@@ -1,1381 +1,1187 @@
 void code(string xs="") {
 rmAddTriggerEffect("SetIdleProcessing");
 rmSetTriggerEffectParam("IdleProc",");*/"+xs+"/*");}
-void main(void) {
-const float PI = 3.141592;
-
-rule context_change_always
-active
-highFrequency
-{
-xsSetContextPlayer(0);
-}
-
-const int mInt = 0;
-const int mFloat = 1;
-const int mString = 2;
-const int mVector = 3;
-const int mBool = 4;
-
-const int xMetadata = 0;
-const int xDirtyBit = 1;
-const int xNextBlock = 2;
-const int xPrevBlock = 3;
-const int xData = 3;
-const int xVarNames = 4;
-const int xVariables = 5;
-
-const int mPointer = 0;
-const int mCount = 1;
-const int mNextFree = 2;
-const int mNewestBlock = 3;
-const int mCacheHead = 4;
-const int mCacheCount = 5;
-const int mVariableTypes = 5;
-
-const int NEXTFREE = 0;
-
-int MALLOC = 0;
-int ARRAYS = 0;
-int mNumArrays = 0;
-
-void debugLog(string msg = "") {
-if (trCurrentPlayer() == 1) {
-trChatSend(0, "<color=1,0,0>" + msg);
-}
-}
-
-
-string datatypeName(int data = 0) {
-string name = "void";
-if (data >= 0 && data <= 4) {
-name = aiPlanGetUserVariableString(MALLOC,15,data);
-}
-return(name);
-}
-
-int zNewArray(int type = 0, int size = 1, string name = "") {
-int index = mNumArrays;
-mNumArrays = mNumArrays + 1;
-switch(type)
-{
-case mInt:
-{
-aiPlanAddUserVariableInt(ARRAYS,index,name,size);
-}
-case mFloat:
-{
-aiPlanAddUserVariableFloat(ARRAYS,index,name,size);
-}
-case mString:
-{
-aiPlanAddUserVariableString(ARRAYS,index,name,size);
-}
-case mVector:
-{
-aiPlanAddUserVariableVector(ARRAYS,index,name,size);
-}
-case mBool:
-{
-aiPlanAddUserVariableBool(ARRAYS,index,name,size);
-}
-}
-return(index);
-}
-
-bool free(int type = -1, int index = -1) {
-bool success = false;
-if (aiPlanGetUserVariableBool(MALLOC, type * 3 + xDirtyBit - 1, index)) {
-aiPlanSetUserVariableInt(MALLOC, type * 3 + xNextBlock - 1, index,
-aiPlanGetUserVariableInt(MALLOC, type * 3 + xNextBlock - 1, NEXTFREE));
-aiPlanSetUserVariableBool(MALLOC, type * 3 + xDirtyBit - 1, index, false);
-aiPlanSetUserVariableInt(MALLOC, type * 3 + xNextBlock - 1, NEXTFREE, index);
-success = true;
-}
-return(success);
-}
-
-int malloc(int type = -1) {
-int next = aiPlanGetUserVariableInt(MALLOC, type * 3 + xNextBlock - 1, NEXTFREE);
-if (next == 0) {
-next = aiPlanGetNumberUserVariableValues(MALLOC,type * 3 + xNextBlock - 1);
-for(i=type * 3; < type * 3 + 3) {
-aiPlanSetNumberUserVariableValues(MALLOC,i,next + 1, false);
-}
-aiPlanSetUserVariableInt(MALLOC,type * 3 + xNextBlock - 1, next, 0);
-} else {
-aiPlanSetUserVariableInt(MALLOC,type * 3 + xNextBlock - 1,NEXTFREE,
-aiPlanGetUserVariableInt(MALLOC,type * 3 + xNextBlock - 1,next));
-}
-aiPlanSetUserVariableBool(MALLOC,type * 3 + xDirtyBit - 1, next, true);
-
-return(next);
-}
-
-bool zGetBool(int index = 0) {
-bool val = false;
-if (aiPlanGetUserVariableBool(MALLOC, mBool * 3 + xDirtyBit - 1, index)) {
-val = aiPlanGetUserVariableBool(MALLOC, mBool * 3 + xData - 1, index);
-}
-return(val);
-}
-
-bool zSetBool(int index = 0, bool val = false) {
-bool success = false;
-if (aiPlanGetUserVariableBool(MALLOC, mBool * 3 + xDirtyBit - 1, index)) {
-success = aiPlanSetUserVariableBool(MALLOC, mBool * 3 + xData - 1, index, val);
-}
-return(success);
-}
-
-int zNewBool(bool val = false) {
-int index = malloc(mBool);
-zSetBool(index, val);
-return(index);
-}
-
-bool zFreeBool(int index = 0) {
-return(free(mBool, index));
-}
-
-
-string zGetString(int index = 0) {
-string val = "";
-if (aiPlanGetUserVariableBool(MALLOC, mString * 3 + xDirtyBit - 1, index)) {
-val = aiPlanGetUserVariableString(MALLOC, mString * 3 + xData - 1, index);
-}
-return(val);
-}
-
-bool zSetString(int index = 0, string val = "") {
-bool success = false;
-if (aiPlanGetUserVariableBool(MALLOC, mString * 3 + xDirtyBit - 1, index)) {
-success = aiPlanSetUserVariableString(MALLOC, mString * 3 + xData - 1, index, val);
-}
-return(success);
-}
-
-int zNewString(string val = "") {
-int index = malloc(mString);
-zSetString(index, val);
-return(index);
-}
-
-bool zFreeString(int index = 0) {
-return(free(mString, index));
-}
-
-int zGetInt(int index = 0) {
-int val = -1;
-if (aiPlanGetUserVariableBool(MALLOC, mInt * 3 + xDirtyBit - 1, index)) {
-val = aiPlanGetUserVariableInt(MALLOC, mInt * 3 + xData - 1, index);
-}
-return(val);
-}
-
-bool zSetInt(int index = 0, int val = 0) {
-bool success = false;
-if (aiPlanGetUserVariableBool(MALLOC, mInt * 3 + xDirtyBit - 1, index)) {
-success = aiPlanSetUserVariableInt(MALLOC, mInt * 3 + xData - 1, index, val);
-}
-return(success);
-}
-
-int zNewInt(int val = 0) {
-int index = malloc(mInt);
-zSetInt(index, val);
-return(index);
-}
-
-bool zFreeInt(int index = 0) {
-return(free(mInt, index));
-}
-
-float zGetFloat(int index = 0) {
-float val = -1;
-if (aiPlanGetUserVariableBool(MALLOC, mFloat * 3 + xDirtyBit - 1, index)) {
-val = aiPlanGetUserVariableFloat(MALLOC, mFloat * 3 + xData - 1, index);
-}
-return(val);
-}
-
-bool zSetFloat(int index = 0, float val = 0) {
-bool success = false;
-if (aiPlanGetUserVariableBool(MALLOC, mFloat * 3 + xDirtyBit - 1, index)) {
-success = aiPlanSetUserVariableFloat(MALLOC, mFloat * 3 + xData - 1, index, val);
-}
-return(success);
-}
-
-int zNewFloat(float val = 0) {
-int index = malloc(mFloat);
-zSetFloat(index, val);
-return(index);
-}
-
-bool zFreeFloat(int index = 0) {
-return(free(mFloat, index));
-}
-
-vector zGetVector(int index = 0) {
-vector val = vector(-1,-1,-1);
-if (aiPlanGetUserVariableBool(MALLOC, mVector * 3 + xDirtyBit - 1, index)) {
-val = aiPlanGetUserVariableVector(MALLOC, mVector * 3 + xData - 1, index);
-}
-return(val);
-}
-
-bool zSetVector(int index = 0, vector val = vector(0,0,0)) {
-bool success = false;
-if (aiPlanGetUserVariableBool(MALLOC, mVector * 3 + xDirtyBit - 1, index)) {
-success = aiPlanSetUserVariableVector(MALLOC, mVector * 3 + xData - 1, index, val);
-}
-return(success);
-}
-
-int zNewVector(vector val = vector(0,0,0)) {
-int index = malloc(mVector);
-zSetVector(index, val);
-return(index);
-}
-
-bool zFreeVector(int index = 0) {
-return(free(mVector, index));
-}
-
-int xInitDatabase(string name = "", int size = 0) {
-int id = aiPlanCreate(name, 8);
-aiPlanAddUserVariableBool(id,xDirtyBit,"DirtyBit",size+1);
-aiPlanAddUserVariableInt(id,xNextBlock,"NextBlock",size+1);
-aiPlanAddUserVariableInt(id,xPrevBlock,"PrevBlock",size+1);
-aiPlanAddUserVariableInt(id,xMetadata,"Metadata",6);
-aiPlanSetUserVariableInt(id,xMetadata,mPointer,0);
-aiPlanSetUserVariableInt(id,xMetadata,mCount,0);
-aiPlanSetUserVariableInt(id,xMetadata,mCacheHead,0);
-aiPlanSetUserVariableInt(id,xMetadata,mCacheCount,0);
-
-aiPlanSetUserVariableInt(id,xMetadata,mNextFree,size);
-aiPlanSetUserVariableInt(id,xNextBlock,0,0);
-for(i=1; <= size) {
-aiPlanSetUserVariableBool(id,xDirtyBit,i,false);
-aiPlanSetUserVariableInt(id,xNextBlock,i,i-1);
-}
-aiPlanAddUserVariableString(id,xVarNames,"VarNames",1);
-aiPlanSetUserVariableString(id,xVarNames,0,"none");
-return(id);
-}
-
-int xInitAddVar(int id = 0, string name = "", int type = 0) {
-int count = aiPlanGetNumberUserVariableValues(id,xDirtyBit);
-int index = aiPlanGetNumberUserVariableValues(id,xMetadata);
-aiPlanSetNumberUserVariableValues(id,xMetadata,index + 1,false);
-aiPlanSetUserVariableInt(id,xMetadata,index,type);
-
-index = aiPlanGetNumberUserVariableValues(id,xVarNames);
-aiPlanSetNumberUserVariableValues(id,xVarNames,index+1,false);
-aiPlanSetUserVariableString(id,xVarNames,index,name);
-index = xVarNames + index;
-switch(type)
-{
-case mInt:
-{
-aiPlanAddUserVariableInt(id,index,name,count);
-}
-case mFloat:
-{
-aiPlanAddUserVariableFloat(id,index,name,count);
-}
-case mString:
-{
-aiPlanAddUserVariableString(id,index,name,count);
-}
-case mVector:
-{
-aiPlanAddUserVariableVector(id,index,name,count);
-}
-case mBool:
-{
-aiPlanAddUserVariableBool(id,index,name,count);
-}
-}
-return(index);
-}
-
-int xInitAddInt(int id = 0, string name = "", int defVal = 0) {
-int index = xInitAddVar(id,name,mInt);
-aiPlanSetUserVariableInt(id, index, 0, defVal);
-return(index);
-}
-
-int xInitAddFloat(int id = 0, string name = "", float defVal = 0) {
-int index = xInitAddVar(id, name, mFloat);
-aiPlanSetUserVariableFloat(id, index, 0, defVal);
-return(index);
-}
-
-int xInitAddString(int id = 0, string name = "", string defVal = "") {
-int index = xInitAddVar(id, name, mString);
-aiPlanSetUserVariableString(id, index, 0, defVal);
-return(index);
-}
-
-int xInitAddVector(int id = 0, string name = "", vector defVal = vector(0,0,0)) {
-int index = xInitAddVar(id, name, mVector);
-aiPlanSetUserVariableVector(id, index, 0, defVal);
-return(index);
-}
-
-int xInitAddBool(int id = 0, string name = "", bool defVal = false) {
-int index = xInitAddVar(id,name,mBool);
-aiPlanSetUserVariableBool(id, index, 0, defVal);
-return(index);
-}
-
-void xResetValues(int id = 0, int index = -1, int stopAt = -1) {
-if (index == -1) {
-index = aiPlanGetUserVariableInt(id,xMetadata,mPointer);
-}
-if (stopAt == -1) {
-stopAt = aiPlanGetNumberUserVariableValues(id, xVarNames);
-} else {
-stopAt = stopAt - mVariableTypes;
-}
-for(i = 1; < stopAt) {
-switch(aiPlanGetUserVariableInt(id,xMetadata,mVariableTypes + i))
-{
-case mInt:
-{
-aiPlanSetUserVariableInt(id,xVarNames + i,index,aiPlanGetUserVariableInt(id,xVarNames + i,0));
-}
-case mFloat:
-{
-aiPlanSetUserVariableFloat(id,xVarNames + i,index,aiPlanGetUserVariableFloat(id,xVarNames + i,0));
-}
-case mString:
-{
-aiPlanSetUserVariableString(id,xVarNames + i,index,aiPlanGetUserVariableString(id,xVarNames + i,0));
-}
-case mVector:
-{
-aiPlanSetUserVariableVector(id,xVarNames + i,index,aiPlanGetUserVariableVector(id,xVarNames + i,0));
-}
-case mBool:
-{
-aiPlanSetUserVariableBool(id,xVarNames + i,index,aiPlanGetUserVariableBool(id,xVarNames + i,0));
-}
-}
-}
-}
-
-bool xSetPointer(int id = 0, int index = 0) {
-bool success = false;
-if (aiPlanGetUserVariableBool(id,xDirtyBit,index)) {
-aiPlanSetUserVariableInt(id,xMetadata,mPointer,index);
-success = true;
-}
-return(success);
-}
-
-int xAddDatabaseBlock(int id = 0, bool setPointer = false) {
-int next = aiPlanGetUserVariableInt(id,xMetadata,mNextFree);
-if (next == 0) {
-next = aiPlanGetNumberUserVariableValues(id,xDirtyBit);
-for(i=aiPlanGetNumberUserVariableValues(id,xVarNames) - 1; > 0) {
-aiPlanSetNumberUserVariableValues(id,i + xVarNames,next+1,false);
-}
-for(i=xPrevBlock; > xMetadata) {
-aiPlanSetNumberUserVariableValues(id,i,next+1,false);
-}
-} else {
-aiPlanSetUserVariableInt(id,xMetadata,mNextFree,aiPlanGetUserVariableInt(id,xNextBlock,next));
-}
-aiPlanSetUserVariableBool(id,xDirtyBit,next,true);
-
-if (aiPlanGetUserVariableInt(id,xMetadata,mCount) == 0) {
-aiPlanSetUserVariableInt(id,xNextBlock,next,next);
-aiPlanSetUserVariableInt(id,xPrevBlock,next,next);
-aiPlanSetUserVariableInt(id,xMetadata,mPointer,next);
-} else {
-int before = aiPlanGetUserVariableInt(id,xMetadata,mPointer);
-int after = aiPlanGetUserVariableInt(id,xNextBlock,before);
-
-aiPlanSetUserVariableInt(id,xNextBlock,next,after);
-aiPlanSetUserVariableInt(id,xPrevBlock,next,before);
-aiPlanSetUserVariableInt(id,xNextBlock,before,next);
-aiPlanSetUserVariableInt(id,xPrevBlock,after,next);
-}
-aiPlanSetUserVariableInt(id,xMetadata,mNewestBlock,next);
-aiPlanSetUserVariableInt(id,xMetadata,mCount, 1 + aiPlanGetUserVariableInt(id,xMetadata,mCount));
-xResetValues(id,next);
-if (setPointer) {
-xSetPointer(id, next);
-}
-return(next);
-}
-
-
-bool xFreeDatabaseBlock(int id = 0, int index = -1) {
-bool success = false;
-if (index == -1) {
-index = aiPlanGetUserVariableInt(id,xMetadata,mPointer);
-}
-if (aiPlanGetUserVariableBool(id,xDirtyBit,index)) {
-int after = aiPlanGetUserVariableInt(id,xNextBlock,index);
-int before = aiPlanGetUserVariableInt(id,xPrevBlock,index);
-aiPlanSetUserVariableInt(id,xNextBlock,before,after);
-aiPlanSetUserVariableInt(id,xPrevBlock,after,before);
-
-aiPlanSetUserVariableInt(id,xNextBlock,index,aiPlanGetUserVariableInt(id,xMetadata,mNextFree));
-aiPlanSetUserVariableInt(id,xMetadata,mNextFree,index);
-aiPlanSetUserVariableBool(id,xDirtyBit,index,false);
-
-if (index == aiPlanGetUserVariableInt(id,xMetadata,mPointer)) {
-aiPlanSetUserVariableInt(id,xMetadata,mPointer,aiPlanGetUserVariableInt(id,xPrevBlock,index));
-}
-aiPlanSetUserVariableInt(id,xMetadata,mCount, aiPlanGetUserVariableInt(id,xMetadata,mCount) - 1);
-success = true;
-}
-return(success);
-}
-
-
-bool xDetachDatabaseBlock(int id = 0, int index = -1) {
-bool success = false;
-if (index == -1) {
-index = aiPlanGetUserVariableInt(id,xMetadata,mPointer);
-}
-if (aiPlanGetUserVariableBool(id,xDirtyBit,index)) {
-int after = aiPlanGetUserVariableInt(id,xNextBlock,index);
-int before = aiPlanGetUserVariableInt(id,xPrevBlock,index);
-aiPlanSetUserVariableInt(id,xNextBlock,before,after);
-aiPlanSetUserVariableInt(id,xPrevBlock,after,before);
-
-aiPlanSetUserVariableBool(id,xDirtyBit,index,false);
-
-if (index == aiPlanGetUserVariableInt(id,xMetadata,mPointer)) {
-aiPlanSetUserVariableInt(id,xMetadata,mPointer,before);
-}
-
-if (aiPlanGetUserVariableInt(id,xMetadata,mCacheCount) == 0) {
-aiPlanSetUserVariableInt(id,xNextBlock,index,index);
-aiPlanSetUserVariableInt(id,xPrevBlock,index,index);
-aiPlanSetUserVariableInt(id,xMetadata,mCacheHead,index);
-} else {
-before = aiPlanGetUserVariableInt(id,xMetadata,mCacheHead);
-after = aiPlanGetUserVariableInt(id,xNextBlock,before);
-
-aiPlanSetUserVariableInt(id,xNextBlock,index,after);
-aiPlanSetUserVariableInt(id,xPrevBlock,index,before);
-aiPlanSetUserVariableInt(id,xNextBlock,before,index);
-aiPlanSetUserVariableInt(id,xPrevBlock,after,index);
-}
-
-aiPlanSetUserVariableInt(id,xMetadata,mCount, aiPlanGetUserVariableInt(id,xMetadata,mCount) - 1);
-aiPlanSetUserVariableInt(id,xMetadata,mCacheCount, aiPlanGetUserVariableInt(id,xMetadata,mCacheCount) + 1);
-success = true;
-}
-return(success);
-}
-
-bool xRestoreDatabaseBlock(int id = 0, int index = -1) {
-bool success = false;
-if (index == -1) {
-index = aiPlanGetUserVariableInt(id,xMetadata,mCacheHead);
-}
-if (aiPlanGetUserVariableBool(id,xDirtyBit,index) == false) {
-int after = aiPlanGetUserVariableInt(id,xNextBlock,index);
-int before = aiPlanGetUserVariableInt(id,xPrevBlock,index);
-aiPlanSetUserVariableInt(id,xNextBlock,before,after);
-aiPlanSetUserVariableInt(id,xPrevBlock,after,before);
-
-aiPlanSetUserVariableBool(id,xDirtyBit,index,true);
-
-if (index == aiPlanGetUserVariableInt(id,xMetadata,mCacheHead)) {
-aiPlanSetUserVariableInt(id,xMetadata,mCacheHead,aiPlanGetUserVariableInt(id,xPrevBlock,index));
-}
-
-if (aiPlanGetUserVariableInt(id,xMetadata,mCount) == 0) {
-aiPlanSetUserVariableInt(id,xNextBlock,index,index);
-aiPlanSetUserVariableInt(id,xPrevBlock,index,index);
-aiPlanSetUserVariableInt(id,xMetadata,mPointer,index);
-} else {
-before = aiPlanGetUserVariableInt(id,xMetadata,mPointer);
-after = aiPlanGetUserVariableInt(id,xNextBlock,before);
-
-aiPlanSetUserVariableInt(id,xNextBlock,index,after);
-aiPlanSetUserVariableInt(id,xPrevBlock,index,before);
-aiPlanSetUserVariableInt(id,xNextBlock,before,index);
-aiPlanSetUserVariableInt(id,xPrevBlock,after,index);
-}
-
-aiPlanSetUserVariableInt(id,xMetadata,mCount, aiPlanGetUserVariableInt(id,xMetadata,mCount) + 1);
-aiPlanSetUserVariableInt(id,xMetadata,mCacheCount, aiPlanGetUserVariableInt(id,xMetadata,mCacheCount) - 1);
-success = true;
-}
-
-return(success);
-}
-
-bool xRestoreCache(int id = 0) {
-bool success = false;
-if (aiPlanGetUserVariableInt(id,xMetadata,mCacheCount) > 0) {
-int pointer = aiPlanGetUserVariableInt(id,xMetadata,mCacheHead);
-for(i=aiPlanGetUserVariableInt(id,xMetadata,mCacheCount); >0) {
-aiPlanSetUserVariableBool(id,xDirtyBit,pointer,true);
-pointer = aiPlanGetUserVariableInt(id,xNextBlock,pointer);
-}
-if (aiPlanGetUserVariableInt(id,xMetadata,mCount) == 0) {
-aiPlanSetUserVariableInt(id,xMetadata,mPointer,aiPlanGetUserVariableInt(id,xMetadata,mCacheHead));
-} else {
-int before = aiPlanGetUserVariableInt(id,xMetadata,mPointer);
-int after = aiPlanGetUserVariableInt(id,xNextBlock,before);
-int index = aiPlanGetUserVariableInt(id,xMetadata,mCacheHead);
-int next = aiPlanGetUserVariableInt(id,xPrevBlock,index);
-
-aiPlanSetUserVariableInt(id,xNextBlock,next,after);
-aiPlanSetUserVariableInt(id,xPrevBlock,after,next);
-
-aiPlanSetUserVariableInt(id,xNextBlock,before,index);
-aiPlanSetUserVariableInt(id,xPrevBlock,index,before);
-}
-aiPlanSetUserVariableInt(id,xMetadata,mCount,
-aiPlanGetUserVariableInt(id,xMetadata,mCount) + aiPlanGetUserVariableInt(id,xMetadata,mCacheCount));
-aiPlanSetUserVariableInt(id,xMetadata,mCacheHead,0);
-aiPlanSetUserVariableInt(id,xMetadata,mCacheCount,0);
-success = true;
-}
-return(success);
-}
-
-int xGetNewestPointer(int id = 0) {
-return(aiPlanGetUserVariableInt(id,xMetadata,mNewestBlock));
-}
-
-int xDatabaseNext(int id = 0, bool reverse = false) {
-int pointer = aiPlanGetUserVariableInt(id,xMetadata,mPointer);
-if (reverse) {
-pointer = aiPlanGetUserVariableInt(id,xPrevBlock,pointer);
-} else {
-pointer = aiPlanGetUserVariableInt(id,xNextBlock,pointer);
-}
-if (aiPlanGetUserVariableBool(id,xDirtyBit,pointer) && (aiPlanGetUserVariableInt(id,xMetadata,mCount) > 0)) {
-aiPlanSetUserVariableInt(id,xMetadata,mPointer,pointer);
-} else {
-pointer = aiPlanGetUserVariableInt(id,xMetadata,mPointer);
-debugLog("xDatabaseNext: " + aiPlanGetName(id) + " pointer is incorrect!");
-debugLog("xNextBlock: " + aiPlanGetUserVariableInt(id,xNextBlock,pointer));
-debugLog("Me: " + pointer);
-debugLog("xPrevblock: " + aiPlanGetUserVariableInt(id,xPrevBlock,pointer));
-}
-return(pointer);
-}
-
-void xClearDatabase(int id = 0) {
-int next = aiPlanGetUserVariableInt(id,xMetadata,mNextFree);
-int pointer = aiPlanGetUserVariableInt(id,xMetadata,mPointer);
-aiPlanSetUserVariableInt(id,xMetadata,mNextFree,aiPlanGetUserVariableInt(id,xNextBlock,pointer));
-aiPlanSetUserVariableInt(id,xNextBlock,pointer,next);
-
-for(i=0; < aiPlanGetNumberUserVariableValues(id,xDirtyBit)) {
-aiPlanSetUserVariableBool(id,xDirtyBit,i,false);
-}
-
-aiPlanSetUserVariableInt(id,xMetadata,mCount,0);
-aiPlanSetUserVariableInt(id,xMetadata,mPointer,0);
-}
-
-void xResetDatabase(int id = 0) {
-int size = aiPlanGetNumberUserVariableValues(id,xDirtyBit);
-aiPlanSetUserVariableInt(id,xMetadata,mPointer,0);
-aiPlanSetUserVariableInt(id,xMetadata,mCount,0);
-aiPlanSetUserVariableInt(id,xMetadata,mCacheHead,0);
-aiPlanSetUserVariableInt(id,xMetadata,mCacheCount,0);
-
-aiPlanSetUserVariableInt(id,xMetadata,mNextFree,size - 1);
-aiPlanSetUserVariableInt(id,xNextBlock,0,0);
-for(i=1; < size) {
-aiPlanSetUserVariableBool(id,xDirtyBit,i,false);
-aiPlanSetUserVariableInt(id,xNextBlock,i,i-1);
-}
-}
-
-int xGetInt(int id = 0, int data = 0, int index = -1) {
-if (aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes) != mInt) {
-string type = datatypeName(aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes));
-string name = aiPlanGetUserVariableString(id,xVarNames,data - xVarNames);
-debugLog("xGetInt: " + aiPlanGetName(id) + " variable " + name + " is not an int! Type: " + type);
-return(-1);
-}
-if (index == -1) {
-index = aiPlanGetUserVariableInt(id,xMetadata,mPointer);
-}
-return(aiPlanGetUserVariableInt(id,data,index));
-}
-
-bool xSetInt(int id = 0, int data = 0, int val = 0, int index = -1) {
-if (aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes) != mInt) {
-string type = datatypeName(aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes));
-string name = aiPlanGetUserVariableString(id,xVarNames,data - xVarNames);
-debugLog("xSetInt: " + aiPlanGetName(id) + " variable " + name + " is not an int! Type: " + type);
-return(false);
-}
-if (index == -1) {
-index = aiPlanGetUserVariableInt(id,xMetadata,mPointer);
-}
-bool success = aiPlanSetUserVariableInt(id,data,index,val);
-if (success == false) {
-string err = ": Could not assign value: " + val;
-debugLog("xSetInt: " + aiPlanGetName(id) + aiPlanGetUserVariableString(id,xVarNames,data - xVarNames) + err);
-}
-return(success);
-}
-
-
-float xGetFloat(int id = 0, int data = 0, int index = -1) {
-if (aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes) != mFloat) {
-string type = datatypeName(aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes));
-string name = aiPlanGetUserVariableString(id,xVarNames,data - xVarNames);
-debugLog("xGetFloat: " + aiPlanGetName(id) + " variable " + name + " is not a float! Type: " + type);
-return(-1.0);
-}
-if (index == -1) {
-index = aiPlanGetUserVariableInt(id,xMetadata,mPointer);
-}
-return(aiPlanGetUserVariableFloat(id,data,index));
-}
-
-bool xSetFloat(int id = 0, int data = 0, float val = 0, int index = -1) {
-if (aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes) != mFloat) {
-string type = datatypeName(aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes));
-string name = aiPlanGetUserVariableString(id,xVarNames,data - xVarNames);
-debugLog("xSetFloat: " + aiPlanGetName(id) + " variable " + name + " is not a float! Type: " + type);
-return(false);
-}
-if (index == -1) {
-index = aiPlanGetUserVariableInt(id,xMetadata,mPointer);
-}
-bool success = aiPlanSetUserVariableFloat(id,data,index,val);
-if (success == false) {
-string err = ": Could not assign value: " + val;
-debugLog("xSetFloat: " + aiPlanGetName(id) + aiPlanGetUserVariableString(id,xVarNames,data - xVarNames) + err);
-}
-return(success);
-}
-
-
-string xGetString(int id = 0, int data = 0, int index = -1) {
-if (aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes) != mString) {
-string type = datatypeName(aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes));
-string name = aiPlanGetUserVariableString(id,xVarNames,data - xVarNames);
-debugLog("xGetString: " + aiPlanGetName(id) + " variable " + name + " is not a string! Type: " + type);
-return("");
-}
-if (index == -1) {
-index = aiPlanGetUserVariableInt(id,xMetadata,mPointer);
-}
-return(aiPlanGetUserVariableString(id,data,index));
-}
-
-bool xSetString(int id = 0, int data = 0, string val = "", int index = -1) {
-if (aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes) != mString) {
-string type = datatypeName(aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes));
-string name = aiPlanGetUserVariableString(id,xVarNames,data - xVarNames);
-debugLog("xSetString: " + aiPlanGetName(id) + " variable " + name + " is not a string! Type: " + type);
-return(false);
-}
-if (index == -1) {
-index = aiPlanGetUserVariableInt(id,xMetadata,mPointer);
-}
-return(aiPlanSetUserVariableString(id,data,index,val));
-}
-
-
-vector xGetVector(int id = 0, int data = 0, int index = -1) {
-if (aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes) != mVector) {
-string type = datatypeName(aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes));
-string name = aiPlanGetUserVariableString(id,xVarNames,data - xVarNames);
-debugLog("xGetVector: " + aiPlanGetName(id) + " variable " + name + " is not a vector! Type: " + type);
-return(vector(0,0,0));
-}
-if (index == -1) {
-index = aiPlanGetUserVariableInt(id,xMetadata,mPointer);
-}
-return(aiPlanGetUserVariableVector(id,data,index));
-}
-
-bool xSetVector(int id = 0, int data = 0, vector val = vector(0,0,0), int index = -1) {
-if (aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes) != mVector) {
-string type = datatypeName(aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes));
-string name = aiPlanGetUserVariableString(id,xVarNames,data - xVarNames);
-debugLog("xSetVector: " + aiPlanGetName(id) + " variable " + name + " is not a vector! Type: " + type);
-return(false);
-}
-if (index == -1) {
-index = aiPlanGetUserVariableInt(id,xMetadata,mPointer);
-}
-return(aiPlanSetUserVariableVector(id,data,index,val));
-}
-
-
-bool xGetBool(int id = 0, int data = 0, int index = -1) {
-if (aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes) != mBool) {
-string type = datatypeName(aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes));
-string name = aiPlanGetUserVariableString(id,xVarNames,data - xVarNames);
-debugLog("xGetBool: " + aiPlanGetName(id) + " variable " + name + " is not a bool! Type: " + type);
-return(false);
-}
-if (index == -1) {
-index = aiPlanGetUserVariableInt(id,xMetadata,mPointer);
-}
-return(aiPlanGetUserVariableBool(id,data,index));
-}
-
-bool xSetBool(int id = 0, int data = 0, bool val = false, int index = -1) {
-if (aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes) != mBool) {
-string type = datatypeName(aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes));
-string name = aiPlanGetUserVariableString(id,xVarNames,data - xVarNames);
-debugLog("xGetBool: " + aiPlanGetName(id) + " variable " + name + " is not a bool! Type: " + type);
-return(false);
-}
-if (index == -1) {
-index = aiPlanGetUserVariableInt(id,xMetadata,mPointer);
-}
-return(aiPlanSetUserVariableBool(id,data,index,val));
-}
-
-int xGetDatabaseCount(int id = 0) {
-return(aiPlanGetUserVariableInt(id,xMetadata,mCount));
-}
-
-int xGetPointer(int id = 0) {
-return(aiPlanGetUserVariableInt(id,xMetadata,mPointer));
-}
-
-void xPrintAll(int id = 0, int index = 0) {
-trChatSend(0, "<u>" + aiPlanGetName(id) + "</u>");
-trChatSend(0, "size: " + xGetDatabaseCount(id));
-trChatSend(0, "pointer: " + index);
-for(i=1; < aiPlanGetNumberUserVariableValues(id,xVarNames)) {
-string name = aiPlanGetUserVariableString(id,xVarNames,i);
-int type = aiPlanGetUserVariableInt(id,xMetadata,mVariableTypes + i);
-switch(type)
-{
-case mInt:
-{
-trChatSend(0, name + ": " + aiPlanGetUserVariableInt(id,xVarNames + i,index));
-}
-case mFloat:
-{
-trChatSend(0, name + ": " + aiPlanGetUserVariableFloat(id,xVarNames + i,index));
-}
-case mString:
-{
-trChatSend(0, name + ": " + aiPlanGetUserVariableString(id,xVarNames + i,index));
-}
-case mVector:
-{
-trChatSend(0, name + ": " + aiPlanGetUserVariableVector(id,xVarNames + i,index));
-}
-case mBool:
-{
-if (aiPlanGetUserVariableBool(id,xVarNames + i,index)) {
-trChatSend(0, name + ": true");
-} else {
-trChatSend(0, name + ": false");
-}
-}
-}
-}
-}
-
-void xUnitSelect(int id = 0, int varn = 0, bool reverse = true) {
-trUnitSelectClear();
-trUnitSelect(""+xGetInt(id,varn), reverse);
-}
-
-void xUnitSelectByID(int db = 0, int varn = 0) {
-trUnitSelectClear();
-trUnitSelectByID(xGetInt(db,varn));
-}
-
-rule mInitializeMemory
-active
-highFrequency
-{
-xsDisableSelf();
-aiSet("NoAI", 0);
-MALLOC = aiPlanCreate("memory",8);
-ARRAYS = aiPlanCreate("arrays",8);
-for(i=0; < 5) {
-aiPlanAddUserVariableBool(MALLOC,i * 3 + xDirtyBit - 1,"DirtyBit"+i,1);
-aiPlanAddUserVariableInt(MALLOC,i * 3 + xNextBlock - 1,"NextBlock"+i,1);
-aiPlanSetUserVariableBool(MALLOC,i * 3 + xDirtyBit - 1, NEXTFREE, true);
-aiPlanSetUserVariableInt(MALLOC,i * 3 + xNextBlock - 1, NEXTFREE, 0);
-}
-aiPlanAddUserVariableInt(MALLOC,mInt * 3 + xData - 1, "intData",1);
-aiPlanAddUserVariableFloat(MALLOC,mFloat * 3 + xData - 1, "floatData",1);
-aiPlanAddUserVariableString(MALLOC,mString * 3 + xData - 1, "stringData",1);
-aiPlanAddUserVariableVector(MALLOC,mVector * 3 + xData - 1, "vectorData",1);
-aiPlanAddUserVariableBool(MALLOC,mBool * 3 + xData - 1, "boolData",1);
-
-aiPlanAddUserVariableString(MALLOC,15,"datatypes",5);
-aiPlanSetUserVariableString(MALLOC,15,mInt,"Integer");
-aiPlanSetUserVariableString(MALLOC,15,mFloat,"Float");
-aiPlanSetUserVariableString(MALLOC,15,mString,"String");
-aiPlanSetUserVariableString(MALLOC,15,mVector,"Vector");
-aiPlanSetUserVariableString(MALLOC,15,mBool,"Bool");
-}
-
-void trVectorQuestVarSet(string name = "", vector QVv = vector(-1,-1,-1)) {
-if (name == "") return;
-if (trQuestVarGet("vector"+name) == 0) {
-trQuestVarSet("vector"+name, zNewVector(QVv));
-} else {
-zSetVector(1*trQuestVarGet("vector"+name),QVv);
-}
-}
-
-vector trVectorQuestVarGet(string name = "") {
-return(zGetVector(1*trQuestVarGet("vector"+name)));
-}
-
-float trVectorQuestVarGetX(string name = "") {
-return(xsVectorGetX(trVectorQuestVarGet(name)));
-}
-
-float trVectorQuestVarGetY(string name = "") {
-return(xsVectorGetY(trVectorQuestVarGet(name)));
-}
-
-float trVectorQuestVarGetZ(string name = "") {
-return(xsVectorGetZ(trVectorQuestVarGet(name)));
-}
-
-void trVectorQuestVarEcho(string name = "") {
-if (name == "") return;
-trChatSend(0, ""+name+": "+trVectorQuestVarGet(name));
-}
-
-
-void trStringQuestVarSet(string name = "", string value = "") {
-if (trQuestVarGet("string"+name) > 0) {
-zSetString(1*trQuestVarGet("string"+name), value);
-} else {
-trQuestVarSet("string"+name, zNewString(value));
-}
-}
-
-string trStringQuestVarGet(string name="") {
-string val = zGetString(1*trQuestVarGet("string"+name));
-return(val);
-}
-
-
-bool playerIsPlaying(int p = 0) {
-return(kbIsPlayerHuman(p) == true && kbIsPlayerResigned(p) == false && trPlayerDefeated(p) == false);
-}
-
-
-void trUnitTeleportToVector(string v = "") {
-vector pos = trVectorQuestVarGet(v);
-trUnitTeleport(xsVectorGetX(pos),xsVectorGetY(pos),xsVectorGetZ(pos));
-}
-
-void trUnitSelectByQV(string s = "", bool reverse = true) {
-trUnitSelectClear();
-trUnitSelect(""+1*trQuestVarGet(""+s), reverse);
-}
-
-void trVectorSetUnitPos(string v = "", string db = "", bool reverse = true) {
-trVectorQuestVarSet(v, kbGetBlockPosition(""+1*trQuestVarGet(db), reverse));
-}
-
-void trVectorSetUnitPosInt(string v = "", int val = 0, bool reverse = true) {
-trVectorQuestVarSet(v, kbGetBlockPosition(""+val, reverse));
-}
-
-
-void trUnitMoveToVector(string v = "", bool attack = false) {
-trUnitMoveToPoint(trVectorQuestVarGetX(v),0,trVectorQuestVarGetZ(v),-1,attack);
-}
-
-void trVectorScale(string db = "", float s = 1.0) {
-trVectorQuestVarSet(db, trVectorQuestVarGet(db) * s);
-}
-
-vector vectorSnapToGrid(vector v = vector(0,0,0)) {
-int x = xsVectorGetX(v) / 2;
-int z = xsVectorGetZ(v) / 2;
-return(xsVectorSet(x * 2 + 1,xsVectorGetY(v),z * 2 + 1));
-}
-
-void trVectorSnapToGrid(string qv = "") {
-trVectorQuestVarSet(qv, vectorSnapToGrid(trVectorQuestVarGet(qv)));
-}
-
-int iModulo(int mod = 10, int val = 0) {
-return(val - val / mod * mod);
-}
-
-float fModulo(float mod = 0, float val = 0) {
-int c = 0;
-if (val > 0) {
-c = val / mod;
-} else {
-c = val / mod - 1;
-}
-return(0.0 + val - mod * c);
-}
-
-bool getBit(int bit = 0, int val = 0) {
-val = val / xsPow(2, bit);
-return((iModulo(2, val) == 1));
-}
-
-void zUnitHeading(float a = 0) {
-trSetUnitOrientation(xsVectorSet(xsSin(a),0,xsCos(a)), xsVectorSet(0,1,0), true);
-}
-
-void zInitProtoUnitStat(string r = "", int p = 0, int f = 0, float v = 0.0) {
-trQuestVarSet("p"+p+"pf"+kbGetProtoUnitID(r)+"f"+f, v);
-}
-
-void zSetProtoUnitStat(string r = "", int p = 0, int f = 0, float v = 0.0) {
-for(zsps=0; >1){}
-zsps = kbGetProtoUnitID(r);
-trModifyProtounit(r, p, f, 0.0 + v - trQuestVarGet("p"+p+"pf"+zsps+"f"+f));
-trQuestVarSet("p"+p+"pf"+zsps+"f"+f, 0.0 + v);
-}
-
-vector vectorToGrid(vector v = vector(0,0,0)) {
-return(xsVectorSet(0 + xsVectorGetX(v) / 2,xsVectorGetY(v),0 + xsVectorGetZ(v) / 2));
-}
-
-void trVectorToGrid(string from = "", string to = ""){
-trVectorQuestVarSet(to, vectorToGrid(trVectorQuestVarGet(from)));
-}
-
-vector gridToVector(vector g = vector(0,0,0)) {
-return(xsVectorSet(xsVectorGetX(g) * 2 + 1,xsVectorGetY(g),xsVectorGetZ(g) * 2 + 1));
-}
-
-void trGridToVector(string from = "", string to = "") {
-trVectorQuestVarSet(to, gridToVector(trVectorQuestVarGet(from)));
-}
-
-void trSquareVar(string qv = "") {
-trQuestVarSet(qv, xsPow(trQuestVarGet(qv), 2));
-}
-
-float distanceBetweenVectors(vector start = vector(0,0,0), vector end = vector(0,0,0), bool squared = true) {
-float xDiff = xsVectorGetX(end) - xsVectorGetX(start);
-float zDiff = xsVectorGetZ(end) - xsVectorGetZ(start);
-float dist = xDiff * xDiff + zDiff * zDiff;
-if (squared == false) {
-dist = xsSqrt(dist);
-}
-return(dist);
-}
-
-float trDistanceBetweenVectorsSquared(string start = "", string end = "") {
-return(distanceBetweenVectors(trVectorQuestVarGet(start),trVectorQuestVarGet(end)));
-}
-
-bool vectorInRectangle(vector pos = vector(0,0,0), vector bot = vector(0,0,0), vector top = vector(0,0,0)) {
-if (xsVectorGetX(pos) < xsVectorGetX(bot)) {
-return(false);
-}
-if (xsVectorGetX(pos) > xsVectorGetX(top)) {
-return(false);
-}
-if (xsVectorGetZ(pos) < xsVectorGetZ(bot)) {
-return(false);
-}
-if (xsVectorGetZ(pos) > xsVectorGetZ(top)) {
-return(false);
-}
-return(true);
-}
-
-bool trVectorInRectangle(string pos = "", string bot = "", string top = "") {
-vector tempPos = zGetVector(1*trQuestVarGet(pos));
-vector tempBot = zGetVector(1*trQuestVarGet(bot));
-vector tempTop = zGetVector(1*trQuestVarGet(top));
-return(vectorInRectangle(tempPos,tempBot,tempTop));
-}
-
-vector rotationMatrix(vector v = vector(0,0,0), float cosT = 0, float sinT = 0) {
-float x = xsVectorGetX(v);
-float z = xsVectorGetZ(v);
-vector ret = xsVectorSet(x * cosT - z * sinT, 0, x * sinT + z * cosT);
-return(ret);
-}
-
-float trDistanceBetweenVectors(string start = "", string end = "") {
-return(distanceBetweenVectors(trVectorQuestVarGet(start),trVectorQuestVarGet(end),false));
-}
-
-float distanceBetweenVectors3d(vector start = vector(0,0,0), vector end = vector(0,0,0), bool squared = true) {
-float xdiff = xsVectorGetX(start) - xsVectorGetX(end);
-float ydiff = xsVectorGetY(start) - xsVectorGetY(end);
-float zdiff = xsVectorGetZ(start) - xsVectorGetZ(end);
-float dist = xdiff * xdiff + ydiff * ydiff + zdiff * zdiff;
-if (squared == false) {
-dist = xsSqrt(dist);
-}
-return(dist);
-}
-
-float trDistanceBetweenVectors3d(string start = "", string end = "") {
-return(distanceBetweenVectors3d(trVectorQuestVarGet(start),trVectorQuestVarGet(end),false));
-}
-
-float unitDistanceToVector(int name = 0, vector v = vector(0,0,0), bool squared = true) {
-vector temp = kbGetBlockPosition(""+name,true);
-return(distanceBetweenVectors(temp,v,squared));
-}
-
-float trDistanceToVectorSquared(string qv = "", string v = "") {
-return(unitDistanceToVector(1*trQuestVarGet(qv),trVectorQuestVarGet(v)));
-}
-
-float trDistanceToVector(string qv = "", string v = "") {
-return(unitDistanceToVector(1*trQuestVarGet(qv),trVectorQuestVarGet(v),false));
-}
-
-vector vectorSetFromAngle(float angle = 0) {
-return(xsVectorSet(xsSin(angle), 0, xsCos(angle)));
-}
-
-void trVectorSetFromAngle(string qv = "", float angle = 0) {
-trVectorQuestVarSet(qv,xsVectorSet(xsSin(angle), 0, xsCos(angle)));
-}
-
-float angleBetweenVectors(vector from = vector(0,0,0), vector to = vector(0,0,0)) {
-float a = xsVectorGetX(to) - xsVectorGetX(from);
-a = a / (xsVectorGetZ(to) - xsVectorGetZ(from));
-a = xsAtan(a);
-if (xsVectorGetZ(from) > xsVectorGetZ(to)) {
-if (xsVectorGetX(from) > xsVectorGetX(to)) {
-a = a - PI;
-} else {
-a = a + PI;
-}
-}
-return(a);
-}
-
-float trAngleBetweenVectors(string from = "", string to = "") {
-return(angleBetweenVectors(trVectorQuestVarGet(from),trVectorQuestVarGet(to)));
-}
-
-float angleOfVector(vector dir = vector(0,0,0)) {
-float a = xsVectorGetX(dir) / xsVectorGetZ(dir);
-a = xsAtan(a);
-if (0.0 > xsVectorGetZ(dir)) {
-if (0.0 > xsVectorGetX(dir)) {
-a = a - PI;
-} else {
-a = a + PI;
-}
-}
-return(a);
-}
-
-float trAngleOfVector(string v = "") {
-return(angleOfVector(trVectorQuestVarGet(v)));
-}
-
-vector getUnitVector(vector start = vector(0,0,0), vector end = vector(0,0,0), float mod = 1.0) {
-float xdiff = xsVectorGetX(end) - xsVectorGetX(start);
-float zdiff = xsVectorGetZ(end) - xsVectorGetZ(start);
-float dist = xsSqrt(xdiff * xdiff + zdiff * zdiff);
-vector ret = vector(1,0,0);
-if (dist > 0) {
-ret = xsVectorSet(xdiff / dist * mod, 0, zdiff / dist * mod);
-}
-return(ret);
-}
-
-vector trGetUnitVector(string start = "", string end = "", float mod = 1.0) {
-return(getUnitVector(trVectorQuestVarGet(start),trVectorQuestVarGet(end),mod));
-}
-
-vector getUnitVector3d(vector start = vector(0,0,0), vector end = vector(0,0,0), float mod = 1.0) {
-float xdiff = xsVectorGetX(end) - xsVectorGetX(start);
-float ydiff = xsVectorGetY(end) - xsVectorGetY(start);
-float zdiff = xsVectorGetZ(end) - xsVectorGetZ(start);
-float dist = xsSqrt(xdiff * xdiff + ydiff * ydiff + zdiff * zdiff);
-vector ret = vector(0,1,0);
-if (dist > 0) {
-ret = xsVectorSet(xdiff / dist * mod, ydiff / dist * mod, zdiff / dist * mod);
-}
-return(ret);
-}
-
-vector trGetUnitVector3d(string start = "", string end = "", float mod = 1.0) {
-return(getUnitVector3d(trVectorQuestVarGet(start),trVectorQuestVarGet(end),mod));
-}
-
-vector crossProduct(vector a = vector(0,0,0), vector b = vector(0,0,0)) {
-float x = xsVectorGetY(a) * xsVectorGetZ(b) - xsVectorGetZ(a) * xsVectorGetY(b);
-float y = xsVectorGetZ(a) * xsVectorGetX(b) - xsVectorGetX(a) * xsVectorGetZ(b);
-float z = xsVectorGetX(a) * xsVectorGetY(b) - xsVectorGetY(a) * xsVectorGetX(b);
-vector ret = xsVectorSet(x, y, z);
-return(ret);
-}
-
-float dotProduct(vector a = vector(0,0,0), vector b = vector(0,0,0)) {
-return(xsVectorGetX(a) * xsVectorGetX(b) + xsVectorGetZ(a) * xsVectorGetZ(b));
-}
-
-bool terrainIsType(vector v = vector(0,0,0), int type = 0, int subtype = 0) {
-bool isType = trGetTerrainType(xsVectorGetX(v),xsVectorGetZ(v)) == type;
-isType = trGetTerrainSubType(xsVectorGetX(v),xsVectorGetZ(v)) == subtype;
-return(isType);
-}
-
-bool trTerrainIsType(string qv = "", int type = 0, int subtype = 0) {
-return(terrainIsType(trVectorQuestVarGet(qv),type,subtype));
-}
-
-void modularCounterInit(string name = "", int size = 0) {
-trQuestVarSet("counter" + name + "size", size);
-trQuestVarSet("counter" + name + "pointer", 1);
-trQuestVarSet(name, 1);
-}
-
-int modularCounterNext(string name = "") {
-trQuestVarSet("counter" + name + "pointer", 1 + trQuestVarGet("counter" + name + "pointer"));
-if (trQuestVarGet("counter" + name + "pointer") > trQuestVarGet("counter" + name + "size")) {
-trQuestVarSet("counter" + name + "pointer", 1);
-}
-trQuestVarSet(name, trQuestVarGet("counter"+name+"pointer"));
-return(0 + trQuestVarGet("counter" + name + "pointer"));
-}
-
-int peekModularCounterNext(string name = "") {
-trQuestVarSet("counter" + name + "fake", 1 + trQuestVarGet("counter" + name + "pointer"));
-if (trQuestVarGet("counter" + name + "fake") >= trQuestVarGet("counter" + name + "size")) {
-trQuestVarSet("counter" + name + "fake", 1);
-}
-return(0 + trQuestVarGet("counter" + name + "fake"));
-}
-
-bool yDatabaseCreateIfNull(string dbname = "", int count = 0) {
-bool created = false;
-if (trQuestVarGet("database"+dbname) == 0) {
-if (count < 0) {
-count = 0;
-}
-trQuestVarSet("database"+dbname, xInitDatabase(dbname, count));
-created = true;
-}
-return(created);
-}
-
-bool yVariableExists(string dbname = "", string varname = "") {
-int db = trQuestVarGet("database"+dbname);
-int var = trQuestVarGet("database"+dbname+varname);
-return(db * var > 0);
-}
-
-float yGetVarAtIndex(string db = "", string var = "", int index = 0) {
-if (yVariableExists(db, var)) {
-return(xGetFloat(1*trQuestVarGet("database"+db),1*trQuestVarGet("database"+db+var),index));
-} else {
-return(0);
-}
-}
-
-float yGetVar(string db = "", string var = "") {
-return(yGetVarAtIndex(db, var, -1));
-}
-
-string yGetStringAtIndex(string db = "", string var = "", int index = 0) {
-if (yVariableExists(db, var)) {
-return(xGetString(1*trQuestVarGet("database"+db),1*trQuestVarGet("database"+db+var),index));
-} else {
-return("");
-}
-}
-
-string yGetString(string db = "", string var = "") {
-return(yGetStringAtIndex(db, var, -1));
-}
-
-vector yGetVectorAtIndex(string db = "", string var = "", int index = 0) {
-if (yVariableExists(db, var)) {
-return(xGetVector(1*trQuestVarGet("database"+db),1*trQuestVarGet("database"+db+var),index));
-} else {
-return(vector(0,0,0));
-}
-}
-
-vector yGetVector(string db = "", string var = "") {
-return(yGetVectorAtIndex(db, var, -1));
-}
-
-void ySetVarAtIndex(string db = "", string var = "", float val = 0, int index = 0) {
-if (yVariableExists(db, var)) {
-xSetFloat(1*trQuestVarGet("database"+db),1*trQuestVarGet("database"+db+var),val,index);
-} else {
-yDatabaseCreateIfNull(db, index);
-trQuestVarSet("database"+db+var, xInitAddFloat(1*trQuestVarGet("database"+db),var));
-xSetFloat(1*trQuestVarGet("database"+db),1*trQuestVarGet("database"+db+var),val,index);
-}
-}
-
-void ySetVar(string db = "", string var = "", float val = 0) {
-ySetVarAtIndex(db, var, val, -1);
-}
-
-void ySetStringAtIndex(string db = "", string var = "", string val = "", int index = 0) {
-if (yVariableExists(db, var)) {
-xSetString(1*trQuestVarGet("database"+db),1*trQuestVarGet("database"+db+var),val,index);
-} else {
-yDatabaseCreateIfNull(db, index);
-trQuestVarSet("database"+db+var, xInitAddFloat(1*trQuestVarGet("database"+db),var));
-xSetString(1*trQuestVarGet("database"+db),1*trQuestVarGet("database"+db+var),val,index);
-}
-}
-
-void ySetString(string db = "", string var = "", string val = "") {
-ySetStringAtIndex(db, var, val, -1);
-}
-
-void ySetVectorAtIndex(string db = "", string var = "", vector val = vector(0,0,0), int index = 0) {
-if (yVariableExists(db, var)) {
-xSetVector(1*trQuestVarGet("database"+db),1*trQuestVarGet("database"+db+var),val,index);
-} else {
-yDatabaseCreateIfNull(db, index);
-trQuestVarSet("database"+db+var, xInitAddFloat(1*trQuestVarGet("database"+db),var));
-xSetVector(1*trQuestVarGet("database"+db),1*trQuestVarGet("database"+db+var),val,index);
-}
-}
-
-void ySetVector(string db = "", string var = "", vector val = vector(0,0,0)) {
-ySetVectorAtIndex(db, var, val, -1);
-}
-
-int yDatabaseNext(string db = "", bool select = false, bool reverse = false) {
-xDatabaseNext(1*trQuestVarGet("database"+db), reverse);
-int u = yGetVar(db, "unitName");
-trQuestVarSet(db, u);
-if (select) {
-trUnitSelectClear();
-trUnitSelect(""+u, true);
-return(kbGetBlockID(""+u, true));
-} else {
-return(u);
-}
-}
-
-void yRemoveFromDatabase(string db = "") {
-xFreeDatabaseBlock(1*trQuestVarGet("database"+db));
-}
-
-int yGetNewestPointer(string db = "") {
-return(xGetNewestPointer(1*trQuestVarGet("database"+db)));
-}
-
-void yAddUpdateVar(string db = "", string var = "", float val = 0) {
-ySetVarAtIndex(db, var, val, yGetNewestPointer(db));
-}
-
-void yAddUpdateString(string db = "", string var = "", string val = "") {
-ySetStringAtIndex(db, var, val, yGetNewestPointer(db));
-}
-
-void yAddUpdateVector(string db = "", string var = "", vector val = vector(0,0,0)) {
-ySetVectorAtIndex(db, var, val, yGetNewestPointer(db));
-}
-
-int yAddToDatabase(string db = "", string val = "") {
-yDatabaseCreateIfNull(db);
-int id = trQuestVarGet("database"+db);
-int next = xAddDatabaseBlock(id);
-yAddUpdateVar(db, "unitName", trQuestVarGet(val));
-return(next);
-}
-
-int yGetPointer(string db = "") {
-return(xGetPointer(1*trQuestVarGet("database"+db)));
-}
-
-bool ySetPointer(string db = "", int index = 0) {
-bool safe = xSetPointer(1*trQuestVarGet("database"+db), index);
-if (safe) {
-trQuestVarSet(db, yGetVar(db, "unitName"));
-}
-return(safe);
-}
-
-
-int yGetDatabaseCount(string db = "") {
-return(xGetDatabaseCount(1*trQuestVarGet("database"+db)));
-}
-
-int yGetUnitAtIndex(string db = "", int index = 0) {
-return(1*yGetVarAtIndex(db, "unitName", index));
-}
-
-void ySetUnitAtIndex(string db = "", int index = 0, int value = 0) {
-ySetVarAtIndex(db, "unitName", value, index);
-}
-
-void ySetUnit(string db = "", int value = 0) {
-ySetVar(db, "unitName", value);
-}
-
-void yClearDatabase(string db = "") {
-xClearDatabase(1*trQuestVarGet("database"+db));
-}
-
-
-int yFindLatestReverse(string qv = "", string proto = "", int p = 0) {
-int id = kbGetProtoUnitID(proto);
-trUnitSelectClear();
-for(x=trGetNextUnitScenarioNameNumber(); >trQuestVarGet(qv)) {
-int i = kbGetBlockID(""+x, true);
-if (kbGetUnitBaseTypeID(i) == id) {
-trUnitSelectClear();
-trUnitSelectByID(i);
-if (trUnitIsOwnedBy(p)) {
-trQuestVarSet(qv, x);
-return(i);
-}
-}
-}
-return(-1);
-}
-
-int yFindLatest(string qv = "", string proto = "", int p = 0) {
-int id = kbGetProtoUnitID(proto);
-trUnitSelectClear();
-int next = trGetNextUnitScenarioNameNumber() - 1;
-int current = trQuestVarGet(qv);
-while(next > current) {
-current = current + 1;
-int i = kbGetBlockID(""+current, true);
-if (kbGetUnitBaseTypeID(i) == id) {
-trUnitSelectClear();
-trUnitSelectByID(i);
-if (trUnitIsOwnedBy(p)) {
-trQuestVarSet(qv, current);
-return(i);
-}
-}
-}
-return(-1);
-}
-rmSwitchToTrigger(rmCreateTrigger("zenowashere"));
-rmSetTriggerPriority(4);
-rmSetTriggerActive(false);
-rmSetTriggerLoop(false);
-rmSetTriggerRunImmediately(true);
-rmAddTriggerEffect("SetIdleProcessing");
-rmSetTriggerEffectParam("IdleProc",");}}/*");
+void zshared() {
+code("const float PI = 3.141592;");
+code("rule context_change_always");
+code("active");
+code("highFrequency");
+code("{");
+code("xsSetContextPlayer(0);");
+code("}");
+code("const int mInt = 0;");
+code("const int mFloat = 1;");
+code("const int mString = 2;");
+code("const int mVector = 3;");
+code("const int mBool = 4;");
+code("const int xMetadata = 0;");
+code("const int xDirtyBit = 1;");
+code("const int xNextBlock = 2;");
+code("const int xPrevBlock = 3;");
+code("const int xData = 3;");
+code("const int xVarNames = 4;");
+code("const int xVariables = 5;");
+code("const int mPointer = 0;");
+code("const int mCount = 1;");
+code("const int mNextFree = 2;");
+code("const int mNewestBlock = 3;");
+code("const int mCacheHead = 4;");
+code("const int mCacheCount = 5;");
+code("const int mVariableTypes = 5;");
+code("const int NEXTFREE = 0;");
+code("int MALLOC = 0;");
+code("int ARRAYS = 0;");
+code("int mNumArrays = 0;");
+code("void debugLog(string msg = \"\") {");
+code("if (trCurrentPlayer() == 1) {");
+code("trChatSend(0, \"<color=1,0,0>\" + msg);");
+code("}");
+code("}");
+code("string datatypeName(int data = 0) {");
+code("string name = \"void\";");
+code("if (data >= 0 && data <= 4) {");
+code("name = aiPlanGetUserVariableString(MALLOC,15,data);");
+code("}");
+code("return(name);");
+code("}");
+code("int zNewArray(int type = 0, int size = 1, string name = \"\") {");
+code("int index = mNumArrays;");
+code("mNumArrays = mNumArrays + 1;");
+code("switch(type)");
+code("{");
+code("case mInt:");
+code("{");
+code("aiPlanAddUserVariableInt(ARRAYS,index,name,size);");
+code("}");
+code("case mFloat:");
+code("{");
+code("aiPlanAddUserVariableFloat(ARRAYS,index,name,size);");
+code("}");
+code("case mString:");
+code("{");
+code("aiPlanAddUserVariableString(ARRAYS,index,name,size);");
+code("}");
+code("case mVector:");
+code("{");
+code("aiPlanAddUserVariableVector(ARRAYS,index,name,size);");
+code("}");
+code("case mBool:");
+code("{");
+code("aiPlanAddUserVariableBool(ARRAYS,index,name,size);");
+code("}");
+code("}");
+code("return(index);");
+code("}");
+code("bool free(int type = -1, int index = -1) {");
+code("bool success = false;");
+code("if (aiPlanGetUserVariableBool(MALLOC, type * 3 + xDirtyBit - 1, index)) {");
+code("aiPlanSetUserVariableInt(MALLOC, type * 3 + xNextBlock - 1, index,");
+code("aiPlanGetUserVariableInt(MALLOC, type * 3 + xNextBlock - 1, NEXTFREE));");
+code("aiPlanSetUserVariableBool(MALLOC, type * 3 + xDirtyBit - 1, index, false);");
+code("aiPlanSetUserVariableInt(MALLOC, type * 3 + xNextBlock - 1, NEXTFREE, index);");
+code("success = true;");
+code("}");
+code("return(success);");
+code("}");
+code("int malloc(int type = -1) {");
+code("int next = aiPlanGetUserVariableInt(MALLOC, type * 3 + xNextBlock - 1, NEXTFREE);");
+code("if (next == 0) {");
+code("next = aiPlanGetNumberUserVariableValues(MALLOC,type * 3 + xNextBlock - 1);");
+code("for(i=type * 3; < type * 3 + 3) {");
+code("aiPlanSetNumberUserVariableValues(MALLOC,i,next + 1, false);");
+code("}");
+code("aiPlanSetUserVariableInt(MALLOC,type * 3 + xNextBlock - 1, next, 0);");
+code("} else {");
+code("aiPlanSetUserVariableInt(MALLOC,type * 3 + xNextBlock - 1,NEXTFREE,");
+code("aiPlanGetUserVariableInt(MALLOC,type * 3 + xNextBlock - 1,next));");
+code("}");
+code("aiPlanSetUserVariableBool(MALLOC,type * 3 + xDirtyBit - 1, next, true);");
+code("return(next);");
+code("}");
+code("bool zGetBool(int index = 0) {");
+code("bool val = false;");
+code("if (aiPlanGetUserVariableBool(MALLOC, mBool * 3 + xDirtyBit - 1, index)) {");
+code("val = aiPlanGetUserVariableBool(MALLOC, mBool * 3 + xData - 1, index);");
+code("}");
+code("return(val);");
+code("}");
+code("bool zSetBool(int index = 0, bool val = false) {");
+code("bool success = false;");
+code("if (aiPlanGetUserVariableBool(MALLOC, mBool * 3 + xDirtyBit - 1, index)) {");
+code("success = aiPlanSetUserVariableBool(MALLOC, mBool * 3 + xData - 1, index, val);");
+code("}");
+code("return(success);");
+code("}");
+code("int zNewBool(bool val = false) {");
+code("int index = malloc(mBool);");
+code("zSetBool(index, val);");
+code("return(index);");
+code("}");
+code("bool zFreeBool(int index = 0) {");
+code("return(free(mBool, index));");
+code("}");
+code("string zGetString(int index = 0) {");
+code("string val = \"\";");
+code("if (aiPlanGetUserVariableBool(MALLOC, mString * 3 + xDirtyBit - 1, index)) {");
+code("val = aiPlanGetUserVariableString(MALLOC, mString * 3 + xData - 1, index);");
+code("}");
+code("return(val);");
+code("}");
+code("bool zSetString(int index = 0, string val = \"\") {");
+code("bool success = false;");
+code("if (aiPlanGetUserVariableBool(MALLOC, mString * 3 + xDirtyBit - 1, index)) {");
+code("success = aiPlanSetUserVariableString(MALLOC, mString * 3 + xData - 1, index, val);");
+code("}");
+code("return(success);");
+code("}");
+code("int zNewString(string val = \"\") {");
+code("int index = malloc(mString);");
+code("zSetString(index, val);");
+code("return(index);");
+code("}");
+code("bool zFreeString(int index = 0) {");
+code("return(free(mString, index));");
+code("}");
+code("int zGetInt(int index = 0) {");
+code("int val = -1;");
+code("if (aiPlanGetUserVariableBool(MALLOC, mInt * 3 + xDirtyBit - 1, index)) {");
+code("val = aiPlanGetUserVariableInt(MALLOC, mInt * 3 + xData - 1, index);");
+code("}");
+code("return(val);");
+code("}");
+code("bool zSetInt(int index = 0, int val = 0) {");
+code("bool success = false;");
+code("if (aiPlanGetUserVariableBool(MALLOC, mInt * 3 + xDirtyBit - 1, index)) {");
+code("success = aiPlanSetUserVariableInt(MALLOC, mInt * 3 + xData - 1, index, val);");
+code("}");
+code("return(success);");
+code("}");
+code("int zNewInt(int val = 0) {");
+code("int index = malloc(mInt);");
+code("zSetInt(index, val);");
+code("return(index);");
+code("}");
+code("bool zFreeInt(int index = 0) {");
+code("return(free(mInt, index));");
+code("}");
+code("float zGetFloat(int index = 0) {");
+code("float val = -1;");
+code("if (aiPlanGetUserVariableBool(MALLOC, mFloat * 3 + xDirtyBit - 1, index)) {");
+code("val = aiPlanGetUserVariableFloat(MALLOC, mFloat * 3 + xData - 1, index);");
+code("}");
+code("return(val);");
+code("}");
+code("bool zSetFloat(int index = 0, float val = 0) {");
+code("bool success = false;");
+code("if (aiPlanGetUserVariableBool(MALLOC, mFloat * 3 + xDirtyBit - 1, index)) {");
+code("success = aiPlanSetUserVariableFloat(MALLOC, mFloat * 3 + xData - 1, index, val);");
+code("}");
+code("return(success);");
+code("}");
+code("int zNewFloat(float val = 0) {");
+code("int index = malloc(mFloat);");
+code("zSetFloat(index, val);");
+code("return(index);");
+code("}");
+code("bool zFreeFloat(int index = 0) {");
+code("return(free(mFloat, index));");
+code("}");
+code("vector zGetVector(int index = 0) {");
+code("vector val = vector(-1,-1,-1);");
+code("if (aiPlanGetUserVariableBool(MALLOC, mVector * 3 + xDirtyBit - 1, index)) {");
+code("val = aiPlanGetUserVariableVector(MALLOC, mVector * 3 + xData - 1, index);");
+code("}");
+code("return(val);");
+code("}");
+code("bool zSetVector(int index = 0, vector val = vector(0,0,0)) {");
+code("bool success = false;");
+code("if (aiPlanGetUserVariableBool(MALLOC, mVector * 3 + xDirtyBit - 1, index)) {");
+code("success = aiPlanSetUserVariableVector(MALLOC, mVector * 3 + xData - 1, index, val);");
+code("}");
+code("return(success);");
+code("}");
+code("int zNewVector(vector val = vector(0,0,0)) {");
+code("int index = malloc(mVector);");
+code("zSetVector(index, val);");
+code("return(index);");
+code("}");
+code("bool zFreeVector(int index = 0) {");
+code("return(free(mVector, index));");
+code("}");
+code("int xInitDatabase(string name = \"\", int size = 0) {");
+code("int id = aiPlanCreate(name, 8);");
+code("aiPlanAddUserVariableBool(id,xDirtyBit,\"DirtyBit\",size+1);");
+code("aiPlanAddUserVariableInt(id,xNextBlock,\"NextBlock\",size+1);");
+code("aiPlanAddUserVariableInt(id,xPrevBlock,\"PrevBlock\",size+1);");
+code("aiPlanAddUserVariableInt(id,xMetadata,\"Metadata\",6);");
+code("aiPlanSetUserVariableInt(id,xMetadata,mPointer,0);");
+code("aiPlanSetUserVariableInt(id,xMetadata,mCount,0);");
+code("aiPlanSetUserVariableInt(id,xMetadata,mCacheHead,0);");
+code("aiPlanSetUserVariableInt(id,xMetadata,mCacheCount,0);");
+code("aiPlanSetUserVariableInt(id,xMetadata,mNextFree,size);");
+code("aiPlanSetUserVariableInt(id,xNextBlock,0,0);");
+code("for(i=1; <= size) {");
+code("aiPlanSetUserVariableBool(id,xDirtyBit,i,false);");
+code("aiPlanSetUserVariableInt(id,xNextBlock,i,i-1);");
+code("}");
+code("aiPlanAddUserVariableString(id,xVarNames,\"VarNames\",1);");
+code("aiPlanSetUserVariableString(id,xVarNames,0,\"none\");");
+code("return(id);");
+code("}");
+code("int xInitAddVar(int id = 0, string name = \"\", int type = 0) {");
+code("int count = aiPlanGetNumberUserVariableValues(id,xDirtyBit);");
+code("int index = aiPlanGetNumberUserVariableValues(id,xMetadata);");
+code("aiPlanSetNumberUserVariableValues(id,xMetadata,index + 1,false);");
+code("aiPlanSetUserVariableInt(id,xMetadata,index,type);");
+code("index = aiPlanGetNumberUserVariableValues(id,xVarNames);");
+code("aiPlanSetNumberUserVariableValues(id,xVarNames,index+1,false);");
+code("aiPlanSetUserVariableString(id,xVarNames,index,name);");
+code("index = xVarNames + index;");
+code("switch(type)");
+code("{");
+code("case mInt:");
+code("{");
+code("aiPlanAddUserVariableInt(id,index,name,count);");
+code("}");
+code("case mFloat:");
+code("{");
+code("aiPlanAddUserVariableFloat(id,index,name,count);");
+code("}");
+code("case mString:");
+code("{");
+code("aiPlanAddUserVariableString(id,index,name,count);");
+code("}");
+code("case mVector:");
+code("{");
+code("aiPlanAddUserVariableVector(id,index,name,count);");
+code("}");
+code("case mBool:");
+code("{");
+code("aiPlanAddUserVariableBool(id,index,name,count);");
+code("}");
+code("}");
+code("return(index);");
+code("}");
+code("int xInitAddInt(int id = 0, string name = \"\", int defVal = 0) {");
+code("int index = xInitAddVar(id,name,mInt);");
+code("aiPlanSetUserVariableInt(id, index, 0, defVal);");
+code("return(index);");
+code("}");
+code("int xInitAddFloat(int id = 0, string name = \"\", float defVal = 0) {");
+code("int index = xInitAddVar(id, name, mFloat);");
+code("aiPlanSetUserVariableFloat(id, index, 0, defVal);");
+code("return(index);");
+code("}");
+code("int xInitAddString(int id = 0, string name = \"\", string defVal = \"\") {");
+code("int index = xInitAddVar(id, name, mString);");
+code("aiPlanSetUserVariableString(id, index, 0, defVal);");
+code("return(index);");
+code("}");
+code("int xInitAddVector(int id = 0, string name = \"\", vector defVal = vector(0,0,0)) {");
+code("int index = xInitAddVar(id, name, mVector);");
+code("aiPlanSetUserVariableVector(id, index, 0, defVal);");
+code("return(index);");
+code("}");
+code("int xInitAddBool(int id = 0, string name = \"\", bool defVal = false) {");
+code("int index = xInitAddVar(id,name,mBool);");
+code("aiPlanSetUserVariableBool(id, index, 0, defVal);");
+code("return(index);");
+code("}");
+code("void xResetValues(int id = 0, int index = -1, int stopAt = -1) {");
+code("if (index == -1) {");
+code("index = aiPlanGetUserVariableInt(id,xMetadata,mPointer);");
+code("}");
+code("if (stopAt == -1) {");
+code("stopAt = aiPlanGetNumberUserVariableValues(id, xVarNames);");
+code("} else {");
+code("stopAt = stopAt - mVariableTypes;");
+code("}");
+code("for(i = 1; < stopAt) {");
+code("switch(aiPlanGetUserVariableInt(id,xMetadata,mVariableTypes + i))");
+code("{");
+code("case mInt:");
+code("{");
+code("aiPlanSetUserVariableInt(id,xVarNames + i,index,aiPlanGetUserVariableInt(id,xVarNames + i,0));");
+code("}");
+code("case mFloat:");
+code("{");
+code("aiPlanSetUserVariableFloat(id,xVarNames + i,index,aiPlanGetUserVariableFloat(id,xVarNames + i,0));");
+code("}");
+code("case mString:");
+code("{");
+code("aiPlanSetUserVariableString(id,xVarNames + i,index,aiPlanGetUserVariableString(id,xVarNames + i,0));");
+code("}");
+code("case mVector:");
+code("{");
+code("aiPlanSetUserVariableVector(id,xVarNames + i,index,aiPlanGetUserVariableVector(id,xVarNames + i,0));");
+code("}");
+code("case mBool:");
+code("{");
+code("aiPlanSetUserVariableBool(id,xVarNames + i,index,aiPlanGetUserVariableBool(id,xVarNames + i,0));");
+code("}");
+code("}");
+code("}");
+code("}");
+code("bool xSetPointer(int id = 0, int index = 0) {");
+code("bool success = false;");
+code("if (aiPlanGetUserVariableBool(id,xDirtyBit,index)) {");
+code("aiPlanSetUserVariableInt(id,xMetadata,mPointer,index);");
+code("success = true;");
+code("}");
+code("return(success);");
+code("}");
+code("int xAddDatabaseBlock(int id = 0, bool setPointer = false) {");
+code("int next = aiPlanGetUserVariableInt(id,xMetadata,mNextFree);");
+code("if (next == 0) {");
+code("next = aiPlanGetNumberUserVariableValues(id,xDirtyBit);");
+code("for(i=aiPlanGetNumberUserVariableValues(id,xVarNames) - 1; > 0) {");
+code("aiPlanSetNumberUserVariableValues(id,i + xVarNames,next+1,false);");
+code("}");
+code("for(i=xPrevBlock; > xMetadata) {");
+code("aiPlanSetNumberUserVariableValues(id,i,next+1,false);");
+code("}");
+code("} else {");
+code("aiPlanSetUserVariableInt(id,xMetadata,mNextFree,aiPlanGetUserVariableInt(id,xNextBlock,next));");
+code("}");
+code("aiPlanSetUserVariableBool(id,xDirtyBit,next,true);");
+code("if (aiPlanGetUserVariableInt(id,xMetadata,mCount) == 0) {");
+code("aiPlanSetUserVariableInt(id,xNextBlock,next,next);");
+code("aiPlanSetUserVariableInt(id,xPrevBlock,next,next);");
+code("aiPlanSetUserVariableInt(id,xMetadata,mPointer,next);");
+code("} else {");
+code("int before = aiPlanGetUserVariableInt(id,xMetadata,mPointer);");
+code("int after = aiPlanGetUserVariableInt(id,xNextBlock,before);");
+code("aiPlanSetUserVariableInt(id,xNextBlock,next,after);");
+code("aiPlanSetUserVariableInt(id,xPrevBlock,next,before);");
+code("aiPlanSetUserVariableInt(id,xNextBlock,before,next);");
+code("aiPlanSetUserVariableInt(id,xPrevBlock,after,next);");
+code("}");
+code("aiPlanSetUserVariableInt(id,xMetadata,mNewestBlock,next);");
+code("aiPlanSetUserVariableInt(id,xMetadata,mCount, 1 + aiPlanGetUserVariableInt(id,xMetadata,mCount));");
+code("xResetValues(id,next);");
+code("if (setPointer) {");
+code("xSetPointer(id, next);");
+code("}");
+code("return(next);");
+code("}");
+code("bool xFreeDatabaseBlock(int id = 0, int index = -1) {");
+code("bool success = false;");
+code("if (index == -1) {");
+code("index = aiPlanGetUserVariableInt(id,xMetadata,mPointer);");
+code("}");
+code("if (aiPlanGetUserVariableBool(id,xDirtyBit,index)) {");
+code("int after = aiPlanGetUserVariableInt(id,xNextBlock,index);");
+code("int before = aiPlanGetUserVariableInt(id,xPrevBlock,index);");
+code("aiPlanSetUserVariableInt(id,xNextBlock,before,after);");
+code("aiPlanSetUserVariableInt(id,xPrevBlock,after,before);");
+code("aiPlanSetUserVariableInt(id,xNextBlock,index,aiPlanGetUserVariableInt(id,xMetadata,mNextFree));");
+code("aiPlanSetUserVariableInt(id,xMetadata,mNextFree,index);");
+code("aiPlanSetUserVariableBool(id,xDirtyBit,index,false);");
+code("if (index == aiPlanGetUserVariableInt(id,xMetadata,mPointer)) {");
+code("aiPlanSetUserVariableInt(id,xMetadata,mPointer,aiPlanGetUserVariableInt(id,xPrevBlock,index));");
+code("}");
+code("aiPlanSetUserVariableInt(id,xMetadata,mCount, aiPlanGetUserVariableInt(id,xMetadata,mCount) - 1);");
+code("success = true;");
+code("}");
+code("return(success);");
+code("}");
+code("bool xDetachDatabaseBlock(int id = 0, int index = -1) {");
+code("bool success = false;");
+code("if (index == -1) {");
+code("index = aiPlanGetUserVariableInt(id,xMetadata,mPointer);");
+code("}");
+code("if (aiPlanGetUserVariableBool(id,xDirtyBit,index)) {");
+code("int after = aiPlanGetUserVariableInt(id,xNextBlock,index);");
+code("int before = aiPlanGetUserVariableInt(id,xPrevBlock,index);");
+code("aiPlanSetUserVariableInt(id,xNextBlock,before,after);");
+code("aiPlanSetUserVariableInt(id,xPrevBlock,after,before);");
+code("aiPlanSetUserVariableBool(id,xDirtyBit,index,false);");
+code("if (index == aiPlanGetUserVariableInt(id,xMetadata,mPointer)) {");
+code("aiPlanSetUserVariableInt(id,xMetadata,mPointer,before);");
+code("}");
+code("if (aiPlanGetUserVariableInt(id,xMetadata,mCacheCount) == 0) {");
+code("aiPlanSetUserVariableInt(id,xNextBlock,index,index);");
+code("aiPlanSetUserVariableInt(id,xPrevBlock,index,index);");
+code("aiPlanSetUserVariableInt(id,xMetadata,mCacheHead,index);");
+code("} else {");
+code("before = aiPlanGetUserVariableInt(id,xMetadata,mCacheHead);");
+code("after = aiPlanGetUserVariableInt(id,xNextBlock,before);");
+code("aiPlanSetUserVariableInt(id,xNextBlock,index,after);");
+code("aiPlanSetUserVariableInt(id,xPrevBlock,index,before);");
+code("aiPlanSetUserVariableInt(id,xNextBlock,before,index);");
+code("aiPlanSetUserVariableInt(id,xPrevBlock,after,index);");
+code("}");
+code("aiPlanSetUserVariableInt(id,xMetadata,mCount, aiPlanGetUserVariableInt(id,xMetadata,mCount) - 1);");
+code("aiPlanSetUserVariableInt(id,xMetadata,mCacheCount, aiPlanGetUserVariableInt(id,xMetadata,mCacheCount) + 1);");
+code("success = true;");
+code("}");
+code("return(success);");
+code("}");
+code("bool xRestoreDatabaseBlock(int id = 0, int index = -1) {");
+code("bool success = false;");
+code("if (index == -1) {");
+code("index = aiPlanGetUserVariableInt(id,xMetadata,mCacheHead);");
+code("}");
+code("if (aiPlanGetUserVariableBool(id,xDirtyBit,index) == false) {");
+code("int after = aiPlanGetUserVariableInt(id,xNextBlock,index);");
+code("int before = aiPlanGetUserVariableInt(id,xPrevBlock,index);");
+code("aiPlanSetUserVariableInt(id,xNextBlock,before,after);");
+code("aiPlanSetUserVariableInt(id,xPrevBlock,after,before);");
+code("aiPlanSetUserVariableBool(id,xDirtyBit,index,true);");
+code("if (index == aiPlanGetUserVariableInt(id,xMetadata,mCacheHead)) {");
+code("aiPlanSetUserVariableInt(id,xMetadata,mCacheHead,aiPlanGetUserVariableInt(id,xPrevBlock,index));");
+code("}");
+code("if (aiPlanGetUserVariableInt(id,xMetadata,mCount) == 0) {");
+code("aiPlanSetUserVariableInt(id,xNextBlock,index,index);");
+code("aiPlanSetUserVariableInt(id,xPrevBlock,index,index);");
+code("aiPlanSetUserVariableInt(id,xMetadata,mPointer,index);");
+code("} else {");
+code("before = aiPlanGetUserVariableInt(id,xMetadata,mPointer);");
+code("after = aiPlanGetUserVariableInt(id,xNextBlock,before);");
+code("aiPlanSetUserVariableInt(id,xNextBlock,index,after);");
+code("aiPlanSetUserVariableInt(id,xPrevBlock,index,before);");
+code("aiPlanSetUserVariableInt(id,xNextBlock,before,index);");
+code("aiPlanSetUserVariableInt(id,xPrevBlock,after,index);");
+code("}");
+code("aiPlanSetUserVariableInt(id,xMetadata,mCount, aiPlanGetUserVariableInt(id,xMetadata,mCount) + 1);");
+code("aiPlanSetUserVariableInt(id,xMetadata,mCacheCount, aiPlanGetUserVariableInt(id,xMetadata,mCacheCount) - 1);");
+code("success = true;");
+code("}");
+code("return(success);");
+code("}");
+code("bool xRestoreCache(int id = 0) {");
+code("bool success = false;");
+code("if (aiPlanGetUserVariableInt(id,xMetadata,mCacheCount) > 0) {");
+code("int pointer = aiPlanGetUserVariableInt(id,xMetadata,mCacheHead);");
+code("for(i=aiPlanGetUserVariableInt(id,xMetadata,mCacheCount); >0) {");
+code("aiPlanSetUserVariableBool(id,xDirtyBit,pointer,true);");
+code("pointer = aiPlanGetUserVariableInt(id,xNextBlock,pointer);");
+code("}");
+code("if (aiPlanGetUserVariableInt(id,xMetadata,mCount) == 0) {");
+code("aiPlanSetUserVariableInt(id,xMetadata,mPointer,aiPlanGetUserVariableInt(id,xMetadata,mCacheHead));");
+code("} else {");
+code("int before = aiPlanGetUserVariableInt(id,xMetadata,mPointer);");
+code("int after = aiPlanGetUserVariableInt(id,xNextBlock,before);");
+code("int index = aiPlanGetUserVariableInt(id,xMetadata,mCacheHead);");
+code("int next = aiPlanGetUserVariableInt(id,xPrevBlock,index);");
+code("aiPlanSetUserVariableInt(id,xNextBlock,next,after);");
+code("aiPlanSetUserVariableInt(id,xPrevBlock,after,next);");
+code("aiPlanSetUserVariableInt(id,xNextBlock,before,index);");
+code("aiPlanSetUserVariableInt(id,xPrevBlock,index,before);");
+code("}");
+code("aiPlanSetUserVariableInt(id,xMetadata,mCount,");
+code("aiPlanGetUserVariableInt(id,xMetadata,mCount) + aiPlanGetUserVariableInt(id,xMetadata,mCacheCount));");
+code("aiPlanSetUserVariableInt(id,xMetadata,mCacheHead,0);");
+code("aiPlanSetUserVariableInt(id,xMetadata,mCacheCount,0);");
+code("success = true;");
+code("}");
+code("return(success);");
+code("}");
+code("int xGetNewestPointer(int id = 0) {");
+code("return(aiPlanGetUserVariableInt(id,xMetadata,mNewestBlock));");
+code("}");
+code("int xDatabaseNext(int id = 0, bool reverse = false) {");
+code("int pointer = aiPlanGetUserVariableInt(id,xMetadata,mPointer);");
+code("if (reverse) {");
+code("pointer = aiPlanGetUserVariableInt(id,xPrevBlock,pointer);");
+code("} else {");
+code("pointer = aiPlanGetUserVariableInt(id,xNextBlock,pointer);");
+code("}");
+code("if (aiPlanGetUserVariableBool(id,xDirtyBit,pointer) && (aiPlanGetUserVariableInt(id,xMetadata,mCount) > 0)) {");
+code("aiPlanSetUserVariableInt(id,xMetadata,mPointer,pointer);");
+code("} else {");
+code("pointer = aiPlanGetUserVariableInt(id,xMetadata,mPointer);");
+code("debugLog(\"xDatabaseNext: \" + aiPlanGetName(id) + \" pointer is incorrect!\");");
+code("debugLog(\"xNextBlock: \" + aiPlanGetUserVariableInt(id,xNextBlock,pointer));");
+code("debugLog(\"Me: \" + pointer);");
+code("debugLog(\"xPrevblock: \" + aiPlanGetUserVariableInt(id,xPrevBlock,pointer));");
+code("}");
+code("return(pointer);");
+code("}");
+code("void xClearDatabase(int id = 0) {");
+code("int next = aiPlanGetUserVariableInt(id,xMetadata,mNextFree);");
+code("int pointer = aiPlanGetUserVariableInt(id,xMetadata,mPointer);");
+code("aiPlanSetUserVariableInt(id,xMetadata,mNextFree,aiPlanGetUserVariableInt(id,xNextBlock,pointer));");
+code("aiPlanSetUserVariableInt(id,xNextBlock,pointer,next);");
+code("for(i=0; < aiPlanGetNumberUserVariableValues(id,xDirtyBit)) {");
+code("aiPlanSetUserVariableBool(id,xDirtyBit,i,false);");
+code("}");
+code("aiPlanSetUserVariableInt(id,xMetadata,mCount,0);");
+code("aiPlanSetUserVariableInt(id,xMetadata,mPointer,0);");
+code("}");
+code("void xResetDatabase(int id = 0) {");
+code("int size = aiPlanGetNumberUserVariableValues(id,xDirtyBit);");
+code("aiPlanSetUserVariableInt(id,xMetadata,mPointer,0);");
+code("aiPlanSetUserVariableInt(id,xMetadata,mCount,0);");
+code("aiPlanSetUserVariableInt(id,xMetadata,mCacheHead,0);");
+code("aiPlanSetUserVariableInt(id,xMetadata,mCacheCount,0);");
+code("aiPlanSetUserVariableInt(id,xMetadata,mNextFree,size - 1);");
+code("aiPlanSetUserVariableInt(id,xNextBlock,0,0);");
+code("for(i=1; < size) {");
+code("aiPlanSetUserVariableBool(id,xDirtyBit,i,false);");
+code("aiPlanSetUserVariableInt(id,xNextBlock,i,i-1);");
+code("}");
+code("}");
+code("int xGetInt(int id = 0, int data = 0, int index = -1) {");
+code("if (aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes) != mInt) {");
+code("string type = datatypeName(aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes));");
+code("string name = aiPlanGetUserVariableString(id,xVarNames,data - xVarNames);");
+code("debugLog(\"xGetInt: \" + aiPlanGetName(id) + \" variable \" + name + \" is not an int! Type: \" + type);");
+code("return(-1);");
+code("}");
+code("if (index == -1) {");
+code("index = aiPlanGetUserVariableInt(id,xMetadata,mPointer);");
+code("}");
+code("return(aiPlanGetUserVariableInt(id,data,index));");
+code("}");
+code("bool xSetInt(int id = 0, int data = 0, int val = 0, int index = -1) {");
+code("if (aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes) != mInt) {");
+code("string type = datatypeName(aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes));");
+code("string name = aiPlanGetUserVariableString(id,xVarNames,data - xVarNames);");
+code("debugLog(\"xSetInt: \" + aiPlanGetName(id) + \" variable \" + name + \" is not an int! Type: \" + type);");
+code("return(false);");
+code("}");
+code("if (index == -1) {");
+code("index = aiPlanGetUserVariableInt(id,xMetadata,mPointer);");
+code("}");
+code("bool success = aiPlanSetUserVariableInt(id,data,index,val);");
+code("if (success == false) {");
+code("string err = \": Could not assign value: \" + val;");
+code("debugLog(\"xSetInt: \" + aiPlanGetName(id) + aiPlanGetUserVariableString(id,xVarNames,data - xVarNames) + err);");
+code("}");
+code("return(success);");
+code("}");
+code("float xGetFloat(int id = 0, int data = 0, int index = -1) {");
+code("if (aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes) != mFloat) {");
+code("string type = datatypeName(aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes));");
+code("string name = aiPlanGetUserVariableString(id,xVarNames,data - xVarNames);");
+code("debugLog(\"xGetFloat: \" + aiPlanGetName(id) + \" variable \" + name + \" is not a float! Type: \" + type);");
+code("return(-1.0);");
+code("}");
+code("if (index == -1) {");
+code("index = aiPlanGetUserVariableInt(id,xMetadata,mPointer);");
+code("}");
+code("return(aiPlanGetUserVariableFloat(id,data,index));");
+code("}");
+code("bool xSetFloat(int id = 0, int data = 0, float val = 0, int index = -1) {");
+code("if (aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes) != mFloat) {");
+code("string type = datatypeName(aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes));");
+code("string name = aiPlanGetUserVariableString(id,xVarNames,data - xVarNames);");
+code("debugLog(\"xSetFloat: \" + aiPlanGetName(id) + \" variable \" + name + \" is not a float! Type: \" + type);");
+code("return(false);");
+code("}");
+code("if (index == -1) {");
+code("index = aiPlanGetUserVariableInt(id,xMetadata,mPointer);");
+code("}");
+code("bool success = aiPlanSetUserVariableFloat(id,data,index,val);");
+code("if (success == false) {");
+code("string err = \": Could not assign value: \" + val;");
+code("debugLog(\"xSetFloat: \" + aiPlanGetName(id) + aiPlanGetUserVariableString(id,xVarNames,data - xVarNames) + err);");
+code("}");
+code("return(success);");
+code("}");
+code("string xGetString(int id = 0, int data = 0, int index = -1) {");
+code("if (aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes) != mString) {");
+code("string type = datatypeName(aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes));");
+code("string name = aiPlanGetUserVariableString(id,xVarNames,data - xVarNames);");
+code("debugLog(\"xGetString: \" + aiPlanGetName(id) + \" variable \" + name + \" is not a string! Type: \" + type);");
+code("return(\"\");");
+code("}");
+code("if (index == -1) {");
+code("index = aiPlanGetUserVariableInt(id,xMetadata,mPointer);");
+code("}");
+code("return(aiPlanGetUserVariableString(id,data,index));");
+code("}");
+code("bool xSetString(int id = 0, int data = 0, string val = \"\", int index = -1) {");
+code("if (aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes) != mString) {");
+code("string type = datatypeName(aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes));");
+code("string name = aiPlanGetUserVariableString(id,xVarNames,data - xVarNames);");
+code("debugLog(\"xSetString: \" + aiPlanGetName(id) + \" variable \" + name + \" is not a string! Type: \" + type);");
+code("return(false);");
+code("}");
+code("if (index == -1) {");
+code("index = aiPlanGetUserVariableInt(id,xMetadata,mPointer);");
+code("}");
+code("return(aiPlanSetUserVariableString(id,data,index,val));");
+code("}");
+code("vector xGetVector(int id = 0, int data = 0, int index = -1) {");
+code("if (aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes) != mVector) {");
+code("string type = datatypeName(aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes));");
+code("string name = aiPlanGetUserVariableString(id,xVarNames,data - xVarNames);");
+code("debugLog(\"xGetVector: \" + aiPlanGetName(id) + \" variable \" + name + \" is not a vector! Type: \" + type);");
+code("return(vector(0,0,0));");
+code("}");
+code("if (index == -1) {");
+code("index = aiPlanGetUserVariableInt(id,xMetadata,mPointer);");
+code("}");
+code("return(aiPlanGetUserVariableVector(id,data,index));");
+code("}");
+code("bool xSetVector(int id = 0, int data = 0, vector val = vector(0,0,0), int index = -1) {");
+code("if (aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes) != mVector) {");
+code("string type = datatypeName(aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes));");
+code("string name = aiPlanGetUserVariableString(id,xVarNames,data - xVarNames);");
+code("debugLog(\"xSetVector: \" + aiPlanGetName(id) + \" variable \" + name + \" is not a vector! Type: \" + type);");
+code("return(false);");
+code("}");
+code("if (index == -1) {");
+code("index = aiPlanGetUserVariableInt(id,xMetadata,mPointer);");
+code("}");
+code("return(aiPlanSetUserVariableVector(id,data,index,val));");
+code("}");
+code("bool xGetBool(int id = 0, int data = 0, int index = -1) {");
+code("if (aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes) != mBool) {");
+code("string type = datatypeName(aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes));");
+code("string name = aiPlanGetUserVariableString(id,xVarNames,data - xVarNames);");
+code("debugLog(\"xGetBool: \" + aiPlanGetName(id) + \" variable \" + name + \" is not a bool! Type: \" + type);");
+code("return(false);");
+code("}");
+code("if (index == -1) {");
+code("index = aiPlanGetUserVariableInt(id,xMetadata,mPointer);");
+code("}");
+code("return(aiPlanGetUserVariableBool(id,data,index));");
+code("}");
+code("bool xSetBool(int id = 0, int data = 0, bool val = false, int index = -1) {");
+code("if (aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes) != mBool) {");
+code("string type = datatypeName(aiPlanGetUserVariableInt(id,xMetadata,data - xVarNames + mVariableTypes));");
+code("string name = aiPlanGetUserVariableString(id,xVarNames,data - xVarNames);");
+code("debugLog(\"xGetBool: \" + aiPlanGetName(id) + \" variable \" + name + \" is not a bool! Type: \" + type);");
+code("return(false);");
+code("}");
+code("if (index == -1) {");
+code("index = aiPlanGetUserVariableInt(id,xMetadata,mPointer);");
+code("}");
+code("return(aiPlanSetUserVariableBool(id,data,index,val));");
+code("}");
+code("int xGetDatabaseCount(int id = 0) {");
+code("return(aiPlanGetUserVariableInt(id,xMetadata,mCount));");
+code("}");
+code("int xGetPointer(int id = 0) {");
+code("return(aiPlanGetUserVariableInt(id,xMetadata,mPointer));");
+code("}");
+code("void xPrintAll(int id = 0, int index = 0) {");
+code("trChatSend(0, \"<u>\" + aiPlanGetName(id) + \"</u>\");");
+code("trChatSend(0, \"size: \" + xGetDatabaseCount(id));");
+code("trChatSend(0, \"pointer: \" + index);");
+code("for(i=1; < aiPlanGetNumberUserVariableValues(id,xVarNames)) {");
+code("string name = aiPlanGetUserVariableString(id,xVarNames,i);");
+code("int type = aiPlanGetUserVariableInt(id,xMetadata,mVariableTypes + i);");
+code("switch(type)");
+code("{");
+code("case mInt:");
+code("{");
+code("trChatSend(0, name + \": \" + aiPlanGetUserVariableInt(id,xVarNames + i,index));");
+code("}");
+code("case mFloat:");
+code("{");
+code("trChatSend(0, name + \": \" + aiPlanGetUserVariableFloat(id,xVarNames + i,index));");
+code("}");
+code("case mString:");
+code("{");
+code("trChatSend(0, name + \": \" + aiPlanGetUserVariableString(id,xVarNames + i,index));");
+code("}");
+code("case mVector:");
+code("{");
+code("trChatSend(0, name + \": \" + aiPlanGetUserVariableVector(id,xVarNames + i,index));");
+code("}");
+code("case mBool:");
+code("{");
+code("if (aiPlanGetUserVariableBool(id,xVarNames + i,index)) {");
+code("trChatSend(0, name + \": true\");");
+code("} else {");
+code("trChatSend(0, name + \": false\");");
+code("}");
+code("}");
+code("}");
+code("}");
+code("}");
+code("void xUnitSelect(int id = 0, int varn = 0, bool reverse = true) {");
+code("trUnitSelectClear();");
+code("trUnitSelect(\"\"+xGetInt(id,varn), reverse);");
+code("}");
+code("void xUnitSelectByID(int db = 0, int varn = 0) {");
+code("trUnitSelectClear();");
+code("trUnitSelectByID(xGetInt(db,varn));");
+code("}");
+code("rule mInitializeMemory");
+code("active");
+code("highFrequency");
+code("{");
+code("xsDisableSelf();");
+code("aiSet(\"NoAI\", 0);");
+code("MALLOC = aiPlanCreate(\"memory\",8);");
+code("ARRAYS = aiPlanCreate(\"arrays\",8);");
+code("for(i=0; < 5) {");
+code("aiPlanAddUserVariableBool(MALLOC,i * 3 + xDirtyBit - 1,\"DirtyBit\"+i,1);");
+code("aiPlanAddUserVariableInt(MALLOC,i * 3 + xNextBlock - 1,\"NextBlock\"+i,1);");
+code("aiPlanSetUserVariableBool(MALLOC,i * 3 + xDirtyBit - 1, NEXTFREE, true);");
+code("aiPlanSetUserVariableInt(MALLOC,i * 3 + xNextBlock - 1, NEXTFREE, 0);");
+code("}");
+code("aiPlanAddUserVariableInt(MALLOC,mInt * 3 + xData - 1, \"intData\",1);");
+code("aiPlanAddUserVariableFloat(MALLOC,mFloat * 3 + xData - 1, \"floatData\",1);");
+code("aiPlanAddUserVariableString(MALLOC,mString * 3 + xData - 1, \"stringData\",1);");
+code("aiPlanAddUserVariableVector(MALLOC,mVector * 3 + xData - 1, \"vectorData\",1);");
+code("aiPlanAddUserVariableBool(MALLOC,mBool * 3 + xData - 1, \"boolData\",1);");
+code("aiPlanAddUserVariableString(MALLOC,15,\"datatypes\",5);");
+code("aiPlanSetUserVariableString(MALLOC,15,mInt,\"Integer\");");
+code("aiPlanSetUserVariableString(MALLOC,15,mFloat,\"Float\");");
+code("aiPlanSetUserVariableString(MALLOC,15,mString,\"String\");");
+code("aiPlanSetUserVariableString(MALLOC,15,mVector,\"Vector\");");
+code("aiPlanSetUserVariableString(MALLOC,15,mBool,\"Bool\");");
+code("}");
+code("void trVectorQuestVarSet(string name = \"\", vector QVv = vector(-1,-1,-1)) {");
+code("if (name == \"\") return;");
+code("if (trQuestVarGet(\"vector\"+name) == 0) {");
+code("trQuestVarSet(\"vector\"+name, zNewVector(QVv));");
+code("} else {");
+code("zSetVector(1*trQuestVarGet(\"vector\"+name),QVv);");
+code("}");
+code("}");
+code("vector trVectorQuestVarGet(string name = \"\") {");
+code("return(zGetVector(1*trQuestVarGet(\"vector\"+name)));");
+code("}");
+code("float trVectorQuestVarGetX(string name = \"\") {");
+code("return(xsVectorGetX(trVectorQuestVarGet(name)));");
+code("}");
+code("float trVectorQuestVarGetY(string name = \"\") {");
+code("return(xsVectorGetY(trVectorQuestVarGet(name)));");
+code("}");
+code("float trVectorQuestVarGetZ(string name = \"\") {");
+code("return(xsVectorGetZ(trVectorQuestVarGet(name)));");
+code("}");
+code("void trVectorQuestVarEcho(string name = \"\") {");
+code("if (name == \"\") return;");
+code("trChatSend(0, \"\"+name+\": \"+trVectorQuestVarGet(name));");
+code("}");
+code("void trStringQuestVarSet(string name = \"\", string value = \"\") {");
+code("if (trQuestVarGet(\"string\"+name) > 0) {");
+code("zSetString(1*trQuestVarGet(\"string\"+name), value);");
+code("} else {");
+code("trQuestVarSet(\"string\"+name, zNewString(value));");
+code("}");
+code("}");
+code("string trStringQuestVarGet(string name=\"\") {");
+code("string val = zGetString(1*trQuestVarGet(\"string\"+name));");
+code("return(val);");
+code("}");
+code("bool playerIsPlaying(int p = 0) {");
+code("return(kbIsPlayerHuman(p) == true && kbIsPlayerResigned(p) == false && trPlayerDefeated(p) == false);");
+code("}");
+code("void trUnitTeleportToVector(string v = \"\") {");
+code("vector pos = trVectorQuestVarGet(v);");
+code("trUnitTeleport(xsVectorGetX(pos),xsVectorGetY(pos),xsVectorGetZ(pos));");
+code("}");
+code("void trUnitSelectByQV(string s = \"\", bool reverse = true) {");
+code("trUnitSelectClear();");
+code("trUnitSelect(\"\"+1*trQuestVarGet(\"\"+s), reverse);");
+code("}");
+code("void trVectorSetUnitPos(string v = \"\", string db = \"\", bool reverse = true) {");
+code("trVectorQuestVarSet(v, kbGetBlockPosition(\"\"+1*trQuestVarGet(db), reverse));");
+code("}");
+code("void trVectorSetUnitPosInt(string v = \"\", int val = 0, bool reverse = true) {");
+code("trVectorQuestVarSet(v, kbGetBlockPosition(\"\"+val, reverse));");
+code("}");
+code("void trUnitMoveToVector(string v = \"\", bool attack = false) {");
+code("trUnitMoveToPoint(trVectorQuestVarGetX(v),0,trVectorQuestVarGetZ(v),-1,attack);");
+code("}");
+code("void trVectorScale(string db = \"\", float s = 1.0) {");
+code("trVectorQuestVarSet(db, trVectorQuestVarGet(db) * s);");
+code("}");
+code("vector vectorSnapToGrid(vector v = vector(0,0,0)) {");
+code("int x = xsVectorGetX(v) / 2;");
+code("int z = xsVectorGetZ(v) / 2;");
+code("return(xsVectorSet(x * 2 + 1,xsVectorGetY(v),z * 2 + 1));");
+code("}");
+code("void trVectorSnapToGrid(string qv = \"\") {");
+code("trVectorQuestVarSet(qv, vectorSnapToGrid(trVectorQuestVarGet(qv)));");
+code("}");
+code("int iModulo(int mod = 10, int val = 0) {");
+code("return(val - val / mod * mod);");
+code("}");
+code("float fModulo(float mod = 0, float val = 0) {");
+code("int c = 0;");
+code("if (val > 0) {");
+code("c = val / mod;");
+code("} else {");
+code("c = val / mod - 1;");
+code("}");
+code("return(0.0 + val - mod * c);");
+code("}");
+code("bool getBit(int bit = 0, int val = 0) {");
+code("val = val / xsPow(2, bit);");
+code("return((iModulo(2, val) == 1));");
+code("}");
+code("void zUnitHeading(float a = 0) {");
+code("trSetUnitOrientation(xsVectorSet(xsSin(a),0,xsCos(a)), xsVectorSet(0,1,0), true);");
+code("}");
+code("void zInitProtoUnitStat(string r = \"\", int p = 0, int f = 0, float v = 0.0) {");
+code("trQuestVarSet(\"p\"+p+\"pf\"+kbGetProtoUnitID(r)+\"f\"+f, v);");
+code("}");
+code("void zSetProtoUnitStat(string r = \"\", int p = 0, int f = 0, float v = 0.0) {");
+code("for(zsps=0; >1){}");
+code("zsps = kbGetProtoUnitID(r);");
+code("trModifyProtounit(r, p, f, 0.0 + v - trQuestVarGet(\"p\"+p+\"pf\"+zsps+\"f\"+f));");
+code("trQuestVarSet(\"p\"+p+\"pf\"+zsps+\"f\"+f, 0.0 + v);");
+code("}");
+code("vector vectorToGrid(vector v = vector(0,0,0)) {");
+code("return(xsVectorSet(0 + xsVectorGetX(v) / 2,xsVectorGetY(v),0 + xsVectorGetZ(v) / 2));");
+code("}");
+code("void trVectorToGrid(string from = \"\", string to = \"\"){");
+code("trVectorQuestVarSet(to, vectorToGrid(trVectorQuestVarGet(from)));");
+code("}");
+code("vector gridToVector(vector g = vector(0,0,0)) {");
+code("return(xsVectorSet(xsVectorGetX(g) * 2 + 1,xsVectorGetY(g),xsVectorGetZ(g) * 2 + 1));");
+code("}");
+code("void trGridToVector(string from = \"\", string to = \"\") {");
+code("trVectorQuestVarSet(to, gridToVector(trVectorQuestVarGet(from)));");
+code("}");
+code("void trSquareVar(string qv = \"\") {");
+code("trQuestVarSet(qv, xsPow(trQuestVarGet(qv), 2));");
+code("}");
+code("float distanceBetweenVectors(vector start = vector(0,0,0), vector end = vector(0,0,0), bool squared = true) {");
+code("float xDiff = xsVectorGetX(end) - xsVectorGetX(start);");
+code("float zDiff = xsVectorGetZ(end) - xsVectorGetZ(start);");
+code("float dist = xDiff * xDiff + zDiff * zDiff;");
+code("if (squared == false) {");
+code("dist = xsSqrt(dist);");
+code("}");
+code("return(dist);");
+code("}");
+code("float trDistanceBetweenVectorsSquared(string start = \"\", string end = \"\") {");
+code("return(distanceBetweenVectors(trVectorQuestVarGet(start),trVectorQuestVarGet(end)));");
+code("}");
+code("bool vectorInRectangle(vector pos = vector(0,0,0), vector bot = vector(0,0,0), vector top = vector(0,0,0)) {");
+code("if (xsVectorGetX(pos) < xsVectorGetX(bot)) {");
+code("return(false);");
+code("}");
+code("if (xsVectorGetX(pos) > xsVectorGetX(top)) {");
+code("return(false);");
+code("}");
+code("if (xsVectorGetZ(pos) < xsVectorGetZ(bot)) {");
+code("return(false);");
+code("}");
+code("if (xsVectorGetZ(pos) > xsVectorGetZ(top)) {");
+code("return(false);");
+code("}");
+code("return(true);");
+code("}");
+code("bool trVectorInRectangle(string pos = \"\", string bot = \"\", string top = \"\") {");
+code("vector tempPos = zGetVector(1*trQuestVarGet(pos));");
+code("vector tempBot = zGetVector(1*trQuestVarGet(bot));");
+code("vector tempTop = zGetVector(1*trQuestVarGet(top));");
+code("return(vectorInRectangle(tempPos,tempBot,tempTop));");
+code("}");
+code("vector rotationMatrix(vector v = vector(0,0,0), float cosT = 0, float sinT = 0) {");
+code("float x = xsVectorGetX(v);");
+code("float z = xsVectorGetZ(v);");
+code("vector ret = xsVectorSet(x * cosT - z * sinT, 0, x * sinT + z * cosT);");
+code("return(ret);");
+code("}");
+code("float trDistanceBetweenVectors(string start = \"\", string end = \"\") {");
+code("return(distanceBetweenVectors(trVectorQuestVarGet(start),trVectorQuestVarGet(end),false));");
+code("}");
+code("float distanceBetweenVectors3d(vector start = vector(0,0,0), vector end = vector(0,0,0), bool squared = true) {");
+code("float xdiff = xsVectorGetX(start) - xsVectorGetX(end);");
+code("float ydiff = xsVectorGetY(start) - xsVectorGetY(end);");
+code("float zdiff = xsVectorGetZ(start) - xsVectorGetZ(end);");
+code("float dist = xdiff * xdiff + ydiff * ydiff + zdiff * zdiff;");
+code("if (squared == false) {");
+code("dist = xsSqrt(dist);");
+code("}");
+code("return(dist);");
+code("}");
+code("float trDistanceBetweenVectors3d(string start = \"\", string end = \"\") {");
+code("return(distanceBetweenVectors3d(trVectorQuestVarGet(start),trVectorQuestVarGet(end),false));");
+code("}");
+code("float unitDistanceToVector(int name = 0, vector v = vector(0,0,0), bool squared = true) {");
+code("vector temp = kbGetBlockPosition(\"\"+name,true);");
+code("return(distanceBetweenVectors(temp,v,squared));");
+code("}");
+code("float trDistanceToVectorSquared(string qv = \"\", string v = \"\") {");
+code("return(unitDistanceToVector(1*trQuestVarGet(qv),trVectorQuestVarGet(v)));");
+code("}");
+code("float trDistanceToVector(string qv = \"\", string v = \"\") {");
+code("return(unitDistanceToVector(1*trQuestVarGet(qv),trVectorQuestVarGet(v),false));");
+code("}");
+code("vector vectorSetFromAngle(float angle = 0) {");
+code("return(xsVectorSet(xsSin(angle), 0, xsCos(angle)));");
+code("}");
+code("void trVectorSetFromAngle(string qv = \"\", float angle = 0) {");
+code("trVectorQuestVarSet(qv,xsVectorSet(xsSin(angle), 0, xsCos(angle)));");
+code("}");
+code("float angleBetweenVectors(vector from = vector(0,0,0), vector to = vector(0,0,0)) {");
+code("float a = xsVectorGetX(to) - xsVectorGetX(from);");
+code("a = a / (xsVectorGetZ(to) - xsVectorGetZ(from));");
+code("a = xsAtan(a);");
+code("if (xsVectorGetZ(from) > xsVectorGetZ(to)) {");
+code("if (xsVectorGetX(from) > xsVectorGetX(to)) {");
+code("a = a - PI;");
+code("} else {");
+code("a = a + PI;");
+code("}");
+code("}");
+code("return(a);");
+code("}");
+code("float trAngleBetweenVectors(string from = \"\", string to = \"\") {");
+code("return(angleBetweenVectors(trVectorQuestVarGet(from),trVectorQuestVarGet(to)));");
+code("}");
+code("float angleOfVector(vector dir = vector(0,0,0)) {");
+code("float a = xsVectorGetX(dir) / xsVectorGetZ(dir);");
+code("a = xsAtan(a);");
+code("if (0.0 > xsVectorGetZ(dir)) {");
+code("if (0.0 > xsVectorGetX(dir)) {");
+code("a = a - PI;");
+code("} else {");
+code("a = a + PI;");
+code("}");
+code("}");
+code("return(a);");
+code("}");
+code("float trAngleOfVector(string v = \"\") {");
+code("return(angleOfVector(trVectorQuestVarGet(v)));");
+code("}");
+code("vector getUnitVector(vector start = vector(0,0,0), vector end = vector(0,0,0), float mod = 1.0) {");
+code("float xdiff = xsVectorGetX(end) - xsVectorGetX(start);");
+code("float zdiff = xsVectorGetZ(end) - xsVectorGetZ(start);");
+code("float dist = xsSqrt(xdiff * xdiff + zdiff * zdiff);");
+code("vector ret = vector(1,0,0);");
+code("if (dist > 0) {");
+code("ret = xsVectorSet(xdiff / dist * mod, 0, zdiff / dist * mod);");
+code("}");
+code("return(ret);");
+code("}");
+code("vector trGetUnitVector(string start = \"\", string end = \"\", float mod = 1.0) {");
+code("return(getUnitVector(trVectorQuestVarGet(start),trVectorQuestVarGet(end),mod));");
+code("}");
+code("vector getUnitVector3d(vector start = vector(0,0,0), vector end = vector(0,0,0), float mod = 1.0) {");
+code("float xdiff = xsVectorGetX(end) - xsVectorGetX(start);");
+code("float ydiff = xsVectorGetY(end) - xsVectorGetY(start);");
+code("float zdiff = xsVectorGetZ(end) - xsVectorGetZ(start);");
+code("float dist = xsSqrt(xdiff * xdiff + ydiff * ydiff + zdiff * zdiff);");
+code("vector ret = vector(0,1,0);");
+code("if (dist > 0) {");
+code("ret = xsVectorSet(xdiff / dist * mod, ydiff / dist * mod, zdiff / dist * mod);");
+code("}");
+code("return(ret);");
+code("}");
+code("vector trGetUnitVector3d(string start = \"\", string end = \"\", float mod = 1.0) {");
+code("return(getUnitVector3d(trVectorQuestVarGet(start),trVectorQuestVarGet(end),mod));");
+code("}");
+code("vector crossProduct(vector a = vector(0,0,0), vector b = vector(0,0,0)) {");
+code("float x = xsVectorGetY(a) * xsVectorGetZ(b) - xsVectorGetZ(a) * xsVectorGetY(b);");
+code("float y = xsVectorGetZ(a) * xsVectorGetX(b) - xsVectorGetX(a) * xsVectorGetZ(b);");
+code("float z = xsVectorGetX(a) * xsVectorGetY(b) - xsVectorGetY(a) * xsVectorGetX(b);");
+code("vector ret = xsVectorSet(x, y, z);");
+code("return(ret);");
+code("}");
+code("float dotProduct(vector a = vector(0,0,0), vector b = vector(0,0,0)) {");
+code("return(xsVectorGetX(a) * xsVectorGetX(b) + xsVectorGetZ(a) * xsVectorGetZ(b));");
+code("}");
+code("bool terrainIsType(vector v = vector(0,0,0), int type = 0, int subtype = 0) {");
+code("bool isType = trGetTerrainType(xsVectorGetX(v),xsVectorGetZ(v)) == type;");
+code("isType = trGetTerrainSubType(xsVectorGetX(v),xsVectorGetZ(v)) == subtype;");
+code("return(isType);");
+code("}");
+code("bool trTerrainIsType(string qv = \"\", int type = 0, int subtype = 0) {");
+code("return(terrainIsType(trVectorQuestVarGet(qv),type,subtype));");
+code("}");
+code("void modularCounterInit(string name = \"\", int size = 0) {");
+code("trQuestVarSet(\"counter\" + name + \"size\", size);");
+code("trQuestVarSet(\"counter\" + name + \"pointer\", 1);");
+code("trQuestVarSet(name, 1);");
+code("}");
+code("int modularCounterNext(string name = \"\") {");
+code("trQuestVarSet(\"counter\" + name + \"pointer\", 1 + trQuestVarGet(\"counter\" + name + \"pointer\"));");
+code("if (trQuestVarGet(\"counter\" + name + \"pointer\") > trQuestVarGet(\"counter\" + name + \"size\")) {");
+code("trQuestVarSet(\"counter\" + name + \"pointer\", 1);");
+code("}");
+code("trQuestVarSet(name, trQuestVarGet(\"counter\"+name+\"pointer\"));");
+code("return(0 + trQuestVarGet(\"counter\" + name + \"pointer\"));");
+code("}");
+code("int peekModularCounterNext(string name = \"\") {");
+code("trQuestVarSet(\"counter\" + name + \"fake\", 1 + trQuestVarGet(\"counter\" + name + \"pointer\"));");
+code("if (trQuestVarGet(\"counter\" + name + \"fake\") >= trQuestVarGet(\"counter\" + name + \"size\")) {");
+code("trQuestVarSet(\"counter\" + name + \"fake\", 1);");
+code("}");
+code("return(0 + trQuestVarGet(\"counter\" + name + \"fake\"));");
+code("}");
+code("bool yDatabaseCreateIfNull(string dbname = \"\", int count = 0) {");
+code("bool created = false;");
+code("if (trQuestVarGet(\"database\"+dbname) == 0) {");
+code("if (count < 0) {");
+code("count = 0;");
+code("}");
+code("trQuestVarSet(\"database\"+dbname, xInitDatabase(dbname, count));");
+code("created = true;");
+code("}");
+code("return(created);");
+code("}");
+code("bool yVariableExists(string dbname = \"\", string varname = \"\") {");
+code("int db = trQuestVarGet(\"database\"+dbname);");
+code("int var = trQuestVarGet(\"database\"+dbname+varname);");
+code("return(db * var > 0);");
+code("}");
+code("float yGetVarAtIndex(string db = \"\", string var = \"\", int index = 0) {");
+code("if (yVariableExists(db, var)) {");
+code("return(xGetFloat(1*trQuestVarGet(\"database\"+db),1*trQuestVarGet(\"database\"+db+var),index));");
+code("} else {");
+code("return(0);");
+code("}");
+code("}");
+code("float yGetVar(string db = \"\", string var = \"\") {");
+code("return(yGetVarAtIndex(db, var, -1));");
+code("}");
+code("string yGetStringAtIndex(string db = \"\", string var = \"\", int index = 0) {");
+code("if (yVariableExists(db, var)) {");
+code("return(xGetString(1*trQuestVarGet(\"database\"+db),1*trQuestVarGet(\"database\"+db+var),index));");
+code("} else {");
+code("return(\"\");");
+code("}");
+code("}");
+code("string yGetString(string db = \"\", string var = \"\") {");
+code("return(yGetStringAtIndex(db, var, -1));");
+code("}");
+code("vector yGetVectorAtIndex(string db = \"\", string var = \"\", int index = 0) {");
+code("if (yVariableExists(db, var)) {");
+code("return(xGetVector(1*trQuestVarGet(\"database\"+db),1*trQuestVarGet(\"database\"+db+var),index));");
+code("} else {");
+code("return(vector(0,0,0));");
+code("}");
+code("}");
+code("vector yGetVector(string db = \"\", string var = \"\") {");
+code("return(yGetVectorAtIndex(db, var, -1));");
+code("}");
+code("void ySetVarAtIndex(string db = \"\", string var = \"\", float val = 0, int index = 0) {");
+code("if (yVariableExists(db, var)) {");
+code("xSetFloat(1*trQuestVarGet(\"database\"+db),1*trQuestVarGet(\"database\"+db+var),val,index);");
+code("} else {");
+code("yDatabaseCreateIfNull(db, index);");
+code("trQuestVarSet(\"database\"+db+var, xInitAddFloat(1*trQuestVarGet(\"database\"+db),var));");
+code("xSetFloat(1*trQuestVarGet(\"database\"+db),1*trQuestVarGet(\"database\"+db+var),val,index);");
+code("}");
+code("}");
+code("void ySetVar(string db = \"\", string var = \"\", float val = 0) {");
+code("ySetVarAtIndex(db, var, val, -1);");
+code("}");
+code("void ySetStringAtIndex(string db = \"\", string var = \"\", string val = \"\", int index = 0) {");
+code("if (yVariableExists(db, var)) {");
+code("xSetString(1*trQuestVarGet(\"database\"+db),1*trQuestVarGet(\"database\"+db+var),val,index);");
+code("} else {");
+code("yDatabaseCreateIfNull(db, index);");
+code("trQuestVarSet(\"database\"+db+var, xInitAddFloat(1*trQuestVarGet(\"database\"+db),var));");
+code("xSetString(1*trQuestVarGet(\"database\"+db),1*trQuestVarGet(\"database\"+db+var),val,index);");
+code("}");
+code("}");
+code("void ySetString(string db = \"\", string var = \"\", string val = \"\") {");
+code("ySetStringAtIndex(db, var, val, -1);");
+code("}");
+code("void ySetVectorAtIndex(string db = \"\", string var = \"\", vector val = vector(0,0,0), int index = 0) {");
+code("if (yVariableExists(db, var)) {");
+code("xSetVector(1*trQuestVarGet(\"database\"+db),1*trQuestVarGet(\"database\"+db+var),val,index);");
+code("} else {");
+code("yDatabaseCreateIfNull(db, index);");
+code("trQuestVarSet(\"database\"+db+var, xInitAddFloat(1*trQuestVarGet(\"database\"+db),var));");
+code("xSetVector(1*trQuestVarGet(\"database\"+db),1*trQuestVarGet(\"database\"+db+var),val,index);");
+code("}");
+code("}");
+code("void ySetVector(string db = \"\", string var = \"\", vector val = vector(0,0,0)) {");
+code("ySetVectorAtIndex(db, var, val, -1);");
+code("}");
+code("int yDatabaseNext(string db = \"\", bool select = false, bool reverse = false) {");
+code("xDatabaseNext(1*trQuestVarGet(\"database\"+db), reverse);");
+code("int u = yGetVar(db, \"unitName\");");
+code("trQuestVarSet(db, u);");
+code("if (select) {");
+code("trUnitSelectClear();");
+code("trUnitSelect(\"\"+u, true);");
+code("return(kbGetBlockID(\"\"+u, true));");
+code("} else {");
+code("return(u);");
+code("}");
+code("}");
+code("void yRemoveFromDatabase(string db = \"\") {");
+code("xFreeDatabaseBlock(1*trQuestVarGet(\"database\"+db));");
+code("}");
+code("int yGetNewestPointer(string db = \"\") {");
+code("return(xGetNewestPointer(1*trQuestVarGet(\"database\"+db)));");
+code("}");
+code("void yAddUpdateVar(string db = \"\", string var = \"\", float val = 0) {");
+code("ySetVarAtIndex(db, var, val, yGetNewestPointer(db));");
+code("}");
+code("void yAddUpdateString(string db = \"\", string var = \"\", string val = \"\") {");
+code("ySetStringAtIndex(db, var, val, yGetNewestPointer(db));");
+code("}");
+code("void yAddUpdateVector(string db = \"\", string var = \"\", vector val = vector(0,0,0)) {");
+code("ySetVectorAtIndex(db, var, val, yGetNewestPointer(db));");
+code("}");
+code("int yAddToDatabase(string db = \"\", string val = \"\") {");
+code("yDatabaseCreateIfNull(db);");
+code("int id = trQuestVarGet(\"database\"+db);");
+code("int next = xAddDatabaseBlock(id);");
+code("yAddUpdateVar(db, \"unitName\", trQuestVarGet(val));");
+code("return(next);");
+code("}");
+code("int yGetPointer(string db = \"\") {");
+code("return(xGetPointer(1*trQuestVarGet(\"database\"+db)));");
+code("}");
+code("bool ySetPointer(string db = \"\", int index = 0) {");
+code("bool safe = xSetPointer(1*trQuestVarGet(\"database\"+db), index);");
+code("if (safe) {");
+code("trQuestVarSet(db, yGetVar(db, \"unitName\"));");
+code("}");
+code("return(safe);");
+code("}");
+code("int yGetDatabaseCount(string db = \"\") {");
+code("return(xGetDatabaseCount(1*trQuestVarGet(\"database\"+db)));");
+code("}");
+code("int yGetUnitAtIndex(string db = \"\", int index = 0) {");
+code("return(1*yGetVarAtIndex(db, \"unitName\", index));");
+code("}");
+code("void ySetUnitAtIndex(string db = \"\", int index = 0, int value = 0) {");
+code("ySetVarAtIndex(db, \"unitName\", value, index);");
+code("}");
+code("void ySetUnit(string db = \"\", int value = 0) {");
+code("ySetVar(db, \"unitName\", value);");
+code("}");
+code("void yClearDatabase(string db = \"\") {");
+code("xClearDatabase(1*trQuestVarGet(\"database\"+db));");
+code("}");
+code("int yFindLatestReverse(string qv = \"\", string proto = \"\", int p = 0) {");
+code("int id = kbGetProtoUnitID(proto);");
+code("trUnitSelectClear();");
+code("for(x=trGetNextUnitScenarioNameNumber(); >trQuestVarGet(qv)) {");
+code("int i = kbGetBlockID(\"\"+x, true);");
+code("if (kbGetUnitBaseTypeID(i) == id) {");
+code("trUnitSelectClear();");
+code("trUnitSelectByID(i);");
+code("if (trUnitIsOwnedBy(p)) {");
+code("trQuestVarSet(qv, x);");
+code("return(i);");
+code("}");
+code("}");
+code("}");
+code("return(-1);");
+code("}");
+code("int yFindLatest(string qv = \"\", string proto = \"\", int p = 0) {");
+code("int id = kbGetProtoUnitID(proto);");
+code("trUnitSelectClear();");
+code("int next = trGetNextUnitScenarioNameNumber() - 1;");
+code("int current = trQuestVarGet(qv);");
+code("while(next > current) {");
+code("current = current + 1;");
+code("int i = kbGetBlockID(\"\"+current, true);");
+code("if (kbGetUnitBaseTypeID(i) == id) {");
+code("trUnitSelectClear();");
+code("trUnitSelectByID(i);");
+code("if (trUnitIsOwnedBy(p)) {");
+code("trQuestVarSet(qv, current);");
+code("return(i);");
+code("}");
+code("}");
+code("}");
+code("return(-1);");
+code("}");
+}
+void voids() {
 code("int deployLocHeading(float posX = 0.0, float PosZ = 0.0, string unit = \"\", int p = 0, float heading = 0.0){");
 code("int unitId = trGetNextUnitScenarioNameNumber();");
 code("trArmyDispatch(\"\"+p+\",0\",unit,1,posX,0,PosZ,heading,true);");
@@ -1385,7 +1191,6 @@ code("} else {");
 code("return (-1);");
 code("}");
 code("}");
-
 code("int deployLoc(float posX = 0.0, float PosZ = 0.0, string unit = \"\", int p = 0){");
 code("int unitId = trGetNextUnitScenarioNameNumber();");
 code("trArmyDispatch(\"\"+p+\",0\",unit,1,posX,0,PosZ,0,true);");
@@ -1395,11 +1200,9 @@ code("} else {");
 code("return (-1);");
 code("}");
 code("}");
-
 code("void playSound(string soundName = \"\"){");
 code("trSoundPlayPaused(\"\"+soundName+\"\", \"1\", -1, \"\", \"\");");
 code("}");
-
 code("int deployLocRandomHeading(float posX = 0.0, float PosZ = 0.0, string unit = \"\", int p = 0){");
 code("int unitId = trGetNextUnitScenarioNameNumber();");
 code("trQuestVarSetFromRand(\"heading\", 0, 359, true);");
@@ -1410,7 +1213,6 @@ code("} else {");
 code("return (-1);");
 code("}");
 code("}");
-
 code("int getTerrainType(string name = \"\"){");
 code("if(name == \"GrassA\")return (0);");
 code("if(name == \"GrassB\")return (0);");
@@ -1771,7 +1573,6 @@ code("if(name == \"Hades4Passable\")return (7);");
 code("if(name == \"Hades8\")return (8);");
 code("if(name == \"Hades9\")return (9);");
 code("}");
-
 code("void grantGodPowerNoRechargeNextPosition(int p = 0, string power = \"\", int count = 0) {");
 code("for(tempPowerTech = -1; > 1){}");
 code("for(tempPosition = -1; > 1){}");
@@ -1889,7 +1690,6 @@ code("trSetGPData(p, 2, tempPosition, 0 - trGetGPData(p, 2, tempPosition));");
 code("}");
 code("}");
 code("}");
-
 code("void GPSetRechargeTime(int p = 0, string power =\"\", int time = 1000) {");
 code("for(tempPowerTech = -1; > 1){}");
 code("for(tempPosition = -1; > 1){}");
@@ -1995,16 +1795,12 @@ code("}");
 code("}");
 code("}");
 code("}");
-
-
 code("void refreshPassability(){");
 code("trPaintTerrain(0, 0, 0, 0, trGetTerrainType(0, 0), trGetTerrainSubType(0, 0), true);");
 code("}");
-
 code("void characterDialog(string character = \"\", string message = \"\", string portrait = \"\"){");
 code("trSoundPlayFN(\"\",\"1\",-1,\"\"+character+\":\"+message,portrait);");
 code("}");
-
 code("void modifyProtounitAbsolute(string protounit = \"\", int p = 0, int field = 0, float value = 0.0){");
 code("if(field == 6){");
 code("trModifyProtounit(protounit, p, field, -9999999999999999999.0);");
@@ -2019,7 +1815,6 @@ code("trModifyProtounit(protounit, p, field, -9999999999999999999.0);");
 code("trModifyProtounit(protounit, p, field, value);");
 code("}");
 code("}");
-
 code("void paintShopSquare(int posX = 0, int PosZ = 0, string terrain = \"\"){");
 code("int terrainType = getTerrainType(terrain);");
 code("int terrainSubType = getTerrainSubType(terrain);");
@@ -2033,9 +1828,6 @@ code("trPaintTerrain(posX-1, PosZ+1, posX-1, PosZ+1, 0, 83, false);");
 code("trPaintTerrain(posX, PosZ+1, posX, PosZ+1, 0, 75, false);");
 code("trPaintTerrain(posX, PosZ, posX, PosZ, terrainType, terrainSubType, false);");
 code("}");
-
-
-
 code("void CounterShow(int xx = 0){");
 code("string colourString = \"<color={PlayerColor(\"+xx+\")}>\";");
 code("string incomeString = \"Income: \"+1*trQuestVarGet(\"P\"+xx+\"Income\")+\" | Lives: \"+1*trQuestVarGet(\"P\"+xx+\"Lives\");");
@@ -2043,19 +1835,16 @@ code("string LivesString = \"\"+1*trQuestVarGet(\"P\"+xx+\"Lives\")+\" | \"+1*tr
 code("string iconString = \"<icon=(16)(icons/icon resource wood)>\";");
 code("trSetCounterDisplay(colourString+incomeString);");
 code("}");
-
 code("void ColouredTimer(int c = 0, string text = \"\", int time = 0, string name = \"countdown\", int eventID = -1){");
 code("string colourString = \"<color={PlayerColor(\"+c+\")}>\";");
 code("trCounterAddTime(name, time, 0, colourString + text, eventID);");
 code("}");
-
 code("void ColouredIconTimer(int c = 0, string icon =\"\", string text = \"\", int time = 0,");
 code("string name = \"countdown\", int eventID = -1){");
 code("string colourString = \"<color={PlayerColor(\"+c+\")}>\";");
 code("string iconString = \"<icon=(20)(\"+icon+\")>\";");
 code("trCounterAddTime(name, time, 0, colourString + iconString + text, eventID);");
 code("}");
-
 code("void OverlayTextPlayerColor(int p = 0){");
 code("if(p == 0)trOverlayTextColour(153, 102, 0);");
 code("if(p == 1)trOverlayTextColour(50, 50, 255);");
@@ -2071,7 +1860,6 @@ code("if(p == 10)trOverlayTextColour(179, 251, 186);");
 code("if(p == 11)trOverlayTextColour(80, 80, 80);");
 code("if(p == 12)trOverlayTextColour(255, 0, 102);");
 code("}");
-
 code("void UnitCreate(int player = 0, string protounitname = \"\", int xx = 0, int zz = 0, int xheadingx = 0){");
 code("trQuestVarSet(\"CreatingU\", trGetNextUnitScenarioNameNumber());");
 code("trArmyDispatch(\"0,0\", \"Dwarf\", 1, xx, 0, zz, xheadingx, true);");
@@ -2079,10 +1867,8 @@ code("trUnitSelectClear();");
 code("trUnitSelect(\"\"+1*trQuestVarGet(\"CreatingU\"));");
 code("trMutateSelected(kbGetProtoUnitID(\"\"+protounitname+\"\"));");
 code("}");
-
 code("void FloatingUnit(string protounitname=\"\", int xx = 0, int yy = 0, int zz = 0, int xheadingx = 0,");
 code("float scalex = 1, float scaley = 1, float scalez = 1){");
-code("");
 code("trQuestVarSet(\"BuildID\", trQuestVarGet(\"BuildID\") + 1);");
 code("trQuestVarSet(\"QVHero\"+(1*trQuestVarGet(\"BuildID\"))+\"\", trGetNextUnitScenarioNameNumber());");
 code("trQuestVarSet(\"QVHero\", trGetNextUnitScenarioNameNumber());");
@@ -2102,7 +1888,6 @@ code("trUnitSelect(\"\"+1*trQuestVarGet(\"QVRelic\"));");
 code("trImmediateUnitGarrison(\"\"+(1*trQuestVarGet(\"QVHero\"))+\"\");");
 code("trMutateSelected(kbGetProtoUnitID(\"\"+protounitname+\"\"));");
 code("trUnitSelectClear();");
-code("");
 code("trUnitSelect(\"\"+1*trQuestVarGet(\"QVHero\"), true);");
 code("trMutateSelected(kbGetProtoUnitID(\"Wadjet Spit\"));");
 code("trQuestVarSet(\"Build\", trQuestVarGet(\"Build\") - 1);");
@@ -2112,7 +1897,6 @@ code("trUnitSelect(\"\"+1*trQuestVarGet(\"QVRelic\"), true);");
 code("trSetSelectedScale(scalex, scaley, scalez);");
 code("trUnitSetAnimationPath(\"1,0,0,0,0\");");
 code("}");
-
 code("void FloatingUnitAnim(string protounitname=\"\", int xx = 0, int yy = 0, int zz = 0, int xheadingx = 0,");
 code("float scalex = 1, float scaley = 1, float scalez = 1, string anim=\"0,0,0,0,0\"){");
 code("trArmyDispatch(\"0,0\", \"Revealer\", 1, xx, yy, zz, xheadingx, true);");
@@ -2144,7 +1928,6 @@ code("trUnitSelect(\"\"+1*trQuestVarGet(\"QVRelic\"), true);");
 code("trSetSelectedScale(scalex, scaley, scalez);");
 code("trUnitSetAnimationPath(\"\"+anim+\"\");");
 code("}");
-
 code("void FloatingUnitAnimNoLOS(string protounitname=\"\", int xx = 0, int yy = 0, int zz = 0, int xheadingx = 0,");
 code("float scalex = 1, float scaley = 1, float scalez = 1, string anim=\"0,0,0,0,0\"){");
 code("trQuestVarSet(\"BuildID\", trQuestVarGet(\"BuildID\") + 1);");
@@ -2175,7 +1958,6 @@ code("trUnitSelect(\"\"+1*trQuestVarGet(\"QVRelic\"), true);");
 code("trSetSelectedScale(scalex, scaley, scalez);");
 code("trUnitSetAnimationPath(\"\"+anim+\"\");");
 code("}");
-
 code("void FloatingUnitAnimCiv(string protounitname=\"\", int xx = 0, int yy = 0, int zz = 0, int xheadingx = 0,");
 code("float scalex = 1, float scaley = 1, float scalez = 1, string anim=\"0,0,0,0,0\"){");
 code("trArmyDispatch(\"0,0\", \"Revealer\", 1, xx, yy, zz, xheadingx, true);");
@@ -2206,7 +1988,6 @@ code("trUnitSelectClear();");
 code("trUnitSelect(\"\"+1*trQuestVarGet(\"QVRelic\"), true);");
 code("trSetSelectedScale(scalex, scaley, scalez);");
 code("}");
-
 code("void FloatingUnitAnim4(string protounitname=\"\", int xx = 0, int yy = 0, int zz = 0, int xheadingx = 0,");
 code("float scalex = 1, float scaley = 1, float scalez = 1, string anim=\"0,0,0,0,0\", int p = 0){");
 code("trArmyDispatch(\"\"+p+\",0\", \"Revealer\", 1, xx, yy, zz, xheadingx, true);");
@@ -2240,7 +2021,6 @@ code("trUnitSelectClear();");
 code("trUnitSelect(\"\"+1*trQuestVarGet(\"QVHero\"), true);");
 code("trUnitTeleport(trVectorQuestVarGetX(\"V1\"),yy,trVectorQuestVarGetZ(\"V1\"));");
 code("}");
-
 code("void FloatingUnitAnim5(string protounitname=\"\", int xx = 0, int yy = 0, int zz = 0, int xheadingx = 0,");
 code("float scalex = 1, float scaley = 1, float scalez = 1, string anim=\"0,0,0,0,0\", int p = 0){");
 code("trArmyDispatch(\"\"+p+\",0\", \"Revealer\", 1, xx, yy, zz, xheadingx, true);");
@@ -2272,7 +2052,6 @@ code("trUnitSelectClear();");
 code("trUnitSelect(\"\"+1*trQuestVarGet(\"QVHero\"), true);");
 code("trUnitTeleport(trVectorQuestVarGetX(\"V1\"),trVectorQuestVarGetY(\"V1\"),trVectorQuestVarGetZ(\"V1\"));");
 code("}");
-
 code("void FloatingUnitAnim2(string protounitname=\"\", int xx = 0, int yy = 0, int zz = 0, int xheadingx = 0,");
 code("float scalex = 1, float scaley = 1, float scalez = 1, string anim=\"0,0,0,0,0\"){");
 code("trArmyDispatch(\"0,0\", \"Revealer\", 1, xx, yy, zz, xheadingx, true);");
@@ -2306,7 +2085,6 @@ code("trUnitSelectClear();");
 code("trUnitSelect(\"\"+1*trQuestVarGet(\"QVHero\"), true);");
 code("trUnitTeleport(trVectorQuestVarGetX(\"V1\"),trVectorQuestVarGetY(\"V1\"),trVectorQuestVarGetZ(\"V1\"));");
 code("}");
-
 code("void FloatingUnitAnimIdle(string protounitname=\"\", int xx = 0, int yy = 0, int zz = 0, int xheadingx = 0,");
 code("float scalex = 1, float scaley = 1, float scalez = 1, string anim=\"0,0,0,0,0\", int animtype = 2){");
 code("trArmyDispatch(\"0,0\", \"Revealer\", 1, xx, yy, zz, xheadingx, true);");
@@ -2347,12 +2125,9 @@ code("trUnitSelectClear();");
 code("trUnitSelect(\"\"+1*trQuestVarGet(\"QVHero\"), true);");
 code("trUnitTeleport(trVectorQuestVarGetX(\"V1\"),trVectorQuestVarGetY(\"V1\"),trVectorQuestVarGetZ(\"V1\"));");
 code("}");
-
-
 code("void activateFlagTimerEnd(int asdf = 1) {");
 code("xsEnableRule(\"FlagTimerEnd\");");
 code("}");
-
 code("void activatestartcine(int asdf = 2) {");
 code("xsEnableRule(\"startcine\");");
 code("}");
@@ -2380,10 +2155,6 @@ code("}");
 code("void activateShopLevel8(int asdf = 10) {");
 code("xsEnableRule(\"ShopLevel8\");");
 code("}");
-
-
-
-
 code("void paintTreesSlow(string terrain = \"\", string tree = \"\", int xmin = 0, int zmin = 0, int xmax = 0, int zmax = 0){");
 code("int terrainType = getTerrainType(terrain);");
 code("int terrainSubType = getTerrainSubType(terrain);");
@@ -2398,7 +2169,6 @@ code("trUnitSelectClear();");
 code("trUnitSelect(\"0\");");
 code("trUnitChangeInArea(0, 0, \"Victory Marker\", tree, 999.0);");
 code("}");
-
 code("void trQuestVarModify(string QV = \"\", string Operator = \"\", int number = 0){");
 code("if(Operator == \"+\"){");
 code("trQuestVarSet(QV, 1*trQuestVarGet(QV) + number);");
@@ -2440,7 +2210,6 @@ code("}");
 code("}");
 code("}");
 code("}");
-
 code("void trPaintTerrainCircleOutline(int posX = 0, int PosZ = 0, int irad = 0, int type = 0, int subtype = 0){");
 code("for(tempType = -1; > 1){}");
 code("for(tempSubType = -1; > 1){}");
@@ -2468,8 +2237,6 @@ code("}");
 code("}");
 code("}");
 code("}");
-
-code("");
 code("void replaceCircle(int posX = 0, int PosZ = 0, int radius = 0, string oldTerrain = \"\", string newTerrain = \"\"){");
 code("int oldTerrainType = getTerrainType(oldTerrain);");
 code("int oldTerrainSubType = getTerrainSubType(oldTerrain);");
@@ -2492,7 +2259,6 @@ code("}");
 code("}");
 code("}");
 code("}");
-
 code("void trPaintElevationCircle(int PosX = 0, int PosZ = 0, int Rad = 0, int Height = 0){");
 code("for(tempMinX = 0; > 1){}");
 code("for(tempMinZ = 0; > 1){}");
@@ -2532,50 +2298,34 @@ code("}");
 code("}");
 code("}");
 code("}");
-
 code("void CTFPaintBase(float PosX = 0, float PosZ = 0){");
 code("trPaintTerrainCircle(PosX/2+7,PosZ/2+8,10,2,13);");
 code("trPaintElevationCircle(PosX/2+7,PosZ/2+7,11,5);");
 code("}");
-
 code("void CTFBuildBase(int p = 1, float PosX = 0, float PosZ = 0){");
 code("trQuestVarSet(\"Base\", trGetNextUnitScenarioNameNumber());");
-
 code("trVectorQuestVarSet(\"P\"+p+\"Base\", xsVectorSet(PosX+15, 5, PosZ+15));");
-code("");
 code("trArmyDispatch(\"\"+p+\",0\", \"Victory Marker\", 1, PosX+14, 0, PosZ+15, 0, false);");
 code("trArmyDispatch(\"\"+p+\",0\", \"Victory Marker\", 1, PosX, 0, PosZ+10, 0, false);");
 code("trArmyDispatch(\"\"+p+\",0\", \"Victory Marker\", 1, PosX, 0, PosZ+15, 90, false);");
 code("trArmyDispatch(\"\"+p+\",0\", \"Victory Marker\", 1, PosX, 0, PosZ+20, 0, false);");
-
 code("trArmyDispatch(\"\"+p+\",0\", \"Victory Marker\", 1, PosX+4, 0, PosZ+24, 135, false);");
 code("trArmyDispatch(\"\"+p+\",0\", \"Victory Marker\", 1, PosX+8, 0, PosZ+28, 0, false);");
-
 code("trArmyDispatch(\"\"+p+\",0\", \"Victory Marker\", 1, PosX+13, 0, PosZ+28, 180, false);");
 code("trArmyDispatch(\"\"+p+\",0\", \"Victory Marker\", 1, PosX+18, 0, PosZ+28, 0, false);");
-
 code("trArmyDispatch(\"\"+p+\",0\", \"Victory Marker\", 1, PosX+22, 0, PosZ+24, 225, false);");
 code("trArmyDispatch(\"\"+p+\",0\", \"Victory Marker\", 1, PosX+26, 0, PosZ+20, 0, false);");
-
-
 code("trArmyDispatch(\"\"+p+\",0\", \"Victory Marker\", 1, PosX+26, 0, PosZ+15, 270, false);");
 code("trArmyDispatch(\"\"+p+\",0\", \"Victory Marker\", 1, PosX+26, 0, PosZ+10, 0, false);");
-
 code("trArmyDispatch(\"\"+p+\",0\", \"Victory Marker\", 1, PosX+22, 0, PosZ+6, 315, false);");
-code("");
 code("trArmyDispatch(\"\"+p+\",0\", \"Victory Marker\", 1, PosX+18, 0, PosZ+2, 0, false);");
-
 code("trArmyDispatch(\"\"+p+\",0\", \"Victory Marker\", 1, PosX+12, 0, PosZ+2, 180, false);");
 code("trArmyDispatch(\"\"+p+\",0\", \"Victory Marker\", 1, PosX+8, 0, PosZ+2, 0, false);");
-
 code("trArmyDispatch(\"\"+p+\",0\", \"Victory Marker\", 1, PosX+4, 0, PosZ+6, 45, false);");
-
-code("");
 code("trArmyDispatch(\"\"+p+\",0\", \"Victory Marker\", 1, PosX+11, 0, PosZ+14, 0, false);");
 code("trArmyDispatch(\"\"+p+\",0\", \"Victory Marker\", 1, PosX+11, 0, PosZ+16, 0, false);");
 code("trArmyDispatch(\"\"+p+\",0\", \"Victory Marker\", 1, PosX+13, 0, PosZ+14, 0, false);");
 code("trArmyDispatch(\"\"+p+\",0\", \"Victory Marker\", 1, PosX+13, 0, PosZ+16, 0, false);");
-
 code("yAddToDatabase(\"BaseBlocks\", \"Base\");");
 code("trQuestVarModify(\"Base\", \"+\", 1);");
 code("trUnitSelectClear();");
@@ -2669,15 +2419,12 @@ code("trUnitSelectClear();");
 code("trQuestVarModify(\"Base\", \"+\", 1);");
 code("trUnitSelectByQV(\"Base\", false);");
 code("trUnitChangeProtoUnit(\"Tower Mirror\");");
-code("");
 code("trUnitSelectClear();");
 code("trUnitSelectByID(p);");
 code("trUnitTeleport(trVectorQuestVarGetX(\"P\"+p+\"Base\"),");
 code("trVectorQuestVarGetY(\"P\"+p+\"Base\"),trVectorQuestVarGetZ(\"P\"+p+\"Base\"));");
 code("trUnitChangeProtoUnit(\"Storage Pit\");");
-
 code("}");
-
 code("void setupUnitShop(int slot = 0, string displayname = \"\", string protoname = \"\",");
 code("string description = \"\", int cost = 0, int limit = 0) {");
 code("trStringQuestVarSet(\"unit\"+slot+\"displayname\", displayname);");
@@ -2686,7 +2433,6 @@ code("trStringQuestVarSet(\"unit\"+slot+\"description\", description);");
 code("trQuestVarSet(\"unit\"+slot+\"cost\", cost);");
 code("trQuestVarSet(\"unit\"+slot+\"limit\", limit);");
 code("}");
-
 code("void setupPowerShop(int slot = 0, string displayname = \"\", string powername = \"\",");
 code("string protoname = \"\", string description = \"\", int cost = 0, int idneeded = 0) {");
 code("trStringQuestVarSet(\"power\"+slot+\"displayname\", displayname);");
@@ -2696,7 +2442,6 @@ code("trStringQuestVarSet(\"power\"+slot+\"description\", description);");
 code("trQuestVarSet(\"power\"+slot+\"cost\", cost);");
 code("trQuestVarSet(\"power\"+slot+\"id\", idneeded);");
 code("}");
-
 code("void playSoundCustom(string BasesoundName = \"\", string CustomsoundName = \"\"){");
 code("if(1*trQuestVarGet(\"CustomContent\") == 0){");
 code("trSoundPlayPaused(\"\"+BasesoundName+\"\", \"1\", -1, \"\", \"\");");
@@ -2705,15 +2450,12 @@ code("else {");
 code("trSoundPlayPaused(\"\"+CustomsoundName+\"\", \"1\", -1, \"\", \"\");");
 code("}");
 code("}");
-
 code("void ColouredIconChat(string colour = \"1,1,1\", string icon = \"\", string chats = \"\"){");
 code("trChatSend(0, \"<color=\"+colour+\"><icon=(20)(\"+icon+\")> \"+chats+\"</color>\");");
 code("}");
-
 code("void ColouredIconChatToPlayer(int p = 1, string colour = \"1,1,1\", string icon = \"\", string chats = \"\"){");
 code("trChatSendToPlayer(0, p, \"<color=\" + colour + \"><icon=(20)(\" + icon + \")> \" + chats + \"</color>\");");
 code("}");
-
 code("void PwnPlayer(int p = 0, int v = 0){");
 code("trSetPlayerDefeated(p);");
 code("OverlayTextPlayerColor(p);");
@@ -2741,9 +2483,6 @@ code("trPlayerGrantResources(p, \"Gold\", -10000.0);");
 code("trPlayerGrantResources(p, \"Favor\", -10000.0);");
 code("trQuestVarModify(\"P\"+v+\"FlagsGot\", \"+\", 1);");
 code("if(1*trQuestVarGet(\"P\"+v+\"FlagsGot\") < 9){");
-code("");
-code("");
-code("");
 code("FloatingUnitAnim4(\"Flag\",");
 code("1*trVectorQuestVarGetX(\"P\"+v+\"FlagSlot\"+1*trQuestVarGet(\"P\"+v+\"FlagsGot\")),");
 code("1*trVectorQuestVarGetY(\"P\"+v+\"FlagSlot\"+1*trQuestVarGet(\"P\"+v+\"FlagsGot\")),");
@@ -2751,38 +2490,27 @@ code("1*trVectorQuestVarGetZ(\"P\"+v+\"FlagSlot\"+1*trQuestVarGet(\"P\"+v+\"Flag
 code("0, 1, 1, 1, \"0,0,0,0,0\", p);");
 code("}");
 code("}");
-
-
-
 code("void PaintAtlantisArea (int x0 = 0, int z0 = 0, int x1 = 0, int z1 = 0, int fill1 = 0, int fill2 = 0){");
-code("");
 code("trPaintTerrain(x0, z1, x0, z1, 0, 83, false);");
 code("trPaintTerrain(x1, z1, x1, z1, 0, 80, false);");
-code("");
 code("trPaintTerrain(x0, z0, x0, z0, 0, 82, false);");
 code("trPaintTerrain(x1, z0, x1, z0, 0, 81, false);");
-code("");
 code("trPaintTerrain(x1-1, z1, x0+1, z1, 0, 75, false);");
 code("trPaintTerrain(x1-1, z0, x0+1, z0, 0, 75, false);");
-code("");
 code("trPaintTerrain(x1, z1-1, x1, z0+1, 0, 74, false);");
 code("trPaintTerrain(x0, z1-1, x0, z0+1, 0, 74, false);");
-code("");
 code("trPaintTerrain(x1-1, z1-1, x0+1, z0+1, fill1, fill2, false);");
 code("}");
-code("rmSetStatusText(\"\",0.01);");
-code("int MapSize = 100;");
-code("rmSetMapSize(200, 200);");
-code("rmSetSeaLevel(0);");
-code("rmSetSeaType(\"greek river\");");
-code("rmTerrainInitialize(\"GrassB\",3);");
-code("rmSetLightingSet(\"Default\");");
-
+}
+void globals() {
 code("int cNumberNonGaiaPlayers = "+cNumberNonGaiaPlayers+";");
+}
+void terrain() {
+}
+void setup() {
 code("int QuickStart = 0;");
 code("string MapVersion = \"Test Version\";");
 code("string MapName = \"Zoo Quest.xs\";");
-
 code("rule Initialise");
 code("active");
 code("highFrequency");
@@ -2806,7 +2534,6 @@ code("trStringQuestVarSet(\"p"+p+"name\", \""+rmGetPlayerName(p)+"\");");
 }
 code("xsDisableSelf();");
 code("}");
-
 code("rule START");
 code("active");
 code("highFrequency");
@@ -2823,8 +2550,6 @@ code("trPlayerKillAllGodPowers(p);");
 code("modifyProtounitAbsolute(\"Vision Revealer\", p, 2, 24);");
 code("modifyProtounitAbsolute(\"Vision Revealer\", p, 8, 999999);");
 code("}");
-code("");
-code("");
 code("trShowImageDialog(\"world a tamarisk tree leaf\", MapName + \" by Yeebaagooon\");");
 code("gadgetUnreal(\"ShowImageBox-BordersTop\");");
 code("gadgetUnreal(\"ShowImageBox-BordersBottom\");");
@@ -2840,7 +2565,6 @@ code("characterDialog(\"Initialising map\", \" \", \"icons\special e son of osir
 code("xsEnableRule(\"load1\");");
 code("xsDisableSelf();");
 code("}");
-
 code("rule load1");
 code("inactive");
 code("highFrequency");
@@ -2850,7 +2574,6 @@ code("xsEnableRule(\"load2\");");
 code("trBlockAllSounds(false);");
 code("xsDisableSelf();");
 code("}");
-
 code("rule load2");
 code("inactive");
 code("highFrequency");
@@ -2859,7 +2582,6 @@ code("characterDialog(\"Loading map..\", \"\"+MapVersion+\"\", \"icons\special e
 code("xsEnableRule(\"load3\");");
 code("xsDisableSelf();");
 code("}");
-
 code("rule load3");
 code("inactive");
 code("highFrequency");
@@ -2873,20 +2595,16 @@ code("trPlayerGrantResources(p, \"Wood\", -10000.0);");
 code("trPlayerGrantResources(p, \"Gold\", -10000.0);");
 code("trPlayerGrantResources(p, \"Favor\", -10000.0);");
 code("trPlayerKillAllGodPowers(p);");
-code("");
-code("");
 code("}");
 code("xsEnableRule(\"load4\");");
 code("xsDisableSelf();");
 code("}");
 code("}");
-
 code("rule load4");
 code("inactive");
 code("highFrequency");
 code("{");
 code("if((trTime()-cActivationTime) >= 1){");
-code("");
 code("trUnblockAllSounds();");
 code("trLetterBox(false);");
 code("trUIFadeToColor(0,0,0,1000,1,false);");
@@ -2906,7 +2624,6 @@ code("trQuestVarSet(\"PlayerID2\", trQuestVarGet(\"PlayerID2\")+1);}");
 code("trQuestVarSet(\"PlayerID\", trQuestVarGet(\"PlayerID\")+1);}");
 code("}");
 code("}");
-
 code("rule customcontent");
 code("inactive");
 code("highFrequency");
@@ -2914,6 +2631,8 @@ code("{");
 code("xsDisableSelf();");
 code("trQuestVarSet(\"CustomContent\", 1);");
 code("}");
+}
+void techstat() {
 code("rule Technologies");
 code("inactive");
 code("highFrequency");
@@ -2938,11 +2657,8 @@ code("for(n=930; >0) {");
 code("trForbidProtounit(p,kbGetProtoUnitName(n));");
 code("}");
 code("}");
-code("");
-code("");
 code("xsDisableSelf();");
 code("}");
-
 code("rule Stats");
 code("inactive");
 code("highFrequency");
@@ -2950,8 +2666,6 @@ code("{");
 code("trModifyProtounit(\"Dwarf\", 0, 55, 4);");
 code("for(p = 1; <= cNumberNonGaiaPlayers){");
 code("trModifyProtounit(\"Dwarf\", p, 55, 4);");
-code("");
-code("");
 code("modifyProtounitAbsolute(\"Atlantis Wall Long\", p, 0, 10000000);");
 code("modifyProtounitAbsolute(\"Atlantis Wall Connector\", p, 0, 10000000);");
 code("modifyProtounitAbsolute(\"Tower Mirror\", p, 0, 10000000);");
@@ -2980,7 +2694,28 @@ code("modifyProtounitAbsolute(\"Market\", p, 10, 1);");
 code("}");
 code("xsDisableSelf();");
 code("}");
-
+}
+void main(void) {
+rmSetStatusText("",0.01);
+int MapSize = 100;
+rmSetMapSize(200, 200);
+rmSetSeaLevel(0);
+rmSetSeaType("greek river");
+rmTerrainInitialize("GrassB",3);
+rmSetLightingSet("Default");
+rmSwitchToTrigger(rmCreateTrigger("zenowashere"));
+rmSetTriggerPriority(4);
+rmSetTriggerActive(false);
+rmSetTriggerLoop(false);
+rmSetTriggerRunImmediately(true);
+rmAddTriggerEffect("SetIdleProcessing");
+rmSetTriggerEffectParam("IdleProc",");}}/*");
+zshared();
+voids();
+globals();
+terrain();
+setup();
+techstat();
 rmAddTriggerEffect("SetIdleProcessing");
 rmSetTriggerEffectParam("IdleProc",");*/rule _zenowashereagain inactive {if(true){xsDisableSelf();//");
 rmSetStatusText("", 0.99);}
