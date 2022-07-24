@@ -1,0 +1,9 @@
+**ADD AND COMMIT**
+git add *
+git commit -m "description"
+git push origin main
+
+
+**BRANCH**
+git branch
+git checkout -b "name"
