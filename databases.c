@@ -89,12 +89,8 @@ highFrequency
 		id = kbGetBlockID(""+spysearch, true);
 		if (kbGetUnitBaseTypeID(id) == kbGetProtoUnitID("Spy Eye")) {
 			x = modularCounterNext("spyfound");
-			debugLog("spy requested");
-			trQuestVarEcho("spyfind");
-			trQuestVarEcho("spyfound");
 			if (aiPlanGetUserVariableBool(ARRAYS,spyActive,x)) {
 				spyreset = 0;
-				debugLog("spy changing");
 				aiPlanSetUserVariableBool(ARRAYS,spyActive,x,false);
 				trUnitSelectClear();
 				trUnitSelect(""+aiPlanGetUserVariableInt(ARRAYS,spyUnit,x),true);
@@ -107,7 +103,6 @@ highFrequency
 					trUnitSelectClear();
 					trUnitSelectByID(id);
 					trMutateSelected(aiPlanGetUserVariableInt(ARRAYS,spyProto,x));
-					debugLog("spy running");
 					scale = aiPlanGetUserVariableVector(ARRAYS,spyScale,x);
 					trSetSelectedScale(xsVectorGetX(scale),xsVectorGetY(scale),xsVectorGetZ(scale));
 					trUnitSelectClear();

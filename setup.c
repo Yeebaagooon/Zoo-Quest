@@ -27,7 +27,6 @@ rule START
 active
 highFrequency
 {
-	aiSet("NoAI", 0);
 	trPlayerKillAllGodPowers(0);
 	for(p = 1; <= cNumberNonGaiaPlayers){
 		trSetCivAndCulture(p, 3, 1);
@@ -55,6 +54,8 @@ highFrequency
 	characterDialog("Initialising map", " ", "icons\special e son of osiris icon 64");
 	xsEnableRule("load1");
 	xsDisableSelf();
+	//HOTKEYS
+	map("q", "game", "uiSetSpecialPower(220) uiSpecialPowerAtPointer");
 }
 
 rule load1
@@ -65,6 +66,19 @@ highFrequency
 	xsEnableRule("load2");
 	trBlockAllSounds(false);
 	xsDisableSelf();
+	while(cNumberNonGaiaPlayers>=trQuestVarGet("PlayerID")) {
+		trQuestVarSet("PlayerID2", 0);
+		while(cNumberNonGaiaPlayers>=trQuestVarGet("PlayerID2")) {
+			trPlayerSetDiplomacy(trQuestVarGet("PlayerID"), trQuestVarGet("PlayerID2"), "Ally");
+			trPlayerSetDiplomacy(trQuestVarGet("PlayerID2"), trQuestVarGet("PlayerID"), "Ally");
+		trQuestVarSet("PlayerID2", trQuestVarGet("PlayerID2")+1);}
+	trQuestVarSet("PlayerID", trQuestVarGet("PlayerID")+1);}
+	
+	for(p=1 ; < cNumberNonGaiaPlayers){
+		trPlayerSetDiplomacy(0, p, "Enemy");
+		trPlayerSetDiplomacy(cNumberNonGaiaPlayers, p, "Enemy");
+		trPlayerSetDiplomacy(p, cNumberNonGaiaPlayers, "Enemy");
+	}
 }
 
 rule load2
@@ -73,6 +87,7 @@ highFrequency
 {
 	characterDialog("Loading map..", ""+MapVersion+"", "icons\special e son of osiris icon 64");
 	xsEnableRule("load3");
+	xsEnableRule("Stats");
 	xsDisableSelf();
 }
 
@@ -82,7 +97,6 @@ highFrequency
 {
 	if((trTime()-cActivationTime) >= 1){
 		characterDialog("Loading map...", ""+MapVersion+"", "icons\special e son of osiris icon 64");
-		aiSet("NoAI", 0);
 		for(p = 1; <= cNumberNonGaiaPlayers){
 			trPlayerGrantResources(p, "Food", -10000.0);
 			trPlayerGrantResources(p, "Wood", -10000.0);
@@ -121,13 +135,7 @@ highFrequency
 		gadgetReal("ShowImageBox-BordersRightTop");
 		gadgetReal("ShowImageBox-CloseButton");
 		//startNPCDialog(1);
-		while(cNumberNonGaiaPlayers>=trQuestVarGet("PlayerID")) {
-			trQuestVarSet("PlayerID2", 0);
-			while(cNumberNonGaiaPlayers>=trQuestVarGet("PlayerID2")) {
-				trPlayerSetDiplomacy(trQuestVarGet("PlayerID"), trQuestVarGet("PlayerID2"), "Ally");
-				trPlayerSetDiplomacy(trQuestVarGet("PlayerID2"), trQuestVarGet("PlayerID"), "Ally");
-			trQuestVarSet("PlayerID2", trQuestVarGet("PlayerID2")+1);}
-		trQuestVarSet("PlayerID", trQuestVarGet("PlayerID")+1);}
+		xsEnableRule("TutorialTerrain");
 	}
 }
 
