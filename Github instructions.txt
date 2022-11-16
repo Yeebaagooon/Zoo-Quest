@@ -7,3 +7,8 @@ git push origin main
 **BRANCH**
 git branch
 git checkout -b "name"
+
+**REVERT**
+git log
+commit blahblahblah
+git checkout blahblahblah

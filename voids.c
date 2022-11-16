@@ -710,9 +710,9 @@ void OverlayTextPlayerColor(int p = 0){
 	if(p == 12)trOverlayTextColour(255, 0, 102);
 }
 
-void UnitCreate(int player = 0, string protounitname = "", int xx = 0, int zz = 0, int xheadingx = 0){
+void UnitCreate(int xplayerx = 0, string protounitname = "", int xx = 0, int zz = 0, int xheadingx = 0){
 	trQuestVarSet("CreatingU", trGetNextUnitScenarioNameNumber());
-	trArmyDispatch("0,0", "Dwarf", 1, xx, 0, zz, xheadingx, true);
+	trArmyDispatch(""+xplayerx+",0", "Dwarf", 1, xx, 0, zz, xheadingx, true);
 	trUnitSelectClear();
 	trUnitSelect(""+1*trQuestVarGet("CreatingU"));
 	trMutateSelected(kbGetProtoUnitID(""+protounitname+""));

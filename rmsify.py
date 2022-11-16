@@ -30,7 +30,7 @@ import sys
 FILENAME = 'Zoo Quest TEST.xs'
 rmsFunc = ''
 rmsMain = 'main.c'
-files = ['zshared.c', 'voids.c', 'globals.c', 'terrain.c', 'setup.c', 'techstat.c']
+files = ['zshared.c', 'voids.c', 'globals.c', 'intsstrings.c', 'databases.c', 'text.c', 'setup.c', 'techstat.c', 'tutorial.c']
 
 #########################################
 ####### CODE BELOW (DO NOT TOUCH) #######
@@ -38,7 +38,7 @@ files = ['zshared.c', 'voids.c', 'globals.c', 'terrain.c', 'setup.c', 'techstat.
 
 OUTPUT_COMMENTS = False
 OUTPUT_TABS = False
-REFORMAT = False
+REFORMAT = True
 VERBOSE = False
 for t in sys.argv:
 	if t == '-v':

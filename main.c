@@ -1,10 +1,11 @@
 rmSetStatusText("",0.01);
 int MapSize = 100;
-rmSetMapSize(200, 200);
+rmSetMapSize(250, 250);
 rmSetSeaLevel(0);
 rmSetSeaType("greek river");
-rmTerrainInitialize("GrassB",3);
+rmTerrainInitialize("GrassB",5);
 rmSetLightingSet("Default");
+rmSetGaiaCiv(cCivIsis);
 
 /*
 int id = 0;

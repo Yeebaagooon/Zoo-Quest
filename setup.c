@@ -1,7 +1,3 @@
-int QuickStart = 0;
-string MapVersion = "Test Version";
-string MapName = "Zoo Quest.xs";
-
 rule Initialise
 active
 highFrequency
@@ -11,7 +7,6 @@ runImmediately
 	trUIFadeToColor(0, 0, 0, 0, 10000, false);
 	trFadeOutAllSounds(0.1);
 	trFadeOutMusic(0.1);
-	xsEnableRule("WorldBuild");
 	if(QuickStart == 0){
 	}
 	trBlockAllSounds(true);
@@ -41,9 +36,9 @@ highFrequency
 		trPlayerGrantResources(p, "Gold", -10000.0);
 		trPlayerGrantResources(p, "Favor", -10000.0);
 		trPlayerKillAllGodPowers(p);
-		modifyProtounitAbsolute("Vision Revealer", p, 2, 24);
-		modifyProtounitAbsolute("Vision Revealer", p, 8, 999999);
 	}
+	xsDisableRule("BasicVC1");
+	xsDisableRule("BasicVC2");
 	//start fade to black
 	//trUIFadeToColor(1,0,0,0,0,true);
 	trShowImageDialog("world a tamarisk tree leaf", MapName + " by Yeebaagooon");
@@ -113,16 +108,24 @@ highFrequency
 		trUIFadeToColor(0,0,0,1000,1,false);
 		trOverlayTextColour(255, 125, 0);
 		gadgetUnreal("ShowImageBox");
-		trOverlayText(MapName, 8.0, 566, 35, 1000);
+		trOverlayText(MapName, 8.0, 594, 28, 1000);
 		trSetUnitIdleProcessing(true);
 		xsDisableSelf();
-		paintShopSquare(3,3, "Black");
-		UnitCreate(0, "Hoplite", 8, 8, 0);
+		gadgetReal("ShowImageBox-BordersTop");
+		gadgetReal("ShowImageBox-BordersBottom");
+		gadgetReal("ShowImageBox-BordersLeft");
+		gadgetReal("ShowImageBox-BordersRight");
+		gadgetReal("ShowImageBox-BordersLeftTop");
+		gadgetReal("ShowImageBox-BordersLeftBottom");
+		gadgetReal("ShowImageBox-BordersRightBottom");
+		gadgetReal("ShowImageBox-BordersRightTop");
+		gadgetReal("ShowImageBox-CloseButton");
+		//startNPCDialog(1);
 		while(cNumberNonGaiaPlayers>=trQuestVarGet("PlayerID")) {
 			trQuestVarSet("PlayerID2", 0);
 			while(cNumberNonGaiaPlayers>=trQuestVarGet("PlayerID2")) {
-				trPlayerSetDiplomacy(trQuestVarGet("PlayerID"), trQuestVarGet("PlayerID2"), "Enemy");
-				trPlayerSetDiplomacy(trQuestVarGet("PlayerID2"), trQuestVarGet("PlayerID"), "Enemy");
+				trPlayerSetDiplomacy(trQuestVarGet("PlayerID"), trQuestVarGet("PlayerID2"), "Ally");
+				trPlayerSetDiplomacy(trQuestVarGet("PlayerID2"), trQuestVarGet("PlayerID"), "Ally");
 			trQuestVarSet("PlayerID2", trQuestVarGet("PlayerID2")+1);}
 		trQuestVarSet("PlayerID", trQuestVarGet("PlayerID")+1);}
 	}
