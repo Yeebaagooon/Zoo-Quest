@@ -126,9 +126,9 @@ inactive
 			xSetInt(dPlayerData, xTarget, trGetNextUnitScenarioNameNumber());
 			//Greta heading 0 to player heading
 			UnitCreate(cNumberNonGaiaPlayers, "Female", trVectorQuestVarGetX("V"+p+"Second"), trVectorQuestVarGetZ("V"+p+"Second"), 0);
-			trUnitSelectClear();
-			trUnitSelect(""+xGetInt(dPlayerData, xTarget));
+			xUnitSelect(dPlayerData, xTarget);
 			trSetSelectedScale(1,0,1);
+			trSetUnitOrientation(trVectorQuestVarGet("V"+p+"dir"), vector(0,1,0), true);
 			trUnitSelectClear();
 			trUnitSelectByQV("P"+p+"Unit");
 			trUnitDoWorkOnUnit(""+xGetInt(dPlayerData, xTarget),-1);
@@ -147,26 +147,27 @@ inactive
 			trUnitSelectClear();
 			trUnitSelect(""+xGetInt(dPlayerData, xTarget));
 			if(trUnitPercentDamaged() > 0){
-				trUnitSelectClear();
-				trUnitSelect(""+xGetInt(dPlayerData, xTarget));
-				trMutateSelected(kbGetProtoUnitID("Transport Ship Greek"));
-				trUnitSelect(""+xGetInt(dPlayerData, xTarget));
+				xUnitSelect(dPlayerData, xTarget);
 				trUnitConvert(p);
-				trUnitSelect(""+xGetInt(dPlayerData, xTarget));
-				trSetSelectedScale(0,0,0);
+				trMutateSelected(kbGetProtoUnitID("Transport Ship Greek"));
+				trSetSelectedScale(0,1,0);
+				
 				trUnitSelectByQV("P"+p+"Unit");
 				trImmediateUnitGarrison(""+xGetInt(dPlayerData, xTarget));
-				trUnitSelectByQV("P"+p+"Unit");
-				trUnitChangeProtoUnit(""+GazelleProto);
-				trUnitSelect(""+xGetInt(dPlayerData, xTarget));
-				trUnitChangeProtoUnit("Rocket");
+				trUnitChangeProtoUnit("Dwarf");
+				
+				xUnitSelect(dPlayerData, xTarget);
+				trUnitDestroy();
+				
 				xSetInt(dPlayerData, xTarget, 0);
-				trUnitSelectClear();
+				
 				trUnitSelectByQV("P"+p+"Unit");
 				trMutateSelected(kbGetProtoUnitID(""+GazelleProto));
+				trSetSelectedScale(0,1,0);
+				
 				xSetInt(dPlayerData, xOldAnim, 2);
-				trUnitSelectClear();
-				trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+				
+				xUnitSelect(dPlayerData, xSpyID);
 				//trUnitOverrideAnimation(13, 0, false, false, -1, 0);
 				trUnitOverrideAnimation(2, 0, true, true, -1, 0);
 				trTechGodPower(p, "Vision", 1);
@@ -193,6 +194,7 @@ inactive
 			trVectorQuestVarSet("V"+p+"Second", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
 			trVectorQuestVarSet("V"+p+"Second", trVectorQuestVarGet("V"+p+"Second") - trVectorQuestVarGet("P"+p+"Pos"));
 			trVectorQuestVarSet("V"+p+"Second", xsVectorNormalize(trVectorQuestVarGet("V"+p+"Second")));
+			trVectorQuestVarSet("V"+p+"dir", trVectorQuestVarGet("V"+p+"Second"));
 			trVectorQuestVarSet("V"+p+"Second", xsVectorSet(trVectorQuestVarGetX("V"+p+"Second") * 10,trVectorQuestVarGetY("V"+p+"Second") * 1,trVectorQuestVarGetZ("V"+p+"Second") * 10));
 			trVectorQuestVarSet("V"+p+"Second", trVectorQuestVarGet("V"+p+"Second") + trVectorQuestVarGet("P"+p+"Pos"));
 		}
