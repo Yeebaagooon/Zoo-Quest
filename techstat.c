@@ -22,7 +22,6 @@ highFrequency
 			trForbidProtounit(p,kbGetProtoUnitName(n));
 		}
 	}
-	trTechSetStatus(0, 304, 4);
 	//      trUnforbidProtounit(p, "Outpost");
 	//  trUnforbidProtounit(1*p, "Oracle Hero");
 	xsDisableSelf();
@@ -36,6 +35,7 @@ highFrequency
 	for(p = 1; <= cNumberNonGaiaPlayers){
 		trModifyProtounit("Dwarf", p, 55, 4);
 		trModifyProtounit("Animal Attractor", p, 55, 4);
+		trModifyProtounit("Hero Greek Bellerophon", p, 55, 4);
 		//trQuestVarSet("P"+p+"FlagBaseWarnF", 15);
 		//modifyProtounitAbsolute("Gate", p, 0, 1000);
 		modifyProtounitAbsolute("Vision Revealer", p, 6, 100);

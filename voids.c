@@ -992,41 +992,6 @@ void trQuestVarModify(string qv = "", string operation = "", float value = 0){
 }
 */
 
-void activateFlagTimerEnd(int asdf = 1) {
-	xsEnableRule("FlagTimerEnd");
-}
-
-void activatestartcine(int asdf = 2) {
-	xsEnableRule("startcine");
-}
-void activatecustomcontent(int asdf = 3) {
-	xsEnableRule("customcontent");
-}
-void activateShopLevel2(int asdf = 4) {
-	xsEnableRule("ShopLevel2");
-}
-void activateShopLevel3(int asdf = 5) {
-	xsEnableRule("ShopLevel3");
-}
-void activateShopLevel4(int asdf = 6) {
-	xsEnableRule("ShopLevel4");
-}
-void activateShopLevel5(int asdf = 7) {
-	xsEnableRule("ShopLevel5");
-}
-void activateShopLevel6(int asdf = 8) {
-	xsEnableRule("ShopLevel6");
-}
-void activateShopLevel7(int asdf = 9) {
-	xsEnableRule("ShopLevel7");
-}
-void activateShopLevel8(int asdf = 10) {
-	xsEnableRule("ShopLevel8");
-}
-
-
-
-
 void paintTreesSlow(string terrain = "", string tree = "", int xmin = 0, int zmin = 0, int xmax = 0, int zmax = 0){
 	int terrainType = getTerrainType(terrain);
 	int terrainSubType = getTerrainSubType(terrain);
@@ -1341,6 +1306,7 @@ void setupPowerShop(int slot = 0, string displayname = "", string powername = ""
 }
 
 void playSoundCustom(string BasesoundName = "", string CustomsoundName = ""){
+	//Yeebaagooon Zoo Quest
 	if(1*trQuestVarGet("CustomContent") == 0){
 		trSoundPlayPaused(""+BasesoundName+"", "1", -1, "", "");
 	}

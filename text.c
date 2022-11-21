@@ -14,6 +14,7 @@ void startNPCDialog(int npc = 0) {
 int npcDiag(int npc = 0, int dialog = 0) {
 	dialog = dialog + 1;
 	string extra = "";
+	int p = 0;
 	switch(npc)
 	{
 		/*
@@ -62,6 +63,42 @@ int npcDiag(int npc = 0, int dialog = 0) {
 				case 3:
 				{
 					trShowImageDialog("icons\infantry g hoplite icon 64", "Success!");
+					dialog = 0;
+				}
+			}
+		}
+		case 2:
+		{
+			switch(dialog)
+			{
+				case 1:
+				{
+					uiMessageBox("Welcome to Zoo Quest. Here's a quick tutorial before we begin.");
+					dialog = 0;
+				}
+			}
+		}
+		case 3:
+		{
+			switch(dialog)
+			{
+				case 1:
+				{
+					p = trCurrentPlayer();
+					if(1*trQuestVarGet("P"+p+"FirstJump") == 0){
+						uiMessageBox("Press 'Q' to jump - you will always jump forward.");
+					}
+					dialog = 0;
+				}
+			}
+		}
+		case 4:
+		{
+			switch(dialog)
+			{
+				case 1:
+				{
+					uiMessageBox("Great! Now make it to the end line and we can begin.");
 					dialog = 0;
 				}
 			}

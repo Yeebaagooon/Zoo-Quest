@@ -1,3 +1,16 @@
+rule EventSetHandler
+active
+highFrequency
+//THESE ONLY WORK IF FIRES FUNCTION, SO USE VOID!
+{
+	//for(p = 1; <= cNumberNonGaiaPlayers){
+	//	trEventSetHandler(p, "UngarrisonDrill");
+	//trEventSetHandler(13+p, "SellMinerals");
+	//}
+	trEventSetHandler(13, "CustomContent");
+	xsDisableSelf();
+}
+
 rule Initialise
 active
 highFrequency
@@ -40,7 +53,7 @@ highFrequency
 	xsDisableRule("BasicVC2");
 	//start fade to black
 	//trUIFadeToColor(1,0,0,0,0,true);
-	trShowImageDialog("world a tamarisk tree leaf", MapName + " by Yeebaagooon");
+	trShowImageDialog("icons\icon class harmless animal", MapName + " by Yeebaagooon");
 	gadgetUnreal("ShowImageBox-BordersTop");
 	gadgetUnreal("ShowImageBox-BordersBottom");
 	gadgetUnreal("ShowImageBox-BordersLeft");
@@ -79,6 +92,7 @@ highFrequency
 		trPlayerSetDiplomacy(cNumberNonGaiaPlayers, p, "Enemy");
 		trPlayerSetDiplomacy(p, cNumberNonGaiaPlayers, "Enemy");
 	}
+	trTechSetStatus(0, 304, 4);
 }
 
 rule load2
@@ -104,7 +118,7 @@ highFrequency
 			trPlayerGrantResources(p, "Favor", -10000.0);
 			trPlayerKillAllGodPowers(p);
 			//this does custom content
-			//	trSoundPlayFN("Yeebaagooon\test sound.mp3", "1", 3, "","");
+			trSoundPlayFN("\Yeebaagooon\Zoo Quest\test sound.mp3", "1", 13, "","");
 		}
 		xsEnableRule("load4");
 		xsDisableSelf();
@@ -136,13 +150,25 @@ highFrequency
 		gadgetReal("ShowImageBox-CloseButton");
 		//startNPCDialog(1);
 		xsEnableRule("TutorialTerrain");
+		xsEnableRule("CustomContentChat");
 	}
 }
 
-rule customcontent
+void CustomContent(int p = 0){
+	//xsSetContextPlayer(0);
+	xsDisableSelf();
+	trQuestVarSet("CustomContent", 1);
+}
+
+
+
+rule CustomContentChat
 inactive
 highFrequency
 {
+	if(1*trQuestVarGet("CustomContent") == 1){
+		//playSound("\Yeebaagooon\Zoo Quest\Skillpoint.mp3");
+		ColouredIconChat("1,0.5,0", "icons\special e son of osiris icon 64","Custom Content enabled!");
+	}
 	xsDisableSelf();
-	trQuestVarSet("CustomContent", 1);
 }
