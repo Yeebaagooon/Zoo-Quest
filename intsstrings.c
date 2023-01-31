@@ -30,7 +30,7 @@ Find and gather in clearing
 [COMMENT]
 Tidy up
 Sort tutorial + intro
-Change vision to build order from worldbuild
+*Change vision to build order from worldbuild
 ?Data
 Engage level 1
 Fix tree paint
@@ -41,11 +41,20 @@ Fix tree paint
 //---Controls
 //\Yeebaagooon\Zoo Quest\Test sound.mp3
 int QuickStart = 0;
+int Stage = 0;
 string MapVersion = "Test Version";
 string MapName = "Zoo Quest.xs";
 string GazelleProto = "Hero Greek Jason";
 vector StageVector = vector(0,0,0);
 
+//EVENTS
+const int EVENT_BUILD_HOUSE = 28;
+const int EVENT_BUILD_GRANARY = 29;
+const int EVENT_BUILD_STOREHOUSE = 30;
+const int EVENT_REMOVE_CAM_TRACKS = 26;
+const int EVENT_BUILD_AT_CURSOR = 31;
+
+//DB STUFF
 int DestroyNumber = 0;
 int NewDestroyNumber = 0;
 int DontDestroyBelow = 0;
@@ -53,6 +62,8 @@ int PlayersActive = 10;
 int BerryTarget = 0;
 int PlayersMinigaming = 0;
 int MinigameWins = 0;
+int GlobalTimerMS = 0;
+bool InMinigame = false;
 
 int dPlayerData = 0;
 int xSpyID = 0;
@@ -62,13 +73,12 @@ int xPlayerActive = 0;
 int xVectorHold = 0;
 int xStopDeath = 0;
 int xTeleportDue = 0;
+int xPlayerUnitID = 0;
 
 int dDestroyMe = 0;
 int xDestroyName = 0;
 int xDestroyTime = 0;
 
-//EVENTS
-int EVENT_REMOVE_CAM_TRACKS = 26;
 
 rule setup_first_databases
 active
@@ -82,6 +92,7 @@ highFrequency
 	xVectorHold = xInitAddVector(dPlayerData, "hold vector");
 	xStopDeath = xInitAddBool(dPlayerData, "player immortal", false);
 	xTeleportDue = xInitAddInt(dPlayerData, "tp due", 0);
+	xPlayerUnitID = xInitAddInt(dPlayerData, "unitId", -1);
 	xsDisableSelf();
 	for(p=1; <= cNumberNonGaiaPlayers) {
 		xAddDatabaseBlock(dPlayerData, true);

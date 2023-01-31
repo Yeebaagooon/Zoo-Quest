@@ -107,6 +107,7 @@ highFrequency
 inactive
 {
 	int temp = 0;
+	int TimerTile = 0;
 	ProcessBerries(5);
 	ProcessLogs(7);
 	for(p=1 ; < cNumberNonGaiaPlayers){
@@ -123,41 +124,61 @@ inactive
 			PlayersActive = PlayersActive-1;
 		}
 		//MINIGAME
-		if(xGetBool(dPlayerData, xStopDeath) == true){
-			if(trPlayerUnitCountSpecific(p, ""+GazelleProto) == 1){
-				trVectorQuestVarSet("P"+p+"PosMG", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
-				if((trGetTerrainType(trVectorQuestVarGetX("P"+p+"PosMG")/2,trVectorQuestVarGetZ("P"+p+"PosMG")/2) == 2) && (trGetTerrainSubType(trVectorQuestVarGetX("P"+p+"PosMG")/2,trVectorQuestVarGetZ("P"+p+"PosMG")/2) == 10)){
-					trUnitSelectByQV("P"+p+"Unit");
-					trUnitChangeProtoUnit("Ragnorok SFX");
-					trUnitSelectByQV("P"+p+"Unit");
-					trUnitDestroy();
-					trUnitSelectClear();
-					trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
-					trUnitChangeProtoUnit("Hero Death");
-					UnitCreate(0, "Tartarian Gate Flame", trVectorQuestVarGetX("P"+p+"PosMG"),trVectorQuestVarGetZ("P"+p+"PosMG"), 90);
-					PlayersMinigaming = PlayersMinigaming-1;
-					if(trCurrentPlayer() == p){
-						playSound("xlose.wav");
-						trOverlayText("Fail!", 3.0,-1,-1,600);
+		if(InMinigame == true){
+			if(xGetBool(dPlayerData, xStopDeath) == true){
+				if(trPlayerUnitCountSpecific(p, ""+GazelleProto) == 1){
+					trVectorQuestVarSet("P"+p+"PosMG", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
+					if((trGetTerrainType(trVectorQuestVarGetX("P"+p+"PosMG")/2,trVectorQuestVarGetZ("P"+p+"PosMG")/2) == 2) && (trGetTerrainSubType(trVectorQuestVarGetX("P"+p+"PosMG")/2,trVectorQuestVarGetZ("P"+p+"PosMG")/2) == 10)){
+						trUnitSelectByQV("P"+p+"Unit");
+						trUnitChangeProtoUnit("Ragnorok SFX");
+						trUnitSelectByQV("P"+p+"Unit");
+						trUnitDestroy();
+						trUnitSelectClear();
+						trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+						trUnitChangeProtoUnit("Hero Death");
+						UnitCreate(0, "Tartarian Gate Flame", trVectorQuestVarGetX("P"+p+"PosMG"),trVectorQuestVarGetZ("P"+p+"PosMG"), 90);
+						xSetVector(dPlayerData, xVectorHold, trVectorQuestVarGet("P"+p+"PosMG"));
+						PlayersMinigaming = PlayersMinigaming-1;
+						if(trCurrentPlayer() == p){
+							playSound("xlose.wav");
+							trOverlayText("Fail!", 3.0,-1,-1,600);
+						}
+					}
+					trVectorQuestVarSet("P"+p+"PosMG", trVectorQuestVarGet("P"+p+"PosMG")/2);
+					if((trVectorQuestVarGetZ("P"+p+"PosMG") < xsVectorGetZ(StageVector)+1) || (trVectorQuestVarGetZ("P"+p+"PosMG") > xsVectorGetZ(StageVector)+11) || (trVectorQuestVarGetX("P"+p+"PosMG") < xsVectorGetX(StageVector))){
+						xSetBool(dPlayerData, xStopDeath, false);
+						PlayersMinigaming = PlayersMinigaming-1;
+						if(trCurrentPlayer() == p){
+							playSound("xlose.wav");
+							trMessageSetText("You have gone out of bounds and been returned to normal play.", 5000);
+						}
+					}
+					if(trVectorQuestVarGetX("P"+p+"PosMG") > xsVectorGetX(StageVector)+26){
+						xSetBool(dPlayerData, xStopDeath, false);
+						PlayersMinigaming = PlayersMinigaming-1;
+						MinigameWins = MinigameWins+1;
+						if(trCurrentPlayer() == p){
+							playSound("xwin.wav");
+							trMessageSetText("You have won!", 4000);
+						}
 					}
 				}
-				trVectorQuestVarSet("P"+p+"PosMG", trVectorQuestVarGet("P"+p+"PosMG")/2);
-				if((trVectorQuestVarGetZ("P"+p+"PosMG") < xsVectorGetZ(StageVector)+1) || (trVectorQuestVarGetZ("P"+p+"PosMG") > xsVectorGetZ(StageVector)+11) || (trVectorQuestVarGetX("P"+p+"PosMG") < xsVectorGetX(StageVector))){
-					xSetBool(dPlayerData, xStopDeath, false);
-					PlayersMinigaming = PlayersMinigaming-1;
-					if(trCurrentPlayer() == p){
-						playSound("xlose.wav");
-						trMessageSetText("You have gone out of bounds and been returned to normal play.", 5000);
-					}
-				}
-				if(trVectorQuestVarGetX("P"+p+"PosMG") > xsVectorGetX(StageVector)+26){
-					xSetBool(dPlayerData, xStopDeath, false);
-					PlayersMinigaming = PlayersMinigaming-1;
-					MinigameWins = MinigameWins+1;
-					if(trCurrentPlayer() == p){
-						playSound("xwin.wav");
-						trMessageSetText("You have won!", 4000);
-					}
+			}
+		}
+	}
+	if(InMinigame == true){
+		TimerTile = trTimeMS();
+		if(TimerTile > GlobalTimerMS){
+			GlobalTimerMS = trTimeMS()+250;
+			trQuestVarModify("LavaTile", "+", 1);
+			if(1*trQuestVarGet("LavaTile") >= xGetDatabaseCount(dTiles1)){
+				trQuestVarSet("LavaTile", 0);
+			}
+			for(a=0 ; < xGetDatabaseCount(dTiles1)){
+				xDatabaseNext(dTiles1);
+				trPaintTerrain(xGetInt(dTiles1, xTileX),xGetInt(dTiles1, xTileZ),xGetInt(dTiles1, xTileX),xGetInt(dTiles1, xTileZ),xGetInt(dTiles1, xTileType),xGetInt(dTiles1, xTileSubType));
+				if(a == 1*trQuestVarGet("LavaTile")){
+					trPaintTerrain(xGetInt(dTiles1, xTileX),xGetInt(dTiles1, xTileZ),xGetInt(dTiles1, xTileX),xGetInt(dTiles1, xTileZ),2,10);
 				}
 			}
 		}
@@ -194,12 +215,41 @@ inactive
 
 void DeerMinigameGo(int temp = 0){
 	xsSetContextPlayer(0);
+	InMinigame = true;
 	trPaintTerrain(xsVectorGetX(StageVector)+6,xsVectorGetZ(StageVector)+3,xsVectorGetX(StageVector)+25,xsVectorGetZ(StageVector)+7,0,73);
 	trPaintTerrain(xsVectorGetX(StageVector),xsVectorGetZ(StageVector)+3,xsVectorGetX(StageVector),xsVectorGetZ(StageVector)+7,2,13);
 	PaintAtlantisArea(xsVectorGetX(StageVector)+26,xsVectorGetZ(StageVector)+4,xsVectorGetX(StageVector)+28,xsVectorGetZ(StageVector)+6,0,71);
+	refreshPassability();
+	//trPaintTerrain(xsVectorGetX(StageVector)+6,xsVectorGetZ(StageVector)+3,xsVectorGetX(StageVector)+25,xsVectorGetZ(StageVector)+7,0,73);
+	trPaintTerrain(xsVectorGetX(StageVector)+6,xsVectorGetZ(StageVector)+7,xsVectorGetX(StageVector)+9,xsVectorGetZ(StageVector)+7,2,10);
+	trPaintTerrain(xsVectorGetX(StageVector)+6,xsVectorGetZ(StageVector)+3,xsVectorGetX(StageVector)+6,xsVectorGetZ(StageVector)+5,2,10);
+	trPaintTerrain(xsVectorGetX(StageVector)+8,xsVectorGetZ(StageVector)+5,xsVectorGetX(StageVector)+9,xsVectorGetZ(StageVector)+7,2,10);
+	trPaintTerrain(xsVectorGetX(StageVector)+6,xsVectorGetZ(StageVector)+3,xsVectorGetX(StageVector)+9,xsVectorGetZ(StageVector)+3,2,10);
+	trPaintTerrain(xsVectorGetX(StageVector)+10,xsVectorGetZ(StageVector)+3,xsVectorGetX(StageVector)+12,xsVectorGetZ(StageVector)+7,2,10);
+	trPaintTerrain(xsVectorGetX(StageVector)+25,xsVectorGetZ(StageVector)+3,xsVectorGetX(StageVector)+25,xsVectorGetZ(StageVector)+7,2,10);
+	trDelayedRuleActivation("DeerMinigameEnd");
+	trMessageSetText("The floor is lava! Reach the end safely. If you jump outside the arena you are disqualified.", 8000);
+	AddTileMGDeer(xsVectorGetX(StageVector)+17,xsVectorGetZ(StageVector)+3);
+	AddTileMGDeer(xsVectorGetX(StageVector)+17,xsVectorGetZ(StageVector)+4);
+	AddTileMGDeer(xsVectorGetX(StageVector)+17,xsVectorGetZ(StageVector)+5);
+	AddTileMGDeer(xsVectorGetX(StageVector)+17,xsVectorGetZ(StageVector)+6);
+	AddTileMGDeer(xsVectorGetX(StageVector)+17,xsVectorGetZ(StageVector)+7);
+	AddTileMGDeer(xsVectorGetX(StageVector)+18,xsVectorGetZ(StageVector)+7);
+	AddTileMGDeer(xsVectorGetX(StageVector)+19,xsVectorGetZ(StageVector)+7);
+	AddTileMGDeer(xsVectorGetX(StageVector)+19,xsVectorGetZ(StageVector)+6);
+	AddTileMGDeer(xsVectorGetX(StageVector)+19,xsVectorGetZ(StageVector)+5);
+	AddTileMGDeer(xsVectorGetX(StageVector)+19,xsVectorGetZ(StageVector)+4);
+	AddTileMGDeer(xsVectorGetX(StageVector)+19,xsVectorGetZ(StageVector)+3);
+	AddTileMGDeer(xsVectorGetX(StageVector)+18,xsVectorGetZ(StageVector)+3);
+	trQuestVarSet("LavaTile", 1);
 	for(z=1 ; < 8){
 		temp = trGetNextUnitScenarioNameNumber();
-		UnitCreate(0, "Cinematic Block", 2*xsVectorGetX(StageVector)+(8*z),2*xsVectorGetZ(StageVector)+11,0);
+		UnitCreate(0, "Dwarf", 2*xsVectorGetX(StageVector)+(8*z),2*xsVectorGetZ(StageVector)+12,0);
+		trUnitSelectClear();
+		trUnitSelect(""+temp);
+		trUnitChangeProtoUnit("Revealer");
+		temp = trGetNextUnitScenarioNameNumber();
+		UnitCreate(0, "Dwarf", 2*xsVectorGetX(StageVector)+(8*z),2*xsVectorGetZ(StageVector)+8,0);
 		trUnitSelectClear();
 		trUnitSelect(""+temp);
 		trUnitChangeProtoUnit("Revealer");
@@ -214,19 +264,7 @@ void DeerMinigameGo(int temp = 0){
 			PlayersMinigaming = PlayersMinigaming+1;
 		}
 	}
-	if(PlayersMinigaming > 0){
-		refreshPassability();
-		//trPaintTerrain(xsVectorGetX(StageVector)+6,xsVectorGetZ(StageVector)+3,xsVectorGetX(StageVector)+25,xsVectorGetZ(StageVector)+7,0,73);
-		trPaintTerrain(xsVectorGetX(StageVector)+6,xsVectorGetZ(StageVector)+7,xsVectorGetX(StageVector)+9,xsVectorGetZ(StageVector)+7,2,10);
-		trPaintTerrain(xsVectorGetX(StageVector)+6,xsVectorGetZ(StageVector)+3,xsVectorGetX(StageVector)+6,xsVectorGetZ(StageVector)+5,2,10);
-		trPaintTerrain(xsVectorGetX(StageVector)+8,xsVectorGetZ(StageVector)+5,xsVectorGetX(StageVector)+9,xsVectorGetZ(StageVector)+7,2,10);
-		trPaintTerrain(xsVectorGetX(StageVector)+6,xsVectorGetZ(StageVector)+3,xsVectorGetX(StageVector)+9,xsVectorGetZ(StageVector)+3,2,10);
-		trPaintTerrain(xsVectorGetX(StageVector)+10,xsVectorGetZ(StageVector)+3,xsVectorGetX(StageVector)+12,xsVectorGetZ(StageVector)+7,2,10);
-		trPaintTerrain(xsVectorGetX(StageVector)+25,xsVectorGetZ(StageVector)+3,xsVectorGetX(StageVector)+25,xsVectorGetZ(StageVector)+7,2,10);
-		trDelayedRuleActivation("DeerMinigameEnd");
-		trMessageSetText("The floor is lava! Reach the end safely. If you jump outside the arena you are disqualified.", 8000);
-	}
-	else if(PlayersMinigaming == 0){
+	if(PlayersMinigaming == 0){
 		//end MG
 		trUnitSelectByQV("MinigameStartSFX");
 		trUnitDestroy();
@@ -234,6 +272,7 @@ void DeerMinigameGo(int temp = 0){
 		trUnitDestroy();
 		trDelayedRuleActivation("DeerMinigameEnd");
 		trMessageSetText("Nobody was on the white tiles. Minigame cancelled.", 5000);
+		InMinigame = false;
 	}
 }
 
@@ -256,14 +295,22 @@ highFrequency
 				trUnitSelectClear();
 				trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
 				trUnitChangeProtoUnit("Hero Death");
-				trQuestVarSet("P"+p+"Unit", trGetNextUnitScenarioNameNumber());
-				UnitCreate(p, ""+GazelleProto, xsVectorGetX(temp), xsVectorGetZ(temp), 0);
-				trUnitSelectByQV("P"+p+"Unit");
-				trSetSelectedScale(0,1,0);
-				trUnitSelectByQV("P"+p+"Unit");
-				spyEffect(kbGetProtoUnitID("Gazelle"), 0, xsVectorSet(dPlayerData,xSpyID,p), vector(1,1,1));
+				CreateGazelle(p, xsVectorGetX(temp), xsVectorGetZ(temp), 0);
 				xSetBool(dPlayerData, xStopDeath, false);
 				xSetInt(dPlayerData, xTeleportDue, 0);
+			}
+			else if(xGetInt(dPlayerData, xTeleportDue) == 0){
+				if(trPlayerUnitCountSpecific(p, ""+GazelleProto) == 0){
+					temp = xGetVector(dPlayerData, xVectorHold);
+					trUnitSelectByQV("P"+p+"Unit");
+					trUnitChangeProtoUnit("Ragnorok SFX");
+					trUnitSelectByQV("P"+p+"Unit");
+					trUnitDestroy();
+					trUnitSelectClear();
+					trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+					trUnitChangeProtoUnit("Hero Death");
+					CreateGazelle(p, xsVectorGetX(temp), xsVectorGetZ(temp), 0);
+				}
 			}
 		}
 		uiZoomToProto(""+GazelleProto);
@@ -271,5 +318,7 @@ highFrequency
 		unitTransform("Tartarian Gate Flame", "Flowers");
 		unitTransform("Revealer", "Rocket");
 		xsDisableSelf();
+		xPrintAll(dTiles1);
+		InMinigame = false;
 	}
 }

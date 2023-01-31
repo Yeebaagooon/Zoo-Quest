@@ -10,6 +10,19 @@ inactive
 	clearMap("black", 5.0);
 	trPaintTerrain(0,0,35,cNumberNonGaiaPlayers*8,2,4);
 	int temp = 0;
+	//trees
+	for(t=0 ; < cNumberNonGaiaPlayers){
+		for(x=0 ; < 36){
+			temp = trGetNextUnitScenarioNameNumber();
+			UnitCreate(0, "Cinematic Block", x*2, t*16+8, 90);
+			trUnitSelectClear();
+			trUnitSelect(""+temp);
+			trUnitChangeProtoUnit("Gaia Forest Tree");
+			trUnitSelectClear();
+			trUnitSelect(""+temp);
+			trSetSelectedScale(2,0.3,1);
+		}
+	}
 	for(p=1 ; < cNumberNonGaiaPlayers){
 		trPaintTerrain(5,((p*8)-2),30,((p*8+4)-2),0,2);
 		trPaintTerrain(7,p*8,7,p*8,0,73); //start sq
@@ -42,15 +55,17 @@ inactive
 		trPaintTerrain(16,p*8+2,16,p*8-2,2,4); //second log
 		trPaintTerrain(23,p*8+2,23,p*8-2,2,4); //THIRD log
 		trQuestVarSet("P"+p+"Unit", trGetNextUnitScenarioNameNumber());
-		UnitCreate(p, ""+GazelleProto, 14, p*16, 90);
+		UnitCreate(p, ""+GazelleProto, 12, p*16, 90);
 		trSetSelectedScale(0,1,0);
-		UnitCreate(0, "Revealer to Player", 14, p*16, 90);
+		UnitCreate(0, "Revealer to Player", 16, p*16, 90);
 		trUnitSelectByQV("P"+p+"Unit");
 		spyEffect(kbGetProtoUnitID("Gazelle"),0, xsVectorSet(dPlayerData,xSpyID,p), vector(1,1,1));
 		trQuestVarSet("P"+p+"CanHaveVision", 1);
 		trUnitSelectClear();
 		trUnitSelectByQV("P"+p+"Unit");
-		trUnitMoveToPoint(17,0,p*16+1, -1, false);
+		trUnitMoveToPoint(14,0,p*16+1, -1, false);
+		xSetPointer(dPlayerData, xPlayerUnitID);
+		xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
 	}
 	trPaintTerrain(0,0,0,0,2,4,true);
 	xsEnableRule("Animations");
@@ -101,8 +116,8 @@ inactive
 			trQuestVarModify("PlayersDoneTutorial", "+", 1);
 			temp = 1*trQuestVarGet("PlayersDoneTutorial");
 			trClearCounterDisplay();
-			trSetCounterDisplay("<color={PlayerColor(0)}>Tutorial complete: " + temp + " / " + PlayersActive);
-			if(temp == 1){
+			trSetCounterDisplay("<color={PlayerColor(" + GreenText() + ")}>Tutorial complete: " + temp + " / " + PlayersActive);
+			if((temp == 1) && (PlayersActive > 1)){
 				//timeout
 			}
 			if(trCurrentPlayer() == p){
@@ -212,10 +227,9 @@ inactive
 {
 	int anim = 0;
 	for(p=1 ; < cNumberNonGaiaPlayers){
-		if(trPlayerGetPopulation(p) > 100){
+		if(trPlayerResourceCount(p, "Gold") > 0){
 			xSetPointer(dPlayerData, p);
-			unitTransform("Vision Revealer", "Rocket");
-			unitTransform("Vision SFX", "Rocket");
+			trPlayerGrantResources(p, "Gold", -100000);
 			trUnitSelectClear();
 			trUnitSelectByQV("P"+p+"Unit");
 			trMutateSelected(kbGetProtoUnitID("Hero Greek Bellerophon"));
@@ -316,7 +330,6 @@ inactive
 			trVectorQuestVarSet("V"+p+"Second", xsVectorSet(trVectorQuestVarGetX("V"+p+"Second") * 10,trVectorQuestVarGetY("V"+p+"Second") * 1,trVectorQuestVarGetZ("V"+p+"Second") * 10));
 			trVectorQuestVarSet("V"+p+"Second", trVectorQuestVarGet("V"+p+"Second") + trVectorQuestVarGet("P"+p+"Pos"));
 			if(1*trQuestVarGet("P"+p+"CanHaveVision") == 1){
-				trTechGodPower(p, "Vision", 1);
 				trQuestVarSet("P"+p+"CanHaveVision", 0);
 			}
 		}

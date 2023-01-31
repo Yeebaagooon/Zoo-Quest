@@ -10,6 +10,10 @@ highFrequency
 	trEventSetHandler(25, "CustomContent");
 	trEventSetHandler(EVENT_REMOVE_CAM_TRACKS, "removeCamTracks");
 	trEventSetHandler(27, "DeerMinigameGo");
+	for(i=EVENT_BUILD_HOUSE; <= EVENT_BUILD_STOREHOUSE) {
+		trEventSetHandler(i, "hotkeyAbility");
+	}
+	trEventSetHandler(EVENT_BUILD_AT_CURSOR, "buildAtCursor");
 	xsDisableSelf();
 }
 
@@ -70,7 +74,8 @@ highFrequency
 	xsEnableRule("load1");
 	xsDisableSelf();
 	//HOTKEYS
-	map("q", "game", "uiSetSpecialPower(220) uiSpecialPowerAtPointer");
+	//map("q", "game", "uiSetSpecialPower(220) uiSpecialPowerAtPointer");
+	map("q", "game", "trackInsert(); trackAddWaypoint();trackPlay(-1,28);");
 }
 
 rule load1

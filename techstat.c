@@ -27,6 +27,18 @@ highFrequency
 	xsDisableSelf();
 }
 
+void modifyBuildableProto(string proto = "", int p = 0) {
+	trModifyProtounit(proto, p, 55, 4);
+	trModifyProtounit(proto, p, 2, 9999999999999999999.0);
+	trModifyProtounit(proto, p, 2, -9999999999999999999.0);
+	trModifyProtounit(proto, p, 2, 0.0);
+	for(i=16; <= 19) {
+		trModifyProtounit(proto, p, i, 9999999999999999999.0);
+		trModifyProtounit(proto, p, i, -9999999999999999999.0);
+		trModifyProtounit(proto, p, i, 0.0);
+	}
+}
+
 rule Stats
 inactive
 highFrequency
@@ -40,6 +52,12 @@ highFrequency
 		//modifyProtounitAbsolute("Gate", p, 0, 1000);
 		modifyProtounitAbsolute("Vision Revealer", p, 6, 100);
 		modifyProtounitAbsolute("Vision Revealer", p, 2, 0);
+		modifyBuildableProto("House", p);
+		modifyBuildableProto("Granary", p);
+		modifyBuildableProto("Storehouse", p);
+		modifyProtounitAbsolute("House", p, 16, -1);
+		modifyProtounitAbsolute("Granary", p, 17, -1);
+		modifyProtounitAbsolute("Storehouse", p, 18, -1);
 		trModifyProtounit(""+YesChoiceUnitName, p, 55, 4);
 		trModifyProtounit(""+YesChoiceUnitName, p, 1, -10);
 		trModifyProtounit(""+YesChoiceUnitName, p, 2, 9999999999999999999.0);

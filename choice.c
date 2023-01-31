@@ -48,8 +48,6 @@ inactive
 				trSetSelectedScale(0,1,0);
 				trUnitSelectByQV("P"+p+"Unit");
 				spyEffect(kbGetProtoUnitID("Gazelle"), 0, xsVectorSet(dPlayerData,xSpyID,p), vector(1,1,1));
-				trPlayerKillAllGodPowers(p);
-				trTechGodPower(p, "Vision", 1);
 				if(trCurrentPlayer() == p){
 					uiZoomToProto(""+GazelleProto);
 					uiLookAtProto(""+GazelleProto);
@@ -183,4 +181,3 @@ inactive
 //[TIMEOUT]
 //gadgetUnreal("ShowChoiceBox");
 //trIsGadgetVisible("ShowChoiceBox")
-

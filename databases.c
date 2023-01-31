@@ -21,6 +21,13 @@ int dLogs = 0;
 int xUnitID = 0;
 int xUnitPos = 0;
 
+int dTiles1 = 0;
+int xTileX = 0;
+int xTileZ = 0;
+int xTileNumber = 0;
+int xTileType = 0;
+int xTileSubType = 0;
+
 rule initialise_spy_database
 active
 highFrequency
@@ -41,6 +48,13 @@ highFrequency
 	dLogs = xInitDatabase("Logs");
 	xUnitID = xInitAddInt(dLogs, "unit id");
 	xUnitPos = xInitAddVector(dLogs, "pos");
+	
+	dTiles1 = xInitDatabase("Tileset");
+	xTileX = xInitAddInt(dTiles1, "tx", 0);
+	xTileZ = xInitAddInt(dTiles1, "tz", 0);
+	xTileNumber = xInitAddInt(dTiles1, "number", 0);
+	xTileType = xInitAddInt(dTiles1, "ttype", 0);
+	xTileSubType = xInitAddInt(dTiles1, "tsubtype", 0);
 }
 
 /*

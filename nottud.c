@@ -1567,16 +1567,10 @@ void createDeepForestArea(){
 			heading = heading+360;
 		}
 		if(xGetBool(dPlayerData, xPlayerActive) == true){
-			trQuestVarSet("P"+p+"Unit", trGetNextUnitScenarioNameNumber());
-			UnitCreate(p, ""+GazelleProto, trVectorQuestVarGetX("base"), trVectorQuestVarGetZ("base"), heading);
-			trUnitSelectByQV("P"+p+"Unit");
-			trSetSelectedScale(0,1,0);
-			trUnitSelectByQV("P"+p+"Unit");
-			spyEffect(kbGetProtoUnitID("Gazelle"), 0, xsVectorSet(dPlayerData,xSpyID,p), vector(1,1,1));
+			CreateGazelle(p, trVectorQuestVarGetX("base"), trVectorQuestVarGetZ("base"), heading);
 		}
 		//spyEffect(1*trQuestVarGet("P"+p+"Unit"), kbGetProtoUnitID("Gazelle"), vector(1,1,1), vector(1,1,1));
 		trPlayerKillAllGodPowers(p);
-		trTechGodPower(p, "Vision", 1);
 		trVectorQuestVarSet("dir", rotationMatrix(trVectorQuestVarGet("dir"), baseCos, baseSin));
 		trUnitSelectClear();
 	}
@@ -1588,4 +1582,5 @@ void createDeepForestArea(){
 		trUnitChangeInArea(0,0,"Tamarisk Tree Dead","Cinematic Block", 15);
 	}
 	refreshPassability();
+	Stage = 1;
 }
