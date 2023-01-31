@@ -1,4 +1,4 @@
-string GazelleProto = "Hero Greek Jason";
+//You have to move to be granted vision
 
 rule TutorialTerrain
 highFrequency
@@ -7,12 +7,10 @@ inactive
 	//if (trTime() > cActivationTime + 1) {
 	xsDisableSelf();
 	//trLetterBox(false);
+	clearMap("black", 5.0);
 	trPaintTerrain(0,0,35,cNumberNonGaiaPlayers*8,2,4);
 	int temp = 0;
 	for(p=1 ; < cNumberNonGaiaPlayers){
-		//	trPlayerSetDiplomacy(0, p, "Enemy");
-		//	trPlayerSetDiplomacy(cNumberNonGaiaPlayers, p, "Enemy");
-		//	trPlayerSetDiplomacy(p, cNumberNonGaiaPlayers, "Enemy");
 		trPaintTerrain(5,((p*8)-2),30,((p*8+4)-2),0,2);
 		trPaintTerrain(7,p*8,7,p*8,0,73); //start sq
 		trPaintTerrain(28,p*8+2,28,p*8-2,0,74); //end line
@@ -47,9 +45,12 @@ inactive
 		UnitCreate(p, ""+GazelleProto, 14, p*16, 90);
 		trSetSelectedScale(0,1,0);
 		UnitCreate(0, "Revealer to Player", 14, p*16, 90);
-		spyEffect(1*trQuestVarGet("P"+p+"Unit"), kbGetProtoUnitID("Gazelle"), xsVectorSet(dPlayerData,xSpyID,p), vector(1,1,1));
-		//spyEffect(1*trQuestVarGet("P"+p+"Unit"), kbGetProtoUnitID("Gazelle"), vector(1,1,1), vector(1,1,1));
-		trTechGodPower(p, "Vision", 1);
+		trUnitSelectByQV("P"+p+"Unit");
+		spyEffect(kbGetProtoUnitID("Gazelle"),0, xsVectorSet(dPlayerData,xSpyID,p), vector(1,1,1));
+		trQuestVarSet("P"+p+"CanHaveVision", 1);
+		trUnitSelectClear();
+		trUnitSelectByQV("P"+p+"Unit");
+		trUnitMoveToPoint(17,0,p*16+1, -1, false);
 	}
 	trPaintTerrain(0,0,0,0,2,4,true);
 	xsEnableRule("Animations");
@@ -62,16 +63,117 @@ inactive
 	}
 }
 
+rule ResetBlackmap
+highFrequency
+inactive
+{
+	xsDisableSelf();
+	trPlayerResetBlackMapForAllPlayers();
+}
+
+rule TutorialVectorCheck
+highFrequency
+inactive
+{
+	int temp = 0;
+	for(p=1 ; < cNumberNonGaiaPlayers){
+		xSetPointer(dPlayerData, p);
+		if((playerIsPlaying(p) == false) && (xGetBool(dPlayerData, xPlayerActive) == true)){
+			trUnitSelectByQV("P"+p+"Unit");
+			trUnitChangeProtoUnit("Ragnorok SFX");
+			trUnitSelectByQV("P"+p+"Unit");
+			trUnitDestroy();
+			trUnitSelectClear();
+			trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+			trUnitChangeProtoUnit("Hero Death");
+			xSetBool(dPlayerData, xPlayerActive, false);
+			PlayersActive = PlayersActive-1;
+		}
+		if((trVectorQuestVarGetX("P"+p+"Pos") > 58) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0)){
+			trUnitSelectByQV("P"+p+"Unit");
+			trUnitChangeProtoUnit("Ragnorok SFX");
+			trUnitSelectByQV("P"+p+"Unit");
+			trUnitDestroy();
+			trUnitSelectClear();
+			trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+			trUnitChangeProtoUnit("Hero Death");
+			trQuestVarSet("P"+p+"DoneTutorial", 1);
+			trQuestVarModify("PlayersDoneTutorial", "+", 1);
+			temp = 1*trQuestVarGet("PlayersDoneTutorial");
+			trClearCounterDisplay();
+			trSetCounterDisplay("<color={PlayerColor(0)}>Tutorial complete: " + temp + " / " + PlayersActive);
+			if(temp == 1){
+				//timeout
+			}
+			if(trCurrentPlayer() == p){
+				playSound("ageadvance.wav");
+			}
+		}
+		if((trVectorQuestVarGetZ("P"+p+"Pos") > (p*16+8)) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0)){
+			trUnitSelectByQV("P"+p+"Unit");
+			trUnitTeleport(trVectorQuestVarGetX("P"+p+"Pos"),3,p*16);
+		}
+		if((trVectorQuestVarGetZ("P"+p+"Pos") < (p*16-8)) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0)){
+			trUnitSelectByQV("P"+p+"Unit");
+			trUnitTeleport(trVectorQuestVarGetX("P"+p+"Pos"),3,p*16);
+		}
+	}
+}
+
+rule DeerTutorialDone
+highFrequency
+inactive
+{
+	if(PlayersActive == 1*trQuestVarGet("PlayersDoneTutorial")){
+		xsDisableSelf();
+		xsDisableRule("TutorialVectorCheck");
+		xsEnableRule("BuildDeerArea");
+		trClearCounterDisplay();
+		trQuestVarSet("PlayersDoneTutorial", 0);
+		trLetterBox(true);
+		trUIFadeToColor(0,0,0,1,1,true);
+		characterDialog("Act I - Deer", " ", "icons\animal gazelle icon 64");
+		trSetFogAndBlackmap(true,true);
+		trDelayedRuleActivation("ResetBlackmap");
+		/*
+		trShowImageDialog("icons\icon class harmless animal", "Entering Bullshit Forest");
+		gadgetUnreal("ShowImageBox-BordersTop");
+		gadgetUnreal("ShowImageBox-BordersBottom");
+		gadgetUnreal("ShowImageBox-BordersLeft");
+		gadgetUnreal("ShowImageBox-BordersRight");
+		gadgetUnreal("ShowImageBox-BordersLeftTop");
+		gadgetUnreal("ShowImageBox-BordersLeftBottom");
+		gadgetUnreal("ShowImageBox-BordersRightBottom");
+		gadgetUnreal("ShowImageBox-BordersRightTop");
+		gadgetUnreal("ShowImageBox-CloseButton");
+		pause(0);
+		*/
+	}
+}
+
 rule TutorialMsg1
 highFrequency
 inactive
 {
 	if (trTime() > cActivationTime + 5) {
 		startNPCDialog(3);
+		trDelayedRuleActivation("TutorialVectorCheck");
+		trDelayedRuleActivation("DeerTutorialDone");
 		xsDisableSelf();
+		/*
+		gadgetReal("ShowImageBox-BordersTop");
+		gadgetReal("ShowImageBox-BordersBottom");
+		gadgetReal("ShowImageBox-BordersLeft");
+		gadgetReal("ShowImageBox-BordersRight");
+		gadgetReal("ShowImageBox-BordersLeftTop");
+		gadgetReal("ShowImageBox-BordersLeftBottom");
+		gadgetReal("ShowImageBox-BordersRightBottom");
+		gadgetReal("ShowImageBox-BordersRightTop");
+		gadgetReal("ShowImageBox-CloseButton");
+		gadgetUnreal("ShowImageBox");
+		*/
 	}
 }
-
 
 rule Animations
 highFrequency
@@ -86,7 +188,7 @@ inactive
 			trChatSend(0, ""+anim);
 		}*/
 		if((xGetInt(dPlayerData, xOldAnim) == anim) || (xGetInt(dPlayerData, xOldAnim) == -10)){
-			break;
+			continue;
 			//Stop if no anim change
 		}
 		xSetInt(dPlayerData, xOldAnim, anim);
@@ -132,8 +234,21 @@ inactive
 			trUnitSelectClear();
 			trUnitSelectByQV("P"+p+"Unit");
 			trUnitDoWorkOnUnit(""+xGetInt(dPlayerData, xTarget),-1);
+			xAddDatabaseBlock(dDestroyMe, true);
+			xSetInt(dDestroyMe, xDestroyName, xGetInt(dPlayerData, xTarget));
+			xSetInt(dDestroyMe, xDestroyTime, trTimeMS()+2300);
 		}
 		//jump set anim to 13
+	}
+	for (x= xGetDatabaseCount(dDestroyMe); > 0) {
+		xDatabaseNext(dDestroyMe);
+		if(trTimeMS() > xGetInt(dDestroyMe, xDestroyTime)){
+			xUnitSelect(dDestroyMe, xDestroyName);
+			trDamageUnit(100);
+			//trUnitDestroy();
+			//trChatSend(0, "<color=1,0,0>"+xGetInt(dDestroyMe, xDestroyName));
+			xFreeDatabaseBlock(dDestroyMe);
+		}
 	}
 }
 
@@ -165,17 +280,20 @@ inactive
 				trMutateSelected(kbGetProtoUnitID(""+GazelleProto));
 				trSetSelectedScale(0,1,0);
 				
+				trUnitSelectByQV("P"+p+"Unit");
+				trSetUnitOrientation(trVectorQuestVarGet("V"+p+"dir"), vector(0,1,0), true);
+				
 				xSetInt(dPlayerData, xOldAnim, 2);
 				
 				xUnitSelect(dPlayerData, xSpyID);
 				//trUnitOverrideAnimation(13, 0, false, false, -1, 0);
 				trUnitOverrideAnimation(2, 0, true, true, -1, 0);
-				trTechGodPower(p, "Vision", 1);
+				trQuestVarSet("P"+p+"CanHaveVision", 1);
 				trVectorQuestVarSet("P"+p+"Pos", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
 				if(1*trQuestVarGet("P"+p+"FirstJump") == 0){
 					trQuestVarSet("P"+p+"FirstJump", 1);
 					if(trCurrentPlayer() == p){
-						//startNPCDialog(4);
+						startNPCDialog(4);
 					}
 				}
 			}
@@ -197,6 +315,10 @@ inactive
 			trVectorQuestVarSet("V"+p+"dir", trVectorQuestVarGet("V"+p+"Second"));
 			trVectorQuestVarSet("V"+p+"Second", xsVectorSet(trVectorQuestVarGetX("V"+p+"Second") * 10,trVectorQuestVarGetY("V"+p+"Second") * 1,trVectorQuestVarGetZ("V"+p+"Second") * 10));
 			trVectorQuestVarSet("V"+p+"Second", trVectorQuestVarGet("V"+p+"Second") + trVectorQuestVarGet("P"+p+"Pos"));
+			if(1*trQuestVarGet("P"+p+"CanHaveVision") == 1){
+				trTechGodPower(p, "Vision", 1);
+				trQuestVarSet("P"+p+"CanHaveVision", 0);
+			}
 		}
 	}
 	xsDisableSelf();
@@ -213,16 +335,3 @@ inactive
 	xsDisableSelf();
 	trDelayedRuleActivation("VectorFirst");
 }
-
-/*
-Vector shozzle
-trVectorQuestVarSet("V2", kbGetBlockPosition("0"));
-trVectorQuestVarSet("V2", trVectorQuestVarGet("V2") - trVectorQuestVarGet("V1"));
-
-trVectorQuestVarSet("V2", xsVectorNormalize(trVectorQuestVarGet("V2")));
-trVectorQuestVarSet("V2", xsVectorSet(trVectorQuestVarGetX("V2") * 9,trVectorQuestVarGetY("V2") * 0,trVectorQuestVarGetZ("V2") * 9));
-
-trVectorQuestVarSet("V2", trVectorQuestVarGet("V2") + trVectorQuestVarGet("V1"));
-
-trArmyDispatch("1,10", "Ajax", 1, trVectorQuestVarGetX("V2"), trVectorQuestVarGetY("V2"), trVectorQuestVarGetZ("V2"), 0, true);
-*/

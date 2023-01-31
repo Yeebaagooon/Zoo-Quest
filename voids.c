@@ -1306,7 +1306,6 @@ void setupPowerShop(int slot = 0, string displayname = "", string powername = ""
 }
 
 void playSoundCustom(string BasesoundName = "", string CustomsoundName = ""){
-	//Yeebaagooon Zoo Quest
 	if(1*trQuestVarGet("CustomContent") == 0){
 		trSoundPlayPaused(""+BasesoundName+"", "1", -1, "", "");
 	}
@@ -1317,6 +1316,10 @@ void playSoundCustom(string BasesoundName = "", string CustomsoundName = ""){
 
 void ColouredIconChat(string colour = "1,1,1", string icon = "", string chats = ""){
 	trChatSend(0, "<color="+colour+"><icon=(20)("+icon+")> "+chats+"</color>");
+}
+
+void PlayerColouredChat(int p = 0, string chats = ""){
+	trChatSend(0, "<color={PlayerColor("+p+")}> "+chats+"</color>");
 }
 
 void ColouredIconChatToPlayer(int p = 1, string colour = "1,1,1", string icon = "", string chats = ""){

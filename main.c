@@ -1,6 +1,6 @@
 rmSetStatusText("",0.01);
-int MapSize = 100;
-rmSetMapSize(250, 250);
+int MapSize = 252;
+rmSetMapSize(252, 252);
 rmSetSeaLevel(0);
 rmSetSeaType("greek river");
 rmTerrainInitialize("GrassB",5);

@@ -73,6 +73,8 @@ int npcDiag(int npc = 0, int dialog = 0) {
 			{
 				case 1:
 				{
+					uiZoomToProto(""+GazelleProto);
+					uiLookAtProto(""+GazelleProto);
 					uiMessageBox("Welcome to Zoo Quest. Here's a quick tutorial before we begin.");
 					dialog = 0;
 				}
@@ -98,7 +100,7 @@ int npcDiag(int npc = 0, int dialog = 0) {
 			{
 				case 1:
 				{
-					uiMessageBox("Great! Now make it to the end line and we can begin.");
+					uiMessageBox("Great! Now make it to the end line and we can begin the map.");
 					dialog = 0;
 				}
 			}

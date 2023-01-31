@@ -1101,6 +1101,9 @@ vector rotationMatrix(vector v = vector(0,0,0), float cosT = 0, float sinT = 0) 
 	vector ret = xsVectorSet(x * cosT - z * sinT, 0, x * sinT + z * cosT);
 	return(ret);
 }
+//myVector = rotationMatrix(myVector, 0, 1);
+//that will rotate your vector by 90 degrees
+
 
 float trDistanceBetweenVectors(string start = "", string end = "") {
 	return(distanceBetweenVectors(trVectorQuestVarGet(start),trVectorQuestVarGet(end),false));
@@ -1473,4 +1476,10 @@ int yFindLatest(string qv = "", string proto = "", int p = 0) {
 		}
 	}
 	return(-1);
+}
+
+
+void removeCamTracks(int eventID = -1) {
+	trackRemove();
+	trUnblockAllSounds();
 }

@@ -3,11 +3,13 @@ active
 highFrequency
 //THESE ONLY WORK IF FIRES FUNCTION, SO USE VOID!
 {
-	//for(p = 1; <= cNumberNonGaiaPlayers){
-	//	trEventSetHandler(p, "UngarrisonDrill");
-	//trEventSetHandler(13+p, "SellMinerals");
-	//}
-	trEventSetHandler(13, "CustomContent");
+	for(p = 1; < cNumberNonGaiaPlayers){
+		trEventSetHandler(p, "ChooseYes");
+		trEventSetHandler(12+p, "ChooseNo");
+	}
+	trEventSetHandler(25, "CustomContent");
+	trEventSetHandler(EVENT_REMOVE_CAM_TRACKS, "removeCamTracks");
+	trEventSetHandler(27, "DeerMinigameGo");
 	xsDisableSelf();
 }
 
@@ -93,6 +95,8 @@ highFrequency
 		trPlayerSetDiplomacy(p, cNumberNonGaiaPlayers, "Enemy");
 	}
 	trTechSetStatus(0, 304, 4);
+	PlayersActive = cNumberNonGaiaPlayers;
+	PlayersActive = PlayersActive-1;
 }
 
 rule load2
@@ -102,6 +106,7 @@ highFrequency
 	characterDialog("Loading map..", ""+MapVersion+"", "icons\special e son of osiris icon 64");
 	xsEnableRule("load3");
 	xsEnableRule("Stats");
+	xsEnableRule("SetupChoiceUnits");
 	xsDisableSelf();
 }
 
@@ -118,7 +123,7 @@ highFrequency
 			trPlayerGrantResources(p, "Favor", -10000.0);
 			trPlayerKillAllGodPowers(p);
 			//this does custom content
-			trSoundPlayFN("\Yeebaagooon\Zoo Quest\test sound.mp3", "1", 13, "","");
+			trSoundPlayFN("\Yeebaagooon\Zoo Quest\test sound.mp3", "1", 25, "","");
 		}
 		xsEnableRule("load4");
 		xsDisableSelf();
@@ -151,6 +156,7 @@ highFrequency
 		//startNPCDialog(1);
 		xsEnableRule("TutorialTerrain");
 		xsEnableRule("CustomContentChat");
+		xsEnableRule("ysearch");
 	}
 }
 
@@ -167,7 +173,7 @@ inactive
 highFrequency
 {
 	if(1*trQuestVarGet("CustomContent") == 1){
-		//playSound("\Yeebaagooon\Zoo Quest\Skillpoint.mp3");
+		playSound("\Yeebaagooon\Zoo Quest\Skillpoint.mp3");
 		ColouredIconChat("1,0.5,0", "icons\special e son of osiris icon 64","Custom Content enabled!");
 	}
 	xsDisableSelf();
