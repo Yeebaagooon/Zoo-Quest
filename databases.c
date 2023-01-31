@@ -27,6 +27,7 @@ int xTileZ = 0;
 int xTileNumber = 0;
 int xTileType = 0;
 int xTileSubType = 0;
+int dTiles2 = 0;
 
 rule initialise_spy_database
 active
@@ -55,6 +56,13 @@ highFrequency
 	xTileNumber = xInitAddInt(dTiles1, "number", 0);
 	xTileType = xInitAddInt(dTiles1, "ttype", 0);
 	xTileSubType = xInitAddInt(dTiles1, "tsubtype", 0);
+	
+	dTiles2 = xInitDatabase("Tileset two");
+	xTileX = xInitAddInt(dTiles2, "tx", 0);
+	xTileZ = xInitAddInt(dTiles2, "tz", 0);
+	xTileNumber = xInitAddInt(dTiles2, "number", 0);
+	xTileType = xInitAddInt(dTiles2, "ttype", 0);
+	xTileSubType = xInitAddInt(dTiles2, "tsubtype", 0);
 }
 
 /*

@@ -55,7 +55,7 @@ inactive
 		trPaintTerrain(16,p*8+2,16,p*8-2,2,4); //second log
 		trPaintTerrain(23,p*8+2,23,p*8-2,2,4); //THIRD log
 		trQuestVarSet("P"+p+"Unit", trGetNextUnitScenarioNameNumber());
-		UnitCreate(p, ""+GazelleProto, 12, p*16, 90);
+		UnitCreate(p, ""+GazelleProto, 14, p*16, 90);
 		trSetSelectedScale(0,1,0);
 		UnitCreate(0, "Revealer to Player", 16, p*16, 90);
 		trUnitSelectByQV("P"+p+"Unit");
@@ -63,7 +63,7 @@ inactive
 		trQuestVarSet("P"+p+"CanHaveVision", 1);
 		trUnitSelectClear();
 		trUnitSelectByQV("P"+p+"Unit");
-		trUnitMoveToPoint(14,0,p*16+1, -1, false);
+		trUnitMoveToPoint(16,0,p*16+1, -1, false);
 		xSetPointer(dPlayerData, xPlayerUnitID);
 		xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
 	}

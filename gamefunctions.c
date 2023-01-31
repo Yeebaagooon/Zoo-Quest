@@ -82,3 +82,13 @@ void AddTileMGDeer(int x = 0, int z = 0){
 	xSetInt(dTiles1, xTileType, trGetTerrainType(x,z));
 	xSetInt(dTiles1, xTileSubType,trGetTerrainSubType(x,z));
 }
+
+void AddTileMGDeer2(int x = 0, int z = 0){
+	int count = xGetDatabaseCount(dTiles2);
+	xAddDatabaseBlock(dTiles2, true);
+	xSetInt(dTiles2, xTileX, x);
+	xSetInt(dTiles2, xTileZ, z);
+	xSetInt(dTiles2, xTileNumber, count+1);
+	xSetInt(dTiles2, xTileType, trGetTerrainType(x,z));
+	xSetInt(dTiles2, xTileSubType,trGetTerrainSubType(x,z));
+}

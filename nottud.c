@@ -1498,8 +1498,9 @@ void createDeepForestArea(){
 	trUnitChangeProtoUnit("Torch");
 	//PaintAtlantisArea(xsVectorGetX(tileForTrack)+26,xsVectorGetZ(tileForTrack)+4,xsVectorGetX(tileForTrack)+28,xsVectorGetZ(tileForTrack)+6,4,90);
 	StageVector = tileForTrack;
+	LeaveTerrain = "IceA";
 	paintCircleHeight2(StartTileX, StartTileZ, 8, "GrassDirt25", StartHeight);
-	paintCircleHeight2(EndTileX, EndTileZ, 8, "IceB", EndHeight);
+	paintCircleHeight2(EndTileX, EndTileZ, 8, LeaveTerrain, EndHeight);
 	currentId = trGetNextUnitScenarioNameNumber();
 	paintUnit("ForestFloorPine", "Rotting Log", 0, 0.015);
 	for(i = currentId; < trGetNextUnitScenarioNameNumber()){
@@ -1529,7 +1530,7 @@ void createDeepForestArea(){
 		xSetVector(dLogs, xUnitPos, kbGetBlockPosition(""+i, true));
 		
 	}
-	paintTrees("ForestFloorPine", "Pine");
+	//paintTrees("ForestFloorPine", "Pine");
 	paintUnit("GaiaCreepA", "Blowing Leaves", 0, 0.01);
 	paintUnit("GaiaCreepA", "Misy", 0, 0.004);
 	paintUnit("GaiaCreepA", "Tamarisk Tree Dead", 0, 0.004);

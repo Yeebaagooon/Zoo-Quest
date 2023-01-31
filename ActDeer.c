@@ -30,6 +30,7 @@ inactive
 		trDelayedRuleActivation("DeerActLoops");
 		trDelayedRuleActivation("DeerMinigameDetect");
 		trDelayedRuleActivation("Testing");
+		trDelayedRuleActivation("DeerLeave");
 		BerryTarget = 8+PlayersActive;
 		if(BerryTarget >= xGetDatabaseCount(dBerryBush)){
 			BerryTarget = xGetDatabaseCount(dBerryBush)-12+PlayersActive;
@@ -123,8 +124,9 @@ inactive
 			xSetBool(dPlayerData, xPlayerActive, false);
 			PlayersActive = PlayersActive-1;
 		}
-		//MINIGAME
+		xSetVector(dPlayerData, xConstantPos, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
 		if(InMinigame == true){
+			//MINIGAME
 			if(xGetBool(dPlayerData, xStopDeath) == true){
 				if(trPlayerUnitCountSpecific(p, ""+GazelleProto) == 1){
 					trVectorQuestVarSet("P"+p+"PosMG", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
@@ -171,8 +173,16 @@ inactive
 		if(TimerTile > GlobalTimerMS){
 			GlobalTimerMS = trTimeMS()+250;
 			trQuestVarModify("LavaTile", "+", 1);
+			trQuestVarModify("LavaTile2", "+", 1);
+			trQuestVarModify("LavaTile3", "+", 1);
 			if(1*trQuestVarGet("LavaTile") >= xGetDatabaseCount(dTiles1)){
 				trQuestVarSet("LavaTile", 0);
+			}
+			if(1*trQuestVarGet("LavaTile2") >= xGetDatabaseCount(dTiles2)){
+				trQuestVarSet("LavaTile2", 0);
+			}
+			if(1*trQuestVarGet("LavaTile3") >= xGetDatabaseCount(dTiles2)){
+				trQuestVarSet("LavaTile3", 0);
 			}
 			for(a=0 ; < xGetDatabaseCount(dTiles1)){
 				xDatabaseNext(dTiles1);
@@ -181,9 +191,22 @@ inactive
 					trPaintTerrain(xGetInt(dTiles1, xTileX),xGetInt(dTiles1, xTileZ),xGetInt(dTiles1, xTileX),xGetInt(dTiles1, xTileZ),2,10);
 				}
 			}
+			for(b=0 ; < xGetDatabaseCount(dTiles2)){
+				xDatabaseNext(dTiles2);
+				trPaintTerrain(xGetInt(dTiles2, xTileX),xGetInt(dTiles2, xTileZ),xGetInt(dTiles2, xTileX),xGetInt(dTiles2, xTileZ),xGetInt(dTiles2, xTileType),xGetInt(dTiles2, xTileSubType));
+				if(b == 1*trQuestVarGet("LavaTile2")){
+					trPaintTerrain(xGetInt(dTiles2, xTileX),xGetInt(dTiles2, xTileZ),xGetInt(dTiles2, xTileX),xGetInt(dTiles2, xTileZ),2,10);
+				}
+				if(b == 1*trQuestVarGet("LavaTile3")){
+					trPaintTerrain(xGetInt(dTiles2, xTileX),xGetInt(dTiles2, xTileZ),xGetInt(dTiles2, xTileX),xGetInt(dTiles2, xTileZ),2,10);
+				}
+			}
 		}
 	}
 	//Check terrain for extraction
+	if(PlayersReadyToLeave == PlayersActive){
+		xsEnableRule("DeerExit");
+	}
 }
 
 rule DeerMinigameDetect
@@ -242,6 +265,22 @@ void DeerMinigameGo(int temp = 0){
 	AddTileMGDeer(xsVectorGetX(StageVector)+19,xsVectorGetZ(StageVector)+3);
 	AddTileMGDeer(xsVectorGetX(StageVector)+18,xsVectorGetZ(StageVector)+3);
 	trQuestVarSet("LavaTile", 1);
+	AddTileMGDeer2(xsVectorGetX(StageVector)+21,xsVectorGetZ(StageVector)+3);
+	AddTileMGDeer2(xsVectorGetX(StageVector)+21,xsVectorGetZ(StageVector)+4);
+	AddTileMGDeer2(xsVectorGetX(StageVector)+21,xsVectorGetZ(StageVector)+5);
+	AddTileMGDeer2(xsVectorGetX(StageVector)+21,xsVectorGetZ(StageVector)+6);
+	AddTileMGDeer2(xsVectorGetX(StageVector)+21,xsVectorGetZ(StageVector)+7);
+	AddTileMGDeer2(xsVectorGetX(StageVector)+22,xsVectorGetZ(StageVector)+7);
+	AddTileMGDeer2(xsVectorGetX(StageVector)+23,xsVectorGetZ(StageVector)+7);
+	AddTileMGDeer2(xsVectorGetX(StageVector)+24,xsVectorGetZ(StageVector)+7);
+	AddTileMGDeer2(xsVectorGetX(StageVector)+24,xsVectorGetZ(StageVector)+6);
+	AddTileMGDeer2(xsVectorGetX(StageVector)+24,xsVectorGetZ(StageVector)+5);
+	AddTileMGDeer2(xsVectorGetX(StageVector)+24,xsVectorGetZ(StageVector)+4);
+	AddTileMGDeer2(xsVectorGetX(StageVector)+24,xsVectorGetZ(StageVector)+3);
+	AddTileMGDeer2(xsVectorGetX(StageVector)+23,xsVectorGetZ(StageVector)+3);
+	AddTileMGDeer2(xsVectorGetX(StageVector)+22,xsVectorGetZ(StageVector)+3);
+	trQuestVarSet("LavaTile2", 1);
+	trQuestVarSet("LavaTile3", 8);
 	for(z=1 ; < 8){
 		temp = trGetNextUnitScenarioNameNumber();
 		UnitCreate(0, "Dwarf", 2*xsVectorGetX(StageVector)+(8*z),2*xsVectorGetZ(StageVector)+12,0);
@@ -318,7 +357,46 @@ highFrequency
 		unitTransform("Tartarian Gate Flame", "Flowers");
 		unitTransform("Revealer", "Rocket");
 		xsDisableSelf();
-		xPrintAll(dTiles1);
 		InMinigame = false;
 	}
+}
+
+rule DeerLeave
+inactive
+highFrequency
+{
+	int ABORT = 0;
+	trQuestVarModify("PlayerCycle", "+", 1);
+	if(1*trQuestVarGet("PlayerCycle") > cNumberNonGaiaPlayers){
+		trQuestVarSet("PlayerCycle", 1);
+	}
+	int p = 1*trQuestVarGet("PlayerCycle");
+	xSetPointer(dPlayerData, p);
+	tempV = xGetVector(dPlayerData, xConstantPos);
+	if(xGetBool(dPlayerData, xReadyToLeave) == true){
+		if((trGetTerrainType(1*xsVectorGetX(tempV)/2,1*xsVectorGetZ(tempV)/2) != getTerrainType(LeaveTerrain)) || (trGetTerrainSubType(1*xsVectorGetX(tempV)/2,1*xsVectorGetZ(tempV)/2) != getTerrainSubType(LeaveTerrain))){
+			xSetBool(dPlayerData, xReadyToLeave, false);
+			PlayersReadyToLeave = PlayersReadyToLeave-1;
+			PlayerColouredChatToSelf(p, "You have left the extraction zone");
+			ABORT = 1;
+		}
+	}
+	if((xGetBool(dPlayerData, xReadyToLeave) == false) && (ABORT == 0)){
+		if((trGetTerrainType(1*xsVectorGetX(tempV)/2,1*xsVectorGetZ(tempV)/2) == getTerrainType(LeaveTerrain)) && (trGetTerrainSubType(1*xsVectorGetX(tempV)/2,1*xsVectorGetZ(tempV)/2) == getTerrainSubType(LeaveTerrain))){
+			xSetBool(dPlayerData, xReadyToLeave, true);
+			PlayersReadyToLeave = PlayersReadyToLeave+1;
+			PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is ready to leave");
+		}
+	}
+}
+
+rule DeerExit
+inactive
+highFrequency
+{
+	xsDisableSelf();
+	xsDisableRule("DeerActLoops");
+	xsDisableRule("DeerMinigameDetect");
+	xsDisableRule("DeerMinigameEnd");
+	trChatSend(0, "END R1");
 }

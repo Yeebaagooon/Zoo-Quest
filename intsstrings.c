@@ -46,6 +46,7 @@ string MapVersion = "Test Version";
 string MapName = "Zoo Quest.xs";
 string GazelleProto = "Hero Greek Jason";
 vector StageVector = vector(0,0,0);
+string LeaveTerrain = "";
 
 //EVENTS
 const int EVENT_BUILD_HOUSE = 28;
@@ -61,6 +62,7 @@ int DontDestroyBelow = 0;
 int PlayersActive = 10;
 int BerryTarget = 0;
 int PlayersMinigaming = 0;
+int PlayersReadyToLeave = 0;
 int MinigameWins = 0;
 int GlobalTimerMS = 0;
 bool InMinigame = false;
@@ -74,6 +76,8 @@ int xVectorHold = 0;
 int xStopDeath = 0;
 int xTeleportDue = 0;
 int xPlayerUnitID = 0;
+int xReadyToLeave = 0;
+int xConstantPos = 0;
 
 int dDestroyMe = 0;
 int xDestroyName = 0;
@@ -93,6 +97,8 @@ highFrequency
 	xStopDeath = xInitAddBool(dPlayerData, "player immortal", false);
 	xTeleportDue = xInitAddInt(dPlayerData, "tp due", 0);
 	xPlayerUnitID = xInitAddInt(dPlayerData, "unitId", -1);
+	xReadyToLeave = xInitAddBool(dPlayerData, "leave area", false);
+	xConstantPos = xInitAddVector(dPlayerData, "position", vector(0,0,0));
 	xsDisableSelf();
 	for(p=1; <= cNumberNonGaiaPlayers) {
 		xAddDatabaseBlock(dPlayerData, true);
