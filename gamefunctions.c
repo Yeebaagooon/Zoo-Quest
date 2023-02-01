@@ -8,10 +8,9 @@ void hotkeyAbility(int ability = 0) {
 		trackPlay(1,EVENT_BUILD_AT_CURSOR);
 		trBlockAllSounds(false);
 		xUnitSelectByID(dPlayerData, xPlayerUnitID);
-		if (trUnitIsSelected() == false) {
-			//uiFindType(xGetString(dPlayerData, xPlayerProto));
-			uiFindType(""+GazelleProto);
-		}
+		//if (trUnitIsSelected() == false) {
+		//	uiFindType(""+GazelleProto);
+		//}
 		if(trPlayerUnitCountSpecific(xGetPointer(dPlayerData), ""+GazelleProto) > 0){
 			switch(ability)
 			{
@@ -69,7 +68,7 @@ void CreateGazelle(int p = 1, int x = 1, int z = 1, int heading = 0){
 	trSetSelectedScale(0,1,0);
 	trUnitSelectByQV("P"+p+"Unit");
 	spyEffect(kbGetProtoUnitID("Gazelle"), 0, xsVectorSet(dPlayerData,xSpyID,p), vector(1,1,1));
-	xSetPointer(dPlayerData, xPlayerUnitID);
+	xSetPointer(dPlayerData, p);
 	xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
 }
 

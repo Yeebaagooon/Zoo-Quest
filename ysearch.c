@@ -4,6 +4,7 @@ highFrequency
 {
 	int id = 0;
 	int unittype = 0;
+	int temp = 0;
 	vector scale = vector(0,0,0);
 	vector dest = vector(0,0,0);
 	for(i = spysearch; < trGetNextUnitScenarioNameNumber()) {
@@ -38,6 +39,41 @@ highFrequency
 				trUnitSelectByID(id);
 				trUnitDestroy();
 				break;
+			}
+			case kbGetProtoUnitID("Axe"):
+			{
+				//axe
+				vector axevector = vector(0,0,0);
+				axevector = kbGetBlockPosition(""+i);
+				trUnitSelectClear();
+				trUnitSelectByID(id);
+				trUnitDestroy();
+				vector dist = vector(0,0,0);
+				vector closevector = vector(0,0,0);
+				vector target = vector(0,0,0);
+				int closest = 10000;
+				int closestid = 0;
+				//cycle through all throwing axemen to find the closest
+				for(a=0 ; < xGetDatabaseCount(dPoachers)){
+					xDatabaseNext(dPoachers);
+					dist = kbGetBlockPosition(""+xGetInt(dPoachers, xUnitID));
+					if(distanceBetweenVectors(dist, axevector, true) < closest){
+						closest = distanceBetweenVectors(dist, axevector, true);
+						closestid = xGetInt(dPoachers, xUnitID);
+					}
+				}
+				closevector = kbGetBlockPosition(""+closestid);
+				xsSetContextPlayer(cNumberNonGaiaPlayers);
+				dest = kbGetBlockPosition(""+trGetUnitScenarioNameNumber(kbUnitGetTargetUnitID(kbGetBlockID(""+closestid))));
+				xsSetContextPlayer(0);
+				dist = xsVectorNormalize(dest-closevector);
+				temp = trGetNextUnitScenarioNameNumber();
+				UnitCreate(0, "Lampades Bolt",xsVectorGetX(closevector),xsVectorGetZ(closevector),0);
+				dist = vectorSetAsTargetVector(closevector,dist,40.0);
+				trUnitSelectClear();
+				trUnitSelect(""+temp);
+				trUnitMoveToPoint(xsVectorGetX(dist),0,xsVectorGetZ(dist),-1,false);
+				//create projectile at the axeman
 			}
 			case kbGetProtoUnitID("Hero Birth"):
 			{

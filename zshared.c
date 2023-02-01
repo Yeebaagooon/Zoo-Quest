@@ -1483,3 +1483,26 @@ void removeCamTracks(int eventID = -1) {
 	trackRemove();
 	trUnblockAllSounds();
 }
+
+vector vectorSetAsTargetVector(vector from = vector(0,0,0), vector dir = vector(0,0,0), float dist = 40.0) {
+	vector target = xsVectorSet((xsVectorGetX(dir) * dist) + xsVectorGetX(from), 0, (xsVectorGetZ(dir) * dist) + xsVectorGetZ(from));
+	float scale = 0;
+	if (xsVectorGetX(target) < 0) {
+		scale = xsVectorGetX(target) / (xsVectorGetX(target) - xsVectorGetX(from));
+		target = xsVectorSet(0,0, xsVectorGetZ(target) + scale * (xsVectorGetZ(from) - xsVectorGetZ(target)));
+	} else if (xsVectorGetX(target) > 256) {
+		scale = (xsVectorGetX(target) - 256) / (xsVectorGetX(target) - xsVectorGetX(from));
+		target = xsVectorSet(256,0,xsVectorGetZ(target) + scale * (xsVectorGetZ(from) - xsVectorGetZ(target)));
+	}
+	if (xsVectorGetZ(target) < 0) {
+		scale = xsVectorGetZ(target) / (xsVectorGetZ(target) - xsVectorGetZ(from));
+		target = xsVectorSet(xsVectorGetX(target) + scale * (xsVectorGetX(from) - xsVectorGetX(target)),0,0);
+	} else if (xsVectorGetZ(target) > 256) {
+		scale = (xsVectorGetZ(target) - 256) / (xsVectorGetZ(target) - xsVectorGetZ(from));
+		target = xsVectorSet(xsVectorGetX(target) + scale * (xsVectorGetX(from) - xsVectorGetX(target)),0,256);
+	}
+	//	ColouredChat("0,1,0" , ""+xGetVector(dPlayerData, xPlayerThrowPos, 1));
+	//	ColouredChat("1,1,0", ""+target);
+	return(target);
+}
+

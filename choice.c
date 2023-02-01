@@ -71,14 +71,14 @@ void PlayerChoice(int p = 0, string prompt = "Question", string answerone = "Ans
 	xsDisableSelf();
 	int temp = 0;
 	//Check choice units alive
-	xsSetContextPlayer(-1);
-	if(kbUnitGetProtoUnitID(1*trQuestVarGet("P"+p+"Yes")) == -1){
+	//xsSetContextPlayer(-1);
+	if(kbGetBlockID(""+1*trQuestVarGet("P"+p+"Yes")) == -1){
 		temp = trGetNextUnitScenarioNameNumber();
 		UnitCreate(p, "Cinematic Block", p*3, 1, 0);
 		trQuestVarSet("P"+p+"Yes", temp);
 		debugLog("Choice selector dead");
 	}
-	if(kbUnitGetProtoUnitID(1*trQuestVarGet("P"+p+"No")) == -1){
+	if(kbGetBlockID(""+1*trQuestVarGet("P"+p+"No")) == -1){
 		temp = trGetNextUnitScenarioNameNumber();
 		UnitCreate(p, "Cinematic Block", p*3, 1, 0);
 		trQuestVarSet("P"+p+"No", temp);
@@ -175,7 +175,7 @@ inactive
 		trQuestVarSet("P"+p+"No", temp);
 	}
 	DontDestroyBelow = trGetNextUnitScenarioNameNumber();
-	trChatSend(0, "choice units set");
+	//trChatSend(0, "choice units set");
 }
 
 //[TIMEOUT]

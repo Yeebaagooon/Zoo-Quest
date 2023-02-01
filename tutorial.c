@@ -25,7 +25,8 @@ inactive
 	}
 	for(p=1 ; < cNumberNonGaiaPlayers){
 		trPaintTerrain(5,((p*8)-2),30,((p*8+4)-2),0,2);
-		trPaintTerrain(7,p*8,7,p*8,0,73); //start sq
+		//trPaintTerrain(7,p*8,7,p*8,0,73); //start sq
+		PaintAtlantisArea(6,p*8-1,8,p*8+1,0,8);  //start sq
 		trPaintTerrain(28,p*8+2,28,p*8-2,0,74); //end line
 		//start log
 		temp = trGetNextUnitScenarioNameNumber();

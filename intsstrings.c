@@ -20,6 +20,10 @@ Zenophobia:
 yeah with negative build points
 and of course the cost needs to be set to 0
 
+since kbGetBlockPosition requires the unit name
+instead of the id
+
+
 FIX PAINT TREES SO LIKE A CHECKBOARD - actually ok for stage one
 
 DEER QUEST
@@ -93,7 +97,7 @@ highFrequency
 	xOldAnim = xInitAddInt(dPlayerData, "Anim id", 0);
 	xTarget = xInitAddInt(dPlayerData, "target id", 0);
 	xPlayerActive = xInitAddBool(dPlayerData, "player alive", true);
-	xVectorHold = xInitAddVector(dPlayerData, "hold vector");
+	xVectorHold = xInitAddVector(dPlayerData, "hold vector", vector(0,0,0));
 	xStopDeath = xInitAddBool(dPlayerData, "player immortal", false);
 	xTeleportDue = xInitAddInt(dPlayerData, "tp due", 0);
 	xPlayerUnitID = xInitAddInt(dPlayerData, "unitId", -1);

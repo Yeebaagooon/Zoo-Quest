@@ -9,6 +9,8 @@ Extra:
 -Complete MG (cNum)
 100 = All berries, all jumps, all alive
 Required = 40
+
+So calculate extras /60 then +40 if got enough berries
 */
 
 rule BuildDeerArea
@@ -29,23 +31,34 @@ inactive
 		trDelayedRuleActivation("ResetBlackmap");
 		trDelayedRuleActivation("DeerActLoops");
 		trDelayedRuleActivation("DeerMinigameDetect");
-		trDelayedRuleActivation("Testing");
 		trDelayedRuleActivation("DeerLeave");
+		trDelayedRuleActivation("DeerPoachers");
 		BerryTarget = 8+PlayersActive;
 		if(BerryTarget >= xGetDatabaseCount(dBerryBush)){
 			BerryTarget = xGetDatabaseCount(dBerryBush)-12+PlayersActive;
 		}
+		trSetCounterDisplay("<color={PlayerColor(2)}>Berries Eaten: 0 / " + BerryTarget);
 	}
 }
 
-rule Testing
+rule DeerPoachers
 highFrequency
 inactive
 {
 	if (trTime() > cActivationTime + 1) {
+		int temp = 0;
+		trChatSend(0, "Poacher");
+		temp = trGetNextUnitScenarioNameNumber();
+		UnitCreate(cNumberNonGaiaPlayers, "Throwing Axeman", 0 , 0 ,0);
+		xAddDatabaseBlock(dPoachers, true);
+		xSetInt(dPoachers, xUnitID, temp);
+		temp = trGetNextUnitScenarioNameNumber();
+		UnitCreate(cNumberNonGaiaPlayers, "Throwing Axeman", 20 , 20 ,0);
+		xAddDatabaseBlock(dPoachers, true);
+		xSetInt(dPoachers, xUnitID, temp);
+		trTechGodPower(1, "Vision", 1);
+		trTechGodPower(1, "Nidhogg", 1);
 		xsDisableSelf();
-		xsSetContextPlayer(0);
-		PlayerChoice(1, "Participate in minigame?", "Yes", 4, "No", 0);
 	}
 }
 
@@ -74,7 +87,7 @@ void ProcessBerries(int count = 1) {
 					trSetCounterDisplay("<color={PlayerColor(3)}>Berries Eaten: " + temp);
 				}
 				if(trCurrentPlayer() == p){
-					playSoundCustom("farming3.wav", "\Yeebaagooon\Zoo Quest\Eat.mp3");
+					playSoundCustom("colossuseat.wav", "\Yeebaagooon\Zoo Quest\Eat.mp3");
 				}
 				if(temp == BerryTarget){
 					playSoundCustom("cinematics\10_in\clearedcity.wav", "\Yeebaagooon\Zoo Quest\Skillpoint.mp3");
@@ -213,6 +226,7 @@ rule DeerMinigameDetect
 highFrequency
 inactive
 {
+	xsSetContextPlayer(0);
 	vector pos = vector(0,0,0);
 	vector minigame = kbGetBlockPosition(""+1*trQuestVarGet("MinigameStartID"));
 	for(p=1 ; < cNumberNonGaiaPlayers){
@@ -325,7 +339,7 @@ highFrequency
 		refreshPassability();
 		for(p=1 ; < cNumberNonGaiaPlayers){
 			xSetPointer(dPlayerData, p);
-			if(xGetInt(dPlayerData, xTeleportDue) == 1){
+			if((xGetInt(dPlayerData, xTeleportDue) == 1) && (xGetBool(dPlayerData, xPlayerActive) == true)){
 				temp = xGetVector(dPlayerData, xVectorHold);
 				trUnitSelectByQV("P"+p+"Unit");
 				trUnitChangeProtoUnit("Ragnorok SFX");
@@ -338,7 +352,7 @@ highFrequency
 				xSetBool(dPlayerData, xStopDeath, false);
 				xSetInt(dPlayerData, xTeleportDue, 0);
 			}
-			else if(xGetInt(dPlayerData, xTeleportDue) == 0){
+			else if((xGetInt(dPlayerData, xTeleportDue) == 0) && (xGetBool(dPlayerData, xPlayerActive) == true)){
 				if(trPlayerUnitCountSpecific(p, ""+GazelleProto) == 0){
 					temp = xGetVector(dPlayerData, xVectorHold);
 					trUnitSelectByQV("P"+p+"Unit");
@@ -365,7 +379,7 @@ rule DeerLeave
 inactive
 highFrequency
 {
-	int ABORT = 0;
+	int STOP = 0;
 	trQuestVarModify("PlayerCycle", "+", 1);
 	if(1*trQuestVarGet("PlayerCycle") > cNumberNonGaiaPlayers){
 		trQuestVarSet("PlayerCycle", 1);
@@ -378,10 +392,10 @@ highFrequency
 			xSetBool(dPlayerData, xReadyToLeave, false);
 			PlayersReadyToLeave = PlayersReadyToLeave-1;
 			PlayerColouredChatToSelf(p, "You have left the extraction zone");
-			ABORT = 1;
+			STOP = 1;
 		}
 	}
-	if((xGetBool(dPlayerData, xReadyToLeave) == false) && (ABORT == 0)){
+	if((xGetBool(dPlayerData, xReadyToLeave) == false) && (STOP == 0)){
 		if((trGetTerrainType(1*xsVectorGetX(tempV)/2,1*xsVectorGetZ(tempV)/2) == getTerrainType(LeaveTerrain)) && (trGetTerrainSubType(1*xsVectorGetX(tempV)/2,1*xsVectorGetZ(tempV)/2) == getTerrainSubType(LeaveTerrain))){
 			xSetBool(dPlayerData, xReadyToLeave, true);
 			PlayersReadyToLeave = PlayersReadyToLeave+1;
@@ -394,9 +408,19 @@ rule DeerExit
 inactive
 highFrequency
 {
-	xsDisableSelf();
 	xsDisableRule("DeerActLoops");
 	xsDisableRule("DeerMinigameDetect");
 	xsDisableRule("DeerMinigameEnd");
 	trChatSend(0, "END R1");
+	for(p=1 ; < cNumberNonGaiaPlayers){
+		trUnitSelectByQV("P"+p+"Unit");
+		trUnitChangeProtoUnit("Ragnorok SFX");
+		trUnitSelectByQV("P"+p+"Unit");
+		trUnitDestroy();
+		trUnitSelectClear();
+		trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+		trUnitChangeProtoUnit("Hero Death");
+	}
+	trClearCounterDisplay();
+	xsDisableSelf();
 }

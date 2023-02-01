@@ -29,6 +29,8 @@ int xTileType = 0;
 int xTileSubType = 0;
 int dTiles2 = 0;
 
+int dPoachers = 0;
+
 rule initialise_spy_database
 active
 highFrequency
@@ -63,6 +65,9 @@ highFrequency
 	xTileNumber = xInitAddInt(dTiles2, "number", 0);
 	xTileType = xInitAddInt(dTiles2, "ttype", 0);
 	xTileSubType = xInitAddInt(dTiles2, "tsubtype", 0);
+	
+	dPoachers = xInitDatabase("Poachers");
+	xUnitID = xInitAddInt(dPoachers, "unit id");
 }
 
 /*

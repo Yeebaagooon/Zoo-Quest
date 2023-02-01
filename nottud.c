@@ -1460,8 +1460,8 @@ void createDeepForestArea(){
 		tileForStart = getRandomTileMatchingTerrain("GaiaCreepA", 10);
 		ABORT = ABORT +1;
 		if(ABORT > 500){
-			break;
 			trChatSend(0, "ERROR - CANT PAINT END AREA");
+			break;
 		}
 	}
 	
@@ -1472,13 +1472,13 @@ void createDeepForestArea(){
 	float StartMetreZ = StartTileZ*2+1;
 	ABORT = 0;
 	vector tileForTrack = getRandomTileMatchingTerrain("GaiaCreepA", 40);
-	while(((distanceBetweenVectors(tileForTrack, tileForStart, true) > 8000)) && ((distanceBetweenVectors(tileForTrack, tileForEnd, true) > 3000)) && (xsVectorGetX(tileForTrack) < 160)){
+	while(((distanceBetweenVectors(tileForTrack, tileForStart, true) < 2000)) || ((distanceBetweenVectors(tileForTrack, tileForEnd, true) < 2000)) || (xsVectorGetX(tileForTrack) > 160)){
 		tileForTrack = getRandomTileMatchingTerrain("GaiaCreepA", 10);
 		ABORT = ABORT +1;
-		debugLog("Gen count " + ABORT);
+		debugLog(""+ABORT);
 		if(ABORT > 500){
-			break;
 			trChatSend(0, "ERROR - CANT PAINT BONUS AREA");
+			break;
 		}
 	}
 	trPaintTerrain(xsVectorGetX(tileForTrack)-3,xsVectorGetZ(tileForTrack)-3,xsVectorGetX(tileForTrack)+33,xsVectorGetZ(tileForTrack)+13,3,9,false);
@@ -1530,9 +1530,9 @@ void createDeepForestArea(){
 		xSetVector(dLogs, xUnitPos, kbGetBlockPosition(""+i, true));
 		
 	}
-	//paintTrees("ForestFloorPine", "Pine");
+	paintTrees("ForestFloorPine", "Pine");
 	paintUnit("GaiaCreepA", "Blowing Leaves", 0, 0.01);
-	paintUnit("GaiaCreepA", "Misy", 0, 0.004);
+	paintUnit("GaiaCreepA", "Mist", 0, 0.004);
 	paintUnit("GaiaCreepA", "Tamarisk Tree Dead", 0, 0.004);
 	paintUnit("GaiaCreepA", "Tamarisk Tree", 0, 0.004);
 	currentId = trGetNextUnitScenarioNameNumber();
