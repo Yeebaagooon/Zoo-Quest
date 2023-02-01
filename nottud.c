@@ -1150,7 +1150,8 @@ float randomFloatWeighted(float min = 0.0, float max = 1.0, int weight = 1){
 	ERROR
 	for(i = 0; < weight){
 		value = rmRandFloat(min, value);
-	}*/
+	}
+	*/
 	return (value);
 }
 

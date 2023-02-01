@@ -44,7 +44,7 @@ Fix tree paint
 
 //---Controls
 //\Yeebaagooon\Zoo Quest\Test sound.mp3
-int QuickStart = 0;
+int QuickStart = 1;
 int Stage = 0;
 string MapVersion = "Test Version";
 string MapName = "Zoo Quest.xs";
@@ -58,6 +58,11 @@ const int EVENT_BUILD_GRANARY = 29;
 const int EVENT_BUILD_STOREHOUSE = 30;
 const int EVENT_REMOVE_CAM_TRACKS = 26;
 const int EVENT_BUILD_AT_CURSOR = 31;
+
+//MAP STUFF
+float timediff = 0.0;
+int timelast = 0;
+vector MapCentre = vector(0,0,0);
 
 //DB STUFF
 int DestroyNumber = 0;
@@ -93,6 +98,7 @@ active
 highFrequency
 {
 	dPlayerData = xInitDatabase("playerData");
+	xPlayerUnitID = xInitAddInt(dPlayerData, "unit id", 0);
 	xSpyID = xInitAddInt(dPlayerData, "Spy id", 0);
 	xOldAnim = xInitAddInt(dPlayerData, "Anim id", 0);
 	xTarget = xInitAddInt(dPlayerData, "target id", 0);

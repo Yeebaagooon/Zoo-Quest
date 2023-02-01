@@ -68,12 +68,17 @@ highFrequency
 				xsSetContextPlayer(0);
 				dist = xsVectorNormalize(dest-closevector);
 				temp = trGetNextUnitScenarioNameNumber();
-				UnitCreate(0, "Lampades Bolt",xsVectorGetX(closevector),xsVectorGetZ(closevector),0);
-				dist = vectorSetAsTargetVector(closevector,dist,40.0);
+				UnitCreate(cNumberNonGaiaPlayers, "Lampades Bolt",xsVectorGetX(closevector),xsVectorGetZ(closevector),0);
+				dist = vectorSetAsTargetVector(closevector,dist,60.0);
 				trUnitSelectClear();
 				trUnitSelect(""+temp);
 				trUnitMoveToPoint(xsVectorGetX(dist),0,xsVectorGetZ(dist),-1,false);
-				//create projectile at the axeman
+				xAddDatabaseBlock(dMissiles, true);
+				xSetInt(dMissiles, xUnitID, temp);
+				xSetInt(dMissiles, xOwner, cNumberNonGaiaPlayers);
+				xSetVector(dMissiles, xMissilePos, closevector);
+				xSetVector(dMissiles, xMissilePrev, closevector);
+				xSetVector(dMissiles, xMissileDir, xsVectorNormalize(dist));
 			}
 			case kbGetProtoUnitID("Hero Birth"):
 			{

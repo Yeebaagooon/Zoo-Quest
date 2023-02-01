@@ -159,7 +159,16 @@ highFrequency
 		gadgetReal("ShowImageBox-BordersRightTop");
 		gadgetReal("ShowImageBox-CloseButton");
 		//startNPCDialog(1);
-		xsEnableRule("TutorialTerrain");
+		if(QuickStart == 1){
+			xsEnableRule("BuildDeerArea");
+			xsEnableRule("Animations");
+			xsEnableRule("Jump");
+			xsEnableRule("JumpEnd");
+			trDelayedRuleActivation("VectorSecond");
+		}
+		else{
+			xsEnableRule("TutorialTerrain");
+		}
 		xsEnableRule("CustomContentChat");
 		xsEnableRule("ysearch");
 	}

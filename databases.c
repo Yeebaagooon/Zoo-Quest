@@ -30,6 +30,14 @@ int xTileSubType = 0;
 int dTiles2 = 0;
 
 int dPoachers = 0;
+int dMissiles = 0;
+int xOwner = 0;
+int xMissilePos = 0;
+int xMissileDir = 0;
+int xMissileCentre = 0;
+int xMissilePrev = 0;
+
+
 
 rule initialise_spy_database
 active
@@ -68,11 +76,22 @@ highFrequency
 	
 	dPoachers = xInitDatabase("Poachers");
 	xUnitID = xInitAddInt(dPoachers, "unit id");
+	
+	dMissiles = xInitDatabase("Missiles DB");
+	xUnitID = xInitAddInt(dMissiles, "missile unit id", -1);
+	xOwner = xInitAddInt(dMissiles, "missile owner", 0);
+	xMissilePos = xInitAddVector(dMissiles, "position", vector(0,0,0));
+	xMissileDir = xInitAddVector(dMissiles, "direction", vector(0,0,0));
+	xMissileCentre = xInitAddVector(dMissiles, "centre", vector(0,0,0));
+	xMissilePrev = xInitAddVector(dMissiles, "prev", vector(0,0,0));
+	
+	MapCentre = xsVectorSet(252/2-1,0,252/2-1);
 }
 
 /*
 Assumes that the target unit is already selected
 */
+
 void spyEffect(int proto = 0, int anim = 0, vector dest = vector(0,0,0), vector scale = vector(1,1,1), int event = -1) {
 	int newest = xAddDatabaseBlock(dSpyRequests);
 	xSetInt(dSpyRequests, xSpyRequestProto, proto, newest);
@@ -82,3 +101,68 @@ void spyEffect(int proto = 0, int anim = 0, vector dest = vector(0,0,0), vector 
 	xSetInt(dSpyRequests, xSpyRequestEvent, event, newest);
 	trTechInvokeGodPower(0, "spy", vector(0,0,0), vector(0,0,0));
 }
+
+bool rayCollision(vector start = vector(0,0,0), vector dir = vector(1,0,0),
+	float dist = 0, float width = 0) {
+	if(xGetBool (dPlayerData, xPlayerActive)){
+		vector pos = kbGetBlockPosition(""+xGetInt(dPlayerData,xPlayerUnitID),true);
+		float current = distanceBetweenVectors(pos, start, false);
+		if (current < dist) {
+			vector hitbox = start + dir * current;
+			if (distanceBetweenVectors(pos, hitbox, true) <= width) {
+				return(true);
+			}
+		}
+	}
+	return(false);
+}
+
+void DoMissile(){
+	xDatabaseNext(dMissiles);
+	vector pos = vector(0,0,0);
+	vector dir = vector(0,0,0);
+	vector prev = vector(0,0,0);
+	prev = xGetVector(dMissiles, xMissilePrev); //when created this is the same as xMissilePos
+	bool hit = false;
+	int playerhit = 0;
+	int boomID = 0;
+	pos = xGetVector(dMissiles, xMissilePos); // retrieve current pos
+	if(pos == prev){
+		debugLog("SAME V"); //this never happened so it's moving
+	}
+	pos = pos + xGetVector(dMissiles, xMissileDir) * timediff; // calculate new pos with physics
+	dir = xGetVector(dMissiles, xMissileDir); //Normalized direction when missile created and target locked
+	xSetVector(dMissiles, xMissilePos, pos);
+	xSetPointer(dPlayerData, xGetInt(dMissiles, xOwner));
+	float dist = distanceBetweenVectors(pos, prev, false);
+	for(x=1; < cNumberNonGaiaPlayers) {
+		xDatabaseNext(dPlayerData);
+		//2 is raw dist, 4 is squared
+		if(rayCollision(prev,dir,dist+2,4)){
+			hit = true;
+			playerhit = xGetPointer(dPlayerData);
+			break;
+		}
+	}
+	if(hit){
+		//hit effect
+		xUnitSelect(dMissiles, xUnitID);
+		trUnitDestroy();
+		boomID = trGetNextUnitScenarioNameNumber();
+		UnitCreate(0, "Cinematic Block", xsVectorGetX(pos), xsVectorGetZ(pos), 0);
+		playSound("implode explode.wav");
+		//FREE DB LAST
+		xFreeDatabaseBlock(dMissiles);
+		//debugLog("Hits P " + playerhit);
+	}
+	else{
+		xSetVector(dMissiles, xMissilePrev, pos);
+		if((xsVectorGetX(pos) < 0) || (xsVectorGetX(pos) > 252) || (xsVectorGetZ(pos) < 0) || (xsVectorGetZ(pos) > 252)){
+			//remove map outside
+			xUnitSelect(dMissiles, xUnitID);
+			trUnitDestroy();
+			xFreeDatabaseBlock(dMissiles);
+		}
+	}
+}
+

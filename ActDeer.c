@@ -56,8 +56,12 @@ inactive
 		UnitCreate(cNumberNonGaiaPlayers, "Throwing Axeman", 20 , 20 ,0);
 		xAddDatabaseBlock(dPoachers, true);
 		xSetInt(dPoachers, xUnitID, temp);
+		temp = trGetNextUnitScenarioNameNumber();
+		UnitCreate(cNumberNonGaiaPlayers, "Throwing Axeman", 40 , 40 ,0);
+		xAddDatabaseBlock(dPoachers, true);
+		xSetInt(dPoachers, xUnitID, temp);
 		trTechGodPower(1, "Vision", 1);
-		trTechGodPower(1, "Nidhogg", 1);
+		trTechGodPower(1, "Sandstorm", 1);
 		xsDisableSelf();
 	}
 }
@@ -120,10 +124,15 @@ rule DeerActLoops
 highFrequency
 inactive
 {
+	timediff = 0.001 * (trTimeMS() - timelast); // calculate timediff
+	timelast = trTimeMS();
 	int temp = 0;
 	int TimerTile = 0;
 	ProcessBerries(5);
 	ProcessLogs(7);
+	if(xGetDatabaseCount(dMissiles) > 0){
+		DoMissile();
+	}
 	for(p=1 ; < cNumberNonGaiaPlayers){
 		xSetPointer(dPlayerData, p);
 		if((playerIsPlaying(p) == false) && (xGetBool(dPlayerData, xPlayerActive) == true)){
