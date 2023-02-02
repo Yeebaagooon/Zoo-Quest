@@ -232,27 +232,29 @@ inactive
 		if(trPlayerResourceCount(p, "Gold") > 0){
 			xSetPointer(dPlayerData, p);
 			trPlayerGrantResources(p, "Gold", -100000);
-			trUnitSelectClear();
-			trUnitSelectByQV("P"+p+"Unit");
-			trMutateSelected(kbGetProtoUnitID("Hero Greek Bellerophon"));
-			//trUnitChangeProtoUnit("Hero Greek Bellerophon");
-			trSetSelectedScale(0,1,0);
-			xSetInt(dPlayerData, xOldAnim, -10);
-			trUnitSelectClear();
-			trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
-			trUnitOverrideAnimation(13, 0, true, false, -1, 0);
-			xSetInt(dPlayerData, xTarget, trGetNextUnitScenarioNameNumber());
-			//Greta heading 0 to player heading
-			UnitCreate(cNumberNonGaiaPlayers, "Female", trVectorQuestVarGetX("V"+p+"Second"), trVectorQuestVarGetZ("V"+p+"Second"), 0);
-			xUnitSelect(dPlayerData, xTarget);
-			trSetSelectedScale(0.1,0.1,0.1);
-			trSetUnitOrientation(trVectorQuestVarGet("V"+p+"dir"), vector(0,1,0), true);
-			trUnitSelectClear();
-			trUnitSelectByQV("P"+p+"Unit");
-			trUnitDoWorkOnUnit(""+xGetInt(dPlayerData, xTarget),-1);
-			xAddDatabaseBlock(dDestroyMe, true);
-			xSetInt(dDestroyMe, xDestroyName, xGetInt(dPlayerData, xTarget));
-			xSetInt(dDestroyMe, xDestroyTime, trTimeMS()+2300);
+			if(xGetBool(dPlayerData, xReadyToLeave) == false){
+				trUnitSelectClear();
+				trUnitSelectByQV("P"+p+"Unit");
+				trMutateSelected(kbGetProtoUnitID("Hero Greek Bellerophon"));
+				//trUnitChangeProtoUnit("Hero Greek Bellerophon");
+				trSetSelectedScale(0,1,0);
+				xSetInt(dPlayerData, xOldAnim, -10);
+				trUnitSelectClear();
+				trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+				trUnitOverrideAnimation(13, 0, true, false, -1, 0);
+				xSetInt(dPlayerData, xTarget, trGetNextUnitScenarioNameNumber());
+				//Greta heading 0 to player heading
+				UnitCreate(cNumberNonGaiaPlayers, "Female", trVectorQuestVarGetX("V"+p+"Second"), trVectorQuestVarGetZ("V"+p+"Second"), 0);
+				xUnitSelect(dPlayerData, xTarget);
+				trSetSelectedScale(0.1,0.1,0.1);
+				trSetUnitOrientation(trVectorQuestVarGet("V"+p+"dir"), vector(0,1,0), true);
+				trUnitSelectClear();
+				trUnitSelectByQV("P"+p+"Unit");
+				trUnitDoWorkOnUnit(""+xGetInt(dPlayerData, xTarget),-1);
+				xAddDatabaseBlock(dDestroyMe, true);
+				xSetInt(dDestroyMe, xDestroyName, xGetInt(dPlayerData, xTarget));
+				xSetInt(dDestroyMe, xDestroyTime, trTimeMS()+2300);
+			}
 		}
 		//jump set anim to 13
 	}
@@ -293,7 +295,12 @@ inactive
 				xSetInt(dPlayerData, xTarget, 0);
 				
 				trUnitSelectByQV("P"+p+"Unit");
-				trMutateSelected(kbGetProtoUnitID(""+GazelleProto));
+				if(xGetBool(dPlayerData, xReadyToLeave) == false){
+					trMutateSelected(kbGetProtoUnitID(""+GazelleProto));
+				}
+				if(xGetBool(dPlayerData, xReadyToLeave) == true){
+					trMutateSelected(kbGetProtoUnitID("Prisoner"));
+				}
 				trSetSelectedScale(0,1,0);
 				
 				trUnitSelectByQV("P"+p+"Unit");

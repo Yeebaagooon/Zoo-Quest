@@ -119,9 +119,10 @@ bool rayCollision(vector start = vector(0,0,0), vector dir = vector(1,0,0),
 		if (current < dist) {
 			vector hitbox = start + dir * current;
 			if (distanceBetweenVectors(pos, hitbox, true) <= width) {
-				//Next line allows jumping over missiles
 				if(trPlayerUnitCountSpecific(xGetPointer(dPlayerData), ""+GazelleProto) == 1){
-					return(true);
+					if(xGetBool(dPlayerData, xStopDeath) == false){
+						return(true);
+					}
 				}
 			}
 		}

@@ -50,6 +50,7 @@ string MapVersion = "Test Version";
 string MapName = "Zoo Quest.xs";
 string GazelleProto = "Hero Greek Jason";
 vector StageVector = vector(0,0,0);
+vector EndPoint = vector(0,0,0);
 string LeaveTerrain = "";
 
 //EVENTS

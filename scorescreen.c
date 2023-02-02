@@ -37,6 +37,7 @@ inactive
 	xsEnableRule("DestroyStuff");
 	characterDialog(ActName(Stage) + " - " + StageRequirement + " percent required to advance", "", ActIcon(Stage));
 	StageScore = 41;
+	//Current req is 40
 }
 
 rule DestroyStuff
@@ -79,7 +80,7 @@ inactive
 {
 	int TimerTile = trTimeMS();
 	if(TimerTile > GlobalTimerMS){
-		GlobalTimerMS = trTimeMS()+100;
+		GlobalTimerMS = trTimeMS()+70;
 		trQuestVarModify("ScoreCheck", "+", 1);
 		if (iModulo(2, 1*trQuestVarGet("ScoreCheck")) == 0) { //if is divisble by 2
 			xDatabaseNext(dDots);

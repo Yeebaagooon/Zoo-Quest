@@ -41,6 +41,12 @@ inactive
 			BerryTarget = xGetDatabaseCount(dBerryBush)-12+PlayersActive;
 		}
 		trSetCounterDisplay("<color={PlayerColor(2)}>Berries Eaten: 0 / " + BerryTarget);
+		ColouredIconChat("1,0.5,0", ActIcon(Stage), "<u>" + ActName(Stage) + "</u>");
+		ColouredIconChat("0.0,0.8,0.2", "icons\world berry bush icon 64", "Eat at least the required number of berries");
+		trChatSend(0, "In each act you need to find and move to the extraction zone.");
+		trChatSend(0, "It is a ring of ice terrain.");
+		trChatSend(0, "When all players are dead or in the zone, the act ends.");
+		trChatSend(0, "Make sure to explore, as higher act scores help you out later.");
 	}
 }
 
@@ -49,7 +55,7 @@ void SpawnDeerPoachers(int unused = 0){
 	unused = 0;
 	if(Stage == 1){
 		trOverlayText("Poachers Spawned!", 5.0,-1,-1,600);
-		SpawnDeerPoacher(3);
+		SpawnDeerPoacher(xsMax(PlayersActive,2));
 	}
 }
 
@@ -57,13 +63,31 @@ rule PoacherTimer
 highFrequency
 inactive
 {
-	if (trTime() > cActivationTime + 4) {
+	if (trTime() > cActivationTime + 64) {
 		if(Stage == 1){
-			//Poacher CD timer
-			trCounterAddTime("poachtimer", 4, 0, "Poachers spawn", 32);
+			trCounterAddTime("poachtimer", 122, 0, "Poachers spawn", 32);
+			trQuestVarSet("NextPoacherSpawn", trTime()+80);
+			xsEnableRule("PoacherSpawnLoop");
+			ColouredIconChat("1,0,0", "icons\archer n throwing axeman icon 64", "<u>Watch out for poachers!</u>");
+			ColouredChat("0.9,0.3,0.3", "They can hide amongst the trees or actively scout for you.");
+			ColouredChat("0.9,0.3,0.3", "You will be attacked on sight.");
+			ColouredChat("0.9,0.3,0.3", "But can run or jump over the attacks.");
 		}
 		xsDisableSelf();
 	}
+}
+
+rule PoacherSpawnLoop
+highFrequency
+inactive
+{
+	if (trTime() > 1*trQuestVarGet("NextPoacherSpawn")) {
+		if(Stage == 1){
+			SpawnDeerPoacher(2);
+			trQuestVarModify("NextPoacherSpawn", "+", 50);
+		}
+	}
+	
 }
 
 rule TEST
@@ -157,7 +181,7 @@ inactive
 			xSetBool(dPlayerData, xPlayerActive, false);
 			PlayersActive = PlayersActive-1;
 		}
-		if((xGetBool(dPlayerData, xStopDeath) == false) && (trPlayerUnitCountSpecific(p, ""+GazelleProto) == 0) && (trPlayerUnitCountSpecific(p, "Hero Greek Bellerophon") == 0) && (xGetBool(dPlayerData, xPlayerActive) == true) && (xGetBool(dPlayerData, xPlayerDead) == false) && (InMinigame == false)){
+		if((xGetBool(dPlayerData, xStopDeath) == false) && (trPlayerUnitCountSpecific(p, ""+GazelleProto) == 0) && (trPlayerUnitCountSpecific(p, "Hero Greek Bellerophon") == 0) && (trPlayerUnitCountSpecific(p, "Prisoner") == 0) && (xGetBool(dPlayerData, xPlayerActive) == true) && (xGetBool(dPlayerData, xPlayerDead) == false) && (InMinigame == false)){
 			//PLAYER DEAD
 			PlayersDead = PlayersDead+1;
 			xSetBool(dPlayerData, xPlayerDead, true);
@@ -166,6 +190,11 @@ inactive
 		xSetVector(dPlayerData, xConstantPos, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
 		if(InMinigame == true){
 			//MINIGAME
+			for(b = 0; <xGetDatabaseCount(dPoachers)){
+				xDatabaseNext(dPoachers);
+				xUnitSelect(dPoachers, xUnitID);
+				trUnitChangeProtoUnit("Cinematic Block");
+			}
 			if(xGetBool(dPlayerData, xStopDeath) == true){
 				if(trPlayerUnitCountSpecific(p, ""+GazelleProto) == 1){
 					trVectorQuestVarSet("P"+p+"PosMG", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
@@ -243,7 +272,7 @@ inactive
 		}
 	}
 	//Check terrain for extraction is done in seperate trigger
-	if((PlayersReadyToLeave == PlayersActive+PlayersDead) && (PlayersDead != PlayersActive)){
+	if((PlayersActive == PlayersReadyToLeave+PlayersDead) && (PlayersDead != PlayersActive)){
 		xsEnableRule("DeerExit");
 	}
 }
@@ -271,8 +300,12 @@ inactive
 					PlayerChoice(x, "Participate in minigame?", "Yes", 4, "No", 0);
 				}
 			}
+			for(b = 0; <xGetDatabaseCount(dPoachers)){
+				xDatabaseNext(dPoachers);
+				xUnitSelect(dPoachers, xUnitID);
+				trUnitChangeProtoUnit("Cinematic Block");
+			}
 			xsDisableSelf();
-			unitTransform("Throwing Axeman", "Osiris SFX");
 		}
 	}
 }
@@ -397,9 +430,13 @@ highFrequency
 		uiLookAtProto(""+GazelleProto);
 		unitTransform("Tartarian Gate Flame", "Flowers");
 		unitTransform("Revealer", "Rocket");
+		for(b = 0; <xGetDatabaseCount(dPoachers)){
+			xDatabaseNext(dPoachers);
+			xUnitSelect(dPoachers, xUnitID);
+			trUnitChangeProtoUnit("Throwing Axeman");
+		}
 		xsDisableSelf();
 		InMinigame = false;
-		unitTransform("Osiris SFX", "Throwing Axeman");
 	}
 }
 
@@ -418,7 +455,10 @@ highFrequency
 	if(xGetBool(dPlayerData, xReadyToLeave) == true){
 		if((trGetTerrainType(1*xsVectorGetX(tempV)/2,1*xsVectorGetZ(tempV)/2) != getTerrainType(LeaveTerrain)) || (trGetTerrainSubType(1*xsVectorGetX(tempV)/2,1*xsVectorGetZ(tempV)/2) != getTerrainSubType(LeaveTerrain))){
 			xSetBool(dPlayerData, xReadyToLeave, false);
+			xSetBool(dPlayerData, xStopDeath, false);
 			PlayersReadyToLeave = PlayersReadyToLeave-1;
+			trUnitSelectByQV("P"+p+"Unit");
+			trMutateSelected(kbGetProtoUnitID("Hero Greek Jason"));
 			PlayerColouredChatToSelf(p, "You have left the extraction zone");
 			STOP = 1;
 		}
@@ -426,8 +466,16 @@ highFrequency
 	if((xGetBool(dPlayerData, xReadyToLeave) == false) && (STOP == 0)){
 		if((trGetTerrainType(1*xsVectorGetX(tempV)/2,1*xsVectorGetZ(tempV)/2) == getTerrainType(LeaveTerrain)) && (trGetTerrainSubType(1*xsVectorGetX(tempV)/2,1*xsVectorGetZ(tempV)/2) == getTerrainSubType(LeaveTerrain))){
 			xSetBool(dPlayerData, xReadyToLeave, true);
+			xSetBool(dPlayerData, xStopDeath, true);
 			PlayersReadyToLeave = PlayersReadyToLeave+1;
+			trUnitSelectByQV("P"+p+"Unit");
+			trMutateSelected(kbGetProtoUnitID("Prisoner"));
 			PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is ready to leave");
+			if(trQuestVarGet("P"+p+"LeaveMsg") == 0){
+				trQuestVarSet("P"+p+"LeaveMsg", 1);
+				ColouredChatToPlayer(p, "1,1,0", "You cannot jump in the extraction zone.");
+				ColouredChatToPlayer(p, "1,1,0", "You also cannot die or be attacked.");
+			}
 		}
 	}
 }
@@ -442,7 +490,7 @@ highFrequency
 	xsDisableRule("DeerLeave");
 	xsDisableRule("DeerAllDead");
 	xsDisableRule("DeerPoacherMovement");
-	trChatSend(0, "END R1");
+	xsDisableRule("PoacherSpawnLoop");
 	for(p=1 ; < cNumberNonGaiaPlayers){
 		trUnitSelectByQV("P"+p+"Unit");
 		trUnitChangeProtoUnit("Ragnorok SFX");
@@ -473,7 +521,7 @@ minInterval 5
 
 rule DeerPoacherMovement
 inactive
-minInterval 5
+highFrequency
 {
 	if(xGetDatabaseCount(dPoachers) > 0){
 		xDatabaseNext(dPoachers);

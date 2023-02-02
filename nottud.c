@@ -1473,7 +1473,7 @@ void createDeepForestArea(){
 	float StartMetreZ = StartTileZ*2+1;
 	ABORT = 0;
 	vector tileForTrack = getRandomTileMatchingTerrain("GaiaCreepA", 40);
-	while(((distanceBetweenVectors(tileForTrack, tileForStart, true) < 2000)) || ((distanceBetweenVectors(tileForTrack, tileForEnd, true) < 2000)) || (xsVectorGetX(tileForTrack) > 147)){
+	while(((distanceBetweenVectors(tileForTrack, tileForStart, true) < 2000)) || ((distanceBetweenVectors(tileForTrack, tileForEnd, true) < 2000)) || (xsVectorGetX(tileForTrack) > 100)){
 		tileForTrack = getRandomTileMatchingTerrain("GaiaCreepA", 10);
 		ABORT = ABORT +1;
 		if(ABORT > 500){
@@ -1587,4 +1587,5 @@ void createDeepForestArea(){
 	StageRequirement = 40;
 	StageScore = 0;
 	PlayersDead = 0;
+	EndPoint = tileForEnd;
 }
