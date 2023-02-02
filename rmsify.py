@@ -30,7 +30,7 @@ import sys
 FILENAME = 'Zoo Quest TEST.xs'
 rmsFunc = ''
 rmsMain = 'main.c'
-files = ['zshared.c', 'voids.c', 'globals.c', 'intsstrings.c', 'databases.c', 'ysearch.c', 'gamefunctions.c', 'choice.c', 'nottud.c', 'text.c', 'setup.c', 'techstat.c', 'tutorial.c', 'ActDeer.c']
+files = ['zshared.c', 'voids.c', 'globals.c', 'intsstrings.c', 'databases.c', 'ysearch.c', 'gamefunctions.c', 'choice.c', 'nottud.c', 'text.c', 'setup.c', 'techstat.c', 'tutorial.c', 'ActDeer.c', 'scorescreen.c']
 
 #########################################
 ####### CODE BELOW (DO NOT TOUCH) #######

@@ -1585,4 +1585,6 @@ void createDeepForestArea(){
 	}
 	refreshPassability();
 	Stage = 1;
+	StageRequirement = 40;
+	StageScore = 0;
 }

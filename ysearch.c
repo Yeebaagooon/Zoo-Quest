@@ -79,6 +79,9 @@ highFrequency
 				xSetVector(dMissiles, xMissilePos, closevector);
 				xSetVector(dMissiles, xMissilePrev, closevector);
 				xSetVector(dMissiles, xMissileDir, xsVectorNormalize(dist));
+				xAddDatabaseBlock(dDestroyMe, true);
+				xSetInt(dDestroyMe, xUnitID, temp);
+				xSetInt(dDestroyMe, xDestroyTime, trTimeMS()+10000);
 			}
 			case kbGetProtoUnitID("Hero Birth"):
 			{

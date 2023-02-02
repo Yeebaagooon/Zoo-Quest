@@ -1404,3 +1404,9 @@ void PaintAtlantisArea (int x0 = 0, int z0 = 0, int x1 = 0, int z1 = 0, int fill
 	//fill
 	trPaintTerrain(x1-1, z1-1, x0+1, z0+1, fill1, fill2, false);
 }
+
+void trUnitSetVariation(int name = 0, int var = 0){
+	trUnitSelectClear();
+	trUnitSelect(""+name);
+	trUnitSetAnimationPath(""+(var)+",0,0,0,0,0,0");
+}

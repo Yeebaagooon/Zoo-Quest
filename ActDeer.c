@@ -146,6 +146,9 @@ inactive
 			xSetBool(dPlayerData, xPlayerActive, false);
 			PlayersActive = PlayersActive-1;
 		}
+		if(xGetBool(dPlayerData, xStopDeath) == false){
+			//PLAYER DEAD
+		}
 		xSetVector(dPlayerData, xConstantPos, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
 		if(InMinigame == true){
 			//MINIGAME
@@ -420,6 +423,7 @@ highFrequency
 	xsDisableRule("DeerActLoops");
 	xsDisableRule("DeerMinigameDetect");
 	xsDisableRule("DeerMinigameEnd");
+	xsDisableRule("DeerLeave");
 	trChatSend(0, "END R1");
 	for(p=1 ; < cNumberNonGaiaPlayers){
 		trUnitSelectByQV("P"+p+"Unit");
@@ -431,5 +435,6 @@ highFrequency
 		trUnitChangeProtoUnit("Hero Death");
 	}
 	trClearCounterDisplay();
+	xsEnableRule("ScoreScreenStart");
 	xsDisableSelf();
 }

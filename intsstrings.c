@@ -63,6 +63,9 @@ const int EVENT_BUILD_AT_CURSOR = 31;
 float timediff = 0.0;
 int timelast = 0;
 vector MapCentre = vector(0,0,0);
+int StagePercent = 0;
+int StageRequirement = 0;
+int StageScore = 0;
 
 //DB STUFF
 int DestroyNumber = 0;

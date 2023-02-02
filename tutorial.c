@@ -259,7 +259,7 @@ inactive
 		xDatabaseNext(dDestroyMe);
 		if(trTimeMS() > xGetInt(dDestroyMe, xDestroyTime)){
 			xUnitSelect(dDestroyMe, xDestroyName);
-			trDamageUnit(100);
+			trUnitDestroy();
 			//trUnitDestroy();
 			//trChatSend(0, "<color=1,0,0>"+xGetInt(dDestroyMe, xDestroyName));
 			xFreeDatabaseBlock(dDestroyMe);
