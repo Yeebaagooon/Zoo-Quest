@@ -66,6 +66,7 @@ vector MapCentre = vector(0,0,0);
 int StagePercent = 0;
 int StageRequirement = 0;
 int StageScore = 0;
+int PlayersDead = 0;
 
 //DB STUFF
 int DestroyNumber = 0;
@@ -90,6 +91,7 @@ int xTeleportDue = 0;
 int xPlayerUnitID = 0;
 int xReadyToLeave = 0;
 int xConstantPos = 0;
+int xPlayerDead = 0;
 
 int dDestroyMe = 0;
 int xDestroyName = 0;
@@ -112,6 +114,7 @@ highFrequency
 	xPlayerUnitID = xInitAddInt(dPlayerData, "unitId", -1);
 	xReadyToLeave = xInitAddBool(dPlayerData, "leave area", false);
 	xConstantPos = xInitAddVector(dPlayerData, "position", vector(0,0,0));
+	xPlayerDead = xInitAddBool(dPlayerData, "dead", false);
 	xsDisableSelf();
 	for(p=1; <= cNumberNonGaiaPlayers) {
 		xAddDatabaseBlock(dPlayerData, true);

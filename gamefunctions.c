@@ -1,3 +1,48 @@
+string ActName(int num = 0){
+	string actnamed = "Error";
+	switch(num)
+	{
+		case 1:
+		{
+			actnamed = "Act I - Deer";
+		}
+		case 2:
+		{
+			actnamed = "Act II - Unknown";
+		}
+	}
+	return(actnamed);
+}
+
+string ActIcon(int num = 0){
+	string animaliconact = "Error";
+	switch(num)
+	{
+		case 1:
+		{
+			animaliconact = "icons\animal gazelle icon 64";
+		}
+		case 2:
+		{
+			animaliconact = "Act II - Not yet made";
+		}
+	}
+	return(animaliconact);
+}
+
+void SpawnDeerPoacher(int num = 0){
+	int temp = 0;
+	for(n=num ; > 0){
+		temp = trGetNextUnitScenarioNameNumber();
+		trQuestVarSetFromRand("x",0,252);
+		trQuestVarSetFromRand("z",0,252);
+		UnitCreate(cNumberNonGaiaPlayers, "Throwing Axeman", 1*trQuestVarGet("x"), 1*trQuestVarGet("z"), 0);
+		xAddDatabaseBlock(dPoachers, true);
+		xSetInt(dPoachers, xUnitID, temp);
+		xSetInt(dPoachers, xMoveTime, 0);
+	}
+}
+
 void hotkeyAbility(int ability = 0) {
 	xsSetContextPlayer(0);
 	int old = xGetPointer(dPlayerData);
@@ -70,6 +115,7 @@ void CreateGazelle(int p = 1, int x = 1, int z = 1, int heading = 0){
 	spyEffect(kbGetProtoUnitID("Gazelle"), 0, xsVectorSet(dPlayerData,xSpyID,p), vector(1,1,1));
 	xSetPointer(dPlayerData, p);
 	xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
+	xSetBool(dPlayerData, xStopDeath, false);
 }
 
 void AddTileMGDeer(int x = 0, int z = 0){

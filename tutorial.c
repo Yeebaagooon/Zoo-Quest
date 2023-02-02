@@ -148,7 +148,8 @@ inactive
 		trQuestVarSet("PlayersDoneTutorial", 0);
 		trLetterBox(true);
 		trUIFadeToColor(0,0,0,1,1,true);
-		characterDialog("Act I - Deer", " ", "icons\animal gazelle icon 64");
+		Stage = 1;
+		characterDialog(ActName(Stage), " ", ActIcon(Stage));
 		trSetFogAndBlackmap(true,true);
 		trDelayedRuleActivation("ResetBlackmap");
 		/*
@@ -244,7 +245,7 @@ inactive
 			//Greta heading 0 to player heading
 			UnitCreate(cNumberNonGaiaPlayers, "Female", trVectorQuestVarGetX("V"+p+"Second"), trVectorQuestVarGetZ("V"+p+"Second"), 0);
 			xUnitSelect(dPlayerData, xTarget);
-			trSetSelectedScale(1,0,1);
+			trSetSelectedScale(0.1,0.1,0.1);
 			trSetUnitOrientation(trVectorQuestVarGet("V"+p+"dir"), vector(0,1,0), true);
 			trUnitSelectClear();
 			trUnitSelectByQV("P"+p+"Unit");
@@ -276,7 +277,7 @@ inactive
 		if(xGetInt(dPlayerData, xTarget) > 0){
 			trUnitSelectClear();
 			trUnitSelect(""+xGetInt(dPlayerData, xTarget));
-			if(trUnitPercentDamaged() > 0){
+			if((trUnitPercentDamaged() > 0) || (trUnitDead())){
 				xUnitSelect(dPlayerData, xTarget);
 				trUnitConvert(p);
 				trMutateSelected(kbGetProtoUnitID("Transport Ship Greek"));
@@ -307,8 +308,10 @@ inactive
 				trVectorQuestVarSet("P"+p+"Pos", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
 				if(1*trQuestVarGet("P"+p+"FirstJump") == 0){
 					trQuestVarSet("P"+p+"FirstJump", 1);
-					if(trCurrentPlayer() == p){
-						startNPCDialog(4);
+					if(QuickStart == 0){
+						if(trCurrentPlayer() == p){
+							startNPCDialog(4);
+						}
 					}
 				}
 			}

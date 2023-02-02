@@ -1473,10 +1473,9 @@ void createDeepForestArea(){
 	float StartMetreZ = StartTileZ*2+1;
 	ABORT = 0;
 	vector tileForTrack = getRandomTileMatchingTerrain("GaiaCreepA", 40);
-	while(((distanceBetweenVectors(tileForTrack, tileForStart, true) < 2000)) || ((distanceBetweenVectors(tileForTrack, tileForEnd, true) < 2000)) || (xsVectorGetX(tileForTrack) > 160)){
+	while(((distanceBetweenVectors(tileForTrack, tileForStart, true) < 2000)) || ((distanceBetweenVectors(tileForTrack, tileForEnd, true) < 2000)) || (xsVectorGetX(tileForTrack) > 147)){
 		tileForTrack = getRandomTileMatchingTerrain("GaiaCreepA", 10);
 		ABORT = ABORT +1;
-		debugLog(""+ABORT);
 		if(ABORT > 500){
 			trChatSend(0, "ERROR - CANT PAINT BONUS AREA");
 			break;
@@ -1587,4 +1586,5 @@ void createDeepForestArea(){
 	Stage = 1;
 	StageRequirement = 40;
 	StageScore = 0;
+	PlayersDead = 0;
 }

@@ -14,6 +14,7 @@ highFrequency
 		trEventSetHandler(i, "hotkeyAbility");
 	}
 	trEventSetHandler(EVENT_BUILD_AT_CURSOR, "buildAtCursor");
+	trEventSetHandler(32, "SpawnDeerPoachers");
 	xsDisableSelf();
 }
 

@@ -30,6 +30,7 @@ int xTileSubType = 0;
 int dTiles2 = 0;
 
 int dPoachers = 0;
+int xMoveTime = 0;
 int dMissiles = 0;
 int xOwner = 0;
 int xMissilePos = 0;
@@ -79,6 +80,7 @@ highFrequency
 	
 	dPoachers = xInitDatabase("Poachers");
 	xUnitID = xInitAddInt(dPoachers, "unit id");
+	xMoveTime = xInitAddInt(dPoachers, "time", 0);
 	
 	dMissiles = xInitDatabase("Missiles DB");
 	xUnitID = xInitAddInt(dMissiles, "missile unit id", -1);

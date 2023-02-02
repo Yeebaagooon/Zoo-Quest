@@ -32,7 +32,10 @@ inactive
 		trDelayedRuleActivation("DeerActLoops");
 		trDelayedRuleActivation("DeerMinigameDetect");
 		trDelayedRuleActivation("DeerLeave");
-		trDelayedRuleActivation("DeerPoachers");
+		trDelayedRuleActivation("TEST");
+		trDelayedRuleActivation("DeerAllDead");
+		trDelayedRuleActivation("PoacherTimer");
+		xsEnableRule("DeerPoacherMovement");
 		BerryTarget = 8+PlayersActive;
 		if(BerryTarget >= xGetDatabaseCount(dBerryBush)){
 			BerryTarget = xGetDatabaseCount(dBerryBush)-12+PlayersActive;
@@ -41,25 +44,33 @@ inactive
 	}
 }
 
-rule DeerPoachers
+void SpawnDeerPoachers(int unused = 0){
+	xsSetContextPlayer(0);
+	unused = 0;
+	if(Stage == 1){
+		trOverlayText("Poachers Spawned!", 5.0,-1,-1,600);
+		SpawnDeerPoacher(3);
+	}
+}
+
+rule PoacherTimer
+highFrequency
+inactive
+{
+	if (trTime() > cActivationTime + 4) {
+		if(Stage == 1){
+			//Poacher CD timer
+			trCounterAddTime("poachtimer", 4, 0, "Poachers spawn", 32);
+		}
+		xsDisableSelf();
+	}
+}
+
+rule TEST
 highFrequency
 inactive
 {
 	if (trTime() > cActivationTime + 1) {
-		int temp = 0;
-		trChatSend(0, "Poacher");
-		temp = trGetNextUnitScenarioNameNumber();
-		UnitCreate(cNumberNonGaiaPlayers, "Throwing Axeman", 0 , 0 ,0);
-		xAddDatabaseBlock(dPoachers, true);
-		xSetInt(dPoachers, xUnitID, temp);
-		temp = trGetNextUnitScenarioNameNumber();
-		UnitCreate(cNumberNonGaiaPlayers, "Throwing Axeman", 20 , 20 ,0);
-		xAddDatabaseBlock(dPoachers, true);
-		xSetInt(dPoachers, xUnitID, temp);
-		temp = trGetNextUnitScenarioNameNumber();
-		UnitCreate(cNumberNonGaiaPlayers, "Throwing Axeman", 40 , 40 ,0);
-		xAddDatabaseBlock(dPoachers, true);
-		xSetInt(dPoachers, xUnitID, temp);
 		trTechGodPower(1, "Vision", 1);
 		trTechGodPower(1, "Sandstorm", 1);
 		xsDisableSelf();
@@ -146,8 +157,11 @@ inactive
 			xSetBool(dPlayerData, xPlayerActive, false);
 			PlayersActive = PlayersActive-1;
 		}
-		if(xGetBool(dPlayerData, xStopDeath) == false){
+		if((xGetBool(dPlayerData, xStopDeath) == false) && (trPlayerUnitCountSpecific(p, ""+GazelleProto) == 0) && (trPlayerUnitCountSpecific(p, "Hero Greek Bellerophon") == 0) && (xGetBool(dPlayerData, xPlayerActive) == true) && (xGetBool(dPlayerData, xPlayerDead) == false) && (InMinigame == false)){
 			//PLAYER DEAD
+			PlayersDead = PlayersDead+1;
+			xSetBool(dPlayerData, xPlayerDead, true);
+			PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is dead!");
 		}
 		xSetVector(dPlayerData, xConstantPos, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
 		if(InMinigame == true){
@@ -168,7 +182,7 @@ inactive
 						PlayersMinigaming = PlayersMinigaming-1;
 						if(trCurrentPlayer() == p){
 							playSound("xlose.wav");
-							trOverlayText("Fail!", 3.0,-1,-1,600);
+							trOverlayText("Minigame Failed!", 3.0,-1,-1,600);
 						}
 					}
 					trVectorQuestVarSet("P"+p+"PosMG", trVectorQuestVarGet("P"+p+"PosMG")/2);
@@ -186,7 +200,7 @@ inactive
 						MinigameWins = MinigameWins+1;
 						if(trCurrentPlayer() == p){
 							playSound("xwin.wav");
-							trMessageSetText("You have won!", 4000);
+							trMessageSetText("You have won the minigame!", 4000);
 						}
 					}
 				}
@@ -228,8 +242,8 @@ inactive
 			}
 		}
 	}
-	//Check terrain for extraction
-	if(PlayersReadyToLeave == PlayersActive){
+	//Check terrain for extraction is done in seperate trigger
+	if((PlayersReadyToLeave == PlayersActive+PlayersDead) && (PlayersDead != PlayersActive)){
 		xsEnableRule("DeerExit");
 	}
 }
@@ -258,6 +272,7 @@ inactive
 				}
 			}
 			xsDisableSelf();
+			unitTransform("Throwing Axeman", "Osiris SFX");
 		}
 	}
 }
@@ -384,6 +399,7 @@ highFrequency
 		unitTransform("Revealer", "Rocket");
 		xsDisableSelf();
 		InMinigame = false;
+		unitTransform("Osiris SFX", "Throwing Axeman");
 	}
 }
 
@@ -424,6 +440,8 @@ highFrequency
 	xsDisableRule("DeerMinigameDetect");
 	xsDisableRule("DeerMinigameEnd");
 	xsDisableRule("DeerLeave");
+	xsDisableRule("DeerAllDead");
+	xsDisableRule("DeerPoacherMovement");
 	trChatSend(0, "END R1");
 	for(p=1 ; < cNumberNonGaiaPlayers){
 		trUnitSelectByQV("P"+p+"Unit");
@@ -437,4 +455,35 @@ highFrequency
 	trClearCounterDisplay();
 	xsEnableRule("ScoreScreenStart");
 	xsDisableSelf();
+}
+
+rule DeerAllDead
+inactive
+minInterval 5
+{
+	if((Stage == 1) && (PlayersDead == PlayersActive)){
+		trShowWinLose("All players are dead", "xlose.wav");
+		for(p=1 ; < cNumberNonGaiaPlayers){
+			trSetPlayerDefeated(p);
+		}
+		xsDisableSelf();
+		trEndGame();
+	}
+}
+
+rule DeerPoacherMovement
+inactive
+minInterval 5
+{
+	if(xGetDatabaseCount(dPoachers) > 0){
+		xDatabaseNext(dPoachers);
+		if(xGetInt(dPoachers, xMoveTime) < trTime()){
+			trQuestVarSetFromRand("x",0,252);
+			trQuestVarSetFromRand("y",30,80);
+			trQuestVarSetFromRand("z",0,252);
+			xSetInt(dPoachers, xMoveTime, trTime()+1*trQuestVarGet("y"));
+			xUnitSelect(dPoachers, xUnitID);
+			trUnitMoveToPoint(1*trQuestVarGet("x"),5,1*trQuestVarGet("z"),-1,true);
+		}
+	}
 }

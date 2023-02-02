@@ -44,7 +44,7 @@ inactive
 highFrequency
 {
 	trModifyProtounit("Dwarf", 0, 55, 4);
-	modifyProtounitAbsolute("Throwing Axeman", cNumberNonGaiaPlayers, 2, 20);
+	modifyProtounitAbsolute("Throwing Axeman", cNumberNonGaiaPlayers, 2, 28);
 	modifyProtounitAbsolute("Throwing Axeman", cNumberNonGaiaPlayers, 11, 20);
 	modifyProtounitAbsolute("Lampades Bolt", cNumberNonGaiaPlayers, 1, 5);
 	modifyProtounitAbsolute("Lampades Bolt", cNumberNonGaiaPlayers, 8, 10);
@@ -54,11 +54,11 @@ highFrequency
 		trModifyProtounit("Hero Greek Bellerophon", p, 55, 4);
 		//trQuestVarSet("P"+p+"FlagBaseWarnF", 15);
 		//modifyProtounitAbsolute("Gate", p, 0, 1000);
-		modifyProtounitAbsolute("Hero Greek Jason", p, 0, 2);
-		modifyProtounitAbsolute("Hero Greek Jason", p, 2, 22);
+		modifyProtounitAbsolute(""+GazelleProto, p, 0, 2);
+		modifyProtounitAbsolute(""+GazelleProto, p, 2, 22);
 		modifyProtounitAbsolute("Hero Greek Bellerophon", p, 0, 2);
 		for(a = 24; <= 29){
-			modifyProtounitAbsolute("Hero Greek Jason", p, a, 0);
+			modifyProtounitAbsolute(""+GazelleProto, p, a, 0);
 			modifyProtounitAbsolute("Hero Greek Bellerophon", p, a, 0);
 		}
 		modifyBuildableProto("House", p);
