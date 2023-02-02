@@ -1419,3 +1419,15 @@ void trUnitSetVariation(int name = 0, int var = 0){
 	trUnitSelect(""+name);
 	trUnitSetAnimationPath(""+(var)+",0,0,0,0,0,0");
 }
+
+vector HeadingToVector(int heading = 0){
+	heading = heading*PI/180;
+	vector hi = xsVectorSet(xsSin(heading),0,xsCos(heading));
+	return(hi);
+	//new Vector2((float)Math.Cos(radians), (float)Math.Sin(radians))
+}
+//Does 90 degress left
+
+void trSetScale(int s = 0){
+	trSetSelectedScale(s,s,s);
+}

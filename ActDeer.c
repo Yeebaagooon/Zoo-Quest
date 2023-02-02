@@ -57,6 +57,7 @@ void SpawnDeerPoachers(int unused = 0){
 	if(Stage == 1){
 		trOverlayText("Poachers Spawned!", 5.0,-1,-1,600);
 		SpawnDeerPoacher(xsMax(PlayersActive,2));
+		playSound("\cinematics\04_in\armyarrive.wav");
 	}
 }
 
@@ -135,6 +136,10 @@ void ProcessBerries(int count = 1) {
 				}
 				//playSound("\Yeebaagooon\Zoo Quest\Eat.mp3");
 				xFreeDatabaseBlock(dBerryBush);
+				if(xGetDatabaseCount(dBerryBush) == 0){
+					playSoundCustom("cinematics\10_in\clearedcity.wav", "\Yeebaagooon\Zoo Quest\Skillpoint.mp3");
+					trOverlayText("All berries eaten!", 5.0,-1,-1,600);
+				}
 			}
 		}
 	}
@@ -276,6 +281,51 @@ inactive
 	//Check terrain for extraction is done in seperate trigger
 	if((PlayersActive == PlayersReadyToLeave+PlayersDead) && (PlayersDead != PlayersActive)){
 		xsEnableRule("DeerExit");
+	}
+	if(xGetDatabaseCount(dChests) > 0){
+		xDatabaseNext(dChests);
+		int n = xGetInt(dChests, xUnitID);
+		xUnitSelect(dChests,xUnitID);
+		if (trUnitIsSelected()) {
+			uiClearSelection();
+			startNPCDialog(5);
+		}
+		trUnitSelectClear();
+		for(pl=1 ; < cNumberNonGaiaPlayers){
+			if(trCountUnitsInArea(""+n,pl,"All", 5) > 0){
+				xUnitSelect(dChests,xUnitID);
+				trUnitSetAnimation("SE_Great_Box_Opening",false,-1);
+				xUnitSelect(dChests,xUnitID);
+				trUnitHighlight(3, false);
+				trUnitSelectClear();
+				xUnitSelect(dChests, xUnlockUnitID);
+				trUnitChangeProtoUnit("Spy Eye");
+				trUnitSelectClear();
+				xUnitSelect(dChests, xUnlockUnitID);
+				trMutateSelected(kbGetProtoUnitID("Pyramid Osiris Xpack"));
+				trUnitSelectClear();
+				xUnitSelect(dChests, xUnlockUnitID);
+				trSetSelectedScale(100,0,0);
+				trUnitSelectClear();
+				xUnitSelect(dChests, xUnlockUnitID);
+				trUnitOverrideAnimation(6, 0, false, true, -1);
+				trUnitSelectClear();
+				xUnitSelect(dChests, xUnlockUnitID);
+				trUnitSetAnimationPath("0,1,0,0,0,0");
+				xAddDatabaseBlock(dDestroyMe, true);
+				xSetInt(dDestroyMe, xDestroyName, xGetInt(dChests, xUnlockUnitID));
+				xSetInt(dDestroyMe, xDestroyTime, trTimeMS()+3000);
+				ChestsFound = ChestsFound+1;
+				xFreeDatabaseBlock(dChests);
+				if(iModulo(2, trTimeMS()) == 0){
+					PlayerChoice(pl, "Choose your reward:", "+1 hp", 5, "+4 LOS", 6, 10000);
+				}
+				else{
+					PlayerChoice(pl, "Choose your reward:", "+1 hp", 5, "+0.5 Speed", 7, 10000);
+				}
+			}
+		}
+		
 	}
 }
 
@@ -486,6 +536,7 @@ rule DeerExit
 inactive
 highFrequency
 {
+	trCounterAbort("poachtimer");
 	xsDisableRule("DeerActLoops");
 	xsDisableRule("DeerMinigameDetect");
 	xsDisableRule("DeerMinigameEnd");

@@ -8,7 +8,7 @@ rule AnswerConsequences
 highFrequency
 inactive
 {
-	xsSetContextPlayer(0);
+	//xsSetContextPlayer(0);
 	//[REMEMBER THIS IS OPEN AND MAY NEED PLAYER SPECIFIC TAG]
 	if(ActionChoice != 0){
 		int p = ActionChoice;
@@ -53,6 +53,33 @@ inactive
 					uiLookAtProto(""+GazelleProto);
 				}
 			}
+			case 5:
+			{
+				//Deer HP
+				trModifyProtounit(""+GazelleProto, p, 0, 1);
+				trModifyProtounit("Hero Greek Bellerophon", p, 0, 1);
+				if(trCurrentPlayer() == p){
+					playSound("researchcomplete.wav");
+				}
+			}
+			case 6:
+			{
+				//Deer LOS
+				trModifyProtounit(""+GazelleProto, p, 2, 4);
+				trModifyProtounit("Hero Greek Bellerophon", p, 2, 4);
+				if(trCurrentPlayer() == p){
+					playSound("researchcomplete.wav");
+				}
+			}
+			case 7:
+			{
+				//Deer speed
+				trModifyProtounit(""+GazelleProto, p, 1, 0.5);
+				trModifyProtounit("Hero Greek Bellerophon", p, 1, 0.5);
+				if(trCurrentPlayer() == p){
+					playSound("researchcomplete.wav");
+				}
+			}
 		}
 		trQuestVarSet("P"+ActionChoice+"YesAction", 0);
 		trQuestVarSet("P"+ActionChoice+"NoAction", 0);
@@ -61,6 +88,11 @@ inactive
 		//[Safety]
 		unitTransform(""+YesChoiceUnitName + " Hero", "Cinematic Block");
 		unitTransform(""+NoChoiceUnitName + " Hero", "Cinematic Block");
+		if(trCurrentPlayer() == p){
+			uiZoomToProto(""+GazelleProto);
+			//uiLookAtProto(""+GazelleProto);
+			uiLookAtUnit(1*trQuestVarGet("P"+p+"Unit"));
+		}
 		xsDisableSelf();
 	}
 }
@@ -69,7 +101,7 @@ inactive
 //xsGetContextPlayer for problems
 
 void PlayerChoice(int p = 0, string prompt = "Question", string answerone = "Answer 1", int effectone = 0, string answertwo = "Answer 2", int effecttwo = 0, int timeout = 10000){
-	xsDisableSelf();
+	//xsDisableSelf();
 	int temp = 0;
 	//Check choice units alive
 	//xsSetContextPlayer(-1);
@@ -112,8 +144,10 @@ void ChooseYes(int p = 0){
 		trackAddWaypoint();
 		trackPlay(10, EVENT_REMOVE_CAM_TRACKS);
 		trUnitSelectClear();
+		trBlockAllSounds();
 		uiFindType(""+YesChoiceUnitName);
 		uiTransformSelectedUnit(""+YesChoiceUnitName + " Hero");
+		trUnblockAllSounds();
 	}
 }
 
@@ -126,8 +160,10 @@ void ChooseNo(int p = 0){
 		trackAddWaypoint();
 		trackPlay(10,EVENT_REMOVE_CAM_TRACKS);
 		trUnitSelectClear();
+		trBlockAllSounds();
 		uiFindType(""+NoChoiceUnitName);
 		uiTransformSelectedUnit(""+NoChoiceUnitName + " Hero");
+		trUnblockAllSounds();
 	}
 }
 

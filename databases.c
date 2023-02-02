@@ -41,6 +41,12 @@ int xMissilePrev = 0;
 int dDots = 0;
 int xPercent = 0;
 
+int dChests = 0;
+int xKeyType = 0;
+int xUnlockUnitID = 0;
+
+int dKeys = 0;
+int xKeySFXID = 0;
 
 
 rule initialise_spy_database
@@ -93,6 +99,16 @@ highFrequency
 	dDots = xInitDatabase("Dot DB");
 	xUnitID = xInitAddInt(dDots, "unit id", 0);
 	xPercent = xInitAddInt(dDots, "per", 0);
+	
+	dChests = xInitDatabase("chest DB");
+	xUnitID = xInitAddInt(dChests, "unit id", 0);
+	xKeyType = xInitAddInt(dChests, "key type", 0);
+	xUnlockUnitID = xInitAddInt(dChests, "unlock unit id", 0);
+	
+	dKeys = xInitDatabase("key DB");
+	xUnitID = xInitAddInt(dKeys, "unit id", 0);
+	xKeyType = xInitAddInt(dKeys, "key type", 0);
+	xKeySFXID = xInitAddInt(dKeys, "sfx id", 0);
 	
 	MapCentre = xsVectorSet(252/2-1,0,252/2-1);
 }

@@ -36,7 +36,7 @@ inactive
 	trFadeOutMusic(3);
 	xsEnableRule("DestroyStuff");
 	characterDialog(ActName(Stage) + " - " + StageRequirement + " percent required to advance", "", ActIcon(Stage));
-	StageScore = 30;
+	StageScore = 60;
 	//Current req is 40
 }
 

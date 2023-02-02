@@ -140,6 +140,37 @@ void CreateGazelle(int p = 1, int x = 1, int z = 1, int heading = 0){
 	xSetPointer(dPlayerData, p);
 	xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
 	xSetBool(dPlayerData, xStopDeath, false);
+	/*
+	vector test = kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit"));
+	test = test + HeadingToVector(heading);
+	test = test + HeadingToVector(heading);
+	UnitCreate(p, "Dwarf", xsVectorGetX(test),xsVectorGetZ(test), 0);
+	*/
+}
+
+void CreateChest(int x = 1, int z = 1, int heading = -1){
+	if(heading == -1){
+		trQuestVarSetFromRand("temph",0,360,true);
+		heading = 1*trQuestVarGet("temph");
+	}
+	trQuestVarSet("temp",trGetNextUnitScenarioNameNumber());
+	UnitCreate(0, "Dwarf", x, z, heading);
+	trUnitSelectByQV("temp");
+	trUnitChangeProtoUnit("Titan Atlantean");
+	trUnitSelectByQV("temp");
+	trUnitChangeProtoUnit("Great Box");
+	trUnitSelectByQV("temp");
+	trSetSelectedScale(0.6,0.6,0.6);
+	trUnitSelectByQV("temp");
+	trUnitHighlight(10000, false);
+	yFindLatestReverse("temp2", "Titan Gate Dead", 0);
+	trUnitSelectByQV("temp2");
+	trUnitChangeProtoUnit("Dwarf");
+	trUnitSelectByQV("temp2");
+	trUnitChangeProtoUnit("Cinematic Block");
+	xAddDatabaseBlock(dChests, true);
+	xSetInt(dChests, xUnitID, 1*trQuestVarGet("temp"));
+	xSetInt(dChests, xUnlockUnitID, 1*trQuestVarGet("temp2"));
 }
 
 void AddTileMGDeer(int x = 0, int z = 0){

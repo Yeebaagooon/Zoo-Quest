@@ -1474,6 +1474,14 @@ void createDeepForestArea(){
 	trUnitSelectClear();
 	trUnitSelect(""+currentId);
 	trMutateSelected(kbGetProtoUnitID("Osiris Box Glow"));
+	/*
+	trUnitSelectClear();
+	trUnitSelect(""+currentId);
+	trSetSelectedScale(0,0,0);
+	trUnitSelectClear();
+	trUnitSelect(""+currentId);
+	trSetSelectedUpVector(0,1,0);
+	*/
 	trUnitSelectClear();
 	trUnitSelect(""+currentId);
 	trUnitSetAnimationPath("0,0,1,0,0,0");
@@ -1601,6 +1609,11 @@ void createDeepForestArea(){
 		trUnitSelectClear();
 		trUnitSelect(""+currentId );
 		trUnitChangeInArea(0,0,"Tamarisk Tree Dead","Cinematic Block", 15);
+	}
+	for(chestnum=1 ; <= 4){
+		trQuestVarSetFromRand("x", 0, 252);
+		trQuestVarSetFromRand("z", 0, 252);
+		CreateChest(1*trQuestVarGet("x"),1*trQuestVarGet("z"));
 	}
 	refreshPassability();
 	Stage = 1;

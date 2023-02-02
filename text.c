@@ -105,6 +105,17 @@ int npcDiag(int npc = 0, int dialog = 0) {
 				}
 			}
 		}
+		case 5:
+		{
+			switch(dialog)
+			{
+				case 1:
+				{
+					uiMessageBox("This is a treasure chest, come close to unlock it.");
+					dialog = 0;
+				}
+			}
+		}
 		
 	}
 	return(dialog);
