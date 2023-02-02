@@ -68,6 +68,7 @@ int StagePercent = 0;
 int StageRequirement = 0;
 int StageScore = 0;
 int PlayersDead = 0;
+int FlagUnitID = 0;
 
 //DB STUFF
 int DestroyNumber = 0;

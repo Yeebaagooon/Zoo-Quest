@@ -56,6 +56,7 @@ inactive
 		}
 		trQuestVarSet("P"+ActionChoice+"YesAction", 0);
 		trQuestVarSet("P"+ActionChoice+"NoAction", 0);
+		trQuestVarSet("P"+ActionChoice+"ChoiceDialog", 0);
 		ActionChoice = 0;
 		//[Safety]
 		unitTransform(""+YesChoiceUnitName + " Hero", "Cinematic Block");
@@ -67,7 +68,7 @@ inactive
 //PlayerChoice(1, "Choose a god power again", "Vision", 1, "Serpents", 2);
 //xsGetContextPlayer for problems
 
-void PlayerChoice(int p = 0, string prompt = "Question", string answerone = "Answer 1", int effectone = 0, string answertwo = "Answer 2", int effecttwo = 0){
+void PlayerChoice(int p = 0, string prompt = "Question", string answerone = "Answer 1", int effectone = 0, string answertwo = "Answer 2", int effecttwo = 0, int timeout = 10000){
 	xsDisableSelf();
 	int temp = 0;
 	//Check choice units alive
@@ -98,6 +99,9 @@ void PlayerChoice(int p = 0, string prompt = "Question", string answerone = "Ans
 		trShowChoiceDialog(prompt, answerone, p, answertwo, p+12);
 		//camera
 	}
+	trQuestVarSet("P"+p+"ChoiceDialog", 1);
+	trQuestVarSet("P"+p+"ChoiceTimer", trTimeMS()+timeout);
+	xsEnableRule("ChoiceTimeout" + p);
 }
 
 void ChooseYes(int p = 0){
@@ -178,6 +182,243 @@ inactive
 	//trChatSend(0, "choice units set");
 }
 
-//[TIMEOUT]
-//gadgetUnreal("ShowChoiceBox");
-//trIsGadgetVisible("ShowChoiceBox")
+//[Zeno will be angry about this but couldn't get it in a function with the delay :(]
+rule ChoiceTimeout1
+highFrequency
+inactive
+{
+	int p =1;
+	if(trTimeMS() > 1*trQuestVarGet("P"+p+"ChoiceTimer")){
+		if(1*trQuestVarGet("P"+p+"ChoiceDialog") == 1){
+			if(trCurrentPlayer() == p){
+				gadgetUnreal("ShowChoiceBox");
+			}
+			trQuestVarSet("P"+p+"ChoiceDialog", 0);
+			trUnitSelectByQV("P"+p+"No");
+			trUnitChangeProtoUnit("Cinematic Block");
+			trUnitSelectByQV("P"+p+"Yes");
+			trUnitChangeProtoUnit("Cinematic Block");
+		}
+		xsDisableSelf();
+	}
+}
+
+rule ChoiceTimeout2
+highFrequency
+inactive
+{
+	int p =2;
+	if(trTimeMS() > 1*trQuestVarGet("P"+p+"ChoiceTimer")){
+		if(1*trQuestVarGet("P"+p+"ChoiceDialog") == 1){
+			if(trCurrentPlayer() == p){
+				gadgetUnreal("ShowChoiceBox");
+			}
+			trQuestVarSet("P"+p+"ChoiceDialog", 0);
+			trUnitSelectByQV("P"+p+"No");
+			trUnitChangeProtoUnit("Cinematic Block");
+			trUnitSelectByQV("P"+p+"Yes");
+			trUnitChangeProtoUnit("Cinematic Block");
+		}
+		xsDisableSelf();
+	}
+}
+
+rule ChoiceTimeout3
+highFrequency
+inactive
+{
+	int p =3;
+	if(trTimeMS() > 1*trQuestVarGet("P"+p+"ChoiceTimer")){
+		if(1*trQuestVarGet("P"+p+"ChoiceDialog") == 1){
+			if(trCurrentPlayer() == p){
+				gadgetUnreal("ShowChoiceBox");
+			}
+			trQuestVarSet("P"+p+"ChoiceDialog", 0);
+			trUnitSelectByQV("P"+p+"No");
+			trUnitChangeProtoUnit("Cinematic Block");
+			trUnitSelectByQV("P"+p+"Yes");
+			trUnitChangeProtoUnit("Cinematic Block");
+		}
+		xsDisableSelf();
+	}
+}
+
+rule ChoiceTimeout4
+highFrequency
+inactive
+{
+	int p =4;
+	if(trTimeMS() > 1*trQuestVarGet("P"+p+"ChoiceTimer")){
+		if(1*trQuestVarGet("P"+p+"ChoiceDialog") == 1){
+			if(trCurrentPlayer() == p){
+				gadgetUnreal("ShowChoiceBox");
+			}
+			trQuestVarSet("P"+p+"ChoiceDialog", 0);
+			trUnitSelectByQV("P"+p+"No");
+			trUnitChangeProtoUnit("Cinematic Block");
+			trUnitSelectByQV("P"+p+"Yes");
+			trUnitChangeProtoUnit("Cinematic Block");
+		}
+		xsDisableSelf();
+	}
+}
+
+rule ChoiceTimeout5
+highFrequency
+inactive
+{
+	int p =5;
+	if(trTimeMS() > 1*trQuestVarGet("P"+p+"ChoiceTimer")){
+		if(1*trQuestVarGet("P"+p+"ChoiceDialog") == 1){
+			if(trCurrentPlayer() == p){
+				gadgetUnreal("ShowChoiceBox");
+			}
+			trQuestVarSet("P"+p+"ChoiceDialog", 0);
+			trUnitSelectByQV("P"+p+"No");
+			trUnitChangeProtoUnit("Cinematic Block");
+			trUnitSelectByQV("P"+p+"Yes");
+			trUnitChangeProtoUnit("Cinematic Block");
+		}
+		xsDisableSelf();
+	}
+}
+
+rule ChoiceTimeout6
+highFrequency
+inactive
+{
+	int p =6;
+	if(trTimeMS() > 1*trQuestVarGet("P"+p+"ChoiceTimer")){
+		if(1*trQuestVarGet("P"+p+"ChoiceDialog") == 1){
+			if(trCurrentPlayer() == p){
+				gadgetUnreal("ShowChoiceBox");
+			}
+			trQuestVarSet("P"+p+"ChoiceDialog", 0);
+			trUnitSelectByQV("P"+p+"No");
+			trUnitChangeProtoUnit("Cinematic Block");
+			trUnitSelectByQV("P"+p+"Yes");
+			trUnitChangeProtoUnit("Cinematic Block");
+		}
+		xsDisableSelf();
+	}
+}
+
+rule ChoiceTimeout7
+highFrequency
+inactive
+{
+	int p =7;
+	if(trTimeMS() > 1*trQuestVarGet("P"+p+"ChoiceTimer")){
+		if(1*trQuestVarGet("P"+p+"ChoiceDialog") == 1){
+			if(trCurrentPlayer() == p){
+				gadgetUnreal("ShowChoiceBox");
+			}
+			trQuestVarSet("P"+p+"ChoiceDialog", 0);
+			trUnitSelectByQV("P"+p+"No");
+			trUnitChangeProtoUnit("Cinematic Block");
+			trUnitSelectByQV("P"+p+"Yes");
+			trUnitChangeProtoUnit("Cinematic Block");
+		}
+		xsDisableSelf();
+	}
+}
+
+rule ChoiceTimeout8
+highFrequency
+inactive
+{
+	int p =8;
+	if(trTimeMS() > 1*trQuestVarGet("P"+p+"ChoiceTimer")){
+		if(1*trQuestVarGet("P"+p+"ChoiceDialog") == 1){
+			if(trCurrentPlayer() == p){
+				gadgetUnreal("ShowChoiceBox");
+			}
+			trQuestVarSet("P"+p+"ChoiceDialog", 0);
+			trUnitSelectByQV("P"+p+"No");
+			trUnitChangeProtoUnit("Cinematic Block");
+			trUnitSelectByQV("P"+p+"Yes");
+			trUnitChangeProtoUnit("Cinematic Block");
+		}
+		xsDisableSelf();
+	}
+}
+
+rule ChoiceTimeout9
+highFrequency
+inactive
+{
+	int p =9;
+	if(trTimeMS() > 1*trQuestVarGet("P"+p+"ChoiceTimer")){
+		if(1*trQuestVarGet("P"+p+"ChoiceDialog") == 1){
+			if(trCurrentPlayer() == p){
+				gadgetUnreal("ShowChoiceBox");
+			}
+			trQuestVarSet("P"+p+"ChoiceDialog", 0);
+			trUnitSelectByQV("P"+p+"No");
+			trUnitChangeProtoUnit("Cinematic Block");
+			trUnitSelectByQV("P"+p+"Yes");
+			trUnitChangeProtoUnit("Cinematic Block");
+		}
+		xsDisableSelf();
+	}
+}
+
+rule ChoiceTimeout10
+highFrequency
+inactive
+{
+	int p =10;
+	if(trTimeMS() > 1*trQuestVarGet("P"+p+"ChoiceTimer")){
+		if(1*trQuestVarGet("P"+p+"ChoiceDialog") == 1){
+			if(trCurrentPlayer() == p){
+				gadgetUnreal("ShowChoiceBox");
+			}
+			trQuestVarSet("P"+p+"ChoiceDialog", 0);
+			trUnitSelectByQV("P"+p+"No");
+			trUnitChangeProtoUnit("Cinematic Block");
+			trUnitSelectByQV("P"+p+"Yes");
+			trUnitChangeProtoUnit("Cinematic Block");
+		}
+		xsDisableSelf();
+	}
+}
+
+rule ChoiceTimeout11
+highFrequency
+inactive
+{
+	int p =11;
+	if(trTimeMS() > 1*trQuestVarGet("P"+p+"ChoiceTimer")){
+		if(1*trQuestVarGet("P"+p+"ChoiceDialog") == 1){
+			if(trCurrentPlayer() == p){
+				gadgetUnreal("ShowChoiceBox");
+			}
+			trQuestVarSet("P"+p+"ChoiceDialog", 0);
+			trUnitSelectByQV("P"+p+"No");
+			trUnitChangeProtoUnit("Cinematic Block");
+			trUnitSelectByQV("P"+p+"Yes");
+			trUnitChangeProtoUnit("Cinematic Block");
+		}
+		xsDisableSelf();
+	}
+}
+
+rule ChoiceTimeout12
+highFrequency
+inactive
+{
+	int p =12;
+	if(trTimeMS() > 1*trQuestVarGet("P"+p+"ChoiceTimer")){
+		if(1*trQuestVarGet("P"+p+"ChoiceDialog") == 1){
+			if(trCurrentPlayer() == p){
+				gadgetUnreal("ShowChoiceBox");
+			}
+			trQuestVarSet("P"+p+"ChoiceDialog", 0);
+			trUnitSelectByQV("P"+p+"No");
+			trUnitChangeProtoUnit("Cinematic Block");
+			trUnitSelectByQV("P"+p+"Yes");
+			trUnitChangeProtoUnit("Cinematic Block");
+		}
+		xsDisableSelf();
+	}
+}

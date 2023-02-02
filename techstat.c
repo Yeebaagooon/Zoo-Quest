@@ -45,6 +45,8 @@ highFrequency
 {
 	trModifyProtounit("Dwarf", 0, 55, 4);
 	modifyProtounitAbsolute("Throwing Axeman", cNumberNonGaiaPlayers, 2, 28);
+	modifyProtounitAbsolute("Throwing Axeman", cNumberNonGaiaPlayers, 0, 100);
+	modifyProtounitAbsolute("Throwing Axeman", cNumberNonGaiaPlayers, 30, 1);
 	modifyProtounitAbsolute("Throwing Axeman", cNumberNonGaiaPlayers, 11, 20);
 	modifyProtounitAbsolute("Lampades Bolt", cNumberNonGaiaPlayers, 1, 5);
 	modifyProtounitAbsolute("Lampades Bolt", cNumberNonGaiaPlayers, 8, 10);

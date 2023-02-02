@@ -36,7 +36,7 @@ inactive
 	trFadeOutMusic(3);
 	xsEnableRule("DestroyStuff");
 	characterDialog(ActName(Stage) + " - " + StageRequirement + " percent required to advance", "", ActIcon(Stage));
-	StageScore = 41;
+	StageScore = 30;
 	//Current req is 40
 }
 
@@ -63,6 +63,7 @@ inactive
 {
 	xsDisableSelf();
 	trLetterBox(false);
+	trSetFogAndBlackmap(false, false);
 	trUIFadeToColor(0,0,0,1000,1,false);
 	PaintAtlantisArea(30,10,32,61,5,4);
 	trCameraCut(vector(171.726913,123.743729,70.647377), vector(-0.707094,-0.707106,0.004380), vector(-0.707094,0.707106,0.004380), vector(0.006194,0.000000,0.999981));
@@ -129,9 +130,35 @@ highFrequency
 {
 	xsDisableSelf();
 	if(StageScore >= StageRequirement){
-		characterDialog(ActName(Stage) + " - Stage Passed", ""+StageScore + " percent complete", ActIcon(Stage));
+		characterDialog(ActName(Stage) + " - Act Passed", ""+StageScore + " percent complete", ActIcon(Stage));
 	}
 	else if(StageScore < StageRequirement){
-		characterDialog(ActName(Stage) + " - Stage Failed", ""+StageScore + "/" + StageRequirement + " percent complete", ActIcon(Stage));
+		characterDialog(ActName(Stage) + " - Act Failed", ""+StageScore + "/" + StageRequirement + " percent complete", ActIcon(Stage));
+		xsEnableRule("LoseToScore");
+	}
+}
+
+rule LoseToScore
+highFrequency
+inactive
+{
+	if (trTime() > cActivationTime + 3) {
+		xsDisableSelf();
+		xsEnableRule("EndGame");
+		trLetterBox(false);
+	}
+}
+
+rule EndGame
+highFrequency
+inactive
+{
+	if (trTime() > cActivationTime + 1) {
+		trShowWinLose("You failed to progress", "xlose.wav");
+		for(p=1 ; < cNumberNonGaiaPlayers){
+			trSetPlayerDefeated(p);
+		}
+		xsDisableSelf();
+		trEndGame();
 	}
 }

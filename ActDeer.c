@@ -35,6 +35,7 @@ inactive
 		trDelayedRuleActivation("TEST");
 		trDelayedRuleActivation("DeerAllDead");
 		trDelayedRuleActivation("PoacherTimer");
+		trDelayedRuleActivation("DeerEndZoneSee");
 		xsEnableRule("DeerPoacherMovement");
 		BerryTarget = 8+PlayersActive;
 		if(BerryTarget >= xGetDatabaseCount(dBerryBush)){
@@ -98,6 +99,7 @@ inactive
 		trTechGodPower(1, "Vision", 1);
 		trTechGodPower(1, "Sandstorm", 1);
 		xsDisableSelf();
+		trDelayedRuleActivation("ResetBlackmap");
 	}
 }
 
@@ -297,7 +299,7 @@ inactive
 			trCounterAddTime("CDMG", 12, 0, "<color={PlayerColor("+p+")}>Minigame Starts", 27);
 			for(x=1 ; < cNumberNonGaiaPlayers){
 				if(x != p){
-					PlayerChoice(x, "Participate in minigame?", "Yes", 4, "No", 0);
+					PlayerChoice(x, "Participate in minigame?", "Yes", 4, "No", 0, 11900);
 				}
 			}
 			for(b = 0; <xGetDatabaseCount(dPoachers)){
@@ -491,6 +493,8 @@ highFrequency
 	xsDisableRule("DeerAllDead");
 	xsDisableRule("DeerPoacherMovement");
 	xsDisableRule("PoacherSpawnLoop");
+	xsDisableRule("PoacherTimer");
+	xsDisableRule("DeerEndZoneSee");
 	for(p=1 ; < cNumberNonGaiaPlayers){
 		trUnitSelectByQV("P"+p+"Unit");
 		trUnitChangeProtoUnit("Ragnorok SFX");
@@ -532,6 +536,28 @@ highFrequency
 			xSetInt(dPoachers, xMoveTime, trTime()+1*trQuestVarGet("y"));
 			xUnitSelect(dPoachers, xUnitID);
 			trUnitMoveToPoint(1*trQuestVarGet("x"),5,1*trQuestVarGet("z"),-1,true);
+		}
+	}
+}
+
+rule DeerEndZoneSee
+inactive
+highFrequency
+{
+	for(p=1 ; < cNumberNonGaiaPlayers){
+		trUnitSelectByQV("P"+p+"Unit");
+		if(trUnitDistanceToUnit(""+FlagUnitID) < 23){
+			vector flagV = kbGetBlockPosition(""+FlagUnitID);
+			for(x=1 ; < cNumberNonGaiaPlayers){
+				trMinimapFlare(x,10,flagV,true);
+			}
+			UnitCreate(0, "Revealer", xsVectorGetX(flagV),xsVectorGetZ(flagV),0);
+			trMessageSetText("The extraction zone has been found. Gather here when you are ready to end the act.", 8000);
+			playSound("examinationbirth.wav");
+			trUnitSelectClear();
+			trUnitSelect(""+FlagUnitID);
+			trUnitHighlight(10, true);
+			xsDisableSelf();
 		}
 	}
 }

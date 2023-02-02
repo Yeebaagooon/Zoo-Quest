@@ -1436,6 +1436,7 @@ void createDeepForestArea(){
 	int ABORT = 0;
 	int centrePosX = 0;
 	int centrePosZ= 0;
+	int currentId = trGetNextUnitScenarioNameNumber();
 	clearMap("ForestFloorPine", 5.0);
 	for(i = 0; < 10) {
 		centrePosX = randomInt(toTiles(0), toTiles(1.0));
@@ -1465,7 +1466,26 @@ void createDeepForestArea(){
 			break;
 		}
 	}
-	
+	currentId = trGetNextUnitScenarioNameNumber();
+	UnitCreate(0, "Cinematic Block", 2*xsVectorGetX(tileForEnd),2*xsVectorGetZ(tileForEnd),0);
+	trUnitSelectClear();
+	trUnitSelect(""+currentId);
+	trUnitChangeProtoUnit("Spy Eye");
+	trUnitSelectClear();
+	trUnitSelect(""+currentId);
+	trMutateSelected(kbGetProtoUnitID("Osiris Box Glow"));
+	trUnitSelectClear();
+	trUnitSelect(""+currentId);
+	trUnitSetAnimationPath("0,0,1,0,0,0");
+	currentId = trGetNextUnitScenarioNameNumber();
+	UnitCreate(0, "Cinematic Block", 2*xsVectorGetX(tileForEnd),2*xsVectorGetZ(tileForEnd),0);
+	trUnitSelectClear();
+	trUnitSelect(""+currentId);
+	trUnitChangeProtoUnit("Flag");
+	trUnitSelectClear();
+	trUnitSelect(""+currentId);
+	trUnitSetAnimationPath("0,0,0,0,0,0");
+	FlagUnitID = currentId;
 	int StartTileX = xsVectorGetX(tileForStart);
 	int StartTileZ = xsVectorGetZ(tileForStart);
 	float StartHeight = trGetTerrainHeight(StartTileX, StartTileZ);
@@ -1485,8 +1505,8 @@ void createDeepForestArea(){
 	trPaintTerrain(xsVectorGetX(tileForTrack),xsVectorGetZ(tileForTrack),xsVectorGetX(tileForTrack)+30,xsVectorGetZ(tileForTrack)+10,2,13,false);
 	//bonus track area
 	PaintAtlantisArea(xsVectorGetX(tileForTrack),xsVectorGetZ(tileForTrack)+4,xsVectorGetX(tileForTrack)+2,xsVectorGetZ(tileForTrack)+6,0,71);
-	int currentId = trGetNextUnitScenarioNameNumber();
-	UnitCreate(1, "Cinematic Block", 2*xsVectorGetX(tileForTrack)+2,2*xsVectorGetZ(tileForTrack)+11,0);
+	currentId = trGetNextUnitScenarioNameNumber();
+	UnitCreate(0, "Cinematic Block", 2*xsVectorGetX(tileForTrack)+2,2*xsVectorGetZ(tileForTrack)+11,0);
 	trQuestVarSet("MinigameStartID", currentId);
 	currentId = trGetNextUnitScenarioNameNumber();
 	UnitCreate(0, "Cinematic Block", 2*xsVectorGetX(tileForTrack)+2,2*xsVectorGetZ(tileForTrack)+11,0);
