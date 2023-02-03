@@ -35,6 +35,7 @@ inactive
 		trChatSend(0, "When all players are dead or in the zone, the act ends.");
 		trChatSend(0, "Make sure to explore, as higher act scores help you out later.");
 		playSound("\cinematics\19_out\music 2.mp3");
+		xsEnableRule("PlayMusic");
 	}
 }
 
@@ -111,7 +112,7 @@ rule TEST
 highFrequency
 inactive
 {
-	if (trTime() > cActivationTime + 1) {
+	if (trTime() > cActivationTime + 3) {
 		trTechGodPower(1, "Vision", 111);
 		trTechGodPower(1, "Sandstorm", 111);
 		modifyProtounitAbsolute(""+GazelleProto, 1, 1, 20);
@@ -394,6 +395,7 @@ inactive
 }
 
 void DeerMinigameGo(int temp = 0){
+	int old = xsGetContextPlayer();
 	xsSetContextPlayer(0);
 	InMinigame = true;
 	trPaintTerrain(xsVectorGetX(StageVector)+6,xsVectorGetZ(StageVector)+3,xsVectorGetX(StageVector)+25,xsVectorGetZ(StageVector)+7,0,73);
@@ -474,6 +476,7 @@ void DeerMinigameGo(int temp = 0){
 		trMessageSetText("Nobody was on the white tiles. Minigame cancelled.", 5000);
 		InMinigame = false;
 	}
+	xsSetContextPlayer(old);
 }
 
 rule DeerMinigameEnd

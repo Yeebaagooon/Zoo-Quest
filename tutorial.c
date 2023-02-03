@@ -40,6 +40,59 @@ inactive
 		//trPaintTerrain(7,p*8,7,p*8,0,73); //start sq
 		PaintAtlantisArea(6,p*8-1,8,p*8+1,0,8);  //start sq
 		trPaintTerrain(28,p*8+2,28,p*8-2,0,74); //end line
+		//[EYECANDY BUT INEXPCLICABLE BS LOS]
+		/*
+		temp = trGetNextUnitScenarioNameNumber();
+		UnitCreate(p, "Cinematic Block", 56, p*16-4, 90);
+		trUnitSelectClear();
+		trUnitSelect(""+temp);
+		trUnitChangeProtoUnit("Flag");
+		trUnitSelectClear();
+		trUnitSelect(""+temp);
+		trUnitSetAnimationPath("0,2,0,0,0,0");
+		xAddDatabaseBlock(dTemp, true);
+		xSetInt(dTemp, xUnitID, temp);
+		xSetInt(dTemp, xExtra, p);
+		temp = trGetNextUnitScenarioNameNumber();
+		UnitCreate(p, "Cinematic Block", 56, p*16+4, 90);
+		trUnitSelectClear();
+		trUnitSelect(""+temp);
+		trUnitChangeProtoUnit("Flag");
+		trUnitSelectClear();
+		trUnitSelect(""+temp);
+		trUnitSetAnimationPath("0,2,0,0,0,0");
+		xAddDatabaseBlock(dTemp, true);
+		xSetInt(dTemp, xUnitID, temp);
+		xSetInt(dTemp, xExtra, p);
+		temp = trGetNextUnitScenarioNameNumber();
+		UnitCreate(0, "Cinematic Block", 60, p*16, 00);
+		trUnitSelectClear();
+		trUnitSelect(""+temp);
+		trUnitChangeProtoUnit("Spy Eye");
+		trUnitSelectClear();
+		trUnitSelect(""+temp);
+		trMutateSelected(kbGetProtoUnitID("Osiris Box Glow"));
+		trUnitSelectClear();
+		trUnitSelect(""+temp);
+		trUnitSetAnimationPath("0,0,1,0,0,0");
+		xAddDatabaseBlock(dTemp, true);
+		xSetInt(dTemp, xUnitID, temp);
+		xSetInt(dTemp, xExtra, p);
+		temp = trGetNextUnitScenarioNameNumber();
+		UnitCreate(p, "Cinematic Block", 60, p*16, 00);
+		trUnitSelectClear();
+		trUnitSelect(""+temp);
+		trUnitChangeProtoUnit("Spy Eye");
+		trUnitSelectClear();
+		trUnitSelect(""+temp);
+		trMutateSelected(kbGetProtoUnitID("Flag"));
+		trUnitSelectClear();
+		trUnitSelect(""+temp);
+		trUnitSetAnimationPath("0,0,0,0,0,0");
+		xAddDatabaseBlock(dTemp, true);
+		xSetInt(dTemp, xUnitID, temp);
+		xSetInt(dTemp, xExtra, p);
+		*/
 		//start log
 		temp = trGetNextUnitScenarioNameNumber();
 		UnitCreate(0, "Cinematic Block", 20, p*16, 90);
@@ -88,6 +141,9 @@ inactive
 		trUnitMoveToPoint(16,0,p*16+1, -1, false);
 		xSetPointer(dPlayerData, xPlayerUnitID);
 		xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
+		if(trCurrentPlayer() == p){
+			trCounterAddTime("cdtutorial", -100, -200, "<color={PlayerColor("+p+")}>Press 'Q' to jump forward.", -1);
+		}
 	}
 	trPaintTerrain(0,0,0,0,2,4,true);
 	xsEnableRule("Animations");
@@ -168,10 +224,11 @@ inactive
 			trClearCounterDisplay();
 			trSetCounterDisplay("<color={PlayerColor(" + GreenText() + ")}>Tutorial complete: " + temp + " / " + PlayersActive);
 			if((temp == 1) && (PlayersActive > 1)){
-				//timeout
+				xsEnableRule("TutorialTimeout");
 			}
 			if(trCurrentPlayer() == p){
 				playSound("ageadvance.wav");
+				trCounterAbort("cdtutorial");
 			}
 		}
 		if((trVectorQuestVarGetZ("P"+p+"Pos") > (p*16+8)) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0)){
@@ -182,7 +239,32 @@ inactive
 			trUnitSelectByQV("P"+p+"Unit");
 			trUnitTeleport(trVectorQuestVarGetX("P"+p+"Pos"),3,p*16);
 		}
+		trUnitSelectByQV("P"+p+"Unit");
+		if((trUnitDead() == true) && (xGetBool(dPlayerData, xPlayerActive) == true) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0)){
+			trUnitSelectByQV("P"+p+"Unit");
+			trUnitChangeProtoUnit("Ragnorok SFX");
+			trUnitSelectByQV("P"+p+"Unit");
+			trUnitDestroy();
+			trUnitSelectClear();
+			trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+			trUnitChangeProtoUnit("Hero Death");
+			CreateGazelle(p, 14, p*16, 90);
+		}
 	}
+}
+
+rule TutorialTimeout
+highFrequency
+inactive
+{
+	if (trTime() > cActivationTime + 5) {
+		trCounterAddTime("cdtutorialtimeout", 11, 0, "<color={PlayerColor(0)}>Tutorial timeout", 33);
+		xsDisableSelf();
+	}
+}
+
+void TutForceEnd(int p = 0){
+	trQuestVarSet("PlayersDoneTutorial", PlayersActive);
 }
 
 rule DeerTutorialDone
@@ -194,6 +276,8 @@ inactive
 		xsDisableRule("TutorialLoops");
 		xsEnableRule("BuildDeerArea");
 		trClearCounterDisplay();
+		trCounterAbort("cdtutorial");
+		trCounterAbort("cdtutorialtimeout");
 		trQuestVarSet("PlayersDoneTutorial", 0);
 		trLetterBox(true);
 		trUIFadeToColor(0,0,0,1,1,true);

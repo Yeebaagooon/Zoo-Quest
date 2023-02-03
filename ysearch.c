@@ -33,7 +33,7 @@ highFrequency
 				}
 				break;
 			}
-			case kbGetProtoUnitID("Flying Medic"):
+			case kbGetProtoUnitID("House"):
 			{
 				trUnitSelectClear();
 				trUnitSelectByID(id);

@@ -85,7 +85,7 @@ void hotkeyAbility(int ability = 0) {
 			{
 				case EVENT_BUILD_HOUSE:
 				{
-					uiSetProtoCursor("Flying Medic", true);
+					uiSetProtoCursor("House", true);
 				}
 				case EVENT_BUILD_GRANARY:
 				{
