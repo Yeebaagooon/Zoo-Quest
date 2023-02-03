@@ -34,6 +34,18 @@ inactive
 		trChatSend(0, "It is a ring of ice terrain.");
 		trChatSend(0, "When all players are dead or in the zone, the act ends.");
 		trChatSend(0, "Make sure to explore, as higher act scores help you out later.");
+		playSound("\cinematics\19_out\music 2.mp3");
+	}
+}
+
+rule PlayMusic
+highFrequency
+inactive
+{
+	if (trTime() > cActivationTime + 29) {
+		trMusicPlay();
+		trPlayNextMusicTrack();
+		xsDisableSelf();
 	}
 }
 
@@ -53,7 +65,7 @@ inactive
 {
 	if (trTime() > cActivationTime + 64) {
 		if(Stage == 1){
-			trCounterAddTime("poachtimer", 122, 0, "Poachers spawn", 32);
+			trCounterAddTime("poachtimer", 122, 0, "<color={PlayerColor(2)}>Poachers spawn", 32);
 			trQuestVarSet("NextPoacherSpawn", trTime()+200);
 			xsEnableRule("PoacherSpawnLoop");
 			ColouredIconChat("1,0,0", "icons\archer n throwing axeman icon 64", "<u>Watch out for poachers!</u>");

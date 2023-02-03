@@ -101,6 +101,10 @@ int npcDiag(int npc = 0, int dialog = 0) {
 				case 1:
 				{
 					uiMessageBox("Great! Now make it to the end line and we can begin the map.");
+				}
+				case 2:
+				{
+					uiMessageBox("Just remember to move after a jump.");
 					dialog = 0;
 				}
 			}

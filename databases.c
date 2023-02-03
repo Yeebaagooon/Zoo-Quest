@@ -49,6 +49,7 @@ int dKeys = 0;
 int xKeySFXID = 0;
 
 int dTemp = 0;
+int xExtra = 0;
 
 
 rule initialise_spy_database
@@ -114,6 +115,7 @@ highFrequency
 	
 	dTemp = xInitDatabase("tempdb");
 	xUnitID = xInitAddInt(dTemp, "id", 0);
+	xExtra = xInitAddInt(dTemp, "extra param", 0);
 	
 	MapCentre = xsVectorSet(252/2-1,0,252/2-1);
 }

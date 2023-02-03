@@ -36,6 +36,7 @@ inactive
 	trFadeOutMusic(3);
 	xsEnableRule("DestroyStuff");
 	characterDialog(ActName(Stage) + " - " + StageRequirement + " percent required to advance", "", ActIcon(Stage));
+	playSoundCustom("\cinematics\9_in\music.mp3", "\cinematics\9_in\music.mp3");
 	StageScore = 0;
 	float Extras = 0;
 	float ExtrasGot = 0;
@@ -247,5 +248,37 @@ inactive
 		if(QuickStart == 0){
 			xsEnableRule("TempEndGame");
 		}
+		xsEnableRule("ResetInts");
 	}
+}
+
+rule ResetInts
+highFrequency
+inactive
+{
+	StageRequirement = 0;
+	StageScore = 0;
+	PlayersDead = 0;
+	ChestsFound = 0;
+	BerryTotal = 0;
+	ChestsTotal = 0;
+	BerryTarget = 0;
+	PlayersMinigaming = 0;
+	PlayersReadyToLeave = 0;
+	MinigameWins = 0;
+	InMinigame = false;
+	MinigameFound = false;
+	for(p=1 ; < cNumberNonGaiaPlayers){
+		xSetPointer(dPlayerData, p);
+		if(playerIsPlaying(p)){
+			xSetBool(dPlayerData, xPlayerDead, false);
+			xSetBool(dPlayerData, xReadyToLeave, false);
+			xSetBool(dPlayerData, xStopDeath, false);
+			xSetVector(dPlayerData, xVectorHold, vector(0,0,0));
+			xSetInt(dPlayerData, xTeleportDue, 0);
+		}
+	}
+	xResetDatabase(dTemp);
+	xResetDatabase(dLogs);
+	xsDisableSelf();
 }

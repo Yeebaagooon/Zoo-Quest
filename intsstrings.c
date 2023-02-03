@@ -44,7 +44,7 @@ Fix tree paint
 
 //---Controls
 //\Yeebaagooon\Zoo Quest\Test sound.mp3
-int QuickStart = 1;
+int QuickStart = 0;
 int Stage = 0;
 string MapVersion = "Test Version";
 string MapName = "Zoo Quest.xs";
@@ -64,7 +64,6 @@ const int EVENT_BUILD_AT_CURSOR = 31;
 float timediff = 0.0;
 int timelast = 0;
 vector MapCentre = vector(0,0,0);
-int StagePercent = 0;
 int StageRequirement = 0;
 int StageScore = 0;
 int PlayersDead = 0;

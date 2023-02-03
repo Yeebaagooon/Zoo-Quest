@@ -13,14 +13,26 @@ inactive
 	//trees
 	for(t=0 ; < cNumberNonGaiaPlayers){
 		for(x=0 ; < 36){
-			temp = trGetNextUnitScenarioNameNumber();
-			UnitCreate(0, "Cinematic Block", x*2, t*16+8, 90);
-			trUnitSelectClear();
-			trUnitSelect(""+temp);
-			trUnitChangeProtoUnit("Gaia Forest Tree");
-			trUnitSelectClear();
-			trUnitSelect(""+temp);
-			trSetSelectedScale(2,0.3,1);
+			if(iModulo(7,x) == 0){
+				temp = trGetNextUnitScenarioNameNumber();
+				UnitCreate(0, "Cinematic Block", x*2, t*16+8, 90);
+				trUnitSelectClear();
+				trUnitSelect(""+temp);
+				trUnitChangeProtoUnit("Berry Bush");
+				trUnitSelectClear();
+				trUnitSelect(""+temp);
+				trSetSelectedScale(2,3,2);
+			}
+			else{
+				temp = trGetNextUnitScenarioNameNumber();
+				UnitCreate(0, "Cinematic Block", x*2, t*16+8, 90);
+				trUnitSelectClear();
+				trUnitSelect(""+temp);
+				trUnitChangeProtoUnit("Gaia Forest Tree");
+				trUnitSelectClear();
+				trUnitSelect(""+temp);
+				trSetSelectedScale(2,0.3,1);
+			}
 		}
 	}
 	for(p=1 ; < cNumberNonGaiaPlayers){
@@ -35,6 +47,9 @@ inactive
 		trUnitSelect(""+temp);
 		trUnitChangeProtoUnit("Rotting Log");
 		trSetSelectedScale(2,3,2);
+		xAddDatabaseBlock(dTemp, true);
+		xSetInt(dTemp, xUnitID, temp);
+		xSetInt(dTemp, xExtra, p);
 		//end log
 		//start log
 		temp = trGetNextUnitScenarioNameNumber();
@@ -43,6 +58,9 @@ inactive
 		trUnitSelect(""+temp);
 		trUnitChangeProtoUnit("Rotting Log");
 		trSetSelectedScale(2,3,2);
+		xAddDatabaseBlock(dTemp, true);
+		xSetInt(dTemp, xUnitID, temp);
+		xSetInt(dTemp, xExtra, p);
 		//end log
 		//start log
 		temp = trGetNextUnitScenarioNameNumber();
@@ -51,6 +69,9 @@ inactive
 		trUnitSelect(""+temp);
 		trUnitChangeProtoUnit("Rotting Log");
 		trSetSelectedScale(2,3,2);
+		xAddDatabaseBlock(dTemp, true);
+		xSetInt(dTemp, xUnitID, temp);
+		xSetInt(dTemp, xExtra, p);
 		//end log
 		trPaintTerrain(10,p*8+2,10,p*8-2,2,4); //first log
 		trPaintTerrain(16,p*8+2,16,p*8-2,2,4); //second log
@@ -77,6 +98,7 @@ inactive
 		xsEnableRule("TutorialMsg1");
 		startNPCDialog(2);
 	}
+	playSoundCustom("\cinematics\29_in\music2.mp3", "\Yeebaagooon\Zoo Quest\Zoo Quest Theme.mp3");
 }
 
 rule ResetBlackmap
@@ -90,11 +112,12 @@ inactive
 	xsDisableSelf();
 }
 
-rule TutorialVectorCheck
+rule TutorialLoops
 highFrequency
 inactive
 {
 	int temp = 0;
+	vector Vtest = vector(0,0,0);
 	for(p=1 ; < cNumberNonGaiaPlayers){
 		xSetPointer(dPlayerData, p);
 		if((playerIsPlaying(p) == false) && (xGetBool(dPlayerData, xPlayerActive) == true)){
@@ -107,6 +130,17 @@ inactive
 			trUnitChangeProtoUnit("Hero Death");
 			xSetBool(dPlayerData, xPlayerActive, false);
 			PlayersActive = PlayersActive-1;
+			trPaintTerrain(5,((p*8)-2),30,((p*8+4)-2),2,4);
+			Vtest = xsVectorSet((p*8),0,0);
+			trUnitSelectClear();
+			for(a = 0 ; <= xGetDatabaseCount(dTemp)){
+				xDatabaseNext(dTemp);
+				if(xGetInt(dTemp, xExtra) == p){
+					xUnitSelect(dTemp, xUnitID);
+					trUnitDestroy();
+					xFreeDatabaseBlock(dTemp);
+				}
+			}
 		}
 		if((trVectorQuestVarGetX("P"+p+"Pos") > 58) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0)){
 			trUnitSelectByQV("P"+p+"Unit");
@@ -119,6 +153,18 @@ inactive
 			trQuestVarSet("P"+p+"DoneTutorial", 1);
 			trQuestVarModify("PlayersDoneTutorial", "+", 1);
 			temp = 1*trQuestVarGet("PlayersDoneTutorial");
+			trPaintTerrain(5,((p*8)-2),30,((p*8+4)-2),2,4);
+			Vtest = xsVectorSet((p*8),0,0);
+			trUnitSelectClear();
+			for(a = 0 ; <= xGetDatabaseCount(dTemp)){
+				xDatabaseNext(dTemp);
+				if(xGetInt(dTemp, xExtra) == p){
+					xUnitSelect(dTemp, xUnitID);
+					trUnitDestroy();
+					xFreeDatabaseBlock(dTemp);
+				}
+			}
+			trUnitSelectClear();
 			trClearCounterDisplay();
 			trSetCounterDisplay("<color={PlayerColor(" + GreenText() + ")}>Tutorial complete: " + temp + " / " + PlayersActive);
 			if((temp == 1) && (PlayersActive > 1)){
@@ -145,7 +191,7 @@ inactive
 {
 	if(PlayersActive == 1*trQuestVarGet("PlayersDoneTutorial")){
 		xsDisableSelf();
-		xsDisableRule("TutorialVectorCheck");
+		xsDisableRule("TutorialLoops");
 		xsEnableRule("BuildDeerArea");
 		trClearCounterDisplay();
 		trQuestVarSet("PlayersDoneTutorial", 0);
@@ -155,6 +201,9 @@ inactive
 		characterDialog(ActName(Stage), " ", ActIcon(Stage));
 		trSetFogAndBlackmap(true,true);
 		trDelayedRuleActivation("ResetBlackmap");
+		trFadeOutAllSounds(3);
+		trFadeOutMusic(3);
+		xResetDatabase(dTemp);
 		/*
 		trShowImageDialog("icons\icon class harmless animal", "Entering Bullshit Forest");
 		gadgetUnreal("ShowImageBox-BordersTop");
@@ -177,7 +226,7 @@ inactive
 {
 	if (trTime() > cActivationTime + 5) {
 		startNPCDialog(3);
-		trDelayedRuleActivation("TutorialVectorCheck");
+		trDelayedRuleActivation("TutorialLoops");
 		trDelayedRuleActivation("DeerTutorialDone");
 		xsDisableSelf();
 		/*
