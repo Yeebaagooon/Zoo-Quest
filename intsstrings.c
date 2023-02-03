@@ -70,6 +70,8 @@ int StageScore = 0;
 int PlayersDead = 0;
 int FlagUnitID = 0;
 int ChestsFound = 0;
+int BerryTotal = 0;
+int ChestsTotal = 0;
 
 //DB STUFF
 int DestroyNumber = 0;
@@ -82,6 +84,7 @@ int PlayersReadyToLeave = 0;
 int MinigameWins = 0;
 int GlobalTimerMS = 0;
 bool InMinigame = false;
+bool MinigameFound = false;
 
 int dPlayerData = 0;
 int xSpyID = 0;
@@ -95,6 +98,7 @@ int xPlayerUnitID = 0;
 int xReadyToLeave = 0;
 int xConstantPos = 0;
 int xPlayerDead = 0;
+int xLogJumps = 0;
 
 int dDestroyMe = 0;
 int xDestroyName = 0;
@@ -118,6 +122,7 @@ highFrequency
 	xReadyToLeave = xInitAddBool(dPlayerData, "leave area", false);
 	xConstantPos = xInitAddVector(dPlayerData, "position", vector(0,0,0));
 	xPlayerDead = xInitAddBool(dPlayerData, "dead", false);
+	xLogJumps = xInitAddInt(dPlayerData, "jump", 0);
 	xsDisableSelf();
 	for(p=1; <= cNumberNonGaiaPlayers) {
 		xAddDatabaseBlock(dPlayerData, true);

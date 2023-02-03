@@ -1,18 +1,3 @@
-// [DEER OBJECTIVES]
-/*
-Compulsory:
--Eat target berry (Target)
--Jump over log (1/cNum)
--Reach extraction point alive (cNum)
-
-Extra:
--Complete MG (cNum)
-100 = All berries, all jumps, all alive
-Required = 40
-
-So calculate extras /60 then +40 if got enough berries
-*/
-
 rule BuildDeerArea
 highFrequency
 inactive
@@ -41,6 +26,7 @@ inactive
 		if(BerryTarget >= xGetDatabaseCount(dBerryBush)){
 			BerryTarget = xGetDatabaseCount(dBerryBush)-12+PlayersActive;
 		}
+		BerryTotal = xGetDatabaseCount(dBerryBush);
 		trSetCounterDisplay("<color={PlayerColor(2)}>Berries Eaten: 0 / " + BerryTarget);
 		ColouredIconChat("1,0.5,0", ActIcon(Stage), "<u>" + ActName(Stage) + "</u>");
 		ColouredIconChat("0.0,0.8,0.2", "icons\world berry bush icon 64", "Eat at least the required number of berries");
@@ -68,12 +54,29 @@ inactive
 	if (trTime() > cActivationTime + 64) {
 		if(Stage == 1){
 			trCounterAddTime("poachtimer", 122, 0, "Poachers spawn", 32);
-			trQuestVarSet("NextPoacherSpawn", trTime()+80);
+			trQuestVarSet("NextPoacherSpawn", trTime()+200);
 			xsEnableRule("PoacherSpawnLoop");
 			ColouredIconChat("1,0,0", "icons\archer n throwing axeman icon 64", "<u>Watch out for poachers!</u>");
 			ColouredChat("0.9,0.3,0.3", "They can hide amongst the trees or actively scout for you.");
 			ColouredChat("0.9,0.3,0.3", "You will be attacked on sight.");
 			ColouredChat("0.9,0.3,0.3", "But can run or jump over the attacks.");
+		}
+		xsDisableSelf();
+		xsEnableRule("ChestTimer");
+	}
+}
+
+rule ChestTimer
+highFrequency
+inactive
+{
+	if (trTime() > cActivationTime + 54) {
+		int x = xGetDatabaseCount(dChests);
+		if((Stage == 1) && (x > 0)){
+			ColouredIconChat("0,1,0", "icons\special e osiris box icon 64", "<u>Look out for chests!</u>");
+			ColouredChat("0.3,0.9,0.3", "There are " + x + " unopened chests still to find.");
+			ColouredChat("0.3,0.9,0.3", "Move near a chest to open it.");
+			ColouredChat("0.3,0.9,0.3", "A stat bonus is granted for the player who does this.");
 		}
 		xsDisableSelf();
 	}
@@ -97,8 +100,9 @@ highFrequency
 inactive
 {
 	if (trTime() > cActivationTime + 1) {
-		trTechGodPower(1, "Vision", 1);
-		trTechGodPower(1, "Sandstorm", 1);
+		trTechGodPower(1, "Vision", 111);
+		trTechGodPower(1, "Sandstorm", 111);
+		modifyProtounitAbsolute(""+GazelleProto, 1, 1, 20);
 		xsDisableSelf();
 		trDelayedRuleActivation("ResetBlackmap");
 	}
@@ -133,6 +137,7 @@ void ProcessBerries(int count = 1) {
 				}
 				if(temp == BerryTarget){
 					playSoundCustom("cinematics\10_in\clearedcity.wav", "\Yeebaagooon\Zoo Quest\Skillpoint.mp3");
+					trMessageSetText("If all players make it to the extraction zone alive you will pass the act.", 10000);
 				}
 				//playSound("\Yeebaagooon\Zoo Quest\Eat.mp3");
 				xFreeDatabaseBlock(dBerryBush);
@@ -153,10 +158,17 @@ void ProcessLogs(int count = 1) {
 		xDatabaseNext(dLogs);
 		poslog = xGetVector(dLogs, xUnitPos);
 		for(p=1 ; < cNumberNonGaiaPlayers){
-			pos = trVectorQuestVarGet("P"+p+"Pos");
-			if(distanceBetweenVectors(poslog, pos, true) < 2){
-				trChatSend(0, "Log jump!");
-				break;
+			xSetPointer(dPlayerData, p);
+			if(xGetInt(dPlayerData, xLogJumps) == 0){
+				pos = trVectorQuestVarGet("P"+p+"Pos");
+				if(distanceBetweenVectors(poslog, pos, true) < 2){
+					xSetInt(dPlayerData, xLogJumps, 1);
+					ColouredIconChatToPlayer(p, "0,1,0.2", "world a rotting log shadow", "Perfect log jump!");
+					if(trCurrentPlayer() == p){
+						playSound("\cinematics\14_in\chimes.mp3");
+					}
+					break;
+				}
 			}
 		}
 	}
@@ -286,6 +298,12 @@ inactive
 		xDatabaseNext(dChests);
 		int n = xGetInt(dChests, xUnitID);
 		xUnitSelect(dChests,xUnitID);
+		if(trCountUnitsInArea(""+n,0,"Great Box", 1) == 0){
+			xFreeDatabaseBlock(dChests);
+			debugLog("Chest removed" + n);
+			debugLog(""+kbGetProtoUnitID(""+n));
+			ChestsTotal = ChestsTotal-1;
+		}
 		if (trUnitIsSelected()) {
 			uiClearSelection();
 			startNPCDialog(5);
@@ -347,6 +365,7 @@ inactive
 			refreshPassability();
 			trMessageSetText("Minigame found! Remain in the white square if you wish to play.", 10000);
 			trCounterAddTime("CDMG", 12, 0, "<color={PlayerColor("+p+")}>Minigame Starts", 27);
+			MinigameFound = true;
 			for(x=1 ; < cNumberNonGaiaPlayers){
 				if(x != p){
 					PlayerChoice(x, "Participate in minigame?", "Yes", 4, "No", 0, 11900);
@@ -413,11 +432,15 @@ void DeerMinigameGo(int temp = 0){
 		trUnitSelectClear();
 		trUnitSelect(""+temp);
 		trUnitChangeProtoUnit("Revealer");
+		xAddDatabaseBlock(dTemp, true);
+		xSetInt(dTemp, xUnitID, temp);
 		temp = trGetNextUnitScenarioNameNumber();
 		UnitCreate(0, "Dwarf", 2*xsVectorGetX(StageVector)+(8*z),2*xsVectorGetZ(StageVector)+8,0);
 		trUnitSelectClear();
 		trUnitSelect(""+temp);
 		trUnitChangeProtoUnit("Revealer");
+		xAddDatabaseBlock(dTemp, true);
+		xSetInt(dTemp, xUnitID, temp);
 	}
 	for(p=1 ; < cNumberNonGaiaPlayers){
 		xSetPointer(dPlayerData, p);
@@ -481,7 +504,12 @@ highFrequency
 		uiZoomToProto(""+GazelleProto);
 		uiLookAtProto(""+GazelleProto);
 		unitTransform("Tartarian Gate Flame", "Flowers");
-		unitTransform("Revealer", "Rocket");
+		for(c = 0; <xGetDatabaseCount(dTemp)){
+			xDatabaseNext(dTemp);
+			xUnitSelect(dTemp, xUnitID);
+			trUnitDestroy();
+			xFreeDatabaseBlock(dTemp);
+		}
 		for(b = 0; <xGetDatabaseCount(dPoachers)){
 			xDatabaseNext(dPoachers);
 			xUnitSelect(dPoachers, xUnitID);
@@ -530,34 +558,6 @@ highFrequency
 			}
 		}
 	}
-}
-
-rule DeerExit
-inactive
-highFrequency
-{
-	trCounterAbort("poachtimer");
-	xsDisableRule("DeerActLoops");
-	xsDisableRule("DeerMinigameDetect");
-	xsDisableRule("DeerMinigameEnd");
-	xsDisableRule("DeerLeave");
-	xsDisableRule("DeerAllDead");
-	xsDisableRule("DeerPoacherMovement");
-	xsDisableRule("PoacherSpawnLoop");
-	xsDisableRule("PoacherTimer");
-	xsDisableRule("DeerEndZoneSee");
-	for(p=1 ; < cNumberNonGaiaPlayers){
-		trUnitSelectByQV("P"+p+"Unit");
-		trUnitChangeProtoUnit("Ragnorok SFX");
-		trUnitSelectByQV("P"+p+"Unit");
-		trUnitDestroy();
-		trUnitSelectClear();
-		trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
-		trUnitChangeProtoUnit("Hero Death");
-	}
-	trClearCounterDisplay();
-	xsEnableRule("ScoreScreenStart");
-	xsDisableSelf();
 }
 
 rule DeerAllDead
@@ -611,4 +611,33 @@ highFrequency
 			xsDisableSelf();
 		}
 	}
+}
+
+rule DeerExit
+inactive
+highFrequency
+{
+	trCounterAbort("poachtimer");
+	xsDisableRule("DeerActLoops");
+	xsDisableRule("DeerMinigameDetect");
+	xsDisableRule("DeerMinigameEnd");
+	xsDisableRule("DeerLeave");
+	xsDisableRule("DeerAllDead");
+	xsDisableRule("DeerPoacherMovement");
+	xsDisableRule("PoacherSpawnLoop");
+	xsDisableRule("PoacherTimer");
+	xsDisableRule("DeerEndZoneSee");
+	xsDisableRule("ChestTimer");
+	for(p=1 ; < cNumberNonGaiaPlayers){
+		trUnitSelectByQV("P"+p+"Unit");
+		trUnitChangeProtoUnit("Ragnorok SFX");
+		trUnitSelectByQV("P"+p+"Unit");
+		trUnitDestroy();
+		trUnitSelectClear();
+		trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+		trUnitChangeProtoUnit("Hero Death");
+	}
+	trClearCounterDisplay();
+	xsEnableRule("ScoreScreenStart");
+	xsDisableSelf();
 }

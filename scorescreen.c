@@ -36,8 +36,67 @@ inactive
 	trFadeOutMusic(3);
 	xsEnableRule("DestroyStuff");
 	characterDialog(ActName(Stage) + " - " + StageRequirement + " percent required to advance", "", ActIcon(Stage));
-	StageScore = 60;
+	StageScore = 0;
+	float Extras = 0;
+	float ExtrasGot = 0;
+	int temp = 0;
 	//Current req is 40
+	if(Stage == 1){
+		//[CALCULATE THE PERCENT COMPLETE]
+		if(1*trQuestVarGet("BerriesEaten") >= BerryTarget){
+			//passing score
+			StageScore = StageRequirement;
+			//debugLog("Pass, score set to " + StageScore);
+		}
+		else{
+			//failed main goal
+			StageScore = StageRequirement*(trQuestVarGet("BerriesEaten")/BerryTarget);
+			//debugLog("Fail, score set to " + StageScore);
+		}
+		//[CALCULATION PENALTIES]
+		
+		StageScore = StageScore - (PlayersDead*3);
+		//[ADD ON BONUSES, ADD EXTRAS FOR WEIGHTING AND EXTRASGOT IF A PLAYER HAS IT]
+		//[BERRIES,CHESTS,LOG JUMPS, MINIGAME FOUND, MINIGAME COMPLETE]
+		Extras = Extras + (BerryTotal - BerryTarget);
+		ExtrasGot = ExtrasGot + (trQuestVarGet("BerriesEaten") - BerryTarget);
+		//debugLog("Extra berries = " + (trQuestVarGet("BerriesEaten") - BerryTarget) + " out of " + (BerryTotal - BerryTarget));
+		Extras = Extras + ChestsTotal*2;
+		ExtrasGot = ExtrasGot + ChestsFound*2;
+		//debugLog("Chests = " + ChestsFound + " out of " + ChestsTotal);
+		Extras = Extras + PlayersActive;
+		for(a = 1 ; < cNumberNonGaiaPlayers){
+			xSetPointer(dPlayerData, a);
+			if(playerIsPlaying(a) == true){
+				ExtrasGot = ExtrasGot + xGetInt(dPlayerData, xLogJumps);
+				//debugLog("Log jumping player added " + xGetInt(dPlayerData, xLogJumps));
+			}
+		}
+		Extras = Extras + 5;
+		if(MinigameFound == true){
+			ExtrasGot = ExtrasGot + 5;
+		}
+		if(MinigameWins > PlayersActive){
+			MinigameWins = PlayersActive;
+		}
+		Extras = Extras + PlayersActive*2;
+		ExtrasGot = ExtrasGot + MinigameWins*2;
+		if(ExtrasGot > 0){
+			float calc = ExtrasGot/Extras;
+			StageScore = StageScore + (calc*(100-StageRequirement));
+			//debugLog("ExtrasGot = " + ExtrasGot);
+			//debugLog("Extras = " + Extras);
+			//debugLog("Added to score = " + calc);
+		}
+		if((ExtrasGot >= Extras) && (Extras > 0)){
+			StageScore = 100;
+		}
+		if(ExtrasGot > Extras){
+			trChatSend(0, "ERROR MORE THAN 100 PERCENT COMPLETE");
+		}
+		
+		//debugLog("SCORE = " + StageScore);
+	}
 }
 
 rule DestroyStuff
@@ -62,7 +121,7 @@ highFrequency
 inactive
 {
 	xsDisableSelf();
-	trLetterBox(false);
+	//trLetterBox(false);
 	trSetFogAndBlackmap(false, false);
 	trUIFadeToColor(0,0,0,1000,1,false);
 	PaintAtlantisArea(30,10,32,61,5,4);
@@ -131,6 +190,7 @@ highFrequency
 	xsDisableSelf();
 	if(StageScore >= StageRequirement){
 		characterDialog(ActName(Stage) + " - Act Passed", ""+StageScore + " percent complete", ActIcon(Stage));
+		xsEnableRule("PassAct1");
 	}
 	else if(StageScore < StageRequirement){
 		characterDialog(ActName(Stage) + " - Act Failed", ""+StageScore + "/" + StageRequirement + " percent complete", ActIcon(Stage));
@@ -160,5 +220,32 @@ inactive
 		}
 		xsDisableSelf();
 		trEndGame();
+	}
+}
+
+rule TempEndGame
+highFrequency
+inactive
+{
+	if (trTime() > cActivationTime + 1) {
+		trShowWinLose("Thats all so far...", "xwin.wav");
+		for(p=1 ; < cNumberNonGaiaPlayers){
+			trSetPlayerWon(p);
+		}
+		xsDisableSelf();
+		trEndGame();
+	}
+}
+
+rule PassAct1
+highFrequency
+inactive
+{
+	if (trTime() > cActivationTime + 3) {
+		xsDisableSelf();
+		trLetterBox(false);
+		if(QuickStart == 0){
+			xsEnableRule("TempEndGame");
+		}
 	}
 }

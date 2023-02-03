@@ -85,7 +85,7 @@ void hotkeyAbility(int ability = 0) {
 			{
 				case EVENT_BUILD_HOUSE:
 				{
-					uiSetProtoCursor("House", true);
+					uiSetProtoCursor("Flying Medic", true);
 				}
 				case EVENT_BUILD_GRANARY:
 				{
@@ -171,6 +171,7 @@ void CreateChest(int x = 1, int z = 1, int heading = -1){
 	xAddDatabaseBlock(dChests, true);
 	xSetInt(dChests, xUnitID, 1*trQuestVarGet("temp"));
 	xSetInt(dChests, xUnlockUnitID, 1*trQuestVarGet("temp2"));
+	ChestsTotal = ChestsTotal+1;
 }
 
 void AddTileMGDeer(int x = 0, int z = 0){

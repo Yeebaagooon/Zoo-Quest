@@ -1610,10 +1610,14 @@ void createDeepForestArea(){
 		trUnitSelect(""+currentId );
 		trUnitChangeInArea(0,0,"Tamarisk Tree Dead","Cinematic Block", 15);
 	}
-	for(chestnum=1 ; <= 4){
+	int chestnum = xsMax(4,cNumberNonGaiaPlayers/2+1);
+	while(chestnum > 0){
 		trQuestVarSetFromRand("x", 0, 252);
 		trQuestVarSetFromRand("z", 0, 252);
-		CreateChest(1*trQuestVarGet("x"),1*trQuestVarGet("z"));
+		if((trGetTerrainType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) == getTerrainType(baseTerrain)) && (trGetTerrainSubType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) == getTerrainSubType(baseTerrain))){
+			CreateChest(1*trQuestVarGet("x"),1*trQuestVarGet("z"));
+			chestnum = chestnum-1;
+		}
 	}
 	refreshPassability();
 	Stage = 1;
@@ -1621,4 +1625,7 @@ void createDeepForestArea(){
 	StageScore = 0;
 	PlayersDead = 0;
 	EndPoint = tileForEnd;
+	MinigameFound = false;
+	InMinigame = false;
+	xsEnableRule("Reset Blackmap");
 }

@@ -48,6 +48,8 @@ int xUnlockUnitID = 0;
 int dKeys = 0;
 int xKeySFXID = 0;
 
+int dTemp = 0;
+
 
 rule initialise_spy_database
 active
@@ -109,6 +111,9 @@ highFrequency
 	xUnitID = xInitAddInt(dKeys, "unit id", 0);
 	xKeyType = xInitAddInt(dKeys, "key type", 0);
 	xKeySFXID = xInitAddInt(dKeys, "sfx id", 0);
+	
+	dTemp = xInitDatabase("tempdb");
+	xUnitID = xInitAddInt(dTemp, "id", 0);
 	
 	MapCentre = xsVectorSet(252/2-1,0,252/2-1);
 }

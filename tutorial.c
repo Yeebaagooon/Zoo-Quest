@@ -83,8 +83,11 @@ rule ResetBlackmap
 highFrequency
 inactive
 {
+	if(QuickStart == 0){
+		trSetFogAndBlackmap(true,true);
+		trPlayerResetBlackMapForAllPlayers();
+	}
 	xsDisableSelf();
-	trPlayerResetBlackMapForAllPlayers();
 }
 
 rule TutorialVectorCheck

@@ -50,6 +50,9 @@ highFrequency
 	modifyProtounitAbsolute("Throwing Axeman", cNumberNonGaiaPlayers, 11, 20);
 	modifyProtounitAbsolute("Lampades Bolt", cNumberNonGaiaPlayers, 1, 5);
 	modifyProtounitAbsolute("Lampades Bolt", cNumberNonGaiaPlayers, 8, 10);
+	modifyProtounitAbsolute("Titan Atlantean", 0, 2, 0);
+	modifyProtounitAbsolute("Titan Gate Dead", 0, 2, 0);
+	modifyProtounitAbsolute("Torch", 0, 2, 0);
 	for(p = 1; <= cNumberNonGaiaPlayers){
 		trModifyProtounit("Dwarf", p, 55, 4);
 		trModifyProtounit("Animal Attractor", p, 55, 4);
@@ -63,10 +66,10 @@ highFrequency
 			modifyProtounitAbsolute(""+GazelleProto, p, a, 0);
 			modifyProtounitAbsolute("Hero Greek Bellerophon", p, a, 0);
 		}
-		modifyBuildableProto("House", p);
+		modifyBuildableProto("Flying Medic", p);
 		modifyBuildableProto("Granary", p);
 		modifyBuildableProto("Storehouse", p);
-		modifyProtounitAbsolute("House", p, 16, -1);
+		modifyProtounitAbsolute("Flying Medic", p, 16, -1);
 		modifyProtounitAbsolute("Granary", p, 17, -1);
 		modifyProtounitAbsolute("Storehouse", p, 18, -1);
 		trModifyProtounit(""+YesChoiceUnitName, p, 55, 4);
