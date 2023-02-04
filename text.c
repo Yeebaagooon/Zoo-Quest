@@ -120,6 +120,25 @@ int npcDiag(int npc = 0, int dialog = 0) {
 				}
 			}
 		}
+		case 6:
+		{
+			switch(dialog)
+			{
+				case 1:
+				{
+					uiMessageBox("Now we play as the mighty Rhino.");
+				}
+				case 2:
+				{
+					uiMessageBox("Press 'Q' to toggle the charge ability.");
+				}
+				case 3:
+				{
+					uiMessageBox("Use it to smash through the fence.");
+					dialog = 0;
+				}
+			}
+		}
 		
 	}
 	return(dialog);

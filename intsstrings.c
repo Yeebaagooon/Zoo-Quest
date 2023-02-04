@@ -39,16 +39,21 @@ Sort tutorial + intro
 Engage level 1
 Fix tree paint
 
+
+BUG
+Deer hurt sound for all
+
 //DELETE
 */
 
 //---Controls
 //\Yeebaagooon\Zoo Quest\Test sound.mp3
-int QuickStart = 0;
+int QuickStart = 2;
 int Stage = 0;
 string MapVersion = "Test Version";
 string MapName = "Zoo Quest.xs";
 string GazelleProto = "Hero Greek Jason";
+string RhinoProto = "Royal Guard";
 vector StageVector = vector(0,0,0);
 vector EndPoint = vector(0,0,0);
 string LeaveTerrain = "";
@@ -71,6 +76,8 @@ int FlagUnitID = 0;
 int ChestsFound = 0;
 int BerryTotal = 0;
 int ChestsTotal = 0;
+int CliffType = 2;
+int CliffSubType = 2;
 
 //DB STUFF
 int DestroyNumber = 0;
@@ -98,6 +105,9 @@ int xReadyToLeave = 0;
 int xConstantPos = 0;
 int xPlayerDead = 0;
 int xLogJumps = 0;
+int xCharge = 0;
+int xRhinoWalk = 0;
+int xRhinoRun = 0;
 
 int dDestroyMe = 0;
 int xDestroyName = 0;
@@ -122,6 +132,9 @@ highFrequency
 	xConstantPos = xInitAddVector(dPlayerData, "position", vector(0,0,0));
 	xPlayerDead = xInitAddBool(dPlayerData, "dead", false);
 	xLogJumps = xInitAddInt(dPlayerData, "jump", 0);
+	xCharge = xInitAddBool(dPlayerData, "charge", false);
+	xRhinoWalk = xInitAddFloat(dPlayerData, "rhino base speed", 4.0);
+	xRhinoRun = xInitAddFloat(dPlayerData, "rhino run speed", 9.5);
 	xsDisableSelf();
 	for(p=1; <= cNumberNonGaiaPlayers) {
 		xAddDatabaseBlock(dPlayerData, true);

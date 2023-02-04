@@ -185,7 +185,9 @@ void DoMissile(){
 		trUnitSelectClear();
 		trUnitSelect(""+boomID);
 		trUnitChangeProtoUnit("Blood Cinematic");
-		playSound("leviathangrunt2.wav");
+		if(trCurrentPlayer() == playerhit){
+			playSound("leviathangrunt2.wav");
+		}
 		trUnitSelectClear();
 		xSetPointer(dPlayerData, playerhit);
 		xUnitSelect(dPlayerData, xPlayerUnitID);

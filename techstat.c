@@ -65,10 +65,15 @@ highFrequency
 		modifyProtounitAbsolute(""+GazelleProto, p, 0, 2);
 		modifyProtounitAbsolute(""+GazelleProto, p, 2, 22);
 		modifyProtounitAbsolute("Hero Greek Bellerophon", p, 0, 2);
+		modifyProtounitAbsolute(""+RhinoProto, p, 0, 10);
+		modifyProtounitAbsolute(""+RhinoProto, p, 1, xGetFloat(dPlayerData, xRhinoWalk));
+		modifyProtounitAbsolute(""+RhinoProto, p, 2, 22);
 		for(a = 24; <= 29){
 			modifyProtounitAbsolute(""+GazelleProto, p, a, 0);
+			modifyProtounitAbsolute(""+RhinoProto, p, a, 0);
 			modifyProtounitAbsolute("Hero Greek Bellerophon", p, a, 0);
 		}
+		modifyProtounitAbsolute(""+RhinoProto, p, 27, 15);
 		modifyBuildableProto("House", p);
 		modifyBuildableProto("Granary", p);
 		modifyBuildableProto("Storehouse", p);

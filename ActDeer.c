@@ -524,12 +524,6 @@ inactive
 		trMessageSetText("Nobody was on the white tiles. Minigame cancelled.", 5000);
 		InMinigame = false;
 	}
-	else if(PlayersMinigaming > 0){
-		trFadeOutAllSounds(0.1);
-		trFadeOutMusic(0.1);
-		playSound("\cinematics\15_in\gong.wav");
-		playSound("\xpack\xcinematics\7_in\music.mp3");
-	}
 	xsDisableSelf();
 }
 
@@ -537,8 +531,6 @@ rule DeerMinigameEnd
 inactive
 highFrequency
 {
-	trFadeOutAllSounds(3);
-	trFadeOutMusic(3);
 	if(PlayersMinigaming == 0){
 		vector temp = vector(0,0,0);
 		trPaintTerrain(xsVectorGetX(StageVector)-1,xsVectorGetZ(StageVector)-1,xsVectorGetX(StageVector)+31,xsVectorGetZ(StageVector)+11,0,0);
@@ -590,7 +582,6 @@ highFrequency
 		trUnitChangeProtoUnit("Olympus Temple SFX");
 		trUnitSelectByQV("MinigameStartID");
 		trUnitChangeProtoUnit("Forest Fire SFX");
-		xsEnableRule("PlayMusic");
 		xsDisableSelf();
 		InMinigame = false;
 	}

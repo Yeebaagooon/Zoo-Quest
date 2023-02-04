@@ -114,6 +114,7 @@ inactive
 		clearMap("black", 5.0);
 		refreshPassability();
 		xsEnableRule("CutToScore");
+		NewDestroyNumber = trGetNextUnitScenarioNameNumber()-1;
 	}
 }
 
@@ -229,12 +230,24 @@ highFrequency
 inactive
 {
 	if (trTime() > cActivationTime + 1) {
-		trShowWinLose("Thats all so far...", "xwin.wav");
-		for(p=1 ; < cNumberNonGaiaPlayers){
-			trSetPlayerWon(p);
+		if(QuickStart == 0){
+			trShowWinLose("Thats all so far...", "xwin.wav");
+			for(p=1 ; < cNumberNonGaiaPlayers){
+				trSetPlayerWon(p);
+			}
+			xsDisableSelf();
+			trEndGame();
 		}
-		xsDisableSelf();
-		trEndGame();
+		else{
+			clearMap("black", 5);
+			xsEnableRule("TutorialTerrainRhino");
+			for(x=NewDestroyNumber ; < trGetNextUnitScenarioNameNumber()){
+				trUnitSelectClear();
+				trUnitSelect(""+x);
+				trUnitDestroy();
+			}
+			xsDisableSelf();
+		}
 	}
 }
 
@@ -245,9 +258,7 @@ inactive
 	if (trTime() > cActivationTime + 3) {
 		xsDisableSelf();
 		trLetterBox(false);
-		if(QuickStart == 0){
-			xsEnableRule("TempEndGame");
-		}
+		xsEnableRule("TempEndGame");
 		xsEnableRule("ResetInts");
 	}
 }

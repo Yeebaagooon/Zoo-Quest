@@ -8,7 +8,7 @@ string ActName(int num = 0){
 		}
 		case 2:
 		{
-			actnamed = "Act II - Unknown";
+			actnamed = "Act II - Rhino";
 		}
 	}
 	return(actnamed);
@@ -24,7 +24,7 @@ string ActIcon(int num = 0){
 		}
 		case 2:
 		{
-			animaliconact = "Act II - Not yet made";
+			animaliconact = "icons\animal rhino icon 64";
 		}
 	}
 	return(animaliconact);
@@ -97,6 +97,23 @@ void hotkeyAbility(int ability = 0) {
 				}
 			}
 		}
+		if(trPlayerUnitCountSpecific(xGetPointer(dPlayerData), ""+RhinoProto) > 0){
+			switch(ability)
+			{
+				case EVENT_BUILD_HOUSE:
+				{
+					uiSetProtoCursor("House", true);
+				}
+				case EVENT_BUILD_GRANARY:
+				{
+					uiSetProtoCursor("Granary", true);
+				}
+				case EVENT_BUILD_STOREHOUSE:
+				{
+					uiSetProtoCursor("Storehouse", true);
+				}
+			}
+		}
 	}
 	xSetPointer(dPlayerData, old);
 }
@@ -137,6 +154,24 @@ void CreateGazelle(int p = 1, int x = 1, int z = 1, int heading = 0){
 	trSetSelectedScale(0,1,0);
 	trUnitSelectByQV("P"+p+"Unit");
 	spyEffect(kbGetProtoUnitID("Gazelle"), 0, xsVectorSet(dPlayerData,xSpyID,p), vector(1,1,1));
+	xSetPointer(dPlayerData, p);
+	xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
+	xSetBool(dPlayerData, xStopDeath, false);
+	/*
+	vector test = kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit"));
+	test = test + HeadingToVector(heading);
+	test = test + HeadingToVector(heading);
+	UnitCreate(p, "Dwarf", xsVectorGetX(test),xsVectorGetZ(test), 0);
+	*/
+}
+
+void CreateRhino(int p = 1, int x = 1, int z = 1, int heading = 0){
+	trQuestVarSet("P"+p+"Unit", trGetNextUnitScenarioNameNumber());
+	UnitCreate(p, ""+RhinoProto, x, z, heading);
+	trUnitSelectByQV("P"+p+"Unit");
+	trSetSelectedScale(0,1,0);
+	trUnitSelectByQV("P"+p+"Unit");
+	spyEffect(kbGetProtoUnitID("Rhinocerous"), 0, xsVectorSet(dPlayerData,xSpyID,p), vector(1,1,1));
 	xSetPointer(dPlayerData, p);
 	xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
 	xSetBool(dPlayerData, xStopDeath, false);
@@ -192,4 +227,20 @@ void AddTileMGDeer2(int x = 0, int z = 0){
 	xSetInt(dTiles2, xTileNumber, count+1);
 	xSetInt(dTiles2, xTileType, trGetTerrainType(x,z));
 	xSetInt(dTiles2, xTileSubType,trGetTerrainSubType(x,z));
+}
+
+void ToggleCharge(int p = 0){
+	xSetPointer(dPlayerData, p);
+	if(xGetBool(dPlayerData, xCharge) == false){
+		xSetBool(dPlayerData, xCharge, true);
+		modifyProtounitAbsolute(""+RhinoProto, p, 1, xGetFloat(dPlayerData, xRhinoRun));
+		if(trCurrentPlayer() == p){
+			playSound("rumble.wav");
+		}
+	}
+	else if(xGetBool(dPlayerData, xCharge) == true){
+		xSetBool(dPlayerData, xCharge, false);
+		modifyProtounitAbsolute(""+RhinoProto, p, 1, xGetFloat(dPlayerData, xRhinoWalk));
+		//end
+	}
 }

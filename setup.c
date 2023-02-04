@@ -104,6 +104,7 @@ highFrequency
 	trTechSetStatus(0, 304, 4);
 	PlayersActive = cNumberNonGaiaPlayers;
 	PlayersActive = PlayersActive-1;
+	aiSet("NoAI", cNumberNonGaiaPlayers);
 }
 
 rule load2
@@ -161,6 +162,9 @@ highFrequency
 		gadgetReal("ShowImageBox-BordersRightTop");
 		gadgetReal("ShowImageBox-CloseButton");
 		//startNPCDialog(1);
+		if(QuickStart == 2){
+			xsEnableRule("TutorialTerrainRhino");
+		}
 		if(QuickStart == 1){
 			xsEnableRule("BuildDeerArea");
 			xsEnableRule("Animations");
@@ -168,7 +172,7 @@ highFrequency
 			xsEnableRule("JumpEnd");
 			trDelayedRuleActivation("VectorSecond");
 		}
-		else{
+		if(QuickStart == 0){
 			xsEnableRule("TutorialTerrain");
 		}
 		xsEnableRule("CustomContentChat");
