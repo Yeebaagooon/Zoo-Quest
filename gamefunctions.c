@@ -154,7 +154,7 @@ void CreateChest(int x = 1, int z = 1, int heading = -1){
 		heading = 1*trQuestVarGet("temph");
 	}
 	trQuestVarSet("temp",trGetNextUnitScenarioNameNumber());
-	UnitCreate(0, "Dwarf", x, z, heading);
+	UnitCreate(0, "Dwarf", x*2, z*2, heading);
 	trUnitSelectByQV("temp");
 	trUnitChangeProtoUnit("Titan Atlantean");
 	trUnitSelectByQV("temp");

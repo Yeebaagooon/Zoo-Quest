@@ -1615,8 +1615,12 @@ void createDeepForestArea(){
 		trQuestVarSetFromRand("x", 0, 252);
 		trQuestVarSetFromRand("z", 0, 252);
 		if((trGetTerrainType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) == getTerrainType(baseTerrain)) && (trGetTerrainSubType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) == getTerrainSubType(baseTerrain))){
-			CreateChest(1*trQuestVarGet("x"),1*trQuestVarGet("z"));
-			chestnum = chestnum-1;
+			currentId = trGetNextUnitScenarioNameNumber();
+			UnitCreate(0, "Cinematic Block", 1*trQuestVarGet("x"),1*trQuestVarGet("z"), 0);
+			if(trCountUnitsInArea(""+currentId, 0, "Great Box", 60) == 0){
+				CreateChest(1*trQuestVarGet("x"),1*trQuestVarGet("z"));
+				chestnum = chestnum-1;
+			}
 		}
 	}
 	refreshPassability();

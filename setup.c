@@ -36,11 +36,6 @@ runImmediately
 		deployLocHeading(0, p*2, "Victory Marker", p, 180);
 	}
 	trSetFogAndBlackmap(false, false);
-	%
-	for(p=1; <= cNumberNonGaiaPlayers) {
-		code("trStringQuestVarSet(\"p"+p+"name\", \""+rmGetPlayerName(p)+"\");");
-	}
-	%
 	xsDisableSelf();
 }
 
@@ -78,6 +73,11 @@ highFrequency
 	//HOTKEYS
 	//map("q", "game", "uiSetSpecialPower(220) uiSpecialPowerAtPointer");
 	map("q", "game", "trackInsert(); trackAddWaypoint();trackPlay(-1,28);");
+	%
+	for(p=1; < cNumberNonGaiaPlayers) {
+		code("trStringQuestVarSet(\"p"+p+"name\", \""+rmGetPlayerName(p)+"\");");
+	}
+	%
 }
 
 rule load1

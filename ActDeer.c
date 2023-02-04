@@ -35,11 +35,20 @@ inactive
 		trChatSend(0, "When all players are dead or in the zone, the act ends.");
 		trChatSend(0, "Make sure to explore, as higher act scores help you out later.");
 		playSound("\cinematics\19_out\music 2.mp3");
-		xsEnableRule("PlayMusic");
+		xsEnableRule("PlayMusicDelay");
 	}
 }
 
 rule PlayMusic
+highFrequency
+inactive
+{
+	trMusicPlay();
+	trPlayNextMusicTrack();
+	xsDisableSelf();
+}
+
+rule PlayMusicDelay
 highFrequency
 inactive
 {
@@ -261,6 +270,7 @@ inactive
 						MinigameWins = MinigameWins+1;
 						if(trCurrentPlayer() == p){
 							playSound("xwin.wav");
+							playSound("\cinematics\15_in\gong.wav");
 							trMessageSetText("You have won the minigame!", 4000);
 						}
 					}
@@ -395,9 +405,15 @@ inactive
 }
 
 void DeerMinigameGo(int temp = 0){
-	int old = xsGetContextPlayer();
-	xsSetContextPlayer(0);
+	xsEnableRule("MGGODeer");
+}
+
+rule MGGODeer
+highFrequency
+inactive
+{
 	InMinigame = true;
+	int temp = trGetNextUnitScenarioNameNumber();
 	trPaintTerrain(xsVectorGetX(StageVector)+6,xsVectorGetZ(StageVector)+3,xsVectorGetX(StageVector)+25,xsVectorGetZ(StageVector)+7,0,73);
 	trPaintTerrain(xsVectorGetX(StageVector),xsVectorGetZ(StageVector)+3,xsVectorGetX(StageVector),xsVectorGetZ(StageVector)+7,2,13);
 	PaintAtlantisArea(xsVectorGetX(StageVector)+26,xsVectorGetZ(StageVector)+4,xsVectorGetX(StageVector)+28,xsVectorGetZ(StageVector)+6,0,71);
@@ -456,6 +472,39 @@ void DeerMinigameGo(int temp = 0){
 		xAddDatabaseBlock(dTemp, true);
 		xSetInt(dTemp, xUnitID, temp);
 	}
+	temp = trGetNextUnitScenarioNameNumber();
+	UnitCreate(0, "Dwarf", 2*xsVectorGetX(StageVector)+55,2*xsVectorGetZ(StageVector)+11,0);
+	trUnitSelectClear();
+	trUnitSelect(""+temp);
+	trUnitChangeProtoUnit("Spy Eye");
+	trUnitSelectClear();
+	trUnitSelect(""+temp);
+	trMutateSelected(kbGetProtoUnitID("Flag"));
+	trUnitSelectClear();
+	trUnitSelect(""+temp);
+	trUnitSetAnimationPath("0,0,0,0,0,0");
+	trUnitSelectClear();
+	trUnitSelect(""+temp);
+	trSetSelectedScale(2,2,2);
+	trQuestVarSet("MinigameStartSFX", temp);
+	temp = trGetNextUnitScenarioNameNumber();
+	UnitCreate(0, "Dwarf", 2*xsVectorGetX(StageVector)+55,2*xsVectorGetZ(StageVector)+11,0);
+	trUnitSelectClear();
+	trUnitSelect(""+temp);
+	trUnitChangeProtoUnit("Spy Eye");
+	trUnitSelectClear();
+	trUnitSelect(""+temp);
+	trMutateSelected(kbGetProtoUnitID("Pyramid Osiris Xpack"));
+	trUnitSelectClear();
+	trUnitSelect(""+temp);
+	trSetSelectedScale(100,0,0);
+	trUnitSelectClear();
+	trUnitSelect(""+temp);
+	trUnitOverrideAnimation(6, 0, false, true, -1);
+	trUnitSelectClear();
+	trUnitSelect(""+temp);
+	trUnitSetAnimationPath("0,0,1,0,0,0");
+	trQuestVarSet("MinigameStartID", temp);
 	for(p=1 ; < cNumberNonGaiaPlayers){
 		xSetPointer(dPlayerData, p);
 		trVectorQuestVarSet("P"+p+"PosMG", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
@@ -472,17 +521,24 @@ void DeerMinigameGo(int temp = 0){
 		trUnitDestroy();
 		trUnitSelectByQV("MinigameStartID");
 		trUnitDestroy();
-		trDelayedRuleActivation("DeerMinigameEnd");
 		trMessageSetText("Nobody was on the white tiles. Minigame cancelled.", 5000);
 		InMinigame = false;
 	}
-	xsSetContextPlayer(old);
+	else if(PlayersMinigaming > 0){
+		trFadeOutAllSounds(0.1);
+		trFadeOutMusic(0.1);
+		playSound("\cinematics\15_in\gong.wav");
+		playSound("\xpack\xcinematics\7_in\music.mp3");
+	}
+	xsDisableSelf();
 }
 
 rule DeerMinigameEnd
 inactive
 highFrequency
 {
+	trFadeOutAllSounds(3);
+	trFadeOutMusic(3);
 	if(PlayersMinigaming == 0){
 		vector temp = vector(0,0,0);
 		trPaintTerrain(xsVectorGetX(StageVector)-1,xsVectorGetZ(StageVector)-1,xsVectorGetX(StageVector)+31,xsVectorGetZ(StageVector)+11,0,0);
@@ -519,7 +575,7 @@ highFrequency
 		uiZoomToProto(""+GazelleProto);
 		uiLookAtProto(""+GazelleProto);
 		unitTransform("Tartarian Gate Flame", "Flowers");
-		for(c = 0; <xGetDatabaseCount(dTemp)){
+		for(c = 0; <= xGetDatabaseCount(dTemp)){
 			xDatabaseNext(dTemp);
 			xUnitSelect(dTemp, xUnitID);
 			trUnitDestroy();
@@ -530,6 +586,11 @@ highFrequency
 			xUnitSelect(dPoachers, xUnitID);
 			trUnitChangeProtoUnit("Throwing Axeman");
 		}
+		trUnitSelectByQV("MinigameStartSFX");
+		trUnitChangeProtoUnit("Olympus Temple SFX");
+		trUnitSelectByQV("MinigameStartID");
+		trUnitChangeProtoUnit("Forest Fire SFX");
+		xsEnableRule("PlayMusic");
 		xsDisableSelf();
 		InMinigame = false;
 	}
