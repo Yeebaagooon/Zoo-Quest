@@ -72,6 +72,10 @@ highFrequency
 		modifyProtounitAbsolute(""+GazelleProto, p, 2, 22);
 		modifyProtounitAbsolute("Hero Greek Bellerophon", p, 0, 2);
 		modifyProtounitAbsolute(""+RhinoProto, p, 0, 10);
+		modifyProtounitAbsolute(""+RhinoProto, p, 9, 30);
+		modifyProtounitAbsolute(""+RhinoDrinkProto, p, 0, 10);
+		modifyProtounitAbsolute(""+RhinoDrinkProto, p, 1, 0);
+		modifyProtounitAbsolute(""+RhinoDrinkProto, p, 2, 10);
 		modifyProtounitAbsolute(""+RhinoProto, p, 1, xGetFloat(dPlayerData, xRhinoWalk));
 		modifyProtounitAbsolute(""+RhinoProto, p, 2, 22);
 		for(a = 24; <= 29){
@@ -84,12 +88,6 @@ highFrequency
 		modifyBuildableProto("Granary", p);
 		modifyBuildableProto("Storehouse", p);
 		modifyProtounitAbsolute("House", p, 16, -1);
-		modifyProtounitAbsolute("House", p, 2, 0);
-		/*
-		modifyProtounitAbsolute("Flag", p, 2, 0);
-		modifyProtounitAbsolute("Spy Eye", p, 2, 0);
-		modifyProtounitAbsolute("Cinematic Block", p, 2, 0);
-		*/
 		modifyProtounitAbsolute("Granary", p, 17, -1);
 		modifyProtounitAbsolute("Storehouse", p, 18, -1);
 		trModifyProtounit(""+YesChoiceUnitName, p, 55, 4);

@@ -367,6 +367,7 @@ inactive
 			trUnitOverrideAnimation(2, 0, true, true, -1, 0);
 			if(xGetBool(dPlayerData, xCharge) == true){
 				ToggleCharge(p);
+				ColouredIconChatToPlayer(p, "1,1,0", "icons\icon object stat hit point", "Stamina = " + 1*xGetFloat(dPlayerData, xRhinoChargeTime));
 			}
 		}
 		if(Stage > 1){
@@ -413,6 +414,12 @@ inactive
 				xSetInt(dDestroyMe, xDestroyName, xGetInt(dPlayerData, xTarget));
 				xSetInt(dDestroyMe, xDestroyTime, trTimeMS()+2300);
 			}
+		}
+		if(trPlayerResourceCount(p, "Wood") > 0){
+			trPlayerGrantResources(p, "Wood", -100000);
+		}
+		if(trPlayerResourceCount(p, "Food") > 0){
+			trPlayerGrantResources(p, "Food", -100000);
 		}
 		//jump set anim to 13
 	}

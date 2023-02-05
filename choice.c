@@ -121,6 +121,7 @@ inactive
 			{
 				//Rhino HP
 				trModifyProtounit(""+RhinoProto, p, 0, 2);
+				trModifyProtounit(""+RhinoDrinkProto, p, 0, 2);
 				if(trCurrentPlayer() == p){
 					playSound("researchcomplete.wav");
 				}
@@ -183,7 +184,7 @@ void PlayerChoice(int p = 0, string prompt = "Question", string answerone = "Ans
 
 void ChooseYes(int p = 0){
 	//xsSetContextPlayer(0);
-	xsDisableSelf();
+	//xsDisableSelf();
 	if(trCurrentPlayer() == p){
 		trackInsert();
 		trackAddWaypoint();
@@ -199,7 +200,7 @@ void ChooseYes(int p = 0){
 void ChooseNo(int p = 0){
 	//xsSetContextPlayer(0);
 	p = p-12;
-	xsDisableSelf();
+	//xsDisableSelf();
 	if(trCurrentPlayer() == p){
 		trackInsert();
 		trackAddWaypoint();

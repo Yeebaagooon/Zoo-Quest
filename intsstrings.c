@@ -32,16 +32,11 @@ Survive poacher
 Find and gather in clearing
 
 [COMMENT]
-Tidy up
-Sort tutorial + intro
-*Change vision to build order from worldbuild
-?Data
-Engage level 1
-Fix tree paint
+Remove stamina chat, change to counter
 
 
-BUG
-Deer hurt sound for all
+[BUG LIST]
+
 
 //DELETE
 */
@@ -54,6 +49,7 @@ string MapVersion = "Test Version";
 string MapName = "Zoo Quest.xs";
 string GazelleProto = "Hero Greek Jason";
 string RhinoProto = "Ajax";
+string RhinoDrinkProto = "Physician";
 vector StageVector = vector(0,0,0);
 vector EndPoint = vector(0,0,0);
 string LeaveTerrain = "";
@@ -78,6 +74,7 @@ int BerryTotal = 0;
 int ChestsTotal = 0;
 int CliffType = 2;
 int CliffSubType = 2;
+bool TutorialMode = false;
 
 //DB STUFF
 int DestroyNumber = 0;
@@ -111,6 +108,10 @@ int xRhinoRun = 0;
 int xHPRegen = 0;
 int xHPRegenTime = 0;
 int xHPRegenNext = 0;
+int xSecondSpy = 0;
+int xRhinoDrinkTime = 0;
+int xRhinoChargeTime = 0;
+int xRhinoChargeTimeMax = 0;
 
 int dDestroyMe = 0;
 int xDestroyName = 0;
@@ -141,6 +142,10 @@ highFrequency
 	xHPRegen = xInitAddInt(dPlayerData, "hp regen", 0);
 	xHPRegenTime = xInitAddInt(dPlayerData, "hp regen timer", 0);
 	xHPRegenNext = xInitAddInt(dPlayerData, "hp regen counter", 0);
+	xSecondSpy = xInitAddInt(dPlayerData, "spy id", 0);
+	xRhinoDrinkTime = xInitAddFloat(dPlayerData, "drink time", 5);
+	xRhinoChargeTime = xInitAddFloat(dPlayerData, "rhino charge", 15);
+	xRhinoChargeTimeMax = xInitAddInt(dPlayerData, "rhino charge max", 15);
 	xsDisableSelf();
 	for(p=1; <= cNumberNonGaiaPlayers) {
 		xAddDatabaseBlock(dPlayerData, true);

@@ -1354,6 +1354,7 @@ void createMarsh(){
 	float MinigameMetreX = MinigameTileX*2+1;
 	float MinigameMetreZ = MinigameTileZ*2+1;
 	PaintAtlantisArea(MinigameTileX-1, MinigameTileZ-1, MinigameTileX+1, MinigameTileZ+1, 5, 4);
+	trChangeTerrainHeight(MinigameTileX-1, MinigameTileZ-1, MinigameTileX+1, MinigameTileZ+1, 2, false);
 	currentId = trGetNextUnitScenarioNameNumber();
 	UnitCreate(0, "Cinematic Block", MinigameMetreX, MinigameMetreZ,0);
 	trQuestVarSet("MinigameStartID", currentId);
@@ -1366,25 +1367,6 @@ void createMarsh(){
 	trUnitSelectByQV("MinigameStartID");
 	trUnitChangeProtoUnit("Torch");
 	StageVector = tileForMinigame;
-	int chestnum = xsMax(4,PlayersActive/2+1);
-	ABORT = 0;
-	while(chestnum > 0){
-		trQuestVarSetFromRand("x", 0, 252);
-		trQuestVarSetFromRand("z", 0, 252);
-		currentId = trGetNextUnitScenarioNameNumber();
-		UnitCreate(0, "Cinematic Block", 1*trQuestVarGet("x"),1*trQuestVarGet("z"), 0);
-		if(trCountUnitsInArea(""+currentId, 0, "Great Box", 40) == 0){
-			if(xsVectorGetY(kbGetBlockPosition(""+currentId)) > 0){
-				CreateChest(1*trQuestVarGet("x"),1*trQuestVarGet("z"));
-				chestnum = chestnum-1;
-			}
-		}
-		ABORT = ABORT+1;
-		if(ABORT >500){
-			break;
-			trChatSend(0, "ERROR NO CHESTS");
-		}
-	}
 	for(i = 0; <54){
 		UnitCreate(cNumberNonGaiaPlayers, "Fence Wood", 20, i*4+20, 0);
 		UnitCreate(cNumberNonGaiaPlayers, "Fence Wood", 106, i*4+20, 0);
@@ -1424,6 +1406,25 @@ void createMarsh(){
 	paintUnit("SavannahC", "Rock Sandstone Big", 0, 0.015);
 	paintUnit("SavannahC", "Dust Devil", 0, 0.005);
 	refreshPassability();
+	int chestnum = xsMax(4,PlayersActive/2+1);
+	ABORT = 0;
+	while(chestnum > 0){
+		trQuestVarSetFromRand("x", 0, 126);
+		trQuestVarSetFromRand("z", 0, 126);
+		currentId = trGetNextUnitScenarioNameNumber();
+		UnitCreate(0, "Cinematic Block", 1*trQuestVarGet("x"),1*trQuestVarGet("z"), 0);
+		if(trCountUnitsInArea(""+currentId, 0, "Great Box", 40) == 0){
+			if(xsVectorGetY(kbGetBlockPosition(""+currentId)) > 0){
+				CreateChest(1*trQuestVarGet("x"),1*trQuestVarGet("z"));
+				chestnum = chestnum-1;
+			}
+		}
+		ABORT = ABORT+1;
+		if(ABORT >500){
+			trChatSend(0, "ERROR NO CHESTS");
+			break;
+		}
+	}
 }
 
 void createSafeArea(){

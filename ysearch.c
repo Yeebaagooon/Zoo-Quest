@@ -40,6 +40,15 @@ highFrequency
 			}
 			case kbGetProtoUnitID("House"):
 			{
+				// [DEBUG] trPlayerGrantResources(kbUnitGetOwner(id), "Gold", 1);
+				trUnitSelectClear();
+				trUnitSelectByID(id);
+				trUnitDestroy();
+				break;
+			}
+			case kbGetProtoUnitID("Granary"):
+			{
+				trPlayerGrantResources(kbUnitGetOwner(id), "Wood", 1);
 				trUnitSelectClear();
 				trUnitSelectByID(id);
 				trUnitDestroy();

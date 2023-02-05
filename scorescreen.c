@@ -192,7 +192,7 @@ highFrequency
 	xsDisableSelf();
 	if(StageScore >= StageRequirement){
 		characterDialog(ActName(Stage) + " - Act Passed", ""+StageScore + " percent complete", ActIcon(Stage));
-		xsEnableRule("PassAct1");
+		xsEnableRule("PassAct" + Stage);
 	}
 	else if(StageScore < StageRequirement){
 		characterDialog(ActName(Stage) + " - Act Failed", ""+StageScore + "/" + StageRequirement + " percent complete", ActIcon(Stage));

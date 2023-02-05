@@ -30,6 +30,22 @@ string ActIcon(int num = 0){
 	return(animaliconact);
 }
 
+string CurrentProto(int num = 0){
+	string thename = "Error";
+	switch(num)
+	{
+		case 1:
+		{
+			thename = GazelleProto;
+		}
+		case 2:
+		{
+			thename = RhinoProto;
+		}
+	}
+	return(thename);
+}
+
 void SpawnDeerPoacher(int num = 0){
 	int temp = 0;
 	vector spawn = vector(0,0,0);
@@ -209,6 +225,7 @@ void CreateRhino(int p = 1, int x = 1, int z = 1, int heading = 0){
 	trSetSelectedScale(0,1,0);
 	trUnitSelectByQV("P"+p+"Unit");
 	spyEffect(kbGetProtoUnitID("Rhinocerous"), 0, xsVectorSet(dPlayerData,xSpyID,p), vector(1,1,1));
+	//spyEffect(kbGetProtoUnitID("Cinematic Block"), 0, xsVectorSet(dPlayerData,xSecondSpy,p), vector(1,1,1));
 	xSetPointer(dPlayerData, p);
 	xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
 	xSetBool(dPlayerData, xStopDeath, false);

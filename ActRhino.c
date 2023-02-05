@@ -1,9 +1,27 @@
+/*
+
+Rhino MG - Move to things?
+Poachers, two lvels?
+Projectile link to ground
+
+Objectives - destroy some fences
+Then kill x poachers
+Then higher level spawn along with extraction zone
+
+BONUSES FOR DEER
+60- +1 starting speed
+80- +5hp
+100- +25% charge speed increase
+100 PERMA +6 deer LOS
+*/
+
+
 rule BuildRhinoArea
 highFrequency
 inactive
 {
 	if (trTime() > cActivationTime + 1) {
-		xResetDatabase(dChests);
+		TutorialMode = false;
 		createMarsh();
 		xsDisableSelf();
 		//replaceTerrainAboveHeightMax("ForestFloorPine", "GrassB", 0.0);
@@ -32,6 +50,10 @@ inactive
 		PlayersDead = 0;
 		timediff = trTimeMS();
 		timelast = trTimeMS();
+		for(p = 1; < cNumberNonGaiaPlayers){
+			xSetPointer(dPlayerData, p);
+			xSetFloat(dPlayerData, xRhinoChargeTime, xGetInt(dPlayerData, xRhinoChargeTimeMax));
+		}
 	}
 }
 
@@ -47,8 +69,14 @@ inactive
 	}
 	for(p=1 ; < cNumberNonGaiaPlayers){
 		xSetPointer(dPlayerData, p);
-		trUnitSelectByQV("P"+p+"Unit");
-		trDamageUnit(1.5*timediff);
+		if(trPlayerUnitCountSpecific(p, ""+RhinoProto) == 1){
+			trUnitSelectByQV("P"+p+"Unit");
+			trDamageUnit(1.5*timediff);
+		}
+		if(xGetBool(dPlayerData, xCharge) == true){
+			//Charge effects
+			xSetFloat(dPlayerData, xRhinoChargeTime, xGetFloat(dPlayerData, xRhinoChargeTime)-timediff);
+		}
 		if((playerIsPlaying(p) == false) && (xGetBool(dPlayerData, xPlayerActive) == true)){
 			trUnitSelectByQV("P"+p+"Unit");
 			trUnitChangeProtoUnit("Ragnorok SFX");
@@ -60,7 +88,7 @@ inactive
 			xSetBool(dPlayerData, xPlayerActive, false);
 			PlayersActive = PlayersActive-1;
 		}
-		if((xGetBool(dPlayerData, xStopDeath) == false) && (trPlayerUnitCountSpecific(p, ""+RhinoProto) == 0) && (trPlayerUnitCountSpecific(p, "Prisoner") == 0) && (xGetBool(dPlayerData, xPlayerActive) == true) && (xGetBool(dPlayerData, xPlayerDead) == false) && (InMinigame == false)){
+		if((xGetBool(dPlayerData, xStopDeath) == false) && (trPlayerUnitCountSpecific(p, ""+RhinoProto) == 0) && (trPlayerUnitCountSpecific(p, "Prisoner") == 0) && (trPlayerUnitCountSpecific(p, ""+RhinoDrinkProto) == 0) && (xGetBool(dPlayerData, xPlayerActive) == true) && (xGetBool(dPlayerData, xPlayerDead) == false) && (InMinigame == false)){
 			//PLAYER DEAD
 			PlayersDead = PlayersDead+1;
 			xSetBool(dPlayerData, xPlayerDead, true);
@@ -78,8 +106,8 @@ inactive
 			xFreeDatabaseBlock(dChests);
 			debugLog("Chest removed" + n);
 			debugLog(""+kbGetProtoUnitID(""+n));
-			//			ChestsTotal = ChestsTotal-1;
-			CreateChest(iModulo(252, trTimeMS()),iModulo(252, trTime()));
+			ChestsTotal = ChestsTotal-1;
+			//CreateChest(iModulo(252, trTimeMS()),iModulo(252, trTime()));
 		}
 		if (trUnitIsSelected()) {
 			uiClearSelection();
@@ -87,7 +115,7 @@ inactive
 		}
 		trUnitSelectClear();
 		for(pl=1 ; < cNumberNonGaiaPlayers){
-			if(trCountUnitsInArea(""+n,pl,"All", 5) > 0){
+			if(trCountUnitsInArea(""+n,pl,""+RhinoProto, 5) > 0){
 				xUnitSelect(dChests,xUnitID);
 				trUnitSetAnimation("SE_Great_Box_Opening",false,-1);
 				xUnitSelect(dChests,xUnitID);

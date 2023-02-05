@@ -3,12 +3,14 @@ highFrequency
 inactive
 {
 	//if (trTime() > cActivationTime + 1) {
+	TutorialMode = true;
 	Stage = 2;
 	CliffType = 2;
 	CliffSubType = 2;
 	//trLetterBox(false);
 	clearMap("black", 5.0);
 	trPaintTerrain(0,0,35,cNumberNonGaiaPlayers*8,CliffType,CliffSubType);
+	xResetDatabase(dChests);
 	int temp = 0;
 	//trees
 	for(t=0 ; < cNumberNonGaiaPlayers){
@@ -96,15 +98,49 @@ inactive
 {
 	int anim = 0;
 	int temp = 0;
+	float height = 0;
 	for(p=1 ; < cNumberNonGaiaPlayers){
 		xSetPointer(dPlayerData, p);
 		if(trPlayerResourceCount(p, "Gold") > 0){
 			trPlayerGrantResources(p, "Gold", -100000);
-			if(xGetBool(dPlayerData, xReadyToLeave) == false){
-				ToggleCharge(p);
+			if((xGetBool(dPlayerData, xReadyToLeave) == false) && (trPlayerUnitCountSpecific(p, ""+RhinoProto) == 1)){
+				if(xGetFloat(dPlayerData, xRhinoChargeTime) > 0){
+					ToggleCharge(p);
+					ColouredIconChatToPlayer(p, "1,1,0", "icons\icon object stat hit point", "Stamina = " + 1*xGetFloat(dPlayerData, xRhinoChargeTime));
+				}
+				else{
+					ColouredIconChatToPlayer(p, "1,0,0", "icons\icon object stat hit point", "Not enough stamina to charge!");
+					if(trCurrentPlayer() == p){
+						playSound("cantdothat.wav");
+					}
+				}
 			}
 		}
+		if(trPlayerResourceCount(p, "Wood") > 0){
+			trPlayerGrantResources(p, "Wood", -100000);
+			height = xsVectorGetY(kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
+			if(height > 0.31){
+				trChatSendToPlayer(0, p, "Height needs to be less than 0!<color=1,0,0> " + height);
+				if(trCurrentPlayer() == p){
+					playSound("cantdothat.wav");
+				}
+			}
+			else{
+				trChatSend(0, "Height is less than 0! " + xsVectorGetY(kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit"))));
+				trUnitSelectByQV("P"+p+"Unit");
+				trMutateSelected(kbGetProtoUnitID(""+RhinoDrinkProto));
+				trQuestVarSet("P"+p+"Drink", trTimeMS()+1000*xGetFloat(dPlayerData, xRhinoDrinkTime));
+				if(trCurrentPlayer() == p){
+					trCounterAddTime("rhinodrinker" +p, 1*xGetFloat(dPlayerData, xRhinoDrinkTime),0,"<color={PlayerColor("+p+")}>Drinking", -1);
+					playSound("shipdeathsplash.wav");
+				}
+			}
+		}
+		if(trPlayerResourceCount(p, "Food") > 0){
+			trPlayerGrantResources(p, "Food", -100000);
+		}
 		if(xGetBool(dPlayerData, xCharge) == true){
+			//Charge effects
 			if(iModulo(10, trTimeMS()) == 0){
 				temp = trGetNextUnitScenarioNameNumber();
 				UnitCreate(0, "Dwarf",xsVectorGetX(kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit"))),xsVectorGetZ(kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit"))),0);
@@ -113,7 +149,20 @@ inactive
 				trUnitChangeProtoUnit("Dust Medium");
 				trUnitSelectByQV("P"+p+"Unit");
 				trDamageUnitsInArea(cNumberNonGaiaPlayers, "Fence Wood", 4, 50);
+				trDamageUnitsInArea(cNumberNonGaiaPlayers, "Slinger", 2, 50);
 			}
+			if(xGetFloat(dPlayerData, xRhinoChargeTime) < 0){
+				ToggleCharge(p);
+				ColouredIconChatToPlayer(p, "1,0,0", "icons\icon object stat hit point", "Out of stamina!");
+				if(trCurrentPlayer() == p){
+					playSound("cantdothat.wav");
+				}
+			}
+		}
+		if((trTimeMS() > 1*trQuestVarGet("P"+p+"Drink")) && (trPlayerUnitCountSpecific(p, ""+RhinoDrinkProto) == 1)){
+			trUnitSelectByQV("P"+p+"Unit");
+			trMutateSelected(kbGetProtoUnitID(""+RhinoProto));
+			xSetFloat(dPlayerData, xRhinoChargeTime, xGetInt(dPlayerData, xRhinoChargeTimeMax));
 		}
 	}
 	for (x= xGetDatabaseCount(dDestroyMe); > 0) {
