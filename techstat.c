@@ -44,12 +44,18 @@ inactive
 highFrequency
 {
 	trModifyProtounit("Dwarf", 0, 55, 4);
-	modifyProtounitAbsolute("Throwing Axeman", cNumberNonGaiaPlayers, 2, 28);
+	modifyProtounitAbsolute("Throwing Axeman", cNumberNonGaiaPlayers, 2, 36);
 	modifyProtounitAbsolute("Throwing Axeman", cNumberNonGaiaPlayers, 0, 100);
 	modifyProtounitAbsolute("Throwing Axeman", cNumberNonGaiaPlayers, 30, 1);
-	modifyProtounitAbsolute("Throwing Axeman", cNumberNonGaiaPlayers, 11, 20);
+	modifyProtounitAbsolute("Throwing Axeman", cNumberNonGaiaPlayers, 11, 25);
+	modifyProtounitAbsolute("Slinger", cNumberNonGaiaPlayers, 2, 28);
+	modifyProtounitAbsolute("Slinger", cNumberNonGaiaPlayers, 0, 20);
+	modifyProtounitAbsolute("Slinger", cNumberNonGaiaPlayers, 30, 2);
+	modifyProtounitAbsolute("Slinger", cNumberNonGaiaPlayers, 11, 20);
 	modifyProtounitAbsolute("Lampades Bolt", cNumberNonGaiaPlayers, 1, 5);
 	modifyProtounitAbsolute("Lampades Bolt", cNumberNonGaiaPlayers, 8, 10);
+	modifyProtounitAbsolute("Javelin Flaming", cNumberNonGaiaPlayers, 1, 6);
+	modifyProtounitAbsolute("Javelin Flaming", cNumberNonGaiaPlayers, 8, 10);
 	modifyProtounitAbsolute("Titan Atlantean", 0, 2, 0);
 	modifyProtounitAbsolute("Titan Gate Dead", 0, 2, 0);
 	modifyProtounitAbsolute("Torch", 0, 2, 0);

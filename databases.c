@@ -141,9 +141,12 @@ bool rayCollision(vector start = vector(0,0,0), vector dir = vector(1,0,0),
 		float current = distanceBetweenVectors(pos, start, false);
 		if (current < dist) {
 			vector hitbox = start + dir * current;
-			if (distanceBetweenVectors(pos, hitbox, true) <= width) {
-				if(trPlayerUnitCountSpecific(xGetPointer(dPlayerData), ""+GazelleProto) == 1){
-					if(xGetBool(dPlayerData, xStopDeath) == false){
+			if(xGetBool(dPlayerData, xStopDeath) == false){
+				if (distanceBetweenVectors(pos, hitbox, true) <= width) {
+					if(trPlayerUnitCountSpecific(xGetPointer(dPlayerData), ""+GazelleProto) == 1){
+						return(true);
+					}
+					if(trPlayerUnitCountSpecific(xGetPointer(dPlayerData), ""+RhinoProto) == 1){
 						return(true);
 					}
 				}
@@ -170,10 +173,19 @@ void DoMissile(){
 	for(x=1; < cNumberNonGaiaPlayers) {
 		xDatabaseNext(dPlayerData);
 		//2 is raw dist, 4 is squared
-		if(rayCollision(prev,dir,dist+2,2)){
-			hit = true;
-			playerhit = xGetPointer(dPlayerData);
-			break;
+		if(Stage == 1){
+			if(rayCollision(prev,dir,dist+2,2)){
+				hit = true;
+				playerhit = xGetPointer(dPlayerData);
+				break;
+			}
+		}
+		if(Stage == 2){
+			if(rayCollision(prev,dir,dist+2,4)){
+				hit = true;
+				playerhit = xGetPointer(dPlayerData);
+				break;
+			}
 		}
 	}
 	if(hit){
@@ -184,14 +196,26 @@ void DoMissile(){
 		UnitCreate(0, "Cinematic Block", xsVectorGetX(pos), xsVectorGetZ(pos), 0);
 		trUnitSelectClear();
 		trUnitSelect(""+boomID);
-		trUnitChangeProtoUnit("Blood Cinematic");
-		if(trCurrentPlayer() == playerhit){
-			playSound("leviathangrunt2.wav");
+		if(Stage == 1){
+			trUnitChangeProtoUnit("Blood Cinematic");
+			if(trCurrentPlayer() == playerhit){
+				playSound("leviathangrunt2.wav");
+			}
+			trUnitSelectClear();
+			xSetPointer(dPlayerData, playerhit);
+			xUnitSelect(dPlayerData, xPlayerUnitID);
+			trDamageUnit(1);
 		}
-		trUnitSelectClear();
-		xSetPointer(dPlayerData, playerhit);
-		xUnitSelect(dPlayerData, xPlayerUnitID);
-		trDamageUnit(1);
+		if(Stage == 2){
+			trUnitChangeProtoUnit("Blood Cinematic");
+			if(trCurrentPlayer() == playerhit){
+				playSound("rhinogrunt1.wav");
+			}
+			trUnitSelectClear();
+			xSetPointer(dPlayerData, playerhit);
+			xUnitSelect(dPlayerData, xPlayerUnitID);
+			trDamageUnit(2);
+		}
 		//FREE DB LAST
 		xFreeDatabaseBlock(dMissiles);
 		//debugLog("Hits P " + playerhit);

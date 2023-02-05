@@ -60,13 +60,14 @@ inactive
 }
 
 void SpawnDeerPoachers(int unused = 0){
+	unused = xsGetContextPlayer();
 	xsSetContextPlayer(0);
-	unused = 0;
 	if(Stage == 1){
 		trOverlayText("Poachers Spawned!", 5.0,-1,-1,600);
 		SpawnDeerPoacher(xsMax(PlayersActive,2));
 		playSound("\cinematics\04_in\armyarrive.wav");
 	}
+	xsSetContextPlayer(unused);
 }
 
 rule PoacherTimer
@@ -229,6 +230,13 @@ inactive
 			PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is dead!");
 		}
 		xSetVector(dPlayerData, xConstantPos, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
+		if(xGetInt(dPlayerData, xHPRegen) > 0){
+			if(trTime() > xGetInt(dPlayerData, xHPRegenNext)){
+				trUnitSelectByQV("P"+p+"Unit");
+				trDamageUnit(-1*xGetInt(dPlayerData, xHPRegen));
+				xSetInt(dPlayerData, xHPRegenNext, trTime()+xGetInt(dPlayerData, xHPRegenTime));
+			}
+		}
 		if(InMinigame == true){
 			//MINIGAME
 			for(b = 0; <xGetDatabaseCount(dPoachers)){
@@ -272,6 +280,13 @@ inactive
 							playSound("xwin.wav");
 							playSound("\cinematics\15_in\gong.wav");
 							trMessageSetText("You have won the minigame!", 4000);
+						}
+						trQuestVarSetFromRand("temp",1,2,true);
+						if(temp == 1){
+							PlayerChoice(p, "Choose your reward:", "+1 speed", 8, "+2 hp", 10, 10000);
+						}
+						else{
+							PlayerChoice(p, "Choose your reward:", "+6 LOS", 9, "+1hp regen every 30s", 11, 10000);
 						}
 					}
 				}

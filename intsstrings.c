@@ -53,7 +53,7 @@ int Stage = 0;
 string MapVersion = "Test Version";
 string MapName = "Zoo Quest.xs";
 string GazelleProto = "Hero Greek Jason";
-string RhinoProto = "Royal Guard";
+string RhinoProto = "Ajax";
 vector StageVector = vector(0,0,0);
 vector EndPoint = vector(0,0,0);
 string LeaveTerrain = "";
@@ -108,6 +108,9 @@ int xLogJumps = 0;
 int xCharge = 0;
 int xRhinoWalk = 0;
 int xRhinoRun = 0;
+int xHPRegen = 0;
+int xHPRegenTime = 0;
+int xHPRegenNext = 0;
 
 int dDestroyMe = 0;
 int xDestroyName = 0;
@@ -135,6 +138,9 @@ highFrequency
 	xCharge = xInitAddBool(dPlayerData, "charge", false);
 	xRhinoWalk = xInitAddFloat(dPlayerData, "rhino base speed", 4.0);
 	xRhinoRun = xInitAddFloat(dPlayerData, "rhino run speed", 9.5);
+	xHPRegen = xInitAddInt(dPlayerData, "hp regen", 0);
+	xHPRegenTime = xInitAddInt(dPlayerData, "hp regen timer", 0);
+	xHPRegenNext = xInitAddInt(dPlayerData, "hp regen counter", 0);
 	xsDisableSelf();
 	for(p=1; <= cNumberNonGaiaPlayers) {
 		xAddDatabaseBlock(dPlayerData, true);

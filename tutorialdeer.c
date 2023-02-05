@@ -165,6 +165,9 @@ inactive
 		trSetFogAndBlackmap(true,true);
 		trPlayerResetBlackMapForAllPlayers();
 	}
+	else{
+		trSetFogAndBlackmap(false,false);
+	}
 	xsDisableSelf();
 }
 
@@ -367,7 +370,7 @@ inactive
 			}
 		}
 		if(Stage > 1){
-			if(anim == 6){
+			if((anim == 6) || (anim == 46)){
 				//attack
 				trUnitSelectClear();
 				trUnitSelect(""+xGetInt(dPlayerData, xSpyID));

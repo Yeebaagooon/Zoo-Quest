@@ -80,6 +80,51 @@ inactive
 					playSound("researchcomplete.wav");
 				}
 			}
+			case 8:
+			{
+				//Deer minigame reward speed
+				trModifyProtounit(""+GazelleProto, p, 1, 1);
+				trModifyProtounit("Hero Greek Bellerophon", p, 1, 1);
+				if(trCurrentPlayer() == p){
+					playSound("researchcomplete.wav");
+				}
+			}
+			case 9:
+			{
+				//Deer minigame reward LOS
+				trModifyProtounit(""+GazelleProto, p, 2, 6);
+				trModifyProtounit("Hero Greek Bellerophon", p, 2, 6);
+				if(trCurrentPlayer() == p){
+					playSound("researchcomplete.wav");
+				}
+			}
+			case 10:
+			{
+				//Deer minigame reward hp
+				trModifyProtounit(""+GazelleProto, p, 1, 2);
+				trModifyProtounit("Hero Greek Bellerophon", p, 1, 2);
+				if(trCurrentPlayer() == p){
+					playSound("researchcomplete.wav");
+				}
+			}
+			case 11:
+			{
+				//Deer minigame reward regen
+				xSetPointer(dPlayerData, p);
+				xSetInt(dPlayerData, xHPRegenTime, 30);
+				xSetInt(dPlayerData, xHPRegen, xGetInt(dPlayerData, xHPRegen)+1);
+				if(trCurrentPlayer() == p){
+					playSound("researchcomplete.wav");
+				}
+			}
+			case 12:
+			{
+				//Rhino HP
+				trModifyProtounit(""+RhinoProto, p, 0, 2);
+				if(trCurrentPlayer() == p){
+					playSound("researchcomplete.wav");
+				}
+			}
 		}
 		trQuestVarSet("P"+ActionChoice+"YesAction", 0);
 		trQuestVarSet("P"+ActionChoice+"NoAction", 0);
