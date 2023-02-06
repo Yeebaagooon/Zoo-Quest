@@ -54,6 +54,11 @@ int xExtra = 0;
 int dFences = 0;
 int xSegment = 0;
 
+int dIncomingMissiles = 0;
+int xMissileDest = 0;
+int xMissileSpyID = 0;
+int xMissileSpyOfSpyID = 0;
+int xMissileProto = 0;
 
 rule initialise_spy_database
 active
@@ -99,8 +104,16 @@ highFrequency
 	xOwner = xInitAddInt(dMissiles, "missile owner", 0);
 	xMissilePos = xInitAddVector(dMissiles, "position", vector(0,0,0));
 	xMissileDir = xInitAddVector(dMissiles, "direction", vector(0,0,0));
-	xMissileCentre = xInitAddVector(dMissiles, "centre", vector(0,0,0));
 	xMissilePrev = xInitAddVector(dMissiles, "prev", vector(0,0,0));
+	
+	dIncomingMissiles = xInitDatabase("Incoming DB");
+	xUnitID = xInitAddInt(dIncomingMissiles, "missile unit id", -1);
+	xOwner = xInitAddInt(dIncomingMissiles, "missile owner", cNumberNonGaiaPlayers);
+	xMissilePos = xInitAddVector(dIncomingMissiles, "position", vector(0,0,0));
+	xMissileDir = xInitAddVector(dIncomingMissiles, "direction", vector(0,0,0));
+	xMissileSpyID = xInitAddInt(dIncomingMissiles, "spy name", -1);
+	xMissileSpyOfSpyID = xInitAddInt(dIncomingMissiles, "spy of spy", -1);
+	xMissileProto = xInitAddInt(dIncomingMissiles, "proto id", -1);
 	
 	dDots = xInitDatabase("Dot DB");
 	xUnitID = xInitAddInt(dDots, "unit id", 0);

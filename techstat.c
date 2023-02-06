@@ -63,6 +63,8 @@ highFrequency
 	modifyProtounitAbsolute("Spy Eye", 0, 2, 2);
 	modifyProtounitAbsolute("Cinematic Block", 0, 2, 2);
 	for(p = 1; <= cNumberNonGaiaPlayers){
+		modifyProtounitAbsolute("Rocket", p, 1, 5);
+		modifyProtounitAbsolute("Rocket", p, 8, 10);
 		trModifyProtounit("Dwarf", p, 55, 4);
 		trModifyProtounit("Animal Attractor", p, 55, 4);
 		trModifyProtounit("Hero Greek Bellerophon", p, 55, 4);

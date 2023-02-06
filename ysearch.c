@@ -9,9 +9,10 @@ highFrequency
 	int closestid = 0;
 	vector scale = vector(0,0,0);
 	vector dest = vector(0,0,0);
-	vector dist = vector(0,0,0);
+	vector dir = vector(0,0,0);
 	vector closevector = vector(0,0,0);
 	vector target = vector(0,0,0);
+	vector slingvector = vector(0,0,0);
 	for(i = spysearch; < trGetNextUnitScenarioNameNumber()) {
 		id = kbGetBlockID(""+i, true);
 		unittype = kbGetUnitBaseTypeID(id);
@@ -71,7 +72,7 @@ highFrequency
 				trUnitSelectClear();
 				trUnitSelectByID(id);
 				trUnitDestroy();
-				dist = vector(0,0,0);
+				dir = vector(0,0,0);
 				closevector = vector(0,0,0);
 				target = vector(0,0,0);
 				closest = 10000;
@@ -79,9 +80,9 @@ highFrequency
 				//cycle through all throwing axemen to find the closest
 				for(a=0 ; < xGetDatabaseCount(dPoachers)){
 					xDatabaseNext(dPoachers);
-					dist = kbGetBlockPosition(""+xGetInt(dPoachers, xUnitID));
-					if(distanceBetweenVectors(dist, axevector, true) < closest){
-						closest = distanceBetweenVectors(dist, axevector, true);
+					dir = kbGetBlockPosition(""+xGetInt(dPoachers, xUnitID));
+					if(distanceBetweenVectors(dir, axevector, true) < closest){
+						closest = distanceBetweenVectors(dir, axevector, true);
 						closestid = xGetInt(dPoachers, xUnitID);
 					}
 				}
@@ -89,19 +90,19 @@ highFrequency
 				xsSetContextPlayer(cNumberNonGaiaPlayers);
 				dest = kbGetBlockPosition(""+trGetUnitScenarioNameNumber(kbUnitGetTargetUnitID(kbGetBlockID(""+closestid))));
 				xsSetContextPlayer(0);
-				dist = xsVectorNormalize(dest-closevector);
+				dir = xsVectorNormalize(dest-closevector);
 				temp = trGetNextUnitScenarioNameNumber();
 				UnitCreate(cNumberNonGaiaPlayers, "Lampades Bolt",xsVectorGetX(closevector),xsVectorGetZ(closevector),0);
-				dist = vectorSetAsTargetVector(closevector,dist,60.0);
+				dir = vectorSetAsTargetVector(closevector,dir,60.0);
 				trUnitSelectClear();
 				trUnitSelect(""+temp);
-				trUnitMoveToPoint(xsVectorGetX(dist),0,xsVectorGetZ(dist),-1,false);
+				trUnitMoveToPoint(xsVectorGetX(dir),0,xsVectorGetZ(dir),-1,false);
 				xAddDatabaseBlock(dMissiles, true);
 				xSetInt(dMissiles, xUnitID, temp);
 				xSetInt(dMissiles, xOwner, cNumberNonGaiaPlayers);
 				xSetVector(dMissiles, xMissilePos, closevector);
 				xSetVector(dMissiles, xMissilePrev, closevector);
-				xSetVector(dMissiles, xMissileDir, xsVectorNormalize(dist));
+				xSetVector(dMissiles, xMissileDir, xsVectorNormalize(dir));
 				xAddDatabaseBlock(dDestroyMe, true);
 				xSetInt(dDestroyMe, xUnitID, temp);
 				xSetInt(dDestroyMe, xDestroyTime, trTimeMS()+10000);
@@ -109,12 +110,11 @@ highFrequency
 			case kbGetProtoUnitID("Sling Stone"):
 			{
 				//axe
-				vector slingvector = vector(0,0,0);
 				slingvector = kbGetBlockPosition(""+i);
 				trUnitSelectClear();
 				trUnitSelectByID(id);
 				trUnitDestroy();
-				dist = vector(0,0,0);
+				dir = vector(0,0,0);
 				closevector = vector(0,0,0);
 				target = vector(0,0,0);
 				closest = 10000;
@@ -122,9 +122,9 @@ highFrequency
 				//cycle through all poachers to find the closest
 				for(a=0 ; < xGetDatabaseCount(dPoachers)){
 					xDatabaseNext(dPoachers);
-					dist = kbGetBlockPosition(""+xGetInt(dPoachers, xUnitID));
-					if(distanceBetweenVectors(dist, slingvector, true) < closest){
-						closest = distanceBetweenVectors(dist, slingvector, true);
+					dir = kbGetBlockPosition(""+xGetInt(dPoachers, xUnitID));
+					if(distanceBetweenVectors(dir, slingvector, true) < closest){
+						closest = distanceBetweenVectors(dir, slingvector, true);
 						closestid = xGetInt(dPoachers, xUnitID);
 					}
 				}
@@ -132,22 +132,75 @@ highFrequency
 				xsSetContextPlayer(cNumberNonGaiaPlayers);
 				dest = kbGetBlockPosition(""+trGetUnitScenarioNameNumber(kbUnitGetTargetUnitID(kbGetBlockID(""+closestid))));
 				xsSetContextPlayer(0);
-				dist = xsVectorNormalize(dest-closevector);
-				temp = trGetNextUnitScenarioNameNumber();
+				dir = xsVectorNormalize(dest-closevector);
+				/*temp = trGetNextUnitScenarioNameNumber();
 				UnitCreate(cNumberNonGaiaPlayers, "Javelin Flaming", xsVectorGetX(closevector),xsVectorGetZ(closevector),0);
-				dist = vectorSetAsTargetVector(closevector,dist,60.0);
+				dir = vectorSetAsTargetVector(closevector,dir,60.0);
 				trUnitSelectClear();
 				trUnitSelect(""+temp);
-				trUnitMoveToPoint(xsVectorGetX(dist),0,xsVectorGetZ(dist),-1,false);
+				trUnitMoveToPoint(xsVectorGetX(dir),0,xsVectorGetZ(dir),-1,false);
 				xAddDatabaseBlock(dMissiles, true);
 				xSetInt(dMissiles, xUnitID, temp);
 				xSetInt(dMissiles, xOwner, cNumberNonGaiaPlayers);
 				xSetVector(dMissiles, xMissilePos, closevector);
 				xSetVector(dMissiles, xMissilePrev, closevector);
-				xSetVector(dMissiles, xMissileDir, xsVectorNormalize(dist));
+				xSetVector(dMissiles, xMissileDir, xsVectorNormalize(dir));
 				xAddDatabaseBlock(dDestroyMe, true);
 				xSetInt(dDestroyMe, xUnitID, temp);
-				xSetInt(dDestroyMe, xDestroyTime, trTimeMS()+10000);
+				xSetInt(dDestroyMe, xDestroyTime, trTimeMS()+10000);*/
+				ShootProjectile(dir, closevector, "Javelin Flaming");
+			}
+			case kbGetProtoUnitID("Arrow Flaming"):
+			{
+				//axe
+				slingvector = kbGetBlockPosition(""+i);
+				trUnitSelectClear();
+				trUnitSelectByID(id);
+				trUnitDestroy();
+				dir = vector(0,0,0);
+				closevector = vector(0,0,0);
+				target = vector(0,0,0);
+				closest = 10000;
+				closestid = 0;
+				//cycle through all poachers to find the closest
+				for(a=0 ; < xGetDatabaseCount(dPoachers)){
+					xDatabaseNext(dPoachers);
+					dir = kbGetBlockPosition(""+xGetInt(dPoachers, xUnitID));
+					if(distanceBetweenVectors(dir, slingvector, true) < closest){
+						closest = distanceBetweenVectors(dir, slingvector, true);
+						closestid = xGetInt(dPoachers, xUnitID);
+					}
+				}
+				closevector = kbGetBlockPosition(""+closestid);
+				xsSetContextPlayer(cNumberNonGaiaPlayers);
+				dest = kbGetBlockPosition(""+trGetUnitScenarioNameNumber(kbUnitGetTargetUnitID(kbGetBlockID(""+closestid))));
+				xsSetContextPlayer(0);
+				dir = xsVectorNormalize(dest-closevector);
+				//rotate to L, for loop shoot
+				float baseCos = 0.965926;
+				float baseSin = 0.258819;
+				//calculator for sin and cos(angle) required
+				//so for 15 degrees and 5 projs our angles are 30,15,0,-15-,-30, so set to cos/sin -30 then loop for +15
+				dir = rotationMatrix(dir, 0.866025, -0.5);
+				for(a = 1; < 6){
+					/*temp = trGetNextUnitScenarioNameNumber();
+					UnitCreate(cNumberNonGaiaPlayers, "Trident Soldier", xsVectorGetX(closevector),xsVectorGetZ(closevector),0);
+					dest = vectorSetAsTargetVector(closevector,dir,60.0);
+					trUnitSelectClear();
+					trUnitSelect(""+temp);
+					trUnitMoveToPoint(xsVectorGetX(dest),0,xsVectorGetZ(dest),-1,false);
+					xAddDatabaseBlock(dMissiles, true);
+					xSetInt(dMissiles, xUnitID, temp);
+					xSetInt(dMissiles, xOwner, cNumberNonGaiaPlayers);
+					xSetVector(dMissiles, xMissilePos, closevector);
+					xSetVector(dMissiles, xMissilePrev, closevector);
+					xSetVector(dMissiles, xMissileDir, xsVectorNormalize(dir)); //maybe use dest if this breaks
+					xAddDatabaseBlock(dDestroyMe, true);
+					xSetInt(dDestroyMe, xUnitID, temp);
+					xSetInt(dDestroyMe, xDestroyTime, trTimeMS()+10000);*/
+					ShootProjectile(dir, closevector, "Lampades Bolt");
+					dir = rotationMatrix(dir, baseCos, baseSin);
+				}
 			}
 			case kbGetProtoUnitID("Hero Birth"):
 			{
@@ -164,4 +217,48 @@ highFrequency
 		}
 	}
 	spysearch = trGetNextUnitScenarioNameNumber();
+	if(xGetDatabaseCount(dIncomingMissiles) > 0){
+		//[IF REMOVE, DB COUNT GOES DOWN SO DO IT LIKE THIS]
+		for(a = xGetDatabaseCount(dIncomingMissiles) ; > 0){
+			xDatabaseNext(dIncomingMissiles);
+			//if missile has spy eye, shoot it and cast spy on it too
+			if(xGetInt(dIncomingMissiles, xMissileSpyID) > -1){
+				if(xGetInt(dIncomingMissiles, xMissileSpyOfSpyID) > -1){
+					//passenger here
+					xUnitSelect(dIncomingMissiles, xMissileSpyID);
+					trUnitChangeProtoUnit("Invisible Target");
+					xUnitSelect(dIncomingMissiles, xMissileSpyID);
+					trSetScale(2);
+					xFreeDatabaseBlock(dIncomingMissiles);
+				}
+				else{
+					dest = vectorSetAsTargetVector(xGetVector(dIncomingMissiles, xMissilePos), xGetVector(dIncomingMissiles, xMissileDir), 60.0);
+					xUnitSelect(dIncomingMissiles, xUnitID);
+					trMutateSelected(kbGetProtoUnitID("Rocket"));
+					//The car is the rocket
+					trUnitSelectClear();
+					xUnitSelect(dIncomingMissiles, xUnitID);
+					trUnitMoveToPoint(xsVectorGetX(dest),0,xsVectorGetZ(dest),-1,false);
+					xAddDatabaseBlock(dMissiles, true);
+					xSetInt(dMissiles, xUnitID, xGetInt(dIncomingMissiles, xUnitID));
+					xSetInt(dMissiles, xOwner, cNumberNonGaiaPlayers);
+					xSetVector(dMissiles, xMissilePos, xGetVector(dIncomingMissiles, xMissilePos));
+					xSetVector(dMissiles, xMissilePrev, xGetVector(dIncomingMissiles, xMissilePos));
+					xSetVector(dMissiles, xMissileDir, xGetVector(dIncomingMissiles, xMissileDir));
+					xAddDatabaseBlock(dDestroyMe, true);
+					xSetInt(dDestroyMe, xUnitID, xGetInt(dIncomingMissiles, xUnitID));
+					xSetInt(dDestroyMe, xDestroyTime, trTimeMS()+10000);
+					xUnitSelect(dIncomingMissiles, xMissileSpyID);
+					trUnitChangeProtoUnit("Huskarl");
+					xUnitSelect(dIncomingMissiles, xMissileSpyID);
+					trUnitConvert(cNumberNonGaiaPlayers);
+					xUnitSelect(dIncomingMissiles, xMissileSpyID);
+					trSetScale(0);
+					xUnitSelect(dIncomingMissiles, xMissileSpyID);
+					spyEffect(xGetInt(dIncomingMissiles, xMissileProto), 0, xsVectorSet(dIncomingMissiles, xMissileSpyOfSpyID, xGetPointer(dIncomingMissiles)), vector(1,1,1));
+				}
+				
+			}
+		}
+	}
 }

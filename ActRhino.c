@@ -28,7 +28,7 @@ inactive
 		uiLookAtProto(""+RhinoProto);
 		trDelayedRuleActivation("ResetBlackmap");
 		trDelayedRuleActivation("RhinoMinigameDetect");
-		//trDelayedRuleActivation("TEST");
+		trDelayedRuleActivation("TEST");
 		trDelayedRuleActivation("RhinoAllDead");
 		//trDelayedRuleActivation("PoacherTimer");
 		xsEnableRule("RhinoPoacherMovement");
@@ -38,6 +38,7 @@ inactive
 		ColouredChat("0.0,0.8,0.2", "Each long fence segment needs at least one break.");
 		xsEnableRule("PlayMusic");
 		SpawnRhinoPoacher(xsMax(PlayersActive,3));
+		SpawnRhinoSuperPoacher(1);
 		PlayersDead = 0;
 		timediff = trTimeMS();
 		timelast = trTimeMS();
@@ -309,6 +310,10 @@ rule RhinoPoacherMovement
 inactive
 highFrequency
 {
+	int superpoacher = 0;
+	int target = 0;
+	int temp = 0;
+	vector dest = vector(0,0,0);
 	if(xGetDatabaseCount(dPoachers) > 0){
 		xDatabaseNext(dPoachers);
 		if(xGetInt(dPoachers, xMoveTime) < trTime()){

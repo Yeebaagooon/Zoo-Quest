@@ -1,3 +1,37 @@
+void ShootProjectile(vector dir = vector(0,0,0), vector startpos = vector(0,0,0), string protounit = ""){
+	int temp = 0;
+	vector orient = xsVectorSet(xsVectorGetX(dir),0,xsVectorGetZ(dir));
+	temp = trGetNextUnitScenarioNameNumber();
+	UnitCreate(cNumberNonGaiaPlayers, "Dwarf", xsVectorGetX(startpos),xsVectorGetZ(startpos),0);
+	trUnitSelectClear();
+	trUnitSelect(""+temp);
+	trSetUnitOrientation(orient,vector(0,1,0),true);
+	trSetScale(0);
+	//THE CAR
+	//dest = vectorSetAsTargetVector(startpos,dir,60.0);
+	trUnitSelectClear();
+	trUnitSelect(""+temp);
+	int index = xAddDatabaseBlock(dIncomingMissiles, true);
+	spyEffect(kbGetProtoUnitID("Trident Soldier"), 0, xsVectorSet(dIncomingMissiles, xMissileSpyID, index), vector(0,0,0));
+	//THE SEAT, make 0,0,0
+	xSetInt(dIncomingMissiles,xUnitID, temp);
+	xSetVector(dIncomingMissiles, xMissilePos, startpos);
+	xSetVector(dIncomingMissiles, xMissileDir, dir);
+	xSetInt(dIncomingMissiles, xMissileProto, kbGetProtoUnitID(protounit));
+	
+	//trUnitMoveToPoint(xsVectorGetX(dest),0,xsVectorGetZ(dest),-1,false);
+	/*xAddDatabaseBlock(dMissiles, true);
+	xSetInt(dMissiles, xUnitID, temp);
+	xSetInt(dMissiles, xOwner, cNumberNonGaiaPlayers);
+	xSetVector(dMissiles, xMissilePos, startpos);
+	xSetVector(dMissiles, xMissilePrev, startpos);
+	xSetVector(dMissiles, xMissileDir, xsVectorNormalize(dir)); //maybe use dest if this breaks
+	xAddDatabaseBlock(dDestroyMe, true);
+	xSetInt(dDestroyMe, xUnitID, temp);
+	xSetInt(dDestroyMe, xDestroyTime, trTimeMS()+10000);*/
+	
+}
+
 string ActName(int num = 0){
 	string actnamed = "Error";
 	switch(num)

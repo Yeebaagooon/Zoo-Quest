@@ -102,7 +102,9 @@ highFrequency
 		trPlayerSetDiplomacy(0, p, "Enemy");
 		trPlayerSetDiplomacy(cNumberNonGaiaPlayers, p, "Enemy");
 		trPlayerSetDiplomacy(p, cNumberNonGaiaPlayers, "Enemy");
+		trPlayerSetDiplomacy(p, 0, "Neutral");
 	}
+	trPlayerSetDiplomacy(0, cNumberNonGaiaPlayers, "Enemy");
 	trTechSetStatus(0, 304, 4);
 	PlayersActive = cNumberNonGaiaPlayers;
 	PlayersActive = PlayersActive-1;
