@@ -39,7 +39,7 @@ files = ['zshared.c', 'voids.c', 'globals.c', 'intsstrings.c', 'databases.c', 'g
 
 OUTPUT_COMMENTS = False
 OUTPUT_TABS = False
-REFORMAT = True
+REFORMAT = False
 VERBOSE = False
 for t in sys.argv:
 	if t == '-v':
@@ -62,6 +62,8 @@ STATE_DONE = 6
 
 STATE_WAITING_CLOSE_PARENTHESIS = 7
 STATE_CLOSED = 8
+
+NEED_SEMICOLON = False
 
 DATATYPE = ['int', 'float', 'string', 'void', 'vector', 'bool']
 ARITHMETIC = ['/', '*', '+', '-']
@@ -330,12 +332,15 @@ class BaseFrame(Job):
 
 class StackFrame(Job):
 	def __init__(self, name, parent):
+		global NEED_SEMICOLON
 		knownVars = getKnownVariables()
 		super().__init__(name, parent)
 		self.depth = len(knownVars)
 		self.state = 0
+		NEED_SEMICOLON = False
 
 	def accept(self, token):
+		global NEED_SEMICOLON
 		knownVars = getKnownVariables()
 		knownTypes = getKnownDatatypes()
 		accepted = True
@@ -345,6 +350,7 @@ class StackFrame(Job):
 					if len(self.children) > 0:
 						error("Invalid syntax before {")
 					self.state = STATE_IN_BRACKETS
+					NEED_SEMICOLON = True
 				elif token == ';':
 					self.state = STATE_DONE
 					self.resolve()
@@ -494,9 +500,9 @@ class Logic(StackFrame):
 			elif self.state == STATE_IN_BRACKETS:
 				if token in ['break', 'continue']:
 					searchState = self
-					while searchState.name not in ['for', 'while'] and searchState.parent:
+					while searchState.name not in ['for', 'while', 'case'] and searchState.parent:
 						searchState = searchState.parent
-					if searchState.name in ['for','while']:
+					if searchState.name in ['for','while', 'case']:
 						self.children.append(Literal('0',self,'int'))
 						self.children[-1].closed = True
 						self.children[-1].type = 'BREAK'
@@ -601,10 +607,12 @@ class Declaration(StackFrame):
 		self.line = line
 
 	def resolve(self):
+		global NEED_SEMICOLON
 		if not self.closed:
 			self.closed = True
 			super().resolve()
 			if self.type == 'FUNCTION':
+				NEED_SEMICOLON = False
 				FUNCTIONS.update({self.name : CustomFunction(self.name, self.datatype)})
 				for frame in self.children:
 					FUNCTIONS[self.name].add(frame.datatype)
@@ -616,6 +624,7 @@ class Declaration(StackFrame):
 				print("Line " + str(self.ln) + ":\n    " + self.line)
 
 	def accept(self, token):
+		global NEED_SEMICOLON
 		global THE_TRIGGER_KNOWS
 		global IN_TRIGGER
 		knownVars = getKnownVariables()
@@ -644,6 +653,7 @@ class Declaration(StackFrame):
 					self.depth = len(knownVars)
 					self.state = STATE_IN_PARENTHESIS
 					self.type = 'FUNCTION'
+					NEED_SEMICOLON = False
 				else:
 					self.resolve()
 					self.insertAbove(Assignment, token)
@@ -780,6 +790,8 @@ class Function(Mathable):
 		self.expected = FUNCTIONS[name].parameters
 		self.state = 0
 		self.count = 0
+		global NEED_SEMICOLON
+		self.semicolon = NEED_SEMICOLON
 
 	def resolve(self):
 		if not self.closed:
@@ -798,6 +810,7 @@ class Function(Mathable):
 				self.children = []
 
 	def accept(self, token):
+		global NEED_SEMICOLON
 		accepted = True
 		if not super().accept(token):
 			if self.closed:
@@ -805,9 +818,11 @@ class Function(Mathable):
 			elif self.state == 0:
 				if token == '(':
 					self.state = 1
+					NEED_SEMICOLON = False
 				else:
 					accepted = False
 			elif token == ')':
+				NEED_SEMICOLON = self.semicolon
 				self.state = 3;
 				self.resolve()
 			elif self.state == 1:
@@ -844,6 +859,9 @@ class Variable(Mathable):
 		if not super().accept(token):
 			if token == '=':
 				self.insertAbove(Assignment, token)
+			elif token in ['++', '--']:
+				self.insertAbove(Assignment, token)
+				self.parent.accept('1')
 			else:
 				accepted = False
 		return accepted
@@ -1027,6 +1045,8 @@ def parseFile(fn):
 	global comment
 	global ln
 	global line
+	global ERRORED
+	tabs = ''
 	ln = 1
 	pcount = 0 # parenthesis
 	bcount = 0 # brackets
@@ -1076,7 +1096,7 @@ def parseFile(fn):
 										templine = "".join(templine)
 									else:
 										templine = templine.replace(n, ' ' + n + ' ')
-							templine = templine.replace('=', ' = ').replace(' =  = ', ' == ').replace('! = ', ' != ').replace(' >  = ', ' >= ').replace(' <  = ', '<=').replace('minInterval ', 'minInterval').replace('maxInterval ', 'maxInterval')
+							templine = templine.replace('=', ' = ').replace(' =  = ', ' == ').replace('! = ', ' != ').replace(' >  = ', ' >= ').replace(' <  = ', '<=').replace('minInterval ', 'minInterval').replace('maxInterval ', 'maxInterval').replace(' + + ', ' ++ ').replace(' - - ', ' -- ')
 							tokens = [token for token in templine.split(' ') if token != '']
 
 							for token in tokens:
@@ -1094,9 +1114,10 @@ def parseFile(fn):
 						if '//' in stringless:
 							templine = templine[:templine.find('//')].strip()
 
-						if len(templine) > 0 and not (templine[-1] == ';' or templine[-1] == '{' or templine[-1] == '}' or templine[-2:] == '||' or templine[-2:] == '&&' or templine[-1] == ',' or templine[-4:] == 'else' or templine[0:4] == 'rule' or templine == 'highFrequency' or templine == 'runImmediately' or templine[-1] == '/' or templine[-6:] == 'active' or templine[0:11] == 'minInterval' or templine[0:4] == 'case' or templine[0:7] == 'switch(' or templine[-1] == '%'):
+						if len(templine) > 0 and NEED_SEMICOLON and not ERRORED and not (templine[-1] == ';' or templine[-1] == '}' or templine[-1] == '{' or templine[-1] == '%'):
 							print("Missing semicolon")
 							print("Line " + str(ln) + ":\n    " + line)
+							ERRORED = True
 
 						if len(templine) > 120:
 							if ESCAPE:
@@ -1191,7 +1212,7 @@ try:
 			parseFile(rmsFunc)
 		ESCAPE = False
 		for f in files:
-			file_data_2.write('void ' + f[:f.find('.')] + '() {\n')
+			file_data_2.write('void ' + f[:f.rfind('.')].replace('.', '').replace('/', '') + '() {\n')
 			parseFile(f)
 			file_data_2.write('}\n')
 
@@ -1206,7 +1227,7 @@ try:
 		file_data_2.write('rmAddTriggerEffect("SetIdleProcessing");\n')
 		file_data_2.write('rmSetTriggerEffectParam("IdleProc",");}}/*");\n')
 		for f in files:
-			file_data_2.write(f[:f.find('.')] + '();\n')
+			file_data_2.write(f[:f.rfind('.')].replace('.', '').replace('/', '') + '();\n')
 		file_data_2.write('rmAddTriggerEffect("SetIdleProcessing");\n')
 		file_data_2.write('rmSetTriggerEffectParam("IdleProc",");*/rule _zenowashereagain inactive {if(true){xsDisableSelf();//");\n')
 		file_data_2.write('rmSetStatusText("", 0.99);')

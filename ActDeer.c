@@ -201,187 +201,189 @@ rule DeerActLoops
 highFrequency
 inactive
 {
-	timediff = 0.001 * (trTimeMS() - timelast); // calculate timediff
-	timelast = trTimeMS();
-	int temp = 0;
-	int TimerTile = 0;
-	ProcessBerries(5);
-	ProcessLogs(7);
-	if(xGetDatabaseCount(dMissiles) > 0){
-		DoMissile();
-	}
-	for(p=1 ; < cNumberNonGaiaPlayers){
-		xSetPointer(dPlayerData, p);
-		if((playerIsPlaying(p) == false) && (xGetBool(dPlayerData, xPlayerActive) == true)){
-			trUnitSelectByQV("P"+p+"Unit");
-			trUnitChangeProtoUnit("Ragnorok SFX");
-			trUnitSelectByQV("P"+p+"Unit");
-			trUnitDestroy();
-			trUnitSelectClear();
-			trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
-			trUnitChangeProtoUnit("Hero Death");
-			xSetBool(dPlayerData, xPlayerActive, false);
-			PlayersActive = PlayersActive-1;
+	if(Stage == 1){
+		timediff = 0.001 * (trTimeMS() - timelast); // calculate timediff
+		timelast = trTimeMS();
+		int temp = 0;
+		int TimerTile = 0;
+		ProcessBerries(5);
+		ProcessLogs(7);
+		if(xGetDatabaseCount(dMissiles) > 0){
+			DoMissile();
 		}
-		if((xGetBool(dPlayerData, xStopDeath) == false) && (trPlayerUnitCountSpecific(p, ""+GazelleProto) == 0) && (trPlayerUnitCountSpecific(p, "Hero Greek Bellerophon") == 0) && (trPlayerUnitCountSpecific(p, "Prisoner") == 0) && (xGetBool(dPlayerData, xPlayerActive) == true) && (xGetBool(dPlayerData, xPlayerDead) == false) && (InMinigame == false)){
-			//PLAYER DEAD
-			PlayersDead = PlayersDead+1;
-			xSetBool(dPlayerData, xPlayerDead, true);
-			PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is dead!");
-		}
-		xSetVector(dPlayerData, xConstantPos, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
-		if(xGetInt(dPlayerData, xHPRegen) > 0){
-			if(trTime() > xGetInt(dPlayerData, xHPRegenNext)){
+		for(p=1 ; < cNumberNonGaiaPlayers){
+			xSetPointer(dPlayerData, p);
+			if((playerIsPlaying(p) == false) && (xGetBool(dPlayerData, xPlayerActive) == true)){
 				trUnitSelectByQV("P"+p+"Unit");
-				trDamageUnit(-1*xGetInt(dPlayerData, xHPRegen));
-				xSetInt(dPlayerData, xHPRegenNext, trTime()+xGetInt(dPlayerData, xHPRegenTime));
+				trUnitChangeProtoUnit("Ragnorok SFX");
+				trUnitSelectByQV("P"+p+"Unit");
+				trUnitDestroy();
+				trUnitSelectClear();
+				trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+				trUnitChangeProtoUnit("Hero Death");
+				xSetBool(dPlayerData, xPlayerActive, false);
+				PlayersActive = PlayersActive-1;
+			}
+			if((xGetBool(dPlayerData, xStopDeath) == false) && (trPlayerUnitCountSpecific(p, ""+GazelleProto) == 0) && (trPlayerUnitCountSpecific(p, "Hero Greek Bellerophon") == 0) && (trPlayerUnitCountSpecific(p, "Prisoner") == 0) && (xGetBool(dPlayerData, xPlayerActive) == true) && (xGetBool(dPlayerData, xPlayerDead) == false) && (InMinigame == false)){
+				//PLAYER DEAD
+				PlayersDead = PlayersDead+1;
+				xSetBool(dPlayerData, xPlayerDead, true);
+				PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is dead!");
+			}
+			xSetVector(dPlayerData, xConstantPos, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
+			if(xGetInt(dPlayerData, xHPRegen) > 0){
+				if(trTime() > xGetInt(dPlayerData, xHPRegenNext)){
+					trUnitSelectByQV("P"+p+"Unit");
+					trDamageUnit(-1*xGetInt(dPlayerData, xHPRegen));
+					xSetInt(dPlayerData, xHPRegenNext, trTime()+xGetInt(dPlayerData, xHPRegenTime));
+				}
+			}
+			if(InMinigame == true){
+				//MINIGAME
+				for(b = 0; <xGetDatabaseCount(dPoachers)){
+					xDatabaseNext(dPoachers);
+					xUnitSelect(dPoachers, xUnitID);
+					trUnitChangeProtoUnit("Cinematic Block");
+				}
+				if(xGetBool(dPlayerData, xStopDeath) == true){
+					if(trPlayerUnitCountSpecific(p, ""+GazelleProto) == 1){
+						trVectorQuestVarSet("P"+p+"PosMG", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
+						if((trGetTerrainType(trVectorQuestVarGetX("P"+p+"PosMG")/2,trVectorQuestVarGetZ("P"+p+"PosMG")/2) == 2) && (trGetTerrainSubType(trVectorQuestVarGetX("P"+p+"PosMG")/2,trVectorQuestVarGetZ("P"+p+"PosMG")/2) == 10)){
+							trUnitSelectByQV("P"+p+"Unit");
+							trUnitChangeProtoUnit("Ragnorok SFX");
+							trUnitSelectByQV("P"+p+"Unit");
+							trUnitDestroy();
+							trUnitSelectClear();
+							trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+							trUnitChangeProtoUnit("Hero Death");
+							UnitCreate(0, "Tartarian Gate Flame", trVectorQuestVarGetX("P"+p+"PosMG"),trVectorQuestVarGetZ("P"+p+"PosMG"), 90);
+							xSetVector(dPlayerData, xVectorHold, trVectorQuestVarGet("P"+p+"PosMG"));
+							PlayersMinigaming = PlayersMinigaming-1;
+							if(trCurrentPlayer() == p){
+								playSound("xlose.wav");
+								trOverlayText("Minigame Failed!", 3.0,-1,-1,600);
+							}
+						}
+						trVectorQuestVarSet("P"+p+"PosMG", trVectorQuestVarGet("P"+p+"PosMG")/2);
+						if((trVectorQuestVarGetZ("P"+p+"PosMG") < xsVectorGetZ(StageVector)+1) || (trVectorQuestVarGetZ("P"+p+"PosMG") > xsVectorGetZ(StageVector)+11) || (trVectorQuestVarGetX("P"+p+"PosMG") < xsVectorGetX(StageVector))){
+							xSetBool(dPlayerData, xStopDeath, false);
+							PlayersMinigaming = PlayersMinigaming-1;
+							if(trCurrentPlayer() == p){
+								playSound("xlose.wav");
+								trMessageSetText("You have gone out of bounds and been returned to normal play.", 5000);
+							}
+						}
+						if(trVectorQuestVarGetX("P"+p+"PosMG") > xsVectorGetX(StageVector)+26){
+							xSetBool(dPlayerData, xStopDeath, false);
+							PlayersMinigaming = PlayersMinigaming-1;
+							MinigameWins = MinigameWins+1;
+							if(trCurrentPlayer() == p){
+								playSound("xwin.wav");
+								playSound("\cinematics\15_in\gong.wav");
+								trMessageSetText("You have won the minigame!", 4000);
+							}
+							trQuestVarSetFromRand("temp",1,2,true);
+							if(temp == 1){
+								PlayerChoice(p, "Choose your reward:", "+1 speed", 8, "+2 hp", 10, 10000);
+							}
+							else{
+								PlayerChoice(p, "Choose your reward:", "+6 LOS", 9, "+1hp regen every 30s", 11, 10000);
+							}
+						}
+					}
+				}
 			}
 		}
 		if(InMinigame == true){
-			//MINIGAME
-			for(b = 0; <xGetDatabaseCount(dPoachers)){
-				xDatabaseNext(dPoachers);
-				xUnitSelect(dPoachers, xUnitID);
-				trUnitChangeProtoUnit("Cinematic Block");
-			}
-			if(xGetBool(dPlayerData, xStopDeath) == true){
-				if(trPlayerUnitCountSpecific(p, ""+GazelleProto) == 1){
-					trVectorQuestVarSet("P"+p+"PosMG", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
-					if((trGetTerrainType(trVectorQuestVarGetX("P"+p+"PosMG")/2,trVectorQuestVarGetZ("P"+p+"PosMG")/2) == 2) && (trGetTerrainSubType(trVectorQuestVarGetX("P"+p+"PosMG")/2,trVectorQuestVarGetZ("P"+p+"PosMG")/2) == 10)){
-						trUnitSelectByQV("P"+p+"Unit");
-						trUnitChangeProtoUnit("Ragnorok SFX");
-						trUnitSelectByQV("P"+p+"Unit");
-						trUnitDestroy();
-						trUnitSelectClear();
-						trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
-						trUnitChangeProtoUnit("Hero Death");
-						UnitCreate(0, "Tartarian Gate Flame", trVectorQuestVarGetX("P"+p+"PosMG"),trVectorQuestVarGetZ("P"+p+"PosMG"), 90);
-						xSetVector(dPlayerData, xVectorHold, trVectorQuestVarGet("P"+p+"PosMG"));
-						PlayersMinigaming = PlayersMinigaming-1;
-						if(trCurrentPlayer() == p){
-							playSound("xlose.wav");
-							trOverlayText("Minigame Failed!", 3.0,-1,-1,600);
-						}
+			TimerTile = trTimeMS();
+			if(TimerTile > GlobalTimerMS){
+				GlobalTimerMS = trTimeMS()+250;
+				trQuestVarModify("LavaTile", "+", 1);
+				trQuestVarModify("LavaTile2", "+", 1);
+				trQuestVarModify("LavaTile3", "+", 1);
+				if(1*trQuestVarGet("LavaTile") >= xGetDatabaseCount(dTiles1)){
+					trQuestVarSet("LavaTile", 0);
+				}
+				if(1*trQuestVarGet("LavaTile2") >= xGetDatabaseCount(dTiles2)){
+					trQuestVarSet("LavaTile2", 0);
+				}
+				if(1*trQuestVarGet("LavaTile3") >= xGetDatabaseCount(dTiles2)){
+					trQuestVarSet("LavaTile3", 0);
+				}
+				for(a=0 ; < xGetDatabaseCount(dTiles1)){
+					xDatabaseNext(dTiles1);
+					trPaintTerrain(xGetInt(dTiles1, xTileX),xGetInt(dTiles1, xTileZ),xGetInt(dTiles1, xTileX),xGetInt(dTiles1, xTileZ),xGetInt(dTiles1, xTileType),xGetInt(dTiles1, xTileSubType));
+					if(a == 1*trQuestVarGet("LavaTile")){
+						trPaintTerrain(xGetInt(dTiles1, xTileX),xGetInt(dTiles1, xTileZ),xGetInt(dTiles1, xTileX),xGetInt(dTiles1, xTileZ),2,10);
 					}
-					trVectorQuestVarSet("P"+p+"PosMG", trVectorQuestVarGet("P"+p+"PosMG")/2);
-					if((trVectorQuestVarGetZ("P"+p+"PosMG") < xsVectorGetZ(StageVector)+1) || (trVectorQuestVarGetZ("P"+p+"PosMG") > xsVectorGetZ(StageVector)+11) || (trVectorQuestVarGetX("P"+p+"PosMG") < xsVectorGetX(StageVector))){
-						xSetBool(dPlayerData, xStopDeath, false);
-						PlayersMinigaming = PlayersMinigaming-1;
-						if(trCurrentPlayer() == p){
-							playSound("xlose.wav");
-							trMessageSetText("You have gone out of bounds and been returned to normal play.", 5000);
-						}
+				}
+				for(b=0 ; < xGetDatabaseCount(dTiles2)){
+					xDatabaseNext(dTiles2);
+					trPaintTerrain(xGetInt(dTiles2, xTileX),xGetInt(dTiles2, xTileZ),xGetInt(dTiles2, xTileX),xGetInt(dTiles2, xTileZ),xGetInt(dTiles2, xTileType),xGetInt(dTiles2, xTileSubType));
+					if(b == 1*trQuestVarGet("LavaTile2")){
+						trPaintTerrain(xGetInt(dTiles2, xTileX),xGetInt(dTiles2, xTileZ),xGetInt(dTiles2, xTileX),xGetInt(dTiles2, xTileZ),2,10);
 					}
-					if(trVectorQuestVarGetX("P"+p+"PosMG") > xsVectorGetX(StageVector)+26){
-						xSetBool(dPlayerData, xStopDeath, false);
-						PlayersMinigaming = PlayersMinigaming-1;
-						MinigameWins = MinigameWins+1;
-						if(trCurrentPlayer() == p){
-							playSound("xwin.wav");
-							playSound("\cinematics\15_in\gong.wav");
-							trMessageSetText("You have won the minigame!", 4000);
-						}
-						trQuestVarSetFromRand("temp",1,2,true);
-						if(temp == 1){
-							PlayerChoice(p, "Choose your reward:", "+1 speed", 8, "+2 hp", 10, 10000);
-						}
-						else{
-							PlayerChoice(p, "Choose your reward:", "+6 LOS", 9, "+1hp regen every 30s", 11, 10000);
-						}
+					if(b == 1*trQuestVarGet("LavaTile3")){
+						trPaintTerrain(xGetInt(dTiles2, xTileX),xGetInt(dTiles2, xTileZ),xGetInt(dTiles2, xTileX),xGetInt(dTiles2, xTileZ),2,10);
 					}
 				}
 			}
 		}
-	}
-	if(InMinigame == true){
-		TimerTile = trTimeMS();
-		if(TimerTile > GlobalTimerMS){
-			GlobalTimerMS = trTimeMS()+250;
-			trQuestVarModify("LavaTile", "+", 1);
-			trQuestVarModify("LavaTile2", "+", 1);
-			trQuestVarModify("LavaTile3", "+", 1);
-			if(1*trQuestVarGet("LavaTile") >= xGetDatabaseCount(dTiles1)){
-				trQuestVarSet("LavaTile", 0);
-			}
-			if(1*trQuestVarGet("LavaTile2") >= xGetDatabaseCount(dTiles2)){
-				trQuestVarSet("LavaTile2", 0);
-			}
-			if(1*trQuestVarGet("LavaTile3") >= xGetDatabaseCount(dTiles2)){
-				trQuestVarSet("LavaTile3", 0);
-			}
-			for(a=0 ; < xGetDatabaseCount(dTiles1)){
-				xDatabaseNext(dTiles1);
-				trPaintTerrain(xGetInt(dTiles1, xTileX),xGetInt(dTiles1, xTileZ),xGetInt(dTiles1, xTileX),xGetInt(dTiles1, xTileZ),xGetInt(dTiles1, xTileType),xGetInt(dTiles1, xTileSubType));
-				if(a == 1*trQuestVarGet("LavaTile")){
-					trPaintTerrain(xGetInt(dTiles1, xTileX),xGetInt(dTiles1, xTileZ),xGetInt(dTiles1, xTileX),xGetInt(dTiles1, xTileZ),2,10);
-				}
-			}
-			for(b=0 ; < xGetDatabaseCount(dTiles2)){
-				xDatabaseNext(dTiles2);
-				trPaintTerrain(xGetInt(dTiles2, xTileX),xGetInt(dTiles2, xTileZ),xGetInt(dTiles2, xTileX),xGetInt(dTiles2, xTileZ),xGetInt(dTiles2, xTileType),xGetInt(dTiles2, xTileSubType));
-				if(b == 1*trQuestVarGet("LavaTile2")){
-					trPaintTerrain(xGetInt(dTiles2, xTileX),xGetInt(dTiles2, xTileZ),xGetInt(dTiles2, xTileX),xGetInt(dTiles2, xTileZ),2,10);
-				}
-				if(b == 1*trQuestVarGet("LavaTile3")){
-					trPaintTerrain(xGetInt(dTiles2, xTileX),xGetInt(dTiles2, xTileZ),xGetInt(dTiles2, xTileX),xGetInt(dTiles2, xTileZ),2,10);
-				}
-			}
+		//Check terrain for extraction is done in seperate trigger
+		if((PlayersActive == PlayersReadyToLeave+PlayersDead) && (PlayersDead != PlayersActive)){
+			xsEnableRule("DeerExit");
 		}
-	}
-	//Check terrain for extraction is done in seperate trigger
-	if((PlayersActive == PlayersReadyToLeave+PlayersDead) && (PlayersDead != PlayersActive)){
-		xsEnableRule("DeerExit");
-	}
-	if(xGetDatabaseCount(dChests) > 0){
-		xDatabaseNext(dChests);
-		int n = xGetInt(dChests, xUnitID);
-		xUnitSelect(dChests,xUnitID);
-		if(trCountUnitsInArea(""+n,0,"Great Box", 1) == 0){
-			xFreeDatabaseBlock(dChests);
-			debugLog("Chest removed" + n);
-			debugLog(""+kbGetProtoUnitID(""+n));
-			ChestsTotal = ChestsTotal-1;
-		}
-		if (trUnitIsSelected()) {
-			uiClearSelection();
-			startNPCDialog(5);
-		}
-		trUnitSelectClear();
-		for(pl=1 ; < cNumberNonGaiaPlayers){
-			if(trCountUnitsInArea(""+n,pl,"All", 5) > 0){
-				xUnitSelect(dChests,xUnitID);
-				trUnitSetAnimation("SE_Great_Box_Opening",false,-1);
-				xUnitSelect(dChests,xUnitID);
-				trUnitHighlight(3, false);
-				trUnitSelectClear();
-				xUnitSelect(dChests, xUnlockUnitID);
-				trUnitChangeProtoUnit("Spy Eye");
-				trUnitSelectClear();
-				xUnitSelect(dChests, xUnlockUnitID);
-				trMutateSelected(kbGetProtoUnitID("Pyramid Osiris Xpack"));
-				trUnitSelectClear();
-				xUnitSelect(dChests, xUnlockUnitID);
-				trSetSelectedScale(100,0,0);
-				trUnitSelectClear();
-				xUnitSelect(dChests, xUnlockUnitID);
-				trUnitOverrideAnimation(6, 0, false, true, -1);
-				trUnitSelectClear();
-				xUnitSelect(dChests, xUnlockUnitID);
-				trUnitSetAnimationPath("0,1,0,0,0,0");
-				xAddDatabaseBlock(dDestroyMe, true);
-				xSetInt(dDestroyMe, xDestroyName, xGetInt(dChests, xUnlockUnitID));
-				xSetInt(dDestroyMe, xDestroyTime, trTimeMS()+3000);
-				ChestsFound = ChestsFound+1;
+		if(xGetDatabaseCount(dChests) > 0){
+			xDatabaseNext(dChests);
+			int n = xGetInt(dChests, xUnitID);
+			xUnitSelect(dChests,xUnitID);
+			if(trCountUnitsInArea(""+n,0,"Great Box", 1) == 0){
 				xFreeDatabaseBlock(dChests);
-				if(iModulo(2, trTimeMS()) == 0){
-					PlayerChoice(pl, "Choose your reward:", "+1 hp", 5, "+4 LOS", 6, 10000);
-				}
-				else{
-					PlayerChoice(pl, "Choose your reward:", "+1 hp", 5, "+0.5 Speed", 7, 10000);
+				debugLog("Chest removed" + n);
+				debugLog(""+kbGetProtoUnitID(""+n));
+				ChestsTotal = ChestsTotal-1;
+			}
+			if (trUnitIsSelected()) {
+				uiClearSelection();
+				startNPCDialog(5);
+			}
+			trUnitSelectClear();
+			for(pl=1 ; < cNumberNonGaiaPlayers){
+				if(trCountUnitsInArea(""+n,pl,"All", 5) > 0){
+					xUnitSelect(dChests,xUnitID);
+					trUnitSetAnimation("SE_Great_Box_Opening",false,-1);
+					xUnitSelect(dChests,xUnitID);
+					trUnitHighlight(3, false);
+					trUnitSelectClear();
+					xUnitSelect(dChests, xUnlockUnitID);
+					trUnitChangeProtoUnit("Spy Eye");
+					trUnitSelectClear();
+					xUnitSelect(dChests, xUnlockUnitID);
+					trMutateSelected(kbGetProtoUnitID("Pyramid Osiris Xpack"));
+					trUnitSelectClear();
+					xUnitSelect(dChests, xUnlockUnitID);
+					trSetSelectedScale(100,0,0);
+					trUnitSelectClear();
+					xUnitSelect(dChests, xUnlockUnitID);
+					trUnitOverrideAnimation(6, 0, false, true, -1);
+					trUnitSelectClear();
+					xUnitSelect(dChests, xUnlockUnitID);
+					trUnitSetAnimationPath("0,1,0,0,0,0");
+					xAddDatabaseBlock(dDestroyMe, true);
+					xSetInt(dDestroyMe, xDestroyName, xGetInt(dChests, xUnlockUnitID));
+					xSetInt(dDestroyMe, xDestroyTime, trTimeMS()+3000);
+					ChestsFound = ChestsFound+1;
+					xFreeDatabaseBlock(dChests);
+					if(iModulo(2, trTimeMS()) == 0){
+						PlayerChoice(pl, "Choose your reward:", "+1 hp", 5, "+4 LOS", 6, 10000);
+					}
+					else{
+						PlayerChoice(pl, "Choose your reward:", "+1 hp", 5, "+0.5 Speed", 7, 10000);
+					}
 				}
 			}
+			
 		}
-		
 	}
 }
 
@@ -550,7 +552,7 @@ highFrequency
 		uiZoomToProto(""+GazelleProto);
 		uiLookAtProto(""+GazelleProto);
 		unitTransform("Tartarian Gate Flame", "Flowers");
-		for(c = 0; <= xGetDatabaseCount(dTemp)){
+		for(c = xGetDatabaseCount(dTemp) ; > 0){
 			xDatabaseNext(dTemp);
 			xUnitSelect(dTemp, xUnitID);
 			trUnitDestroy();

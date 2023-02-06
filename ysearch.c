@@ -91,21 +91,7 @@ highFrequency
 				dest = kbGetBlockPosition(""+trGetUnitScenarioNameNumber(kbUnitGetTargetUnitID(kbGetBlockID(""+closestid))));
 				xsSetContextPlayer(0);
 				dir = xsVectorNormalize(dest-closevector);
-				temp = trGetNextUnitScenarioNameNumber();
-				UnitCreate(cNumberNonGaiaPlayers, "Lampades Bolt",xsVectorGetX(closevector),xsVectorGetZ(closevector),0);
-				dir = vectorSetAsTargetVector(closevector,dir,60.0);
-				trUnitSelectClear();
-				trUnitSelect(""+temp);
-				trUnitMoveToPoint(xsVectorGetX(dir),0,xsVectorGetZ(dir),-1,false);
-				xAddDatabaseBlock(dMissiles, true);
-				xSetInt(dMissiles, xUnitID, temp);
-				xSetInt(dMissiles, xOwner, cNumberNonGaiaPlayers);
-				xSetVector(dMissiles, xMissilePos, closevector);
-				xSetVector(dMissiles, xMissilePrev, closevector);
-				xSetVector(dMissiles, xMissileDir, xsVectorNormalize(dir));
-				xAddDatabaseBlock(dDestroyMe, true);
-				xSetInt(dDestroyMe, xUnitID, temp);
-				xSetInt(dDestroyMe, xDestroyTime, trTimeMS()+10000);
+				ShootProjectile(dir, closevector, "Lampades Bolt", "Rocket");
 			}
 			case kbGetProtoUnitID("Sling Stone"):
 			{
@@ -133,22 +119,13 @@ highFrequency
 				dest = kbGetBlockPosition(""+trGetUnitScenarioNameNumber(kbUnitGetTargetUnitID(kbGetBlockID(""+closestid))));
 				xsSetContextPlayer(0);
 				dir = xsVectorNormalize(dest-closevector);
-				/*temp = trGetNextUnitScenarioNameNumber();
-				UnitCreate(cNumberNonGaiaPlayers, "Javelin Flaming", xsVectorGetX(closevector),xsVectorGetZ(closevector),0);
-				dir = vectorSetAsTargetVector(closevector,dir,60.0);
+				ShootProjectile(dir, closevector, "Javelin Flaming", "Rocket");
+			}
+			case kbGetProtoUnitID("Petosuchus projectile"):
+			{
 				trUnitSelectClear();
-				trUnitSelect(""+temp);
-				trUnitMoveToPoint(xsVectorGetX(dir),0,xsVectorGetZ(dir),-1,false);
-				xAddDatabaseBlock(dMissiles, true);
-				xSetInt(dMissiles, xUnitID, temp);
-				xSetInt(dMissiles, xOwner, cNumberNonGaiaPlayers);
-				xSetVector(dMissiles, xMissilePos, closevector);
-				xSetVector(dMissiles, xMissilePrev, closevector);
-				xSetVector(dMissiles, xMissileDir, xsVectorNormalize(dir));
-				xAddDatabaseBlock(dDestroyMe, true);
-				xSetInt(dDestroyMe, xUnitID, temp);
-				xSetInt(dDestroyMe, xDestroyTime, trTimeMS()+10000);*/
-				ShootProjectile(dir, closevector, "Javelin Flaming");
+				trUnitSelectByID(id);
+				trUnitHighlight(10,true);
 			}
 			case kbGetProtoUnitID("Arrow Flaming"):
 			{
@@ -183,28 +160,9 @@ highFrequency
 				//so for 15 degrees and 5 projs our angles are 30,15,0,-15-,-30, so set to cos/sin -30 then loop for +15
 				dir = rotationMatrix(dir, 0.866025, -0.5);
 				for(a = 1; < 6){
-					/*temp = trGetNextUnitScenarioNameNumber();
-					UnitCreate(cNumberNonGaiaPlayers, "Trident Soldier", xsVectorGetX(closevector),xsVectorGetZ(closevector),0);
-					dest = vectorSetAsTargetVector(closevector,dir,60.0);
-					trUnitSelectClear();
-					trUnitSelect(""+temp);
-					trUnitMoveToPoint(xsVectorGetX(dest),0,xsVectorGetZ(dest),-1,false);
-					xAddDatabaseBlock(dMissiles, true);
-					xSetInt(dMissiles, xUnitID, temp);
-					xSetInt(dMissiles, xOwner, cNumberNonGaiaPlayers);
-					xSetVector(dMissiles, xMissilePos, closevector);
-					xSetVector(dMissiles, xMissilePrev, closevector);
-					xSetVector(dMissiles, xMissileDir, xsVectorNormalize(dir)); //maybe use dest if this breaks
-					xAddDatabaseBlock(dDestroyMe, true);
-					xSetInt(dDestroyMe, xUnitID, temp);
-					xSetInt(dDestroyMe, xDestroyTime, trTimeMS()+10000);*/
-					ShootProjectile(dir, closevector, "Lampades Bolt");
+					ShootProjectile(dir, closevector, "Lampades Bolt", "Wadjet Spit");
 					dir = rotationMatrix(dir, baseCos, baseSin);
 				}
-			}
-			case kbGetProtoUnitID("Hero Birth"):
-			{
-				debugLog("spysearch: " + i);
 			}
 		}
 	}
@@ -229,12 +187,15 @@ highFrequency
 					trUnitChangeProtoUnit("Invisible Target");
 					xUnitSelect(dIncomingMissiles, xMissileSpyID);
 					trSetScale(2);
+					xUnitSelect(dIncomingMissiles, xMissileSpyOfSpyID);
+					trSetScale(0);
 					xFreeDatabaseBlock(dIncomingMissiles);
 				}
-				else{
+				else if(xGetBool(dIncomingMissiles, SpyDone) == false){
 					dest = vectorSetAsTargetVector(xGetVector(dIncomingMissiles, xMissilePos), xGetVector(dIncomingMissiles, xMissileDir), 60.0);
 					xUnitSelect(dIncomingMissiles, xUnitID);
-					trMutateSelected(kbGetProtoUnitID("Rocket"));
+					trMutateSelected(xGetInt(dIncomingMissiles, xMissileCarProto));
+					xSetBool(dIncomingMissiles, SpyDone, true);
 					//The car is the rocket
 					trUnitSelectClear();
 					xUnitSelect(dIncomingMissiles, xUnitID);
@@ -255,7 +216,7 @@ highFrequency
 					xUnitSelect(dIncomingMissiles, xMissileSpyID);
 					trSetScale(0);
 					xUnitSelect(dIncomingMissiles, xMissileSpyID);
-					spyEffect(xGetInt(dIncomingMissiles, xMissileProto), 0, xsVectorSet(dIncomingMissiles, xMissileSpyOfSpyID, xGetPointer(dIncomingMissiles)), vector(1,1,1));
+					spyEffect(xGetInt(dIncomingMissiles, xMissileProto), xGetInt(dIncomingMissiles, xMissileAnim), xsVectorSet(dIncomingMissiles, xMissileSpyOfSpyID, xGetPointer(dIncomingMissiles)), vector(1,1,1));
 				}
 				
 			}

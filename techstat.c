@@ -65,6 +65,8 @@ highFrequency
 	for(p = 1; <= cNumberNonGaiaPlayers){
 		modifyProtounitAbsolute("Rocket", p, 1, 5);
 		modifyProtounitAbsolute("Rocket", p, 8, 10);
+		modifyProtounitAbsolute("Wadjet Spit", p, 1, 9);
+		modifyProtounitAbsolute("Wadjet Spit", p, 8, 10);
 		trModifyProtounit("Dwarf", p, 55, 4);
 		trModifyProtounit("Animal Attractor", p, 55, 4);
 		trModifyProtounit("Hero Greek Bellerophon", p, 55, 4);

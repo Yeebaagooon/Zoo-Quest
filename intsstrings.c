@@ -36,6 +36,7 @@ Remove stamina chat, change to counter
 
 
 [BUG LIST]
+S2 missiles double dmg, added to db twice??
 
 
 //DELETE

@@ -59,6 +59,9 @@ int xMissileDest = 0;
 int xMissileSpyID = 0;
 int xMissileSpyOfSpyID = 0;
 int xMissileProto = 0;
+int xMissileCarProto = 0;
+int xMissileAnim = 0;
+int SpyDone = 0;
 
 rule initialise_spy_database
 active
@@ -114,6 +117,9 @@ highFrequency
 	xMissileSpyID = xInitAddInt(dIncomingMissiles, "spy name", -1);
 	xMissileSpyOfSpyID = xInitAddInt(dIncomingMissiles, "spy of spy", -1);
 	xMissileProto = xInitAddInt(dIncomingMissiles, "proto id", -1);
+	xMissileCarProto = xInitAddInt(dIncomingMissiles, "car id", -1);
+	xMissileAnim = xInitAddInt(dIncomingMissiles, "anim", 0);
+	SpyDone = xInitAddBool(dIncomingMissiles, "spy done", false);
 	
 	dDots = xInitDatabase("Dot DB");
 	xUnitID = xInitAddInt(dDots, "unit id", 0);

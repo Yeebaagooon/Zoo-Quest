@@ -1,4 +1,4 @@
-void ShootProjectile(vector dir = vector(0,0,0), vector startpos = vector(0,0,0), string protounit = ""){
+void ShootProjectile(vector dir = vector(0,0,0), vector startpos = vector(0,0,0), string protounit = "", string car = "", int anim = 0){
 	int temp = 0;
 	vector orient = xsVectorSet(xsVectorGetX(dir),0,xsVectorGetZ(dir));
 	temp = trGetNextUnitScenarioNameNumber();
@@ -18,18 +18,8 @@ void ShootProjectile(vector dir = vector(0,0,0), vector startpos = vector(0,0,0)
 	xSetVector(dIncomingMissiles, xMissilePos, startpos);
 	xSetVector(dIncomingMissiles, xMissileDir, dir);
 	xSetInt(dIncomingMissiles, xMissileProto, kbGetProtoUnitID(protounit));
-	
-	//trUnitMoveToPoint(xsVectorGetX(dest),0,xsVectorGetZ(dest),-1,false);
-	/*xAddDatabaseBlock(dMissiles, true);
-	xSetInt(dMissiles, xUnitID, temp);
-	xSetInt(dMissiles, xOwner, cNumberNonGaiaPlayers);
-	xSetVector(dMissiles, xMissilePos, startpos);
-	xSetVector(dMissiles, xMissilePrev, startpos);
-	xSetVector(dMissiles, xMissileDir, xsVectorNormalize(dir)); //maybe use dest if this breaks
-	xAddDatabaseBlock(dDestroyMe, true);
-	xSetInt(dDestroyMe, xUnitID, temp);
-	xSetInt(dDestroyMe, xDestroyTime, trTimeMS()+10000);*/
-	
+	xSetInt(dIncomingMissiles, xMissileCarProto , kbGetProtoUnitID(car));
+	xSetInt(dIncomingMissiles, xMissileAnim, anim);
 }
 
 string ActName(int num = 0){
@@ -219,6 +209,9 @@ void SpawnRhinoSuperPoacher(int num = 0){
 				xSetInt(dPoachers, xUnitID, temp);
 				xSetInt(dPoachers, xMoveTime, 0);
 				num = num-1;
+				if(num == 0){
+					playSound("\cinematics\04_in\armyarrive.wav");
+				}
 			}
 			else if(allow == 1){
 				allow = 0;

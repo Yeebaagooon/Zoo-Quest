@@ -234,7 +234,7 @@ inactive
 				PlayersActive = PlayersActive-1;
 				trPaintTerrain(5,((p*8)-2),30,((p*8+4)-2),CliffType,CliffSubType);
 				trUnitSelectClear();
-				for(a = 0 ; <= xGetDatabaseCount(dTemp)){
+				for(a = xGetDatabaseCount(dTemp) ; > 0){
 					xDatabaseNext(dTemp);
 					if(xGetInt(dTemp, xExtra) == p){
 						xUnitSelect(dTemp, xUnitID);
@@ -256,7 +256,7 @@ inactive
 				temp = 1*trQuestVarGet("PlayersDoneTutorial");
 				trPaintTerrain(5,((p*8)-2),30,((p*8+4)-2),CliffType,CliffSubType);
 				trUnitSelectClear();
-				for(a = 0 ; <= xGetDatabaseCount(dTemp)){
+				for(a = xGetDatabaseCount(dTemp) ; > 0){
 					xDatabaseNext(dTemp);
 					if(xGetInt(dTemp, xExtra) == p){
 						xUnitSelect(dTemp, xUnitID);
