@@ -1368,12 +1368,46 @@ void createMarsh(){
 	trUnitChangeProtoUnit("Torch");
 	StageVector = tileForMinigame;
 	for(i = 0; <54){
+		currentId = trGetNextUnitScenarioNameNumber();
 		UnitCreate(cNumberNonGaiaPlayers, "Fence Wood", 20, i*4+20, 0);
+		xAddDatabaseBlock(dFences, true);
+		xSetInt(dFences, xUnitID, currentId);
+		xSetInt(dFences, xSegment, 1);
+		currentId = trGetNextUnitScenarioNameNumber();
 		UnitCreate(cNumberNonGaiaPlayers, "Fence Wood", 106, i*4+20, 0);
+		xAddDatabaseBlock(dFences, true);
+		xSetInt(dFences, xUnitID, currentId);
+		if(i < 26){
+			xSetInt(dFences, xSegment, 5);
+		}
+		else{
+			xSetInt(dFences, xSegment, 6);
+		}
+		currentId = trGetNextUnitScenarioNameNumber();
 		UnitCreate(cNumberNonGaiaPlayers, "Fence Wood", 232, i*4+20, 0);
+		xAddDatabaseBlock(dFences, true);
+		xSetInt(dFences, xUnitID, currentId);
+		xSetInt(dFences, xSegment, 2);
+		currentId = trGetNextUnitScenarioNameNumber();
 		UnitCreate(cNumberNonGaiaPlayers, "Fence Wood", i*4+20, 20, 90);
+		xAddDatabaseBlock(dFences, true);
+		xSetInt(dFences, xUnitID, currentId);
+		xSetInt(dFences, xSegment, 3);
+		currentId = trGetNextUnitScenarioNameNumber();
 		UnitCreate(cNumberNonGaiaPlayers, "Fence Wood", i*4+20, 106, 90);
+		xAddDatabaseBlock(dFences, true);
+		xSetInt(dFences, xUnitID, currentId);
+		if(i < 26){
+			xSetInt(dFences, xSegment, 7);
+		}
+		else{
+			xSetInt(dFences, xSegment, 8);
+		}
+		currentId = trGetNextUnitScenarioNameNumber();
 		UnitCreate(cNumberNonGaiaPlayers, "Fence Wood", i*4+20, 232, 90);
+		xAddDatabaseBlock(dFences, true);
+		xSetInt(dFences, xUnitID, currentId);
+		xSetInt(dFences, xSegment, 4);
 	}
 	for(i = 0; < 25) {
 		tempV = xsVectorSet(randomInt(toTiles(0), toTiles(1.0)), 0.0, randomInt(toTiles(0), toTiles(1.0)));

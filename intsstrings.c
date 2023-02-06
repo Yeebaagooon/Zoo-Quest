@@ -75,6 +75,9 @@ int ChestsTotal = 0;
 int CliffType = 2;
 int CliffSubType = 2;
 bool TutorialMode = false;
+int ActPart = 0;
+int PoachersDead = 0;
+int PoachersTarget = 0;
 
 //DB STUFF
 int DestroyNumber = 0;
@@ -88,6 +91,7 @@ int MinigameWins = 0;
 int GlobalTimerMS = 0;
 bool InMinigame = false;
 bool MinigameFound = false;
+int FencesDone = 0;
 
 int dPlayerData = 0;
 int xSpyID = 0;

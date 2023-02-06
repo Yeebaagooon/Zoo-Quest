@@ -60,7 +60,7 @@ highFrequency
 				if(xsVectorGetY(kbGetBlockPosition(""+trGetUnitScenarioNameNumber(id))) < -1.6){
 					trUnitSelectClear();
 					trUnitSelectByID(id);
-					trUnitDestroy();
+					trUnitChangeProtoUnit("Cinematic Block");
 				}
 			}
 			case kbGetProtoUnitID("Axe"):

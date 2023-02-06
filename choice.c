@@ -12,6 +12,7 @@ inactive
 	//[REMEMBER THIS IS OPEN AND MAY NEED PLAYER SPECIFIC TAG]
 	if(ActionChoice != 0){
 		int p = ActionChoice;
+		xSetPointer(dPlayerData, p);
 		switch(ChoiceEffect)
 		{
 			case 0:
@@ -34,7 +35,6 @@ inactive
 			}
 			case 4:
 			{
-				xSetPointer(dPlayerData, p);
 				xSetVector(dPlayerData, xVectorHold, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
 				xSetInt(dPlayerData, xTeleportDue, 1);
 				trUnitSelectByQV("P"+p+"Unit");
@@ -110,7 +110,6 @@ inactive
 			case 11:
 			{
 				//Deer minigame reward regen
-				xSetPointer(dPlayerData, p);
 				xSetInt(dPlayerData, xHPRegenTime, 30);
 				xSetInt(dPlayerData, xHPRegen, xGetInt(dPlayerData, xHPRegen)+1);
 				if(trCurrentPlayer() == p){
@@ -126,6 +125,49 @@ inactive
 					playSound("researchcomplete.wav");
 				}
 			}
+			case 13:
+			{
+				//Rhino base Speed
+				xSetFloat(dPlayerData, xRhinoWalk, (xGetFloat(dPlayerData, xRhinoWalk)+0.5));
+				if(trCurrentPlayer() == p){
+					playSound("researchcomplete.wav");
+				}
+			}
+			case 14:
+			{
+				//Rhino charge Speed
+				xSetFloat(dPlayerData, xRhinoRun, (xGetFloat(dPlayerData, xRhinoRun)+1.5));
+				if(trCurrentPlayer() == p){
+					playSound("researchcomplete.wav");
+				}
+			}
+			case 15:
+			{
+				//Rhino charge time
+				xSetInt(dPlayerData, xRhinoChargeTimeMax, (xGetInt(dPlayerData, xRhinoChargeTimeMax)+2));
+				if(trCurrentPlayer() == p){
+					playSound("researchcomplete.wav");
+				}
+			}
+			case 16:
+			{
+				//Rhino drink time
+				xSetFloat(dPlayerData, xRhinoDrinkTime, (xGetFloat(dPlayerData, xRhinoDrinkTime)-1));
+				if(trCurrentPlayer() == p){
+					playSound("researchcomplete.wav");
+				}
+			}
+			case 17:
+			{
+				//Rhino minigame reward regen
+				xSetPointer(dPlayerData, p);
+				xSetInt(dPlayerData, xHPRegenTime, 20);
+				xSetInt(dPlayerData, xHPRegen, xGetInt(dPlayerData, xHPRegen)+1);
+				if(trCurrentPlayer() == p){
+					playSound("researchcomplete.wav");
+				}
+			}
+			
 		}
 		trQuestVarSet("P"+ActionChoice+"YesAction", 0);
 		trQuestVarSet("P"+ActionChoice+"NoAction", 0);

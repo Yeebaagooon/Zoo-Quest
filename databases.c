@@ -51,6 +51,9 @@ int xKeySFXID = 0;
 int dTemp = 0;
 int xExtra = 0;
 
+int dFences = 0;
+int xSegment = 0;
+
 
 rule initialise_spy_database
 active
@@ -117,6 +120,10 @@ highFrequency
 	xUnitID = xInitAddInt(dTemp, "id", 0);
 	xExtra = xInitAddInt(dTemp, "extra param", 0);
 	
+	dFences = xInitDatabase("fencedb");
+	xUnitID = xInitAddInt(dFences, "id", -1);
+	xSegment = xInitAddInt(dFences, "segment", 0);
+	
 	MapCentre = xsVectorSet(252/2-1,0,252/2-1);
 }
 
@@ -146,7 +153,7 @@ bool rayCollision(vector start = vector(0,0,0), vector dir = vector(1,0,0),
 					if(trPlayerUnitCountSpecific(xGetPointer(dPlayerData), ""+GazelleProto) == 1){
 						return(true);
 					}
-					if(trPlayerUnitCountSpecific(xGetPointer(dPlayerData), ""+RhinoProto) == 1){
+					if((trPlayerUnitCountSpecific(xGetPointer(dPlayerData), ""+RhinoProto) == 1) || (trPlayerUnitCountSpecific(xGetPointer(dPlayerData), ""+RhinoDrinkProto) == 1)){
 						return(true);
 					}
 				}

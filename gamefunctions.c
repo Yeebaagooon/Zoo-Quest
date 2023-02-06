@@ -179,6 +179,16 @@ void buildAtCursor(int eventID = -1) {
 	trackPlay(1,EVENT_REMOVE_CAM_TRACKS);
 }
 
+int BlueText(int a = 3){
+	if(cNumberNonGaiaPlayers > 3){
+		a = 4;
+	}
+	else{
+		a = 1;
+	}
+	return(a);
+}
+
 int GreenText(int a = 3){
 	if(cNumberNonGaiaPlayers > 2){
 		a = 3;

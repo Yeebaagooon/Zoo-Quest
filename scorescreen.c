@@ -279,6 +279,9 @@ inactive
 	MinigameWins = 0;
 	InMinigame = false;
 	MinigameFound = false;
+	ActPart = 0;
+	PoachersDead = 0;
+	PoachersTarget = 0;
 	for(p=1 ; < cNumberNonGaiaPlayers){
 		xSetPointer(dPlayerData, p);
 		if(playerIsPlaying(p)){

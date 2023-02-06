@@ -30,29 +30,116 @@ inactive
 		uiZoomToProto(""+RhinoProto);
 		uiLookAtProto(""+RhinoProto);
 		trDelayedRuleActivation("ResetBlackmap");
-		trDelayedRuleActivation("RhinoActLoops");
 		//trDelayedRuleActivation("DeerMinigameDetect");
 		//trDelayedRuleActivation("DeerLeave");
 		//trDelayedRuleActivation("TEST");
 		trDelayedRuleActivation("RhinoAllDead");
 		//trDelayedRuleActivation("PoacherTimer");
 		//trDelayedRuleActivation("DeerEndZoneSee");
-		//xsEnableRule("DeerPoacherMovement");
-		trSetCounterDisplay("<color={PlayerColor(2)}>Fencing destroyed: 0 / " + BerryTarget);
+		xsEnableRule("RhinoPoacherMovement");
+		trSetCounterDisplay("<color={PlayerColor(2)}>Fencing destroyed: "+FencesDone+"/8");
 		ColouredIconChat("1,0.5,0", ActIcon(Stage), "<u>" + ActName(Stage) + "</u>");
 		ColouredIconChat("0.0,0.8,0.2", "icons\icon building wooden fence 64", "Destroy enough fences.");
-		trChatSend(0, "In each act you need to find and move to the extraction zone.");
-		trChatSend(0, "It is a ring of ice terrain.");
-		trChatSend(0, "When all players are dead or in the zone, the act ends.");
-		trChatSend(0, "Make sure to explore, as higher act scores help you out later.");
+		ColouredChat("0.0,0.8,0.2", "Each long fence segment needs at least one break.");
 		xsEnableRule("PlayMusic");
-		SpawnRhinoPoacher(xsMax(PlayersActive,2));
+		SpawnRhinoPoacher(xsMax(PlayersActive,3));
 		PlayersDead = 0;
 		timediff = trTimeMS();
 		timelast = trTimeMS();
 		for(p = 1; < cNumberNonGaiaPlayers){
 			xSetPointer(dPlayerData, p);
 			xSetFloat(dPlayerData, xRhinoChargeTime, xGetInt(dPlayerData, xRhinoChargeTimeMax));
+		}
+		trDelayedRuleActivation("RhinoActLoops");
+	}
+}
+
+void ProcessRhinoFence(int count = 5){
+	for (x=xsMin(count, xGetDatabaseCount(dFences)); > 0) {
+		xDatabaseNext(dFences);
+		xUnitSelect(dFences, xUnitID);
+		if(trUnitDead() == true){
+			if(1*trQuestVarGet("Segment"+xGetInt(dFences, xSegment)+"Broken") == 0){
+				trQuestVarModify("Segment"+xGetInt(dFences, xSegment)+"Broken", "+", 1);
+				FencesDone = FencesDone+1;
+			}
+			xFreeDatabaseBlock(dFences);
+		}
+	}
+	//trClearCounterDisplay();
+	if(FencesDone < 8){
+		trSetCounterDisplay("<color={PlayerColor(2)}>Fencing destroyed: "+FencesDone+"/8");
+	}
+	else{
+		trSetCounterDisplay("<color={PlayerColor(3)}>Fencing destroyed: "+FencesDone+"/8");
+		playSoundCustom("xnew_objective.wav", "\Yeebaagooon\Zoo Quest\Skillpoint.mp3");
+		xsEnableRule("RhinoPartTwo");
+	}
+}
+
+void PoacherKillTrack(int count = 5){
+	for (x=xsMin(count, xGetDatabaseCount(dPoachers)); > 0) {
+		xDatabaseNext(dPoachers);
+		xUnitSelect(dPoachers, xUnitID);
+		if(trUnitDead() == true){
+			PoachersDead = PoachersDead+1;
+			xFreeDatabaseBlock(dPoachers);
+		}
+	}
+	//trClearCounterDisplay();
+	if(ActPart == 2){
+		if(PoachersDead < PoachersTarget){
+			trSetCounterDisplay("<color={PlayerColor(2)}>Poachers killed: "+PoachersDead+"/" + PoachersTarget);
+		}
+		else{
+			playSoundCustom("xnew_objective.wav", "\Yeebaagooon\Zoo Quest\Skillpoint.mp3");
+			SpawnRhinoPoacher(5);
+			trMessageSetText("You must now find the extraction zone. Take care, advanced poachers are coming!", 10000);
+			//xsEnableRule("RhinoPartTwo");
+			ActPart = 3;
+		}
+	}
+	if(ActPart == 3){
+		trSetCounterDisplay("<color={PlayerColor(3)}>Poachers killed: "+PoachersDead);
+	}
+}
+
+rule RhinoPartTwo
+highFrequency
+inactive
+{
+	if (trTime() > cActivationTime + 4) {
+		PoachersTarget = xsMax(PlayersActive*2,5);
+		trSetCounterDisplay("<color={PlayerColor(2)}>Poachers killed: "+PoachersDead+"/" + PoachersTarget);
+		ActPart = 2;
+		trOverlayText("Poachers Spawning...", 5.0,-1,-1,600);
+		SpawnRhinoPoacher(2);
+		playSound("\cinematics\04_in\armyarrive.wav");
+		xsDisableSelf();
+		trQuestVarSet("NextPoacherSpawn", trTime()+30);
+		xsEnableRule("RhinoPoacherSpawnLoop");
+	}
+}
+
+rule RhinoPoacherSpawnLoop
+highFrequency
+inactive
+{
+	if (trTime() > 1*trQuestVarGet("NextPoacherSpawn")) {
+		if(Stage == 2){
+			if(xGetDatabaseCount(dPoachers) < PoachersTarget){
+				trQuestVarSetFromRand("temp", 20, 50);
+				if(1*trQuestVarGet("temp") < 35){
+					SpawnRhinoPoacher(2);
+				}
+				else{
+					SpawnRhinoPoacher(3);
+				}
+			}
+			else{
+				trQuestVarSetFromRand("temp", 10, 30);
+			}
+			trQuestVarModify("NextPoacherSpawn", "+", 1*trQuestVarGet("temp"));
 		}
 	}
 }
@@ -66,6 +153,17 @@ inactive
 	int temp = 0;
 	if(xGetDatabaseCount(dMissiles) > 0){
 		DoMissile();
+	}
+	if(FencesDone < 8){
+		ProcessRhinoFence(10);
+	}
+	else{
+		if(ActPart < 2){
+			trSetCounterDisplay("<color={PlayerColor(3)}>Fencing destroyed: "+FencesDone+"/8");
+		}
+		else{
+			PoacherKillTrack(5);
+		}
 	}
 	for(p=1 ; < cNumberNonGaiaPlayers){
 		xSetPointer(dPlayerData, p);
@@ -93,6 +191,17 @@ inactive
 			PlayersDead = PlayersDead+1;
 			xSetBool(dPlayerData, xPlayerDead, true);
 			PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is dead!");
+		}
+		if(xGetInt(dPlayerData, xHPRegen) > 0){
+			if(trTime() > xGetInt(dPlayerData, xHPRegenNext)){
+				trUnitSelectByQV("P"+p+"Unit");
+				trDamageUnit(-1*xGetInt(dPlayerData, xHPRegen));
+				xSetInt(dPlayerData, xHPRegenNext, trTime()+xGetInt(dPlayerData, xHPRegenTime));
+			}
+		}
+		if(trCurrentPlayer() == p){
+			trCounterAbort("stamina"+p);
+			trCounterAddTime("stamina"+p, -100, -200, "<color={PlayerColor("+p+")}>Stamina: " + 1*xGetFloat(dPlayerData, xRhinoChargeTime), -1);
 		}
 	}
 	if((PlayersActive == PlayersReadyToLeave+PlayersDead) && (PlayersDead != PlayersActive)){
@@ -140,12 +249,32 @@ inactive
 				xSetInt(dDestroyMe, xDestroyTime, trTimeMS()+3000);
 				ChestsFound = ChestsFound+1;
 				xFreeDatabaseBlock(dChests);
-				if(iModulo(2, trTimeMS()) == 0){
-					PlayerChoice(pl, "Choose your reward:", "+2 hp", 12, "+not made", 12, 10000);
+				trQuestVarSetFromRand("temp", 1, 2);
+				trQuestVarSetFromRand("temp2", 1, 3);
+				if(1*trQuestVarGet("temp") == 1){
+					if(1*trQuestVarGet("temp2") == 1){
+						PlayerChoice(pl, "Choose your reward:", "+2 hp", 12, "+1.5 charge speed", 14, 10000);
+					}
+					if(1*trQuestVarGet("temp2") == 2){
+						PlayerChoice(pl, "Choose your reward:", "+2 hp", 12, "+2 max stamina", 15, 10000);
+					}
+					if(1*trQuestVarGet("temp2") == 3){
+						PlayerChoice(pl, "Choose your reward:", "+2 hp", 12, "-1s drink time", 16, 10000);
+					}
 				}
-				else{
-					PlayerChoice(pl, "Choose your reward:", "+2 hp", 12, "not made", 12, 10000);
+				if(1*trQuestVarGet("temp") == 2){
+					if(1*trQuestVarGet("temp2") == 1){
+						PlayerChoice(pl, "Choose your reward:", "+0.5 base speed", 13, "+1.5 charge speed", 14, 10000);
+					}
+					if(1*trQuestVarGet("temp2") == 2){
+						PlayerChoice(pl, "Choose your reward:", "+0.5 base speed", 13, "+2 max stamina", 15, 10000);
+					}
+					if(1*trQuestVarGet("temp2") == 3){
+						PlayerChoice(pl, "Choose your reward:", "+0.5 base speed", 13, "-1s drink time", 16, 10000);
+					}
 				}
+				
+				
 			}
 		}
 		

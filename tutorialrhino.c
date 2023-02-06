@@ -106,7 +106,7 @@ inactive
 			if((xGetBool(dPlayerData, xReadyToLeave) == false) && (trPlayerUnitCountSpecific(p, ""+RhinoProto) == 1)){
 				if(xGetFloat(dPlayerData, xRhinoChargeTime) > 0){
 					ToggleCharge(p);
-					ColouredIconChatToPlayer(p, "1,1,0", "icons\icon object stat hit point", "Stamina = " + 1*xGetFloat(dPlayerData, xRhinoChargeTime));
+					//ColouredIconChatToPlayer(p, "1,1,0", "icons\icon object stat hit point", "Stamina = " + 1*xGetFloat(dPlayerData, xRhinoChargeTime));
 				}
 				else{
 					ColouredIconChatToPlayer(p, "1,0,0", "icons\icon object stat hit point", "Not enough stamina to charge!");
@@ -120,19 +120,19 @@ inactive
 			trPlayerGrantResources(p, "Wood", -100000);
 			height = xsVectorGetY(kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
 			if(height > 0.31){
-				trChatSendToPlayer(0, p, "Height needs to be less than 0!<color=1,0,0> " + height);
+				ColouredIconChatToPlayer(p, "1,0.2,0.2", "icons\editor edit water", "Height needs to be less than 0!<color=0,1,1> " + height);
 				if(trCurrentPlayer() == p){
 					playSound("cantdothat.wav");
 				}
 			}
 			else{
-				trChatSend(0, "Height is less than 0! " + xsVectorGetY(kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit"))));
 				trUnitSelectByQV("P"+p+"Unit");
 				trMutateSelected(kbGetProtoUnitID(""+RhinoDrinkProto));
 				trQuestVarSet("P"+p+"Drink", trTimeMS()+1000*xGetFloat(dPlayerData, xRhinoDrinkTime));
 				if(trCurrentPlayer() == p){
-					trCounterAddTime("rhinodrinker" +p, 1*xGetFloat(dPlayerData, xRhinoDrinkTime),0,"<color={PlayerColor("+p+")}>Drinking", -1);
+					trCounterAddTime("rhinodrinker" +p, 1*xGetFloat(dPlayerData, xRhinoDrinkTime),0,"<color={PlayerColor("+BlueText()+")}>Drinking", -1);
 					playSound("shipdeathsplash.wav");
+					playSound("geyserbirth.wav");
 				}
 			}
 		}
@@ -154,6 +154,10 @@ inactive
 			if(xGetFloat(dPlayerData, xRhinoChargeTime) < 0){
 				ToggleCharge(p);
 				ColouredIconChatToPlayer(p, "1,0,0", "icons\icon object stat hit point", "Out of stamina!");
+				trQuestVarModify("P"+p+"StaminaWarn", "+", 1);
+				if(1*trQuestVarGet("P"+p+"StaminaWarn") < 3){
+					ColouredIconChatToPlayer(p, "1,1,0", "icons\editor river", "Use 'W' when near water to drink and replenish.");
+				}
 				if(trCurrentPlayer() == p){
 					playSound("cantdothat.wav");
 				}
@@ -163,6 +167,9 @@ inactive
 			trUnitSelectByQV("P"+p+"Unit");
 			trMutateSelected(kbGetProtoUnitID(""+RhinoProto));
 			xSetFloat(dPlayerData, xRhinoChargeTime, xGetInt(dPlayerData, xRhinoChargeTimeMax));
+			if(trCurrentPlayer() == p){
+				playSound("geyserhit2.wav");
+			}
 		}
 	}
 	for (x= xGetDatabaseCount(dDestroyMe); > 0) {

@@ -367,7 +367,7 @@ inactive
 			trUnitOverrideAnimation(2, 0, true, true, -1, 0);
 			if(xGetBool(dPlayerData, xCharge) == true){
 				ToggleCharge(p);
-				ColouredIconChatToPlayer(p, "1,1,0", "icons\icon object stat hit point", "Stamina = " + 1*xGetFloat(dPlayerData, xRhinoChargeTime));
+				//ColouredIconChatToPlayer(p, "1,1,0", "icons\icon object stat hit point", "Stamina = " + 1*xGetFloat(dPlayerData, xRhinoChargeTime));
 			}
 		}
 		if(Stage > 1){
