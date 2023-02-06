@@ -16,6 +16,7 @@ highFrequency
 	trEventSetHandler(EVENT_BUILD_AT_CURSOR, "buildAtCursor");
 	trEventSetHandler(32, "SpawnDeerPoachers");
 	trEventSetHandler(33, "TutForceEnd");
+	trEventSetHandler(34, "RhinoMinigameGo");
 	xsDisableSelf();
 }
 

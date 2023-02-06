@@ -43,14 +43,24 @@ inactive
 				trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
 				trUnitChangeProtoUnit("Hero Death");
 				trQuestVarSet("P"+p+"Unit", trGetNextUnitScenarioNameNumber());
-				UnitCreate(p, ""+GazelleProto, 2*xsVectorGetX(StageVector)+7,2*xsVectorGetZ(StageVector)+10, 0);
-				trUnitSelectByQV("P"+p+"Unit");
-				trSetSelectedScale(0,1,0);
-				trUnitSelectByQV("P"+p+"Unit");
-				spyEffect(kbGetProtoUnitID("Gazelle"), 0, xsVectorSet(dPlayerData,xSpyID,p), vector(1,1,1));
-				if(trCurrentPlayer() == p){
-					uiZoomToProto(""+GazelleProto);
-					uiLookAtProto(""+GazelleProto);
+				if(Stage == 1){
+					UnitCreate(p, ""+GazelleProto, 2*xsVectorGetX(StageVector)+7,2*xsVectorGetZ(StageVector)+10, 0);
+					trUnitSelectByQV("P"+p+"Unit");
+					trSetSelectedScale(0,1,0);
+					trUnitSelectByQV("P"+p+"Unit");
+					spyEffect(kbGetProtoUnitID("Gazelle"), 0, xsVectorSet(dPlayerData,xSpyID,p), vector(1,1,1));
+					if(trCurrentPlayer() == p){
+						uiZoomToProto(""+GazelleProto);
+						uiLookAtProto(""+GazelleProto);
+					}
+				}
+				if(Stage == 2){
+					UnitCreate(p, ""+RhinoProto, 2*xsVectorGetX(StageVector)+7,2*xsVectorGetZ(StageVector)+10, 0);
+					CreateRhino(p, 2*xsVectorGetX(StageVector)+2,2*xsVectorGetZ(StageVector)+2, 0);
+					if(trCurrentPlayer() == p){
+						uiZoomToProto(""+RhinoProto);
+						uiLookAtProto(""+RhinoProto);
+					}
 				}
 			}
 			case 5:

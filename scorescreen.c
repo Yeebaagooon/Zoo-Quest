@@ -40,6 +40,7 @@ inactive
 	StageScore = 0;
 	float Extras = 0;
 	float ExtrasGot = 0;
+	float calc = 0;
 	int temp = 0;
 	//Current req is 40
 	if(Stage == 1){
@@ -83,11 +84,72 @@ inactive
 		Extras = Extras + PlayersActive*2;
 		ExtrasGot = ExtrasGot + MinigameWins*2;
 		if(ExtrasGot > 0){
-			float calc = ExtrasGot/Extras;
+			calc = ExtrasGot/Extras;
 			StageScore = StageScore + (calc*(100-StageRequirement));
 			//debugLog("ExtrasGot = " + ExtrasGot);
 			//debugLog("Extras = " + Extras);
 			//debugLog("Added to score = " + calc);
+		}
+		if((ExtrasGot >= Extras) && (Extras > 0)){
+			StageScore = 100;
+		}
+		if(ExtrasGot > Extras){
+			trChatSend(0, "ERROR MORE THAN 100 PERCENT COMPLETE");
+		}
+		
+		//debugLog("SCORE = " + StageScore);
+	}
+	if(Stage == 2){
+		//[CALCULATE THE PERCENT COMPLETE]
+		if(PoachersDead >= PoachersTarget){
+			//passing score
+			StageScore = StageRequirement;
+			debugLog("Pass, score set to " + StageScore);
+		}
+		else{
+			//failed main goal
+			trQuestVarSet("temp", PoachersDead);
+			StageScore = StageRequirement*(trQuestVarGet("temp")/PoachersTarget);
+			debugLog("Fail, score set to " + StageScore);
+		}
+		//[CALCULATION PENALTIES]
+		
+		StageScore = StageScore - (PlayersDead*4);
+		//[ADD ON BONUSES, ADD EXTRAS FOR WEIGHTING AND EXTRASGOT IF A PLAYER HAS IT]
+		//[CHESTS, UP TO 5 EXTRA POACHER DEATHS,]
+		Extras = Extras + ChestsTotal*2;
+		ExtrasGot = ExtrasGot + ChestsFound*2;
+		debugLog("Chests = " + ChestsFound + " out of " + ChestsTotal);
+		
+		Extras = Extras + 5;
+		for(a=1 ; <= 5){
+			if(PoachersDead >= PoachersTarget+a){
+				ExtrasGot = ExtrasGot+1;
+			}
+		}
+		/*Extras = Extras + PlayersActive;
+		for(a = 1 ; < cNumberNonGaiaPlayers){
+			xSetPointer(dPlayerData, a);
+			if(playerIsPlaying(a) == true){
+				ExtrasGot = ExtrasGot + xGetInt(dPlayerData, xLogJumps);
+				//debugLog("Log jumping player added " + xGetInt(dPlayerData, xLogJumps));
+			}
+		}
+		Extras = Extras + 5;
+		if(MinigameFound == true){
+			ExtrasGot = ExtrasGot + 5;
+		}
+		if(MinigameWins > PlayersActive){
+			MinigameWins = PlayersActive;
+		}*/
+		//Extras = Extras + PlayersActive*2;
+		//ExtrasGot = ExtrasGot + MinigameWins*2;
+		if(ExtrasGot > 0){
+			calc = ExtrasGot/Extras;
+			StageScore = StageScore + (calc*(100-StageRequirement));
+			debugLog("ExtrasGot = " + ExtrasGot);
+			debugLog("Extras = " + Extras);
+			debugLog("Added to score = " + (calc*(100-StageRequirement)));
 		}
 		if((ExtrasGot >= Extras) && (Extras > 0)){
 			StageScore = 100;
@@ -193,8 +255,9 @@ highFrequency
 	if(StageScore >= StageRequirement){
 		characterDialog(ActName(Stage) + " - Act Passed", ""+StageScore + " percent complete", ActIcon(Stage));
 		xsEnableRule("PassAct" + Stage);
+		Stage = Stage+1;
 	}
-	else if(StageScore < StageRequirement){
+	else{
 		characterDialog(ActName(Stage) + " - Act Failed", ""+StageScore + "/" + StageRequirement + " percent complete", ActIcon(Stage));
 		xsEnableRule("LoseToScore");
 	}
@@ -240,7 +303,7 @@ inactive
 		}
 		else{
 			clearMap("black", 5);
-			xsEnableRule("TutorialTerrainRhino");
+			//xsEnableRule("TutorialTerrainRhino");
 			//[SORT THE ABOVE OUT - AS A CUT TO RHINO FOR DEER, MAYBE JUST FIRE THE EVENT]
 			for(x=NewDestroyNumber ; < trGetNextUnitScenarioNameNumber()){
 				trUnitSelectClear();
@@ -259,7 +322,7 @@ inactive
 	if (trTime() > cActivationTime + 3) {
 		xsDisableSelf();
 		trLetterBox(false);
-		xsEnableRule("TempEndGame");
+		xsEnableRule("TutorialTerrainRhino");
 		xsEnableRule("ResetInts");
 	}
 }
@@ -308,5 +371,11 @@ inactive
 	}
 	xResetDatabase(dTemp);
 	xResetDatabase(dLogs);
+	xResetDatabase(dDots);
+	for(x=NewDestroyNumber ; < trGetNextUnitScenarioNameNumber()){
+		trUnitSelectClear();
+		trUnitSelect(""+x);
+		trUnitDestroy();
+	}
 	xsDisableSelf();
 }

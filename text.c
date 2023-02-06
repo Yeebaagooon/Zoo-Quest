@@ -130,11 +130,30 @@ int npcDiag(int npc = 0, int dialog = 0) {
 				}
 				case 2:
 				{
-					uiMessageBox("Press 'Q' to toggle the charge ability.");
+					uiMessageBox("Press 'Q' to toggle the charge ability when you are moving.");
 				}
 				case 3:
 				{
 					uiMessageBox("Use it to smash through the fence.");
+					dialog = 0;
+				}
+			}
+		}
+		case 7:
+		{
+			switch(dialog)
+			{
+				case 1:
+				{
+					uiMessageBox("Charging is thristy work, you'll need to replenish stamina by drinking.");
+				}
+				case 2:
+				{
+					uiMessageBox("Press 'W' to drink when you are near a water source.");
+				}
+				case 3:
+				{
+					uiMessageBox("You'll be immobilised while you drink, so be careful.");
 					dialog = 0;
 				}
 			}

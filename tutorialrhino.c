@@ -2,94 +2,98 @@ rule TutorialTerrainRhino
 highFrequency
 inactive
 {
-	//if (trTime() > cActivationTime + 1) {
-	TutorialMode = true;
-	Stage = 2;
-	CliffType = 2;
-	CliffSubType = 2;
-	//trLetterBox(false);
-	clearMap("black", 5.0);
-	trPaintTerrain(0,0,35,cNumberNonGaiaPlayers*8,CliffType,CliffSubType);
-	xResetDatabase(dChests);
-	int temp = 0;
-	//trees
-	for(t=0 ; < cNumberNonGaiaPlayers){
-		for(x=0 ; < 36){
-			if(iModulo(7,x) == 0){
-				temp = trGetNextUnitScenarioNameNumber();
-				UnitCreate(0, "Cinematic Block", x*2, t*16+8, 90);
-				trUnitSelectClear();
-				trUnitSelect(""+temp);
-				trUnitChangeProtoUnit("Rock Sandstone Big");
-				trUnitSelectClear();
-				trUnitSelect(""+temp);
-				trSetScale(1.65);
-			}
-			else{
-				temp = trGetNextUnitScenarioNameNumber();
-				UnitCreate(0, "Cinematic Block", x*2, t*16+8, 90);
-				trUnitSelectClear();
-				trUnitSelect(""+temp);
-				trUnitChangeProtoUnit("Savannah Tree");
-				trUnitSelectClear();
-				trUnitSelect(""+temp);
-				trSetScale(0.75);
+	if (trTime() > cActivationTime + 1) {
+		trCameraCut(vector(-65.460060,123.743729,-65.460060), vector(0.500000,-0.707107,0.500000), vector(0.500000,0.707107,0.500000), vector(0.707107,0.000000,-0.707107));
+		xsDisableRule("DeerTutorialDone");
+		TutorialMode = true;
+		Stage = 2;
+		CliffType = 2;
+		CliffSubType = 2;
+		//trLetterBox(false);
+		clearMap("black", 5.0);
+		trPaintTerrain(0,0,35,cNumberNonGaiaPlayers*8,CliffType,CliffSubType);
+		xResetDatabase(dChests);
+		int temp = 0;
+		//trees
+		for(t=0 ; < cNumberNonGaiaPlayers){
+			for(x=0 ; < 36){
+				if(iModulo(7,x) == 0){
+					temp = trGetNextUnitScenarioNameNumber();
+					UnitCreate(0, "Cinematic Block", x*2, t*16+8, 90);
+					trUnitSelectClear();
+					trUnitSelect(""+temp);
+					trUnitChangeProtoUnit("Rock Sandstone Big");
+					trUnitSelectClear();
+					trUnitSelect(""+temp);
+					trSetScale(1.65);
+				}
+				else{
+					temp = trGetNextUnitScenarioNameNumber();
+					UnitCreate(0, "Cinematic Block", x*2, t*16+8, 90);
+					trUnitSelectClear();
+					trUnitSelect(""+temp);
+					trUnitChangeProtoUnit("Savannah Tree");
+					trUnitSelectClear();
+					trUnitSelect(""+temp);
+					trSetScale(0.75);
+				}
 			}
 		}
-	}
-	trQuestVarSet("PlayersDoneTutorial", 0);
-	for(p=1 ; < cNumberNonGaiaPlayers){
-		trQuestVarSet("P"+p+"DoneTutorial", 0);
-		trPaintTerrain(5,((p*8)-2),30,((p*8+4)-2),0,15);
-		//trPaintTerrain(7,p*8,7,p*8,0,73); //start sq
-		PaintAtlantisArea(6,p*8-1,8,p*8+1,0,18);  //start sq
-		trPaintTerrain(28,p*8+2,28,p*8-2,0,74); //end line
-		temp = trGetNextUnitScenarioNameNumber();
-		UnitCreate(cNumberNonGaiaPlayers, "Cinematic Block", 28*2, p*16-4, 0);
-		trUnitSelectClear();
-		trUnitSelect(""+temp);
-		trUnitChangeProtoUnit("Fence Wood");
-		xAddDatabaseBlock(dTemp, true);
-		xSetInt(dTemp, xUnitID, temp);
-		xSetInt(dTemp, xExtra, p);
-		temp = trGetNextUnitScenarioNameNumber();
-		UnitCreate(cNumberNonGaiaPlayers, "Cinematic Block", 28*2, p*16, 0);
-		trUnitSelectClear();
-		trUnitSelect(""+temp);
-		trUnitChangeProtoUnit("Fence Wood");
-		xAddDatabaseBlock(dTemp, true);
-		xSetInt(dTemp, xUnitID, temp);
-		xSetInt(dTemp, xExtra, p);
-		temp = trGetNextUnitScenarioNameNumber();
-		UnitCreate(cNumberNonGaiaPlayers, "Cinematic Block", 28*2, p*16+4, 0);
-		trUnitSelectClear();
-		trUnitSelect(""+temp);
-		trUnitChangeProtoUnit("Fence Wood");
-		xAddDatabaseBlock(dTemp, true);
-		xSetInt(dTemp, xUnitID, temp);
-		xSetInt(dTemp, xExtra, p);
-		CreateRhino(p,14,16*p,90);
-		xSetPointer(dPlayerData, xPlayerUnitID);
-		xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
-		if(trCurrentPlayer() == p){
-			trCounterAddTime("cdtutorial", -100, -200, "<color={PlayerColor("+p+")}>Press 'Q' to start/stop charge.", -1);
+		trQuestVarSet("PlayersDoneTutorial", 0);
+		for(p=1 ; < cNumberNonGaiaPlayers){
+			trQuestVarSet("P"+p+"DoneTutorial", 0);
+			trPaintTerrain(5,((p*8)-2),30,((p*8+4)-2),0,15);
+			//trPaintTerrain(7,p*8,7,p*8,0,73); //start sq
+			PaintAtlantisArea(6,p*8-1,8,p*8+1,0,18);  //start sq
+			trPaintTerrain(28,p*8+2,28,p*8-2,0,74); //end line
+			temp = trGetNextUnitScenarioNameNumber();
+			UnitCreate(cNumberNonGaiaPlayers, "Cinematic Block", 28*2, p*16-4, 0);
+			trUnitSelectClear();
+			trUnitSelect(""+temp);
+			trUnitChangeProtoUnit("Fence Wood");
+			xAddDatabaseBlock(dTemp, true);
+			xSetInt(dTemp, xUnitID, temp);
+			xSetInt(dTemp, xExtra, p);
+			temp = trGetNextUnitScenarioNameNumber();
+			UnitCreate(cNumberNonGaiaPlayers, "Cinematic Block", 28*2, p*16, 0);
+			trUnitSelectClear();
+			trUnitSelect(""+temp);
+			trUnitChangeProtoUnit("Fence Wood");
+			xAddDatabaseBlock(dTemp, true);
+			xSetInt(dTemp, xUnitID, temp);
+			xSetInt(dTemp, xExtra, p);
+			temp = trGetNextUnitScenarioNameNumber();
+			UnitCreate(cNumberNonGaiaPlayers, "Cinematic Block", 28*2, p*16+4, 0);
+			trUnitSelectClear();
+			trUnitSelect(""+temp);
+			trUnitChangeProtoUnit("Fence Wood");
+			xAddDatabaseBlock(dTemp, true);
+			xSetInt(dTemp, xUnitID, temp);
+			xSetInt(dTemp, xExtra, p);
+			CreateRhino(p,14,16*p,90);
+			xSetPointer(dPlayerData, xPlayerUnitID);
+			xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
+			if(trCurrentPlayer() == p){
+				trCounterAddTime("cdtutorial", -100, -200, "<color={PlayerColor("+p+")}>Press 'Q' to start/stop charge.", -1);
+			}
 		}
+		trPaintTerrain(0,0,0,0,2,4,true);
+		xsEnableRule("Animations");
+		xsEnableRule("Charge");
+		xsDisableRule("Jump");
+		xsDisableRule("VectorFirst");
+		xsDisableRule("VectorSecond");
+		xsEnableRule("RhinoTutorialDone");
+		trDelayedRuleActivation("RhinoTutorialLoops");
+		modifyProtounitAbsolute(""+RhinoProto, p, 1, xGetFloat(dPlayerData, xRhinoWalk));
+		if(QuickStart == 0){
+			startNPCDialog(6);
+		}
+		refreshPassability();
+		uiZoomToProto(""+RhinoProto);
+		uiLookAtProto(""+RhinoProto);
+		xsDisableSelf();
 	}
-	trPaintTerrain(0,0,0,0,2,4,true);
-	xsEnableRule("Animations");
-	xsEnableRule("Charge");
-	xsDisableRule("Jump");
-	xsDisableRule("VectorFirst");
-	xsDisableRule("VectorSecond");
-	xsEnableRule("RhinoTutorialDone");
-	trDelayedRuleActivation("RhinoTutorialLoops");
-	modifyProtounitAbsolute(""+RhinoProto, p, 1, xGetFloat(dPlayerData, xRhinoWalk));
-	if(QuickStart == 0){
-		xsEnableRule("TutorialMsg1");
-		startNPCDialog(6);
-	}
-	refreshPassability();
-	xsDisableSelf();
 }
 
 rule Charge
@@ -190,7 +194,7 @@ inactive
 {
 	if(PlayersActive == 1*trQuestVarGet("PlayersDoneTutorial")){
 		xsDisableSelf();
-		xsDisableRule("TutorialLoops");
+		xsDisableRule("RhinoTutorialLoops");
 		xsEnableRule("BuildRhinoArea");
 		trClearCounterDisplay();
 		trCounterAbort("cdtutorial");

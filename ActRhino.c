@@ -4,15 +4,12 @@ Rhino MG - Move to things?
 Poachers, two lvels?
 Projectile link to ground
 
-Objectives - destroy some fences
-Then kill x poachers
-Then higher level spawn along with extraction zone
-
-BONUSES FOR DEER
-60- +1 starting speed
-80- +5hp
-100- +25% charge speed increase
-100 PERMA +6 deer LOS
+EXTRAS
+Kill up to 5 extra poachers
+Kill an uber poacher
+One player survive with full hp
+All players complete 2 full charges
+Kill first couple of poachers
 */
 
 
@@ -30,12 +27,10 @@ inactive
 		uiZoomToProto(""+RhinoProto);
 		uiLookAtProto(""+RhinoProto);
 		trDelayedRuleActivation("ResetBlackmap");
-		//trDelayedRuleActivation("DeerMinigameDetect");
-		trDelayedRuleActivation("RhinoLeave");
+		trDelayedRuleActivation("RhinoMinigameDetect");
 		//trDelayedRuleActivation("TEST");
 		trDelayedRuleActivation("RhinoAllDead");
 		//trDelayedRuleActivation("PoacherTimer");
-		trDelayedRuleActivation("RhinoEndZoneSee");
 		xsEnableRule("RhinoPoacherMovement");
 		trSetCounterDisplay("<color={PlayerColor(2)}>Fencing destroyed: "+FencesDone+"/8");
 		ColouredIconChat("1,0.5,0", ActIcon(Stage), "<u>" + ActName(Stage) + "</u>");
@@ -51,19 +46,6 @@ inactive
 			xSetFloat(dPlayerData, xRhinoChargeTime, xGetInt(dPlayerData, xRhinoChargeTimeMax));
 		}
 		trDelayedRuleActivation("RhinoActLoops");
-		paintCircle(xsVectorGetX(EndPoint),xsVectorGetZ(EndPoint),8,LeaveTerrain);
-		trUnitSelectClear();
-		trUnitSelect(""+FlagUnitID);
-		trMutateSelected(kbGetProtoUnitID("Flag"));
-		trUnitSelectClear();
-		trUnitSelect(""+FlagUnitID);
-		trUnitSetAnimationPath("0,0,0,0,0,0");
-		trUnitSelectClear();
-		trUnitSelect(""+FlagSFXID);
-		trMutateSelected(kbGetProtoUnitID("Osiris Box Glow"));
-		trUnitSelectClear();
-		trUnitSelect(""+FlagSFXID);
-		trUnitSetAnimationPath("0,0,1,0,0,0");
 	}
 }
 
@@ -131,6 +113,21 @@ inactive
 		xsDisableSelf();
 		trQuestVarSet("NextPoacherSpawn", trTime()+30);
 		xsEnableRule("RhinoPoacherSpawnLoop");
+		paintCircle(xsVectorGetX(EndPoint),xsVectorGetZ(EndPoint),8,LeaveTerrain);
+		trUnitSelectClear();
+		trUnitSelect(""+FlagUnitID);
+		trMutateSelected(kbGetProtoUnitID("Flag"));
+		trUnitSelectClear();
+		trUnitSelect(""+FlagUnitID);
+		trUnitSetAnimationPath("0,0,0,0,0,0");
+		trUnitSelectClear();
+		trUnitSelect(""+FlagSFXID);
+		trMutateSelected(kbGetProtoUnitID("Osiris Box Glow"));
+		trUnitSelectClear();
+		trUnitSelect(""+FlagSFXID);
+		trUnitSetAnimationPath("0,0,1,0,0,0");
+		trDelayedRuleActivation("RhinoEndZoneSee");
+		trDelayedRuleActivation("RhinoLeave");
 	}
 }
 
@@ -401,6 +398,8 @@ highFrequency
 	xsDisableRule("RhinoEndZoneSee");
 	xsDisableRule("RhinoLeave");
 	xsDisableRule("RhinoTutorialLoops");
+	xsDisableRule("RhinoMinigameDetect");
+	xsDisableRule("MGGORhino");
 	for(p=1 ; < cNumberNonGaiaPlayers){
 		trUnitSelectByQV("P"+p+"Unit");
 		trUnitChangeProtoUnit("Ragnorok SFX");
@@ -413,5 +412,76 @@ highFrequency
 	}
 	trClearCounterDisplay();
 	xsEnableRule("ScoreScreenStart");
+	xsDisableSelf();
+}
+
+rule RhinoMinigameDetect
+highFrequency
+inactive
+{
+	xsSetContextPlayer(0);
+	vector pos = vector(0,0,0);
+	vector minigame = kbGetBlockPosition(""+1*trQuestVarGet("MinigameStartID"));
+	for(p=1 ; < cNumberNonGaiaPlayers){
+		pos = kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit"));
+		if(distanceBetweenVectors(minigame, pos, true) < 10){
+			trUnitSelectByQV("MinigameStartSFX");
+			trUnitChangeProtoUnit("Olympus Temple SFX");
+			trUnitSelectByQV("MinigameStartID");
+			trUnitChangeProtoUnit("Forest Fire SFX");
+			PaintAtlantisArea(xsVectorGetX(StageVector)-2,xsVectorGetZ(StageVector)-2,xsVectorGetX(StageVector)+2,xsVectorGetZ(StageVector)+2,0,53);
+			refreshPassability();
+			trMessageSetText("Minigame found! Remain in the white square if you wish to play.", 10000);
+			trCounterAddTime("CDMG", 12, 0, "<color={PlayerColor("+p+")}>Minigame Starts", 34);
+			MinigameFound = true;
+			for(x=1 ; < cNumberNonGaiaPlayers){
+				if(x != p){
+					PlayerChoice(x, "Participate in minigame?", "Yes", 4, "No", 0, 11900);
+				}
+			}
+			for(b = 0; <xGetDatabaseCount(dPoachers)){
+				xDatabaseNext(dPoachers);
+				xUnitSelect(dPoachers, xUnitID);
+				trUnitChangeProtoUnit("Cinematic Block");
+			}
+			xsDisableSelf();
+		}
+	}
+}
+
+void RhinoMinigameGo(int temp = 0){
+	xsEnableRule("MGGORhino");
+}
+
+rule MGGORhino
+inactive
+highFrequency
+{
+	InMinigame = true;
+	int temp = trGetNextUnitScenarioNameNumber();
+	trPaintTerrain(xsVectorGetX(StageVector)-2,xsVectorGetZ(StageVector)-2,xsVectorGetX(StageVector)+2,xsVectorGetZ(StageVector)+2,0,73);
+	refreshPassability();
+	//trDelayedRuleActivation("DeerMinigameEnd");
+	trMessageSetText("Rules.", 8000);
+	CreateMinigameFlag(2*xsVectorGetX(StageVector)+2,2*xsVectorGetZ(StageVector)+2);
+	for(p=1 ; < cNumberNonGaiaPlayers){
+		xSetPointer(dPlayerData, p);
+		trVectorQuestVarSet("P"+p+"PosMG", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
+		trVectorQuestVarSet("P"+p+"PosMG", trVectorQuestVarGet("P"+p+"PosMG")/2);
+		if((trVectorQuestVarGetX("P"+p+"PosMG") > xsVectorGetX(StageVector)-2) && (trVectorQuestVarGetX("P"+p+"PosMG") < xsVectorGetX(StageVector)+2) && (trVectorQuestVarGetZ("P"+p+"PosMG") > xsVectorGetZ(StageVector)-2) && (trVectorQuestVarGetZ("P"+p+"PosMG") < xsVectorGetZ(StageVector)+2)){
+			xSetBool(dPlayerData, xStopDeath, true);
+			PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is playing");
+			PlayersMinigaming = PlayersMinigaming+1;
+		}
+	}
+	if(PlayersMinigaming == 0){
+		//end MG
+		trUnitSelectByQV("MinigameStartSFX");
+		trUnitDestroy();
+		trUnitSelectByQV("MinigameStartID");
+		trUnitDestroy();
+		trMessageSetText("Nobody was on the white tiles. Minigame cancelled.", 5000);
+		InMinigame = false;
+	}
 	xsDisableSelf();
 }

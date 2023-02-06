@@ -46,6 +46,42 @@ string CurrentProto(int num = 0){
 	return(thename);
 }
 
+void CreateMinigameFlag(int x = 0, int z = 0){
+	int temp = trGetNextUnitScenarioNameNumber();
+	UnitCreate(0, "Dwarf", x,z,0);
+	trUnitSelectClear();
+	trUnitSelect(""+temp);
+	trUnitChangeProtoUnit("Spy Eye");
+	trUnitSelectClear();
+	trUnitSelect(""+temp);
+	trMutateSelected(kbGetProtoUnitID("Flag"));
+	trUnitSelectClear();
+	trUnitSelect(""+temp);
+	trUnitSetAnimationPath("0,0,0,0,0,0");
+	trUnitSelectClear();
+	trUnitSelect(""+temp);
+	trSetSelectedScale(2,2,2);
+	trQuestVarSet("MinigameStartSFX", temp);
+	temp = trGetNextUnitScenarioNameNumber();
+	UnitCreate(0, "Dwarf", x,z,0);
+	trUnitSelectClear();
+	trUnitSelect(""+temp);
+	trUnitChangeProtoUnit("Spy Eye");
+	trUnitSelectClear();
+	trUnitSelect(""+temp);
+	trMutateSelected(kbGetProtoUnitID("Pyramid Osiris Xpack"));
+	trUnitSelectClear();
+	trUnitSelect(""+temp);
+	trSetSelectedScale(100,0,0);
+	trUnitSelectClear();
+	trUnitSelect(""+temp);
+	trUnitOverrideAnimation(6, 0, false, true, -1);
+	trUnitSelectClear();
+	trUnitSelect(""+temp);
+	trUnitSetAnimationPath("0,0,1,0,0,0");
+	trQuestVarSet("MinigameStartID", temp);
+}
+
 void SpawnDeerPoacher(int num = 0){
 	int temp = 0;
 	vector spawn = vector(0,0,0);
@@ -108,6 +144,43 @@ void SpawnRhinoPoacher(int num = 0){
 			}
 			if(allow == 0){
 				UnitCreate(cNumberNonGaiaPlayers, "Slinger", 1*trQuestVarGet("x"), 1*trQuestVarGet("z"), 0);
+				xAddDatabaseBlock(dPoachers, true);
+				xSetInt(dPoachers, xUnitID, temp);
+				xSetInt(dPoachers, xMoveTime, 0);
+				num = num-1;
+			}
+			else if(allow == 1){
+				allow = 0;
+			}
+		}
+	}
+}
+
+void SpawnRhinoSuperPoacher(int num = 0){
+	int temp = 0;
+	vector spawn = vector(0,0,0);
+	vector EP = EndPoint*2;
+	int allow = 0;
+	if(InMinigame == false){
+		while(num > 0){
+			temp = trGetNextUnitScenarioNameNumber();
+			trQuestVarSetFromRand("x",0,252);
+			trQuestVarSetFromRand("z",0,252);
+			spawn=xsVectorSet(1*trQuestVarGet("x"),5, 1*trQuestVarGet("z"));
+			while((distanceBetweenVectors(spawn, EP, true) < 1000)){
+				trQuestVarSetFromRand("x",0,252);
+				trQuestVarSetFromRand("z",0,252);
+				spawn=xsVectorSet(1*trQuestVarGet("x"),5, 1*trQuestVarGet("z"));
+				continue;
+			}
+			for(p = 1; < cNumberNonGaiaPlayers){
+				xSetPointer(dPlayerData, p);
+				if((distanceBetweenVectors(spawn, kbGetBlockPosition(""+xGetInt(dPlayerData, xPlayerUnitID)),true) < 1000) && (xGetBool(dPlayerData, xPlayerActive) == true)){
+					allow = 1;
+				}
+			}
+			if(allow == 0){
+				UnitCreate(cNumberNonGaiaPlayers, "Chu Ko Nu", 1*trQuestVarGet("x"), 1*trQuestVarGet("z"), 0);
 				xAddDatabaseBlock(dPoachers, true);
 				xSetInt(dPoachers, xUnitID, temp);
 				xSetInt(dPoachers, xMoveTime, 0);

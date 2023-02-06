@@ -1354,7 +1354,7 @@ void createMarsh(){
 	float MinigameMetreX = MinigameTileX*2+1;
 	float MinigameMetreZ = MinigameTileZ*2+1;
 	PaintAtlantisArea(MinigameTileX-1, MinigameTileZ-1, MinigameTileX+1, MinigameTileZ+1, 5, 4);
-	trChangeTerrainHeight(MinigameTileX-1, MinigameTileZ-1, MinigameTileX+1, MinigameTileZ+1, 2, false);
+	trChangeTerrainHeight(MinigameTileX-1, MinigameTileZ-1, MinigameTileX+1, MinigameTileZ+1, MinigameHeight, false);
 	currentId = trGetNextUnitScenarioNameNumber();
 	UnitCreate(0, "Cinematic Block", MinigameMetreX, MinigameMetreZ,0);
 	trQuestVarSet("MinigameStartID", currentId);
@@ -1869,6 +1869,7 @@ void createDeepForestArea(){
 	StageScore = 0;
 	PlayersDead = 0;
 	EndPoint = tileForEnd;
+	ChestsFound = 0;
 	MinigameFound = false;
 	InMinigame = false;
 	xsEnableRule("Reset Blackmap");
