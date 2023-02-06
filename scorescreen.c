@@ -241,6 +241,7 @@ inactive
 		else{
 			clearMap("black", 5);
 			xsEnableRule("TutorialTerrainRhino");
+			//[SORT THE ABOVE OUT - AS A CUT TO RHINO FOR DEER, MAYBE JUST FIRE THE EVENT]
 			for(x=NewDestroyNumber ; < trGetNextUnitScenarioNameNumber()){
 				trUnitSelectClear();
 				trUnitSelect(""+x);
@@ -260,6 +261,19 @@ inactive
 		trLetterBox(false);
 		xsEnableRule("TempEndGame");
 		xsEnableRule("ResetInts");
+	}
+}
+
+rule PassAct2
+highFrequency
+inactive
+{
+	if (trTime() > cActivationTime + 3) {
+		xsDisableSelf();
+		trLetterBox(false);
+		xsEnableRule("TempEndGame");
+		xsEnableRule("ResetInts");
+		QuickStart = 0;
 	}
 }
 

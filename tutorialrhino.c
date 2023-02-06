@@ -205,6 +205,7 @@ inactive
 		trFadeOutAllSounds(3);
 		trFadeOutMusic(3);
 		xResetDatabase(dTemp);
+		TutorialMode = false;
 	}
 }
 
@@ -212,73 +213,75 @@ rule RhinoTutorialLoops
 highFrequency
 inactive
 {
-	int temp = 0;
-	for(p=1 ; < cNumberNonGaiaPlayers){
-		xSetPointer(dPlayerData, p);
-		trVectorQuestVarSet("P"+p+"Pos", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
-		if((playerIsPlaying(p) == false) && (xGetBool(dPlayerData, xPlayerActive) == true)){
-			trUnitSelectByQV("P"+p+"Unit");
-			trUnitChangeProtoUnit("Ragnorok SFX");
-			trUnitSelectByQV("P"+p+"Unit");
-			trUnitDestroy();
-			trUnitSelectClear();
-			trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
-			trUnitChangeProtoUnit("Hero Death");
-			xSetBool(dPlayerData, xPlayerActive, false);
-			PlayersActive = PlayersActive-1;
-			trPaintTerrain(5,((p*8)-2),30,((p*8+4)-2),CliffType,CliffSubType);
-			trUnitSelectClear();
-			for(a = 0 ; <= xGetDatabaseCount(dTemp)){
-				xDatabaseNext(dTemp);
-				if(xGetInt(dTemp, xExtra) == p){
-					xUnitSelect(dTemp, xUnitID);
-					trUnitDestroy();
-					xFreeDatabaseBlock(dTemp);
+	if(TutorialMode){
+		int temp = 0;
+		for(p=1 ; < cNumberNonGaiaPlayers){
+			xSetPointer(dPlayerData, p);
+			trVectorQuestVarSet("P"+p+"Pos", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
+			if((playerIsPlaying(p) == false) && (xGetBool(dPlayerData, xPlayerActive) == true)){
+				trUnitSelectByQV("P"+p+"Unit");
+				trUnitChangeProtoUnit("Ragnorok SFX");
+				trUnitSelectByQV("P"+p+"Unit");
+				trUnitDestroy();
+				trUnitSelectClear();
+				trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+				trUnitChangeProtoUnit("Hero Death");
+				xSetBool(dPlayerData, xPlayerActive, false);
+				PlayersActive = PlayersActive-1;
+				trPaintTerrain(5,((p*8)-2),30,((p*8+4)-2),CliffType,CliffSubType);
+				trUnitSelectClear();
+				for(a = 0 ; <= xGetDatabaseCount(dTemp)){
+					xDatabaseNext(dTemp);
+					if(xGetInt(dTemp, xExtra) == p){
+						xUnitSelect(dTemp, xUnitID);
+						trUnitDestroy();
+						xFreeDatabaseBlock(dTemp);
+					}
 				}
 			}
-		}
-		if((trVectorQuestVarGetX("P"+p+"Pos") > 58) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0)){
-			trUnitSelectByQV("P"+p+"Unit");
-			trUnitChangeProtoUnit("Ragnorok SFX");
-			trUnitSelectByQV("P"+p+"Unit");
-			trUnitDestroy();
-			trUnitSelectClear();
-			trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
-			trUnitChangeProtoUnit("Hero Death");
-			trQuestVarSet("P"+p+"DoneTutorial", 1);
-			trQuestVarModify("PlayersDoneTutorial", "+", 1);
-			temp = 1*trQuestVarGet("PlayersDoneTutorial");
-			trPaintTerrain(5,((p*8)-2),30,((p*8+4)-2),CliffType,CliffSubType);
-			trUnitSelectClear();
-			for(a = 0 ; <= xGetDatabaseCount(dTemp)){
-				xDatabaseNext(dTemp);
-				if(xGetInt(dTemp, xExtra) == p){
-					xUnitSelect(dTemp, xUnitID);
-					trUnitDestroy();
-					xFreeDatabaseBlock(dTemp);
+			if((trVectorQuestVarGetX("P"+p+"Pos") > 58) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0)){
+				trUnitSelectByQV("P"+p+"Unit");
+				trUnitChangeProtoUnit("Ragnorok SFX");
+				trUnitSelectByQV("P"+p+"Unit");
+				trUnitDestroy();
+				trUnitSelectClear();
+				trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+				trUnitChangeProtoUnit("Hero Death");
+				trQuestVarSet("P"+p+"DoneTutorial", 1);
+				trQuestVarModify("PlayersDoneTutorial", "+", 1);
+				temp = 1*trQuestVarGet("PlayersDoneTutorial");
+				trPaintTerrain(5,((p*8)-2),30,((p*8+4)-2),CliffType,CliffSubType);
+				trUnitSelectClear();
+				for(a = 0 ; <= xGetDatabaseCount(dTemp)){
+					xDatabaseNext(dTemp);
+					if(xGetInt(dTemp, xExtra) == p){
+						xUnitSelect(dTemp, xUnitID);
+						trUnitDestroy();
+						xFreeDatabaseBlock(dTemp);
+					}
+				}
+				trUnitSelectClear();
+				trClearCounterDisplay();
+				trSetCounterDisplay("<color={PlayerColor(" + GreenText() + ")}>Tutorial complete: " + temp + " / " + PlayersActive);
+				if((temp == 1) && (PlayersActive > 1)){
+					xsEnableRule("TutorialTimeout");
+				}
+				if(trCurrentPlayer() == p){
+					playSound("ageadvance.wav");
+					trCounterAbort("cdtutorial");
 				}
 			}
-			trUnitSelectClear();
-			trClearCounterDisplay();
-			trSetCounterDisplay("<color={PlayerColor(" + GreenText() + ")}>Tutorial complete: " + temp + " / " + PlayersActive);
-			if((temp == 1) && (PlayersActive > 1)){
-				xsEnableRule("TutorialTimeout");
-			}
-			if(trCurrentPlayer() == p){
-				playSound("ageadvance.wav");
-				trCounterAbort("cdtutorial");
-			}
-		}
-		trUnitSelectByQV("P"+p+"Unit");
-		if((trUnitDead() == true) && (xGetBool(dPlayerData, xPlayerActive) == true) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0)){
 			trUnitSelectByQV("P"+p+"Unit");
-			trUnitChangeProtoUnit("Ragnorok SFX");
-			trUnitSelectByQV("P"+p+"Unit");
-			trUnitDestroy();
-			trUnitSelectClear();
-			trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
-			trUnitChangeProtoUnit("Hero Death");
-			CreateRhino(p, 14, p*16, 90);
+			if((trUnitDead() == true) && (xGetBool(dPlayerData, xPlayerActive) == true) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0)){
+				trUnitSelectByQV("P"+p+"Unit");
+				trUnitChangeProtoUnit("Ragnorok SFX");
+				trUnitSelectByQV("P"+p+"Unit");
+				trUnitDestroy();
+				trUnitSelectClear();
+				trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+				trUnitChangeProtoUnit("Hero Death");
+				CreateRhino(p, 14, p*16, 90);
+			}
 		}
 	}
 }

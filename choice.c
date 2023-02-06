@@ -177,15 +177,17 @@ inactive
 		unitTransform(""+YesChoiceUnitName + " Hero", "Cinematic Block");
 		unitTransform(""+NoChoiceUnitName + " Hero", "Cinematic Block");
 		if(trCurrentPlayer() == p){
-			uiZoomToProto(""+GazelleProto);
-			//uiLookAtProto(""+GazelleProto);
-			uiLookAtUnit(1*trQuestVarGet("P"+p+"Unit"));
+			if(Stage == 1){
+				uiZoomToProto(""+GazelleProto);
+			}
+			if(Stage == 2){
+				uiZoomToProto(""+RhinoProto);
+			}
 		}
 		xsDisableSelf();
 	}
 }
 
-//PlayerChoice(1, "Choose a god power again", "Vision", 1, "Serpents", 2);
 //xsGetContextPlayer for problems
 
 void PlayerChoice(int p = 0, string prompt = "Question", string answerone = "Answer 1", int effectone = 0, string answertwo = "Answer 2", int effecttwo = 0, int timeout = 10000){
@@ -235,7 +237,6 @@ void ChooseYes(int p = 0){
 		trBlockAllSounds();
 		uiFindType(""+YesChoiceUnitName);
 		uiTransformSelectedUnit(""+YesChoiceUnitName + " Hero");
-		trUnblockAllSounds();
 	}
 }
 
@@ -251,7 +252,6 @@ void ChooseNo(int p = 0){
 		trBlockAllSounds();
 		uiFindType(""+NoChoiceUnitName);
 		uiTransformSelectedUnit(""+NoChoiceUnitName + " Hero");
-		trUnblockAllSounds();
 	}
 }
 

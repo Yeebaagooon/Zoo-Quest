@@ -102,7 +102,7 @@ void SpawnRhinoPoacher(int num = 0){
 			}
 			for(p = 1; < cNumberNonGaiaPlayers){
 				xSetPointer(dPlayerData, p);
-				if((distanceBetweenVectors(spawn, kbGetBlockPosition(""+xGetInt(dPlayerData, xPlayerUnitID)),true) < 600) && (xGetBool(dPlayerData, xPlayerActive) == true)){
+				if((distanceBetweenVectors(spawn, kbGetBlockPosition(""+xGetInt(dPlayerData, xPlayerUnitID)),true) < 800) && (xGetBool(dPlayerData, xPlayerActive) == true)){
 					allow = 1;
 				}
 			}

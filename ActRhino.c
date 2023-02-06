@@ -31,11 +31,11 @@ inactive
 		uiLookAtProto(""+RhinoProto);
 		trDelayedRuleActivation("ResetBlackmap");
 		//trDelayedRuleActivation("DeerMinigameDetect");
-		//trDelayedRuleActivation("DeerLeave");
+		trDelayedRuleActivation("RhinoLeave");
 		//trDelayedRuleActivation("TEST");
 		trDelayedRuleActivation("RhinoAllDead");
 		//trDelayedRuleActivation("PoacherTimer");
-		//trDelayedRuleActivation("DeerEndZoneSee");
+		trDelayedRuleActivation("RhinoEndZoneSee");
 		xsEnableRule("RhinoPoacherMovement");
 		trSetCounterDisplay("<color={PlayerColor(2)}>Fencing destroyed: "+FencesDone+"/8");
 		ColouredIconChat("1,0.5,0", ActIcon(Stage), "<u>" + ActName(Stage) + "</u>");
@@ -51,6 +51,19 @@ inactive
 			xSetFloat(dPlayerData, xRhinoChargeTime, xGetInt(dPlayerData, xRhinoChargeTimeMax));
 		}
 		trDelayedRuleActivation("RhinoActLoops");
+		paintCircle(xsVectorGetX(EndPoint),xsVectorGetZ(EndPoint),8,LeaveTerrain);
+		trUnitSelectClear();
+		trUnitSelect(""+FlagUnitID);
+		trMutateSelected(kbGetProtoUnitID("Flag"));
+		trUnitSelectClear();
+		trUnitSelect(""+FlagUnitID);
+		trUnitSetAnimationPath("0,0,0,0,0,0");
+		trUnitSelectClear();
+		trUnitSelect(""+FlagSFXID);
+		trMutateSelected(kbGetProtoUnitID("Osiris Box Glow"));
+		trUnitSelectClear();
+		trUnitSelect(""+FlagSFXID);
+		trUnitSetAnimationPath("0,0,1,0,0,0");
 	}
 }
 
@@ -205,7 +218,7 @@ inactive
 		}
 	}
 	if((PlayersActive == PlayersReadyToLeave+PlayersDead) && (PlayersDead != PlayersActive)){
-		//xsEnableRule("RhinoExit");
+		xsEnableRule("RhinoExit");
 	}
 	if(xGetDatabaseCount(dChests) > 0){
 		xDatabaseNext(dChests);
@@ -310,4 +323,95 @@ highFrequency
 			trUnitMoveToPoint(1*trQuestVarGet("x"),5,1*trQuestVarGet("z"),-1,true);
 		}
 	}
+}
+
+rule RhinoEndZoneSee
+inactive
+highFrequency
+{
+	for(p=1 ; < cNumberNonGaiaPlayers){
+		trUnitSelectByQV("P"+p+"Unit");
+		if(trUnitDistanceToUnit(""+FlagUnitID) < 23){
+			vector flagV = kbGetBlockPosition(""+FlagUnitID);
+			for(x=1 ; < cNumberNonGaiaPlayers){
+				trMinimapFlare(x,10,flagV,true);
+			}
+			UnitCreate(0, "Revealer", xsVectorGetX(flagV),xsVectorGetZ(flagV),0);
+			trMessageSetText("The extraction zone has been found. Gather here when you are ready to end the act.", 8000);
+			playSound("examinationbirth.wav");
+			trUnitSelectClear();
+			trUnitSelect(""+FlagUnitID);
+			trUnitHighlight(10, true);
+			xsDisableSelf();
+		}
+	}
+}
+
+rule RhinoLeave
+inactive
+highFrequency
+{
+	int STOP = 0;
+	trQuestVarModify("PlayerCycle", "+", 1);
+	if(1*trQuestVarGet("PlayerCycle") > cNumberNonGaiaPlayers){
+		trQuestVarSet("PlayerCycle", 1);
+	}
+	int p = 1*trQuestVarGet("PlayerCycle");
+	xSetPointer(dPlayerData, p);
+	tempV = kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit"));
+	if(xGetBool(dPlayerData, xReadyToLeave) == true){
+		if((trGetTerrainType(1*xsVectorGetX(tempV)/2,1*xsVectorGetZ(tempV)/2) != getTerrainType(LeaveTerrain)) || (trGetTerrainSubType(1*xsVectorGetX(tempV)/2,1*xsVectorGetZ(tempV)/2) != getTerrainSubType(LeaveTerrain))){
+			xSetBool(dPlayerData, xReadyToLeave, false);
+			xSetBool(dPlayerData, xStopDeath, false);
+			PlayersReadyToLeave = PlayersReadyToLeave-1;
+			trUnitSelectByQV("P"+p+"Unit");
+			trMutateSelected(kbGetProtoUnitID(""+RhinoProto));
+			PlayerColouredChatToSelf(p, "You have left the extraction zone");
+			STOP = 1;
+		}
+	}
+	if((xGetBool(dPlayerData, xReadyToLeave) == false) && (STOP == 0)){
+		if((trGetTerrainType(1*xsVectorGetX(tempV)/2,1*xsVectorGetZ(tempV)/2) == getTerrainType(LeaveTerrain)) && (trGetTerrainSubType(1*xsVectorGetX(tempV)/2,1*xsVectorGetZ(tempV)/2) == getTerrainSubType(LeaveTerrain))){
+			xSetBool(dPlayerData, xReadyToLeave, true);
+			xSetBool(dPlayerData, xStopDeath, true);
+			PlayersReadyToLeave = PlayersReadyToLeave+1;
+			trUnitSelectByQV("P"+p+"Unit");
+			trMutateSelected(kbGetProtoUnitID("Prisoner"));
+			PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is ready to leave");
+			if(trQuestVarGet("P"+p+"LeaveMsg") == 0){
+				trQuestVarSet("P"+p+"LeaveMsg", 1);
+				ColouredChatToPlayer(p, "1,1,0", "You cannot charge or drink in the extraction zone.");
+				ColouredChatToPlayer(p, "1,1,0", "You also cannot die or be attacked.");
+			}
+		}
+	}
+}
+
+rule RhinoExit
+inactive
+highFrequency
+{
+	trCounterAbort("poachtimer");
+	xsDisableRule("Charge");
+	xsDisableRule("RhinoPartTwo");
+	xsDisableRule("RhinoPoacherSpawnLoop");
+	xsDisableRule("RhinoActLoops");
+	xsDisableRule("RhinoAllDead");
+	xsDisableRule("RhinoPoacherMovement");
+	xsDisableRule("RhinoEndZoneSee");
+	xsDisableRule("RhinoLeave");
+	xsDisableRule("RhinoTutorialLoops");
+	for(p=1 ; < cNumberNonGaiaPlayers){
+		trUnitSelectByQV("P"+p+"Unit");
+		trUnitChangeProtoUnit("Ragnorok SFX");
+		trUnitSelectByQV("P"+p+"Unit");
+		trUnitDestroy();
+		trUnitSelectClear();
+		trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+		trUnitChangeProtoUnit("Hero Death");
+		trCounterAbort("stamina"+p);
+	}
+	trClearCounterDisplay();
+	xsEnableRule("ScoreScreenStart");
+	xsDisableSelf();
 }

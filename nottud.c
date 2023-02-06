@@ -1428,6 +1428,34 @@ void createMarsh(){
 		}
 	}
 	smooth(5);
+	vector tileForEnd = getRandomTileMatchingTerrain("SavannahC", 10);
+	int EndTileX = xsVectorGetX(tileForEnd);
+	int EndTileZ = xsVectorGetZ(tileForEnd);
+	float EndHeight = trGetTerrainHeight(EndTileX, EndTileZ);
+	currentId = trGetNextUnitScenarioNameNumber();
+	UnitCreate(0, "Cinematic Block", 2*xsVectorGetX(tileForEnd),2*xsVectorGetZ(tileForEnd),0);
+	trUnitSelectClear();
+	trUnitSelect(""+currentId);
+	trUnitChangeProtoUnit("Spy Eye");
+	trUnitSelectClear();
+	trUnitSelect(""+currentId);
+	trMutateSelected(kbGetProtoUnitID("Cinematic Block"));
+	FlagSFXID = currentId;
+	trUnitSelectClear();
+	trUnitSelect(""+currentId);
+	trUnitSetAnimationPath("0,0,1,0,0,0");
+	currentId = trGetNextUnitScenarioNameNumber();
+	UnitCreate(0, "Cinematic Block", 2*xsVectorGetX(tileForEnd),2*xsVectorGetZ(tileForEnd),0);
+	trUnitSelectClear();
+	trUnitSelect(""+currentId);
+	trUnitChangeProtoUnit("Spy Eye");
+	trUnitSelectClear();
+	trUnitSelect(""+currentId);
+	trMutateSelected(kbGetProtoUnitID("Cinematic Block"));
+	FlagUnitID = currentId;
+	
+	float EndMetreX = EndTileX*2+1;
+	float EndMetreZ = EndTileZ*2+1;
 	for(a=0 ; < 60){
 		//deployCluster(randomFloat(toMetres(0.2), toMetres(0.8)), randomFloat(toMetres(0.2), toMetres(0.8)), "Savannah Tree", 0, 16, 10.0, false);
 	}
@@ -1459,6 +1487,15 @@ void createMarsh(){
 			break;
 		}
 	}
+	LeaveTerrain = "IceA";
+	Stage = 2;
+	StageRequirement = 60;
+	StageScore = 0;
+	PlayersDead = 0;
+	EndPoint = tileForEnd;
+	MinigameFound = false;
+	InMinigame = false;
+	xsEnableRule("Reset Blackmap");
 }
 
 void createSafeArea(){
