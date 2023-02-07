@@ -52,6 +52,10 @@ highFrequency
 	modifyProtounitAbsolute("Slinger", cNumberNonGaiaPlayers, 0, 20);
 	modifyProtounitAbsolute("Slinger", cNumberNonGaiaPlayers, 30, 2);
 	modifyProtounitAbsolute("Slinger", cNumberNonGaiaPlayers, 11, 20);
+	modifyProtounitAbsolute("Chu Ko Nu", cNumberNonGaiaPlayers, 2, 34);
+	modifyProtounitAbsolute("Chu Ko Nu", cNumberNonGaiaPlayers, 0, 50);
+	modifyProtounitAbsolute("Chu Ko Nu", cNumberNonGaiaPlayers, 11, 24);
+	modifyProtounitAbsolute("Chu Ko Nu", cNumberNonGaiaPlayers, 30, 2);
 	modifyProtounitAbsolute("Lampades Bolt", cNumberNonGaiaPlayers, 1, 5);
 	modifyProtounitAbsolute("Lampades Bolt", cNumberNonGaiaPlayers, 8, 10);
 	modifyProtounitAbsolute("Javelin Flaming", cNumberNonGaiaPlayers, 1, 6);

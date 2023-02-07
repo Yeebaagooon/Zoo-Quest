@@ -36,7 +36,6 @@ Remove stamina chat, change to counter
 
 
 [BUG LIST]
-S2 missiles double dmg, added to db twice??
 
 
 //DELETE
@@ -44,7 +43,7 @@ S2 missiles double dmg, added to db twice??
 
 //---Controls
 //\Yeebaagooon\Zoo Quest\Test sound.mp3
-int QuickStart = 0;
+int QuickStart = 2;
 int Stage = 0;
 string MapVersion = "Test Version";
 string MapName = "Zoo Quest.xs";

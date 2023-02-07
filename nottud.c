@@ -1314,7 +1314,7 @@ void createMarsh(){
 	float StartMetreZ = StartTileZ*2+1;
 	trVectorQuestVarSet("dir", xsVectorSet(11, 0, 0));
 	trVectorQuestVarSet("CentreMap", xsVectorSet(StartMetreX, 0, StartMetreZ));
-	paintCircleHeight2(StartTileX, StartTileZ, 8, "GrassDirt75", StartHeight);
+	paintCircleHeight2(StartTileX, StartTileZ, 8, "GrassDirt75", StartHeight+1);
 	//SPAWN PLAYERS
 	float baseCos = xsCos(6.283185 / (cNumberNonGaiaPlayers-1));
 	float baseSin = xsSin(6.283185 / (cNumberNonGaiaPlayers-1));

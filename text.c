@@ -154,6 +154,10 @@ int npcDiag(int npc = 0, int dialog = 0) {
 				case 3:
 				{
 					uiMessageBox("You'll be immobilised while you drink, so be careful.");
+				}
+				case 4:
+				{
+					uiMessageBox("Drink from the fountain to complete this tutorial.");
 					dialog = 0;
 				}
 			}

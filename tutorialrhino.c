@@ -11,12 +11,12 @@ inactive
 		CliffSubType = 2;
 		//trLetterBox(false);
 		clearMap("black", 5.0);
-		trPaintTerrain(0,0,35,cNumberNonGaiaPlayers*8,CliffType,CliffSubType);
+		trPaintTerrain(0,0,45,cNumberNonGaiaPlayers*8,CliffType,CliffSubType);
 		xResetDatabase(dChests);
 		int temp = 0;
 		//trees
 		for(t=0 ; < cNumberNonGaiaPlayers){
-			for(x=0 ; < 36){
+			for(x=0 ; < 46){
 				if(iModulo(7,x) == 0){
 					temp = trGetNextUnitScenarioNameNumber();
 					UnitCreate(0, "Cinematic Block", x*2, t*16+8, 90);
@@ -42,7 +42,7 @@ inactive
 		trQuestVarSet("PlayersDoneTutorial", 0);
 		for(p=1 ; < cNumberNonGaiaPlayers){
 			trQuestVarSet("P"+p+"DoneTutorial", 0);
-			trPaintTerrain(5,((p*8)-2),30,((p*8+4)-2),0,15);
+			trPaintTerrain(5,((p*8)-2),40,((p*8+4)-2),0,15);
 			//trPaintTerrain(7,p*8,7,p*8,0,73); //start sq
 			PaintAtlantisArea(6,p*8-1,8,p*8+1,0,18);  //start sq
 			trPaintTerrain(28,p*8+2,28,p*8-2,0,74); //end line
@@ -70,6 +70,14 @@ inactive
 			xAddDatabaseBlock(dTemp, true);
 			xSetInt(dTemp, xUnitID, temp);
 			xSetInt(dTemp, xExtra, p);
+			temp = trGetNextUnitScenarioNameNumber();
+			UnitCreate(0, "Cinematic Block", 34*2, p*16, 0);
+			trUnitSelectClear();
+			trUnitSelect(""+temp);
+			trUnitChangeProtoUnit("Fountain");
+			xAddDatabaseBlock(dTemp, true);
+			xSetInt(dTemp, xUnitID, temp);
+			xSetInt(dTemp, xExtra, p);
 			CreateRhino(p,14,16*p,90);
 			xSetPointer(dPlayerData, xPlayerUnitID);
 			xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
@@ -77,7 +85,7 @@ inactive
 				trCounterAddTime("cdtutorial", -100, -200, "<color={PlayerColor("+p+")}>Press 'Q' to start/stop charge.", -1);
 			}
 		}
-		trPaintTerrain(0,0,0,0,2,4,true);
+		refreshPassability();
 		xsEnableRule("Animations");
 		xsEnableRule("Charge");
 		xsDisableRule("Jump");
@@ -232,7 +240,7 @@ inactive
 				trUnitChangeProtoUnit("Hero Death");
 				xSetBool(dPlayerData, xPlayerActive, false);
 				PlayersActive = PlayersActive-1;
-				trPaintTerrain(5,((p*8)-2),30,((p*8+4)-2),CliffType,CliffSubType);
+				trPaintTerrain(5,((p*8)-2),40,((p*8+4)-2),CliffType,CliffSubType);
 				trUnitSelectClear();
 				for(a = xGetDatabaseCount(dTemp) ; > 0){
 					xDatabaseNext(dTemp);
@@ -243,7 +251,14 @@ inactive
 					}
 				}
 			}
-			if((trVectorQuestVarGetX("P"+p+"Pos") > 58) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0)){
+			//through wall
+			if((trVectorQuestVarGetX("P"+p+"Pos") > 58) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0) && (1*trQuestVarGet("P"+p+"FountainMsg") == 0)){
+				if(trCurrentPlayer() == p){
+					startNPCDialog(7);
+					trQuestVarSet("P"+p+"FountainMsg", 1);
+				}
+			}
+			if((trVectorQuestVarGetX("P"+p+"Pos") > 68) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0)){
 				trUnitSelectByQV("P"+p+"Unit");
 				trUnitChangeProtoUnit("Ragnorok SFX");
 				trUnitSelectByQV("P"+p+"Unit");

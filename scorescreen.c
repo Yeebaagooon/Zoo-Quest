@@ -42,7 +42,6 @@ inactive
 	float ExtrasGot = 0;
 	float calc = 0;
 	int temp = 0;
-	//Current req is 40
 	if(Stage == 1){
 		//[CALCULATE THE PERCENT COMPLETE]
 		if(1*trQuestVarGet("BerriesEaten") >= BerryTarget){
@@ -135,6 +134,15 @@ inactive
 		if(MinigameWins > 0){
 			ExtrasGot = ExtrasGot + 5;
 		}
+		Extras = Extras +4;
+		if(1*trQuestVarGet("RhinoSurvival") > 4){
+			ExtrasGot = ExtrasGot+4;
+		}
+		else{
+			ExtrasGot = ExtrasGot + 1*trQuestVarGet("RhinoSurvival");
+		}
+		Extras = Extras+2;
+		ExtrasGot = ExtrasGot + 1*trQuestVarGet("RhinoBonuses");
 		/*Extras = Extras + PlayersActive;
 		for(a = 1 ; < cNumberNonGaiaPlayers){
 			xSetPointer(dPlayerData, a);
