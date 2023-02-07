@@ -283,7 +283,7 @@ inactive
 								trMessageSetText("You have won the minigame!", 4000);
 							}
 							trQuestVarSetFromRand("temp",1,2,true);
-							if(temp == 1){
+							if(1*trQuestVarGet("temp") == 1){
 								PlayerChoice(p, "Choose your reward:", "+1 speed", 8, "+2 hp", 10, 10000);
 							}
 							else{
@@ -421,7 +421,7 @@ inactive
 	}
 }
 
-void DeerMinigameGo(int temp = 0){
+void DeerMinigameGo(int eventfireID = 0){
 	xsEnableRule("MGGODeer");
 }
 
@@ -492,12 +492,14 @@ inactive
 	CreateMinigameFlag(2*xsVectorGetX(StageVector)+55,2*xsVectorGetZ(StageVector)+11);
 	for(p=1 ; < cNumberNonGaiaPlayers){
 		xSetPointer(dPlayerData, p);
-		trVectorQuestVarSet("P"+p+"PosMG", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
-		trVectorQuestVarSet("P"+p+"PosMG", trVectorQuestVarGet("P"+p+"PosMG")/2);
-		if((trVectorQuestVarGetX("P"+p+"PosMG") > xsVectorGetX(StageVector)-2) && (trVectorQuestVarGetX("P"+p+"PosMG") < xsVectorGetX(StageVector)+6) && (trVectorQuestVarGetZ("P"+p+"PosMG") > xsVectorGetZ(StageVector)-4) && (trVectorQuestVarGetZ("P"+p+"PosMG") < xsVectorGetZ(StageVector)+8)){
-			xSetBool(dPlayerData, xStopDeath, true);
-			PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is playing");
-			PlayersMinigaming = PlayersMinigaming+1;
+		if(xGetBool(dPlayerData, xPlayerActive)){
+			trVectorQuestVarSet("P"+p+"PosMG", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
+			trVectorQuestVarSet("P"+p+"PosMG", trVectorQuestVarGet("P"+p+"PosMG")/2);
+			if((trVectorQuestVarGetX("P"+p+"PosMG") > xsVectorGetX(StageVector)-2) && (trVectorQuestVarGetX("P"+p+"PosMG") < xsVectorGetX(StageVector)+6) && (trVectorQuestVarGetZ("P"+p+"PosMG") > xsVectorGetZ(StageVector)-4) && (trVectorQuestVarGetZ("P"+p+"PosMG") < xsVectorGetZ(StageVector)+8)){
+				xSetBool(dPlayerData, xStopDeath, true);
+				PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is playing");
+				PlayersMinigaming = PlayersMinigaming+1;
+			}
 		}
 	}
 	if(PlayersMinigaming == 0){

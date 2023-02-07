@@ -291,6 +291,32 @@ inactive
 				}
 			}
 		}
+		if(InMinigame == true){
+			//MINIGAME
+			for(b = 0; <xGetDatabaseCount(dPoachers)){
+				xDatabaseNext(dPoachers);
+				xUnitSelect(dPoachers, xUnitID);
+				trUnitChangeProtoUnit("Cinematic Block");
+			}
+			for(b = xGetDatabaseCount(dTemp); > 0){
+				xDatabaseNext(dTemp);
+				vector yeetpos = kbGetBlockPosition(""+xGetInt(dTemp, xUnitID));
+				yeetpos = yeetpos/2;
+				if((xsVectorGetX(yeetpos) > xsVectorGetX(StageVector)-2) && (xsVectorGetX(yeetpos) < xsVectorGetX(StageVector)+2) && (xsVectorGetZ(yeetpos) > xsVectorGetZ(StageVector)-2) && (xsVectorGetZ(yeetpos) < xsVectorGetZ(StageVector)+2)){
+					int anim = kbUnitGetAnimationActionType(kbGetBlockID(""+xGetInt(dTemp, xUnitID)+""));
+					if(anim != 29){
+						//if unit in pit and not flailing
+						xUnitSelect(dTemp, xUnitID);
+						trUnitChangeProtoUnit("Tartarian Gate flame");
+						xFreeDatabaseBlock(dTemp);
+						playSound("spidermaledeath" + iModulo(5, (trTime())+1) + ".wav");
+					}
+				}
+			}
+			if(xGetDatabaseCount(dTemp) == 0){
+				xsEnableRule("RhinoMinigameEnd");
+			}
+		}
 		
 	}
 }
@@ -440,7 +466,7 @@ inactive
 			PaintAtlantisArea(xsVectorGetX(StageVector)-2,xsVectorGetZ(StageVector)-2,xsVectorGetX(StageVector)+2,xsVectorGetZ(StageVector)+2,0,53);
 			refreshPassability();
 			trMessageSetText("Minigame found! Remain in the white square if you wish to play.", 10000);
-			trCounterAddTime("CDMG", 12, 0, "<color={PlayerColor("+p+")}>Minigame Starts", 34);
+			trCounterAddTime("CDMG", 12-(QuickStart*5), 0, "<color={PlayerColor("+p+")}>Minigame Starts", 34);
 			MinigameFound = true;
 			for(x=1 ; < cNumberNonGaiaPlayers){
 				if(x != p){
@@ -466,21 +492,75 @@ inactive
 highFrequency
 {
 	InMinigame = true;
+	vector dir = vector(25,0,0);
+	vector place = vector(30,0,0);
+	vector base = StageVector;
+	float baseCos = xsCos(6.283185 / (cNumberNonGaiaPlayers-1));
+	float baseSin = xsSin(6.283185 / (cNumberNonGaiaPlayers-1));
+	int heading = 90;
 	int temp = trGetNextUnitScenarioNameNumber();
-	trPaintTerrain(xsVectorGetX(StageVector)-2,xsVectorGetZ(StageVector)-2,xsVectorGetX(StageVector)+2,xsVectorGetZ(StageVector)+2,0,73);
+	trPaintTerrain(xsVectorGetX(StageVector)-2,xsVectorGetZ(StageVector)-2,xsVectorGetX(StageVector)+2,xsVectorGetZ(StageVector)+2,2,2);
+	trPaintTerrain(xsVectorGetX(StageVector)-1,xsVectorGetZ(StageVector)-1,xsVectorGetX(StageVector)+1,xsVectorGetZ(StageVector)+1,0,0);
+	CreateMinigameFlag(2*xsVectorGetX(StageVector),2*xsVectorGetZ(StageVector));
+	temp = trGetNextUnitScenarioNameNumber();
+	UnitCreate(0, "Dwarf", 2*xsVectorGetX(StageVector),2*xsVectorGetZ(StageVector),0);
+	trUnitSelectClear();
+	trUnitSelect(""+temp);
+	trUnitChangeProtoUnit("Spy Eye");
+	trUnitSelectClear();
+	trUnitSelect(""+temp);
+	trMutateSelected(kbGetProtoUnitID("Tartarian Gate birth"));
+	trUnitSelectClear();
+	trUnitSelect(""+temp);
+	trUnitOverrideAnimation(18,0,false,false);
+	trQuestVarSet("PitFire", temp);
+	temp = trGetNextUnitScenarioNameNumber();
+	UnitCreate(0, "Dwarf", 2*xsVectorGetX(StageVector),2*xsVectorGetZ(StageVector),0);
+	trUnitSelectClear();
+	trUnitSelect(""+temp);
+	trUnitChangeProtoUnit("Revealer");
+	trChangeTerrainHeight(xsVectorGetX(StageVector)-1,xsVectorGetZ(StageVector)-1,xsVectorGetX(StageVector)+1,xsVectorGetZ(StageVector)+1,-10, false);
 	refreshPassability();
+	trPaintTerrain(xsVectorGetX(StageVector)-1,xsVectorGetZ(StageVector)-1,xsVectorGetX(StageVector)+1,xsVectorGetZ(StageVector)+1,2,10);
 	//trDelayedRuleActivation("DeerMinigameEnd");
-	trMessageSetText("Rules.", 8000);
-	CreateMinigameFlag(2*xsVectorGetX(StageVector)+2,2*xsVectorGetZ(StageVector)+2);
 	for(p=1 ; < cNumberNonGaiaPlayers){
 		xSetPointer(dPlayerData, p);
 		trVectorQuestVarSet("P"+p+"PosMG", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
 		trVectorQuestVarSet("P"+p+"PosMG", trVectorQuestVarGet("P"+p+"PosMG")/2);
 		if((trVectorQuestVarGetX("P"+p+"PosMG") > xsVectorGetX(StageVector)-2) && (trVectorQuestVarGetX("P"+p+"PosMG") < xsVectorGetX(StageVector)+2) && (trVectorQuestVarGetZ("P"+p+"PosMG") > xsVectorGetZ(StageVector)-2) && (trVectorQuestVarGetZ("P"+p+"PosMG") < xsVectorGetZ(StageVector)+2)){
-			xSetBool(dPlayerData, xStopDeath, true);
+			xSetFloat(dPlayerData, xRhinoChargeTime, 30);
+			modifyProtounitAbsolute(""+RhinoProto, p, 9, 1);
 			PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is playing");
 			PlayersMinigaming = PlayersMinigaming+1;
+			//destroy and recreate
+			trUnitSelectByQV("P"+p+"Unit");
+			trUnitChangeProtoUnit("Ragnorok SFX");
+			trUnitSelectByQV("P"+p+"Unit");
+			trUnitDestroy();
+			trUnitSelectClear();
+			trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+			trUnitChangeProtoUnit("Hero Death");
+			CreateRhino(p, trVectorQuestVarGetX("P"+p+"PosMG")*2,trVectorQuestVarGetZ("P"+p+"PosMG")*2+10,0);
+			trUnitSelectByQV("MinigameStartSFX");
+			trUnitChangeInArea(0,0,"Savannah Tree", "Rocket", 8);
+			trUnitChangeInArea(cNumberNonGaiaPlayers,0,"Fence Wood", "Rocket", 8);
+			xSetBool(dPlayerData, xStopDeath, true);
 		}
+		//-spawn guys
+		base = StageVector*2;
+		base = base+dir;
+		heading = heading-(360/(cNumberNonGaiaPlayers-1));
+		if(heading > 360){
+			heading = heading-360;
+		}
+		if(heading < 0){
+			heading = heading+360;
+		}
+		temp = trGetNextUnitScenarioNameNumber();
+		UnitCreate(cNumberNonGaiaPlayers, "Villager Egyptian", xsVectorGetX(base), xsVectorGetZ(base), heading);
+		xAddDatabaseBlock(dTemp, true);
+		xSetInt(dTemp, xUnitID, temp);
+		dir = rotationMatrix(dir, baseCos, baseSin);
 	}
 	if(PlayersMinigaming == 0){
 		//end MG
@@ -489,7 +569,104 @@ highFrequency
 		trUnitSelectByQV("MinigameStartID");
 		trUnitDestroy();
 		trMessageSetText("Nobody was on the white tiles. Minigame cancelled.", 5000);
+		for(c = xGetDatabaseCount(dTemp) ; > 0){
+			xDatabaseNext(dTemp);
+			xUnitSelect(dTemp, xUnitID);
+			trUnitDestroy();
+			xFreeDatabaseBlock(dTemp);
+		}
+		for(b = 0; <xGetDatabaseCount(dPoachers)){
+			xDatabaseNext(dPoachers);
+			xUnitSelect(dPoachers, xUnitID);
+			trUnitChangeProtoUnit("Slinger");
+		}
 		InMinigame = false;
 	}
+	else{
+		trMessageSetText("Yeet all " + xGetDatabaseCount(dTemp) + " villagers into the pit. Players granted extra stamina.", 8000);
+		trCounterAddTime("cdrhinominigame", 90,0,"<color={PlayerColor(0)}>Minigame time remaining", 35);
+		debugLog("xGetBool(dPlayerData, xStopDeath, 1)");
+	}
 	xsDisableSelf();
+}
+
+void RhinoMGTimeout(int eventID = 0){
+	xsEnableRule("RhinoMinigameEnd");
+}
+
+rule RhinoMinigameEnd
+inactive
+highFrequency
+{
+	vector temp = vector(0,0,0);
+	//trPaintTerrain(xsVectorGetX(StageVector)-1,xsVectorGetZ(StageVector)-1,xsVectorGetX(StageVector)+31,xsVectorGetZ(StageVector)+11,0,0);
+	//refreshPassability();
+	
+	for(p=1 ; < cNumberNonGaiaPlayers){
+		xSetPointer(dPlayerData, p);
+		if(xGetDatabaseCount(dTemp) == 0){
+			if(xGetBool(dPlayerData, xStopDeath) == true){
+				MinigameWins = 1;
+				if(trCurrentPlayer() == p){
+					playSound("xwin.wav");
+					playSound("\cinematics\15_in\gong.wav");
+					trMessageSetText("You have won the minigame!", 4000);
+				}
+				trQuestVarSetFromRand("temp",1,2,true);
+				if(1*trQuestVarGet("temp") == 1){
+					PlayerChoice(p, "Choose your reward:", "+5 hp", 19, "+5 max stamina", 20, 10000);
+				}
+				else{
+					PlayerChoice(p, "Choose your reward:", "+20 percent charge speed", 18, "+1hp regen every 20s", 17, 10000);
+				}
+			}
+		}
+		else{
+			if(xGetBool(dPlayerData, xStopDeath) == true){
+				if(trCurrentPlayer() == p){
+					trMessageSetText("Minigame end lose.", 5000);
+					playSound("xlose.wav");
+				}
+			}
+		}
+		if((xGetInt(dPlayerData, xTeleportDue) == 1) && (xGetBool(dPlayerData, xPlayerActive) == true)){
+			temp = xGetVector(dPlayerData, xVectorHold);
+			trUnitSelectByQV("P"+p+"Unit");
+			trUnitChangeProtoUnit("Ragnorok SFX");
+			trUnitSelectByQV("P"+p+"Unit");
+			trUnitDestroy();
+			trUnitSelectClear();
+			trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+			trUnitChangeProtoUnit("Hero Death");
+			CreateRhino(p, xsVectorGetX(temp), xsVectorGetZ(temp), 0);
+		}
+		xSetBool(dPlayerData, xStopDeath, false);
+		xSetInt(dPlayerData, xTeleportDue, 0);
+	}
+	uiZoomToProto(""+RhinoProto);
+	uiLookAtProto(""+RhinoProto);
+	for(c = xGetDatabaseCount(dTemp) ; > 0){
+		xDatabaseNext(dTemp);
+		xUnitSelect(dTemp, xUnitID);
+		trUnitDestroy();
+		xFreeDatabaseBlock(dTemp);
+	}
+	for(b = 0; <xGetDatabaseCount(dPoachers)){
+		xDatabaseNext(dPoachers);
+		xUnitSelect(dPoachers, xUnitID);
+		trUnitChangeProtoUnit("Slinger");
+	}
+	trUnitSelectByQV("MinigameStartSFX");
+	trUnitChangeProtoUnit("Olympus Temple SFX");
+	trUnitSelectByQV("MinigameStartID");
+	trUnitChangeProtoUnit("Forest Fire SFX");
+	trUnitSelectByQV("PitFire");
+	trUnitChangeProtoUnit("Heavenlight");
+	xsDisableSelf();
+	InMinigame = false;
+	PlayersMinigaming = 0;
+	trCounterAbort("cdrhinominigame");
+	trChangeTerrainHeight(xsVectorGetX(StageVector)-1,xsVectorGetZ(StageVector)-1,xsVectorGetX(StageVector)+1,xsVectorGetZ(StageVector)+1,3, false);
+	trPaintTerrain(xsVectorGetX(StageVector)-2,xsVectorGetZ(StageVector)-2,xsVectorGetX(StageVector)+2,xsVectorGetZ(StageVector)+2,0,17);
+	refreshPassability();
 }

@@ -119,13 +119,7 @@ highFrequency
 				dest = kbGetBlockPosition(""+trGetUnitScenarioNameNumber(kbUnitGetTargetUnitID(kbGetBlockID(""+closestid))));
 				xsSetContextPlayer(0);
 				dir = xsVectorNormalize(dest-closevector);
-				ShootProjectile(dir, closevector, "Javelin Flaming", "Rocket");
-			}
-			case kbGetProtoUnitID("Petosuchus projectile"):
-			{
-				trUnitSelectClear();
-				trUnitSelectByID(id);
-				trUnitHighlight(10,true);
+				ShootProjectile(dir, closevector, "Lampades Bolt", "Rocket");
 			}
 			case kbGetProtoUnitID("Arrow Flaming"):
 			{

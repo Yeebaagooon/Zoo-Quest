@@ -104,13 +104,13 @@ inactive
 		if(PoachersDead >= PoachersTarget){
 			//passing score
 			StageScore = StageRequirement;
-			debugLog("Pass, score set to " + StageScore);
+			//debugLog("Pass, score set to " + StageScore);
 		}
 		else{
 			//failed main goal
 			trQuestVarSet("temp", PoachersDead);
 			StageScore = StageRequirement*(trQuestVarGet("temp")/PoachersTarget);
-			debugLog("Fail, score set to " + StageScore);
+			//debugLog("Fail, score set to " + StageScore);
 		}
 		//[CALCULATION PENALTIES]
 		
@@ -119,13 +119,21 @@ inactive
 		//[CHESTS, UP TO 5 EXTRA POACHER DEATHS,]
 		Extras = Extras + ChestsTotal*2;
 		ExtrasGot = ExtrasGot + ChestsFound*2;
-		debugLog("Chests = " + ChestsFound + " out of " + ChestsTotal);
+		//debugLog("Chests = " + ChestsFound + " out of " + ChestsTotal);
 		
 		Extras = Extras + 5;
 		for(a=1 ; <= 5){
 			if(PoachersDead >= PoachersTarget+a){
 				ExtrasGot = ExtrasGot+1;
 			}
+		}
+		Extras = Extras + 2;
+		if(MinigameFound == true){
+			ExtrasGot = ExtrasGot + 2;
+		}
+		Extras = Extras + 5;
+		if(MinigameWins > 0){
+			ExtrasGot = ExtrasGot + 5;
 		}
 		/*Extras = Extras + PlayersActive;
 		for(a = 1 ; < cNumberNonGaiaPlayers){

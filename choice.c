@@ -177,6 +177,31 @@ inactive
 					playSound("researchcomplete.wav");
 				}
 			}
+			case 18:
+			{
+				//Rhino minigame charge Speed
+				xSetFloat(dPlayerData, xRhinoRun, (xGetFloat(dPlayerData, xRhinoRun)*1.2));
+				if(trCurrentPlayer() == p){
+					playSound("researchcomplete.wav");
+				}
+			}
+			case 19:
+			{
+				//Rhino HP
+				trModifyProtounit(""+RhinoProto, p, 0, 5);
+				trModifyProtounit(""+RhinoDrinkProto, p, 0, 5);
+				if(trCurrentPlayer() == p){
+					playSound("researchcomplete.wav");
+				}
+			}
+			case 20:
+			{
+				//Rhino MG charge time
+				xSetInt(dPlayerData, xRhinoChargeTimeMax, (xGetInt(dPlayerData, xRhinoChargeTimeMax)+5));
+				if(trCurrentPlayer() == p){
+					playSound("researchcomplete.wav");
+				}
+			}
 			
 		}
 		trQuestVarSet("P"+ActionChoice+"YesAction", 0);

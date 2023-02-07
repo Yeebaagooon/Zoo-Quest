@@ -17,6 +17,7 @@ highFrequency
 	trEventSetHandler(32, "SpawnDeerPoachers");
 	trEventSetHandler(33, "TutForceEnd");
 	trEventSetHandler(34, "RhinoMinigameGo");
+	trEventSetHandler(35, "RhinoMGTimeout");
 	xsDisableSelf();
 }
 

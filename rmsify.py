@@ -39,7 +39,7 @@ files = ['zshared.c', 'voids.c', 'globals.c', 'intsstrings.c', 'databases.c', 'g
 
 OUTPUT_COMMENTS = False
 OUTPUT_TABS = False
-REFORMAT = False
+REFORMAT = True
 VERBOSE = False
 for t in sys.argv:
 	if t == '-v':

@@ -56,6 +56,7 @@ highFrequency
 	modifyProtounitAbsolute("Lampades Bolt", cNumberNonGaiaPlayers, 8, 10);
 	modifyProtounitAbsolute("Javelin Flaming", cNumberNonGaiaPlayers, 1, 6);
 	modifyProtounitAbsolute("Javelin Flaming", cNumberNonGaiaPlayers, 8, 10);
+	modifyProtounitAbsolute("Villager Egyptian", cNumberNonGaiaPlayers, 0, 10000);
 	modifyProtounitAbsolute("Titan Atlantean", 0, 2, 0);
 	modifyProtounitAbsolute("Titan Gate Dead", 0, 2, 0);
 	modifyProtounitAbsolute("Torch", 0, 2, 0);

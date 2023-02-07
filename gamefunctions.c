@@ -71,39 +71,39 @@ string CurrentProto(int num = 0){
 }
 
 void CreateMinigameFlag(int x = 0, int z = 0){
-	int temp = trGetNextUnitScenarioNameNumber();
+	int tempnum = trGetNextUnitScenarioNameNumber();
 	UnitCreate(0, "Dwarf", x,z,0);
 	trUnitSelectClear();
-	trUnitSelect(""+temp);
+	trUnitSelect(""+tempnum);
 	trUnitChangeProtoUnit("Spy Eye");
 	trUnitSelectClear();
-	trUnitSelect(""+temp);
+	trUnitSelect(""+tempnum);
 	trMutateSelected(kbGetProtoUnitID("Flag"));
 	trUnitSelectClear();
-	trUnitSelect(""+temp);
+	trUnitSelect(""+tempnum);
 	trUnitSetAnimationPath("0,0,0,0,0,0");
 	trUnitSelectClear();
-	trUnitSelect(""+temp);
+	trUnitSelect(""+tempnum);
 	trSetSelectedScale(2,2,2);
-	trQuestVarSet("MinigameStartSFX", temp);
-	temp = trGetNextUnitScenarioNameNumber();
+	trQuestVarSet("MinigameStartSFX", tempnum);
+	tempnum = trGetNextUnitScenarioNameNumber();
 	UnitCreate(0, "Dwarf", x,z,0);
 	trUnitSelectClear();
-	trUnitSelect(""+temp);
+	trUnitSelect(""+tempnum);
 	trUnitChangeProtoUnit("Spy Eye");
 	trUnitSelectClear();
-	trUnitSelect(""+temp);
+	trUnitSelect(""+tempnum);
 	trMutateSelected(kbGetProtoUnitID("Pyramid Osiris Xpack"));
 	trUnitSelectClear();
-	trUnitSelect(""+temp);
+	trUnitSelect(""+tempnum);
 	trSetSelectedScale(100,0,0);
 	trUnitSelectClear();
-	trUnitSelect(""+temp);
+	trUnitSelect(""+tempnum);
 	trUnitOverrideAnimation(6, 0, false, true, -1);
 	trUnitSelectClear();
-	trUnitSelect(""+temp);
+	trUnitSelect(""+tempnum);
 	trUnitSetAnimationPath("0,0,1,0,0,0");
-	trQuestVarSet("MinigameStartID", temp);
+	trQuestVarSet("MinigameStartID", tempnum);
 }
 
 void SpawnDeerPoacher(int num = 0){
