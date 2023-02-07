@@ -36,7 +36,8 @@ Remove stamina chat, change to counter
 
 
 [BUG LIST]
-Rhino survival timer
+chest on top of each other
+LOS left after MG 2
 
 
 //DELETE
@@ -44,7 +45,7 @@ Rhino survival timer
 
 //---Controls
 //\Yeebaagooon\Zoo Quest\Test sound.mp3
-int QuickStart = 2;
+int QuickStart = 0;
 int Stage = 0;
 string MapVersion = "Test Version";
 string MapName = "Zoo Quest.xs";

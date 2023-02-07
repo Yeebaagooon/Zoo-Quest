@@ -352,6 +352,7 @@ void CreateChest(int x = 1, int z = 1, int heading = -1){
 		trQuestVarSetFromRand("temph",0,360,true);
 		heading = 1*trQuestVarGet("temph");
 	}
+	int ChestQuery = 0;
 	trQuestVarSet("temp",trGetNextUnitScenarioNameNumber());
 	UnitCreate(0, "Dwarf", x*2, z*2, heading);
 	trUnitSelectByQV("temp");

@@ -110,6 +110,9 @@ inactive
 {
 	if (trTime() > cActivationTime + 4) {
 		PoachersTarget = xsMax(PlayersActive*3,5);
+		if(PoachersDead > PoachersTarget){
+			PoachersTarget = PoachersDead+cNumberNonGaiaPlayers;
+		}
 		trSetCounterDisplay("<color={PlayerColor(2)}>Poachers killed: "+PoachersDead+"/" + PoachersTarget);
 		ActPart = 2;
 		trOverlayText("Poachers Spawning...", 5.0,-1,-1,600);
@@ -196,7 +199,7 @@ inactive
 			xSetPointer(dPlayerData, p);
 			if(trPlayerUnitCountSpecific(p, ""+RhinoProto) == 1){
 				trUnitSelectByQV("P"+p+"Unit");
-				trDamageUnit(1.5*timediff);
+				trDamageUnit(1.49999*timediff);
 			}
 			if(xGetBool(dPlayerData, xCharge) == true){
 				//Charge effects
@@ -331,12 +334,14 @@ inactive
 				xsEnableRule("RhinoMinigameEnd");
 			}
 		}
-		if(1*trQuestVarGet("RhinoPoachTime") < trTime()){
-			trQuestVarModify("RhinoPoachTime", "+", 30);
-			trQuestVarModify("RhinoSurvival", "+", 1);
-			if(1*trQuestVarGet("RhinoSurvival") == 4){
-				ColouredIconChat("0,0.8,0.1", "icons\improvement skin of the rhino icon", "Survival bonus!");
-				playSound("tributereceived.wav");
+		if(ActPart == 3){
+			if(1*trQuestVarGet("RhinoPoachTime") < trTime()){
+				trQuestVarModify("RhinoPoachTime", "+", 30);
+				trQuestVarModify("RhinoSurvival", "+", 1);
+				if(1*trQuestVarGet("RhinoSurvival") == 4){
+					ColouredIconChat("0,0.8,0.1", "icons\improvement skin of the rhino icon", "Survival bonus!");
+					playSound("tributereceived.wav");
+				}
 			}
 		}
 		
@@ -543,7 +548,7 @@ highFrequency
 	else{
 		trMessageSetText("Yeet all " + xGetDatabaseCount(dTemp) + " villagers into the pit. Players granted extra stamina.", 8000);
 		trCounterAddTime("cdrhinominigame", 90,0,"<color={PlayerColor(0)}>Minigame time remaining", 35);
-		playSound("xcinematics\intro\music.mp3");
+		playSound("\xpack\xcinematics\intro\music.mp3");
 	}
 	xsDisableSelf();
 }

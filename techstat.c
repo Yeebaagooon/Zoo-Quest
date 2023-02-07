@@ -86,6 +86,8 @@ highFrequency
 		modifyProtounitAbsolute(""+RhinoDrinkProto, p, 0, 10);
 		modifyProtounitAbsolute(""+RhinoDrinkProto, p, 1, 0);
 		modifyProtounitAbsolute(""+RhinoDrinkProto, p, 2, 10);
+		modifyProtounitAbsolute(""+RhinoDrinkProto, p, 14, 0);
+		modifyProtounitAbsolute(""+RhinoDrinkProto, p, 15, 0);
 		modifyProtounitAbsolute(""+RhinoProto, p, 1, xGetFloat(dPlayerData, xRhinoWalk));
 		modifyProtounitAbsolute(""+RhinoProto, p, 2, 22);
 		for(a = 24; <= 29){

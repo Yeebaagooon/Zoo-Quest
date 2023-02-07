@@ -452,7 +452,9 @@ inactive
 				
 				trUnitSelectByQV("P"+p+"Unit");
 				trImmediateUnitGarrison(""+xGetInt(dPlayerData, xTarget));
-				trUnitChangeProtoUnit("Dwarf");
+				xUnitSelect(dPlayerData, xTarget);
+				trUnitEjectContained();
+				//trUnitChangeProtoUnit("Dwarf");
 				
 				xUnitSelect(dPlayerData, xTarget);
 				trUnitDestroy();
