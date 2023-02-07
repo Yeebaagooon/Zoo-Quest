@@ -1,4 +1,4 @@
-void CreateDot(int x = 0, int z = 0){
+void CreateDot(int x = 0, int z = 0, bool bonus = false){
 	int temp = trGetNextUnitScenarioNameNumber();
 	UnitCreate(0, "Dwarf", x, z, 0);
 	trUnitSelectClear();
@@ -8,6 +8,32 @@ void CreateDot(int x = 0, int z = 0){
 	xAddDatabaseBlock(dDots, true);
 	xSetInt(dDots, xUnitID, temp);
 	xSetInt(dDots, xPercent, z-20);
+	if(bonus == true){
+		temp = trGetNextUnitScenarioNameNumber();
+		UnitCreate(0, "Dwarf", x, z, 0);
+		trUnitSelectClear();
+		trUnitSelect(""+temp);
+		trUnitChangeProtoUnit("Spy Eye");
+		trUnitSelectClear();
+		trQuestVarModify("Bonus", "+", 1);
+		trQuestVarSet("Bonus"+1*trQuestVarGet("Bonus")+"", temp);
+		trUnitSelect(""+temp);
+		if(1*trQuestVarGet("Bonus") == 2){
+			trMutateSelected(kbGetProtoUnitID("Acid Pool"));
+			trUnitSelectClear();
+			trUnitSelect(""+temp);
+			trUnitSetAnimationPath("0,1,1,0,0,0,0");
+		}
+		if(1*trQuestVarGet("Bonus") == 3){
+			trMutateSelected(kbGetProtoUnitID("Hero Birth"));
+			trUnitSelectClear();
+			trUnitSelect(""+temp);
+			trUnitSetAnimationPath("0,1,0,0,0,0,0");
+		}
+		if(1*trQuestVarGet("Bonus") == 1){
+			trMutateSelected(kbGetProtoUnitID("Poison SFX"));
+		}
+	}
 }
 
 void SetPercentRequired(int pe = 0){
@@ -206,8 +232,27 @@ inactive
 	trUIFadeToColor(0,0,0,1000,1,false);
 	PaintAtlantisArea(30,10,32,61,5,4);
 	trCameraCut(vector(171.726913,123.743729,70.647377), vector(-0.707094,-0.707106,0.004380), vector(-0.707094,0.707106,0.004380), vector(0.006194,0.000000,0.999981));
+	trQuestVarSet("Bonus", 0);
+	trQuestVarSet("Bonus1", 0);
+	trQuestVarSet("Bonus2", 0);
+	trQuestVarSet("Bonus3", 0);
+	if(Stage == 1){
+		trQuestVarSet("ScoreBonus1", 60);
+		trQuestVarSet("ScoreBonus2", 80);
+		trQuestVarSet("ScoreBonus3", 100);
+	}
+	if(Stage == 2){
+		trQuestVarSet("ScoreBonus1", 60);
+		trQuestVarSet("ScoreBonus2", 80);
+		trQuestVarSet("ScoreBonus3", 100);
+	}
 	for(z=1 ; < 51){
-		CreateDot(63,20+z*2);
+		if((z == 1*trQuestVarGet("ScoreBonus1")/2) || (z == 1*trQuestVarGet("ScoreBonus2")/2) || (z == 1*trQuestVarGet("ScoreBonus3")/2)){
+			CreateDot(63,20+z*2, true);
+		}
+		else{
+			CreateDot(63,20+z*2, false);
+		}
 	}
 	SetPercentRequired(StageRequirement);
 	trQuestVarSet("ScoreCheck", 0);
@@ -218,6 +263,7 @@ rule DoScore
 highFrequency
 inactive
 {
+	StageScore = 100;
 	int TimerTile = trTimeMS();
 	if(TimerTile > GlobalTimerMS){
 		GlobalTimerMS = trTimeMS()+70;
@@ -270,8 +316,7 @@ highFrequency
 	xsDisableSelf();
 	if(StageScore >= StageRequirement){
 		characterDialog(ActName(Stage) + " - Act Passed", ""+StageScore + " percent complete", ActIcon(Stage));
-		xsEnableRule("PassAct" + Stage);
-		Stage = Stage+1;
+		xsEnableRule("PassAct");
 	}
 	else{
 		characterDialog(ActName(Stage) + " - Act Failed", ""+StageScore + "/" + StageRequirement + " percent complete", ActIcon(Stage));
@@ -331,28 +376,100 @@ inactive
 	}
 }
 
-rule PassAct1
+rule PassAct
 highFrequency
 inactive
 {
 	if (trTime() > cActivationTime + 3) {
 		xsDisableSelf();
-		trLetterBox(false);
-		xsEnableRule("TutorialTerrainRhino");
-		xsEnableRule("ResetInts");
+		xsEnableRule("CheckBonuses");
 	}
 }
 
-rule PassAct2
+rule StopBonusCheck
+highFrequency
+inactive
+{
+	xsEnableRule("ResetInts");
+	characterDialog(" ", " ", "");
+	Stage = Stage+1;
+	xsDisableSelf();
+	if(Stage == 2){
+		xsEnableRule("TutorialTerrainRhino");
+	}
+	if(Stage == 3){
+		xsEnableRule("TempEndGame");
+	}
+	trLetterBox(false);
+}
+
+
+rule CheckBonuses
+highFrequency
+inactive
+{
+	if(StageScore >= 1*trQuestVarGet("ScoreBonus1")){
+		trUnitSelectByQV("Bonus1");
+		trUnitChangeProtoUnit("Ragnorok SFX");
+		characterDialog("Bonus unlocked!", "+4 hitpoints next stage", ActIcon(Stage));
+		xsEnableRule("CheckBonuses2");
+		for(p = 1 ; < cNumberNonGaiaPlayers){
+			trModifyProtounit(""+RhinoProto, p, 0, 4);
+		}
+	}
+	else{
+		xsEnableRule("StopBonusCheck");
+	}
+	xsDisableSelf();
+}
+
+rule CheckBonuses2
 highFrequency
 inactive
 {
 	if (trTime() > cActivationTime + 3) {
+		if(StageScore >= 1*trQuestVarGet("ScoreBonus2")){
+			trUnitSelectByQV("Bonus2");
+			trUnitChangeProtoUnit("Ragnorok SFX");
+			characterDialog("Bonus unlocked!", "+1 base speed next stage", ActIcon(Stage));
+			xsEnableRule("CheckBonuses3");
+			for(p = 1 ; < cNumberNonGaiaPlayers){
+				xSetPointer(dPlayerData, p);
+				xSetFloat(dPlayerData, xRhinoWalk, xGetFloat(dPlayerData, xRhinoWalk)+1);
+			}
+		}
+		else{
+			xsEnableRule("StopBonusCheck");
+		}
 		xsDisableSelf();
-		trLetterBox(false);
-		xsEnableRule("TempEndGame");
-		xsEnableRule("ResetInts");
-		QuickStart = 0;
+	}
+}
+
+rule CheckBonuses3
+highFrequency
+inactive
+{
+	if (trTime() > cActivationTime + 3) {
+		if(StageScore >= 100){
+			trUnitSelectByQV("Bonus3");
+			trUnitChangeProtoUnit("Ragnorok SFX");
+			characterDialog("Bonus unlocked!", "persistent", ActIcon(Stage));
+			for(p = 1 ; < cNumberNonGaiaPlayers){
+				//trModifyProtounit(""+RhinoProto, p, 0, 4);
+			}
+		}
+		xsEnableRule("StopBonusCheck");
+		xsDisableSelf();
+	}
+}
+
+rule BonusDelay
+highFrequency
+inactive
+{
+	if (trTime() > cActivationTime + 4) {
+		xsEnableRule("StopBonusCheck");
+		xsDisableSelf();
 	}
 }
 

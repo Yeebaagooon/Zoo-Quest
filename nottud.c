@@ -1489,7 +1489,7 @@ void createMarsh(){
 	}
 	LeaveTerrain = "IceA";
 	Stage = 2;
-	StageRequirement = 60;
+	StageRequirement = 50;
 	StageScore = 0;
 	PlayersDead = 0;
 	EndPoint = tileForEnd;

@@ -404,7 +404,7 @@ rule RhinoMinigameDetect
 highFrequency
 inactive
 {
-	xsSetContextPlayer(0);
+	//xsSetContextPlayer(0);
 	vector pos = vector(0,0,0);
 	vector minigame = kbGetBlockPosition(""+1*trQuestVarGet("MinigameStartID"));
 	for(p=1 ; < cNumberNonGaiaPlayers){
@@ -429,6 +429,8 @@ inactive
 				xUnitSelect(dPoachers, xUnitID);
 				trUnitChangeProtoUnit("Cinematic Block");
 			}
+			trMusicStop();
+			playSound("\cinematics\22_in\music 2.mp3");
 			xsDisableSelf();
 		}
 	}
@@ -486,6 +488,8 @@ highFrequency
 				PlayersMinigaming = PlayersMinigaming+1;
 				//destroy and recreate
 				trUnitSelectByQV("P"+p+"Unit");
+				trUnitChangeInArea(p,p,""+RhinoProto, "Rocket", 999);
+				trUnitSelectByQV("P"+p+"Unit");
 				trUnitChangeProtoUnit("Ragnorok SFX");
 				trUnitSelectByQV("P"+p+"Unit");
 				trUnitDestroy();
@@ -534,11 +538,12 @@ highFrequency
 			trUnitChangeProtoUnit("Slinger");
 		}
 		InMinigame = false;
+		xsEnableRule("PlayMusic");
 	}
 	else{
 		trMessageSetText("Yeet all " + xGetDatabaseCount(dTemp) + " villagers into the pit. Players granted extra stamina.", 8000);
 		trCounterAddTime("cdrhinominigame", 90,0,"<color={PlayerColor(0)}>Minigame time remaining", 35);
-		debugLog("xGetBool(dPlayerData, xStopDeath, 1)");
+		playSound("xcinematics\intro\music.mp3");
 	}
 	xsDisableSelf();
 }
@@ -585,6 +590,8 @@ highFrequency
 		if((xGetInt(dPlayerData, xTeleportDue) == 1) && (xGetBool(dPlayerData, xPlayerActive) == true)){
 			temp = xGetVector(dPlayerData, xVectorHold);
 			trUnitSelectByQV("P"+p+"Unit");
+			trUnitChangeInArea(p,p,""+RhinoProto, "Rocket", 999);
+			trUnitSelectByQV("P"+p+"Unit");
 			trUnitChangeProtoUnit("Ragnorok SFX");
 			trUnitSelectByQV("P"+p+"Unit");
 			trUnitDestroy();
@@ -616,6 +623,9 @@ highFrequency
 	trUnitSelectByQV("PitFire");
 	trUnitChangeProtoUnit("Heavenlight");
 	xsDisableSelf();
+	trFadeOutAllSounds(3);
+	trFadeOutMusic(3);
+	xsEnableRule("PlayMusic");
 	InMinigame = false;
 	PlayersMinigaming = 0;
 	trCounterAbort("cdrhinominigame");

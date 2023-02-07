@@ -149,7 +149,7 @@ int npcDiag(int npc = 0, int dialog = 0) {
 				}
 				case 2:
 				{
-					uiMessageBox("Press 'W' to drink when you are near a water source.");
+					uiMessageBox("Press 'W' to drink when you are near water (can be map water).");
 				}
 				case 3:
 				{

@@ -263,7 +263,7 @@ highFrequency
 inactive
 {
 	if (trTime() > cActivationTime + 5) {
-		trCounterAddTime("cdtutorialtimeout", 11, 0, "<color={PlayerColor(0)}>Tutorial timeout", 33);
+		trCounterAddTime("cdtutorialtimeout", 9+Stage*2, 0, "<color={PlayerColor(0)}>Tutorial timeout", 33);
 		xsDisableSelf();
 	}
 }

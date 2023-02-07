@@ -55,7 +55,6 @@ inactive
 					}
 				}
 				if(Stage == 2){
-					UnitCreate(p, ""+RhinoProto, 2*xsVectorGetX(StageVector)+7,2*xsVectorGetZ(StageVector)+10, 0);
 					CreateRhino(p, 2*xsVectorGetX(StageVector)+2,2*xsVectorGetZ(StageVector)+2, 0);
 					if(trCurrentPlayer() == p){
 						uiZoomToProto(""+RhinoProto);

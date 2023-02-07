@@ -123,9 +123,11 @@ highFrequency
 inactive
 {
 	if (trTime() > cActivationTime + 3) {
-		trTechGodPower(1, "Vision", 111);
-		trTechGodPower(1, "Sandstorm", 111);
-		modifyProtounitAbsolute(""+GazelleProto, 1, 1, 20);
+		if(QuickStart != 0){
+			trTechGodPower(1, "Vision", 111);
+			trTechGodPower(1, "Sandstorm", 111);
+			modifyProtounitAbsolute(""+GazelleProto, 1, 1, 20);
+		}
 		xsDisableSelf();
 		trDelayedRuleActivation("ResetBlackmap");
 	}
@@ -391,7 +393,7 @@ rule DeerMinigameDetect
 highFrequency
 inactive
 {
-	xsSetContextPlayer(0);
+	//xsSetContextPlayer(0);
 	vector pos = vector(0,0,0);
 	vector minigame = kbGetBlockPosition(""+1*trQuestVarGet("MinigameStartID"));
 	for(p=1 ; < cNumberNonGaiaPlayers){
@@ -416,6 +418,8 @@ inactive
 				xUnitSelect(dPoachers, xUnitID);
 				trUnitChangeProtoUnit("Cinematic Block");
 			}
+			trMusicStop();
+			playSound("\cinematics\22_in\music 2.mp3");
 			xsDisableSelf();
 		}
 	}
@@ -509,7 +513,11 @@ inactive
 		trUnitSelectByQV("MinigameStartID");
 		trUnitDestroy();
 		trMessageSetText("Nobody was on the white tiles. Minigame cancelled.", 5000);
+		xsEnableRule("PlayMusic");
 		InMinigame = false;
+	}
+	if(PlayersMinigaming > 0){
+		playSound("\cinematics\31_out\music.mp3");
 	}
 	xsDisableSelf();
 }
@@ -571,6 +579,9 @@ highFrequency
 		trUnitChangeProtoUnit("Forest Fire SFX");
 		xsDisableSelf();
 		InMinigame = false;
+		trFadeOutAllSounds(3);
+		trFadeOutMusic(3);
+		xsEnableRule("PlayMusic");
 	}
 }
 

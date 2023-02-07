@@ -81,6 +81,7 @@ inactive
 			CreateRhino(p,14,16*p,90);
 			xSetPointer(dPlayerData, xPlayerUnitID);
 			xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
+			modifyProtounitAbsolute(""+RhinoProto, p, 1, xGetFloat(dPlayerData, xRhinoWalk));
 			if(trCurrentPlayer() == p){
 				trCounterAddTime("cdtutorial", -100, -200, "<color={PlayerColor("+p+")}>Press 'Q' to start/stop charge.", -1);
 			}
@@ -130,21 +131,43 @@ inactive
 		}
 		if(trPlayerResourceCount(p, "Wood") > 0){
 			trPlayerGrantResources(p, "Wood", -100000);
-			height = xsVectorGetY(kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
-			if(height > 0.31){
-				ColouredIconChatToPlayer(p, "1,0.2,0.2", "icons\editor edit water", "Height needs to be less than 0!<color=0,1,1> " + height);
-				if(trCurrentPlayer() == p){
-					playSound("cantdothat.wav");
+			if(TutorialMode == false){
+				height = xsVectorGetY(kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
+				if(height > 0.31){
+					ColouredIconChatToPlayer(p, "1,0.2,0.2", "icons\editor edit water", "Height needs to be less than 0!<color=0,1,1> " + height);
+					if(trCurrentPlayer() == p){
+						playSound("cantdothat.wav");
+					}
+				}
+				else{
+					trUnitSelectByQV("P"+p+"Unit");
+					trMutateSelected(kbGetProtoUnitID(""+RhinoDrinkProto));
+					trQuestVarSet("P"+p+"Drink", trTimeMS()+1000*xGetFloat(dPlayerData, xRhinoDrinkTime));
+					if(trCurrentPlayer() == p){
+						trCounterAddTime("rhinodrinker" +p, 1*xGetFloat(dPlayerData, xRhinoDrinkTime),0,"<color={PlayerColor("+BlueText()+")}>Drinking", -1);
+						playSound("shipdeathsplash.wav");
+						playSound("geyserbirth.wav");
+					}
 				}
 			}
-			else{
-				trUnitSelectByQV("P"+p+"Unit");
-				trMutateSelected(kbGetProtoUnitID(""+RhinoDrinkProto));
-				trQuestVarSet("P"+p+"Drink", trTimeMS()+1000*xGetFloat(dPlayerData, xRhinoDrinkTime));
-				if(trCurrentPlayer() == p){
-					trCounterAddTime("rhinodrinker" +p, 1*xGetFloat(dPlayerData, xRhinoDrinkTime),0,"<color={PlayerColor("+BlueText()+")}>Drinking", -1);
-					playSound("shipdeathsplash.wav");
-					playSound("geyserbirth.wav");
+			else if(TutorialMode == true){
+				//tutorial W (68)
+				height = xsVectorGetX(kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
+				if((height < 70) && (height > 66)){
+					//yes
+					trQuestVarSet("P"+p+"FountainMsg", 2);
+					if(trCurrentPlayer() == p){
+						trCounterAddTime("rhinodrinker" +p, 2,0,"<color={PlayerColor("+BlueText()+")}>Drinking", -1);
+						playSound("shipdeathsplash.wav");
+						playSound("geyserbirth.wav");
+					}
+				}
+				else{
+					//no
+					ColouredIconChatToPlayer(p, "1,0.2,0.2", "icons\editor edit water", "Not close enough to fountain!");
+					if(trCurrentPlayer() == p){
+						playSound("cantdothat.wav");
+					}
 				}
 			}
 		}
@@ -160,15 +183,16 @@ inactive
 				trUnitSelect(""+temp);
 				trUnitChangeProtoUnit("Dust Medium");
 				trUnitSelectByQV("P"+p+"Unit");
-				trDamageUnitsInArea(cNumberNonGaiaPlayers, "Fence Wood", 4, 50);
+				trDamageUnitsInArea(cNumberNonGaiaPlayers, "Fence Wood", 6, 50);
 				trDamageUnitsInArea(cNumberNonGaiaPlayers, "Slinger", 2, 50);
+				trDamageUnitsInArea(cNumberNonGaiaPlayers, "Chu Ko Nu", 2, 50);
 			}
 			if(xGetFloat(dPlayerData, xRhinoChargeTime) < 0){
 				ToggleCharge(p);
 				ColouredIconChatToPlayer(p, "1,0,0", "icons\icon object stat hit point", "Out of stamina!");
 				trQuestVarModify("P"+p+"StaminaWarn", "+", 1);
 				if(1*trQuestVarGet("P"+p+"StaminaWarn") < 3){
-					ColouredIconChatToPlayer(p, "1,1,0", "icons\editor river", "Use 'W' when near water to drink and replenish.");
+					ColouredIconChatToPlayer(p, "1,1,0", "icons\editor river", "Use 'W' when near water to drink and replenish stamina.");
 				}
 				if(trCurrentPlayer() == p){
 					playSound("cantdothat.wav");
@@ -206,6 +230,7 @@ inactive
 		xsEnableRule("BuildRhinoArea");
 		trClearCounterDisplay();
 		trCounterAbort("cdtutorial");
+		trCounterAbort("cdtutoriala");
 		trCounterAbort("cdtutorialtimeout");
 		trQuestVarSet("PlayersDoneTutorial", 0);
 		trLetterBox(true);
@@ -230,7 +255,7 @@ inactive
 		for(p=1 ; < cNumberNonGaiaPlayers){
 			xSetPointer(dPlayerData, p);
 			trVectorQuestVarSet("P"+p+"Pos", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
-			if((playerIsPlaying(p) == false) && (xGetBool(dPlayerData, xPlayerActive) == true)){
+			/*if((playerIsPlaying(p) == false) && (xGetBool(dPlayerData, xPlayerActive) == true)){
 				trUnitSelectByQV("P"+p+"Unit");
 				trUnitChangeProtoUnit("Ragnorok SFX");
 				trUnitSelectByQV("P"+p+"Unit");
@@ -250,15 +275,16 @@ inactive
 						xFreeDatabaseBlock(dTemp);
 					}
 				}
-			}
+			}*/
 			//through wall
 			if((trVectorQuestVarGetX("P"+p+"Pos") > 58) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0) && (1*trQuestVarGet("P"+p+"FountainMsg") == 0)){
 				if(trCurrentPlayer() == p){
 					startNPCDialog(7);
 					trQuestVarSet("P"+p+"FountainMsg", 1);
+					trCounterAddTime("cdtutoriala", -100, -200, "<color={PlayerColor("+p+")}>Press 'W' to drink.", -1);
 				}
 			}
-			if((trVectorQuestVarGetX("P"+p+"Pos") > 68) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0)){
+			if((1*trQuestVarGet("P"+p+"FountainMsg") == 2) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0)){
 				trUnitSelectByQV("P"+p+"Unit");
 				trUnitChangeProtoUnit("Ragnorok SFX");
 				trUnitSelectByQV("P"+p+"Unit");
@@ -269,7 +295,7 @@ inactive
 				trQuestVarSet("P"+p+"DoneTutorial", 1);
 				trQuestVarModify("PlayersDoneTutorial", "+", 1);
 				temp = 1*trQuestVarGet("PlayersDoneTutorial");
-				trPaintTerrain(5,((p*8)-2),30,((p*8+4)-2),CliffType,CliffSubType);
+				trPaintTerrain(5,((p*8)-2),40,((p*8+4)-2),CliffType,CliffSubType);
 				trUnitSelectClear();
 				for(a = xGetDatabaseCount(dTemp) ; > 0){
 					xDatabaseNext(dTemp);
@@ -288,6 +314,7 @@ inactive
 				if(trCurrentPlayer() == p){
 					playSound("ageadvance.wav");
 					trCounterAbort("cdtutorial");
+					trCounterAbort("cdtutoriala");
 				}
 			}
 			trUnitSelectByQV("P"+p+"Unit");
