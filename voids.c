@@ -715,7 +715,7 @@ void UnitCreate(int xplayerx = 0, string protounitname = "", int xx = 0, int zz 
 	trArmyDispatch(""+xplayerx+",0", "Dwarf", 1, xx, 0, zz, xheadingx, true);
 	trUnitSelectClear();
 	trUnitSelect(""+1*trQuestVarGet("CreatingU"));
-	trMutateSelected(kbGetProtoUnitID(""+protounitname+""));
+	trUnitChangeProtoUnit(protounitname);
 }
 
 void FloatingUnit(string protounitname="", int xx = 0, int yy = 0, int zz = 0, int xheadingx = 0,

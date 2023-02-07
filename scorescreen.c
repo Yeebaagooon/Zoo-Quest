@@ -263,7 +263,8 @@ rule DoScore
 highFrequency
 inactive
 {
-	StageScore = 100;
+	//[SCORE OVERRIDE FOR TESTING]
+	//StageScore = 100;
 	int TimerTile = trTimeMS();
 	if(TimerTile > GlobalTimerMS){
 		GlobalTimerMS = trTimeMS()+70;
@@ -390,6 +391,7 @@ rule StopBonusCheck
 highFrequency
 inactive
 {
+	//FROM HERE WE START A NEW STAGE
 	xsEnableRule("ResetInts");
 	characterDialog(" ", " ", "");
 	Stage = Stage+1;
@@ -401,6 +403,8 @@ inactive
 		xsEnableRule("TempEndGame");
 	}
 	trLetterBox(false);
+	trFadeOutAllSounds(3);
+	trFadeOutMusic(3);
 }
 
 
@@ -411,10 +415,21 @@ inactive
 	if(StageScore >= 1*trQuestVarGet("ScoreBonus1")){
 		trUnitSelectByQV("Bonus1");
 		trUnitChangeProtoUnit("Ragnorok SFX");
-		characterDialog("Bonus unlocked!", "+4 hitpoints next stage", ActIcon(Stage));
+		int temp = trGetNextUnitScenarioNameNumber();
+		UnitCreate(0, "Dwarf", 62, 20+1*trQuestVarGet("ScoreBonus1"), 0);
+		trUnitSelectClear();
+		trUnitSelect(""+temp);
+		trUnitChangeProtoUnit("Kronny Birth");
 		xsEnableRule("CheckBonuses2");
-		for(p = 1 ; < cNumberNonGaiaPlayers){
-			trModifyProtounit(""+RhinoProto, p, 0, 4);
+		playSound("plentybirth.wav");
+		if(Stage == 1){
+			characterDialog("Bonus unlocked!", "+4 hitpoints next stage", ActIcon(Stage));
+			for(p = 1 ; < cNumberNonGaiaPlayers){
+				trModifyProtounit(""+RhinoProto, p, 0, 4);
+			}
+		}
+		if(Stage == 2){
+			characterDialog("Bonus unlocked!", "Rhino bonus 1", ActIcon(Stage));
 		}
 	}
 	else{
@@ -431,8 +446,19 @@ inactive
 		if(StageScore >= 1*trQuestVarGet("ScoreBonus2")){
 			trUnitSelectByQV("Bonus2");
 			trUnitChangeProtoUnit("Ragnorok SFX");
-			characterDialog("Bonus unlocked!", "+1 base speed next stage", ActIcon(Stage));
+			int temp = trGetNextUnitScenarioNameNumber();
+			UnitCreate(0, "Dwarf", 62, 20+1*trQuestVarGet("ScoreBonus2"), 0);
+			trUnitSelectClear();
+			trUnitSelect(""+temp);
+			trUnitChangeProtoUnit("Kronny Birth");
 			xsEnableRule("CheckBonuses3");
+			playSound("plentybirth.wav");
+			if(Stage == 1){
+				characterDialog("Bonus unlocked!", "+1 base speed next stage", ActIcon(Stage));
+			}
+			if(Stage == 2){
+				characterDialog("Bonus unlocked!", "Rhino bonus 2", ActIcon(Stage));
+			}
 			for(p = 1 ; < cNumberNonGaiaPlayers){
 				xSetPointer(dPlayerData, p);
 				xSetFloat(dPlayerData, xRhinoWalk, xGetFloat(dPlayerData, xRhinoWalk)+1);
@@ -453,12 +479,23 @@ inactive
 		if(StageScore >= 100){
 			trUnitSelectByQV("Bonus3");
 			trUnitChangeProtoUnit("Ragnorok SFX");
-			characterDialog("Bonus unlocked!", "persistent", ActIcon(Stage));
-			for(p = 1 ; < cNumberNonGaiaPlayers){
-				//trModifyProtounit(""+RhinoProto, p, 0, 4);
+			int temp = trGetNextUnitScenarioNameNumber();
+			UnitCreate(0, "Dwarf", 62, 20+1*trQuestVarGet("ScoreBonus3"), 0);
+			trUnitSelectClear();
+			trUnitSelect(""+temp);
+			trUnitChangeProtoUnit("Kronny Birth");
+			xsEnableRule("BonusDelay");
+			if(Stage == 1){
+				characterDialog("Bonus unlocked!", "deer max bonus", ActIcon(Stage));
 			}
+			if(Stage == 2){
+				characterDialog("Bonus unlocked!", "rhino max bonus", ActIcon(Stage));
+			}
+			playSound("plentybirth.wav");
 		}
-		xsEnableRule("StopBonusCheck");
+		else{
+			xsEnableRule("StopBonusCheck");
+		}
 		xsDisableSelf();
 	}
 }

@@ -39,11 +39,12 @@ inactive
 				xSetInt(dPlayerData, xTeleportDue, 1);
 				trUnitSelectByQV("P"+p+"Unit");
 				trUnitDestroy();
-				trUnitSelectClear();
-				trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
-				trUnitChangeProtoUnit("Hero Death");
-				trQuestVarSet("P"+p+"Unit", trGetNextUnitScenarioNameNumber());
+				xUnitSelect(dPlayerData, xSpyID);
+				trUnitDestroy();
+				xUnitSelect(dPlayerData, xPlayerUnitID);
+				trUnitDestroy();
 				if(Stage == 1){
+					trQuestVarSet("P"+p+"Unit", trGetNextUnitScenarioNameNumber());
 					UnitCreate(p, ""+GazelleProto, 2*xsVectorGetX(StageVector)+7,2*xsVectorGetZ(StageVector)+10, 0);
 					trUnitSelectByQV("P"+p+"Unit");
 					trSetSelectedScale(0,1,0);
@@ -55,6 +56,7 @@ inactive
 					}
 				}
 				if(Stage == 2){
+					trQuestVarSet("P"+p+"Unit", trGetNextUnitScenarioNameNumber());
 					CreateRhino(p, 2*xsVectorGetX(StageVector)+2,2*xsVectorGetZ(StageVector)+2, 0);
 					if(trCurrentPlayer() == p){
 						uiZoomToProto(""+RhinoProto);

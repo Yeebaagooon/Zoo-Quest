@@ -95,20 +95,12 @@ void PoacherKillTrack(int count = 5){
 			SpawnRhinoPoacher(5);
 			trMessageSetText("You must now find the extraction zone. Take care, advanced poachers are coming!", 10000);
 			ActPart = 3;
-			trQuestVarSet("RhinoPoachTime", trTime()+30);
+			trQuestVarSet("RhinoPoachTime", (trTime()+30));
 			ColouredIconChat("0,0.8,0.1", "icons\improvement skin of the rhino icon", "Survive for two minutes for bonus points.");
 		}
 	}
 	if(ActPart == 3){
 		trSetCounterDisplay("<color={PlayerColor(3)}>Poachers killed: "+PoachersDead);
-		if(1*trQuestVarGet("RhinoPoachTime") > trTime()){
-			trQuestVarModify("RhinoPoachTime", "+", 30);
-			trQuestVarModify("RhinoSurvival", "+", 1);
-			if(1*trQuestVarGet("RhinoSurvival") == 4){
-				ColouredIconChat("0,0.8,0.1", "icons\improvement skin of the rhino icon", "Survival bonus!");
-				playSound("tributereceived.wav");
-			}
-		}
 	}
 }
 
@@ -117,7 +109,7 @@ highFrequency
 inactive
 {
 	if (trTime() > cActivationTime + 4) {
-		PoachersTarget = xsMax(PlayersActive*2,5);
+		PoachersTarget = xsMax(PlayersActive*3,5);
 		trSetCounterDisplay("<color={PlayerColor(2)}>Poachers killed: "+PoachersDead+"/" + PoachersTarget);
 		ActPart = 2;
 		trOverlayText("Poachers Spawning...", 5.0,-1,-1,600);
@@ -163,18 +155,18 @@ inactive
 				else{
 					trQuestVarSetFromRand("temp", 10, 30);
 				}
-				if(ActPart == 3){
-					trQuestVarSetFromRand("temp", 15, 45);
-					if(1*trQuestVarGet("temp") < 35){
-						SpawnRhinoPoacher(2);
-					}
-					else{
-						SpawnRhinoSuperPoacher(1);
-					}
+			}
+			if(ActPart == 3){
+				trQuestVarSetFromRand("temp", 10, 30);
+				if(1*trQuestVarGet("temp") < 22){
+					SpawnRhinoPoacher(2);
+				}
+				else{
+					SpawnRhinoSuperPoacher(1);
 				}
 			}
-			trQuestVarModify("NextPoacherSpawn", "+", 1*trQuestVarGet("temp"));
 		}
+		trQuestVarModify("NextPoacherSpawn", "+", 1*trQuestVarGet("temp"));
 	}
 }
 
@@ -337,6 +329,14 @@ inactive
 			}
 			if(xGetDatabaseCount(dTemp) == 0){
 				xsEnableRule("RhinoMinigameEnd");
+			}
+		}
+		if(1*trQuestVarGet("RhinoPoachTime") < trTime()){
+			trQuestVarModify("RhinoPoachTime", "+", 30);
+			trQuestVarModify("RhinoSurvival", "+", 1);
+			if(1*trQuestVarGet("RhinoSurvival") == 4){
+				ColouredIconChat("0,0.8,0.1", "icons\improvement skin of the rhino icon", "Survival bonus!");
+				playSound("tributereceived.wav");
 			}
 		}
 		
