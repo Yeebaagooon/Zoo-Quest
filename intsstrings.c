@@ -38,6 +38,7 @@ Remove stamina chat, change to counter
 [BUG LIST]
 chest on top of each other
 LOS left after MG 2
+DDestroy me not in  an eternal loop
 
 
 //DELETE
@@ -45,7 +46,7 @@ LOS left after MG 2
 
 //---Controls
 //\Yeebaagooon\Zoo Quest\Test sound.mp3
-int QuickStart = 0;
+int QuickStart = 3;
 int Stage = 0;
 string MapVersion = "Test Version";
 string MapName = "Zoo Quest.xs";
@@ -55,6 +56,7 @@ string RhinoDrinkProto = "Physician";
 vector StageVector = vector(0,0,0);
 vector EndPoint = vector(0,0,0);
 string LeaveTerrain = "";
+string GoatProto = "Hero Greek Heracles";
 
 //EVENTS
 const int EVENT_BUILD_HOUSE = 28;
@@ -119,6 +121,7 @@ int xSecondSpy = 0;
 int xRhinoDrinkTime = 0;
 int xRhinoChargeTime = 0;
 int xRhinoChargeTimeMax = 0;
+int xGoatTarget = 0;
 
 int dDestroyMe = 0;
 int xDestroyName = 0;
@@ -153,6 +156,7 @@ highFrequency
 	xRhinoDrinkTime = xInitAddFloat(dPlayerData, "drink time", 5);
 	xRhinoChargeTime = xInitAddFloat(dPlayerData, "rhino charge", 15);
 	xRhinoChargeTimeMax = xInitAddInt(dPlayerData, "rhino charge max", 15);
+	xGoatTarget = xInitAddVector(dPlayerData, "goat target", vector(0,0,0));
 	xsDisableSelf();
 	for(p=1; <= cNumberNonGaiaPlayers) {
 		xAddDatabaseBlock(dPlayerData, true);

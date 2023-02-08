@@ -42,6 +42,11 @@ highFrequency
 			case kbGetProtoUnitID("House"):
 			{
 				// [DEBUG] trPlayerGrantResources(kbUnitGetOwner(id), "Gold", 1);
+				if(Stage == 3){
+					xSetPointer(dPlayerData, kbUnitGetOwner(id));
+					xSetVector(dPlayerData, xGoatTarget, kbGetBlockPosition(""+trGetUnitScenarioNameNumber(id)));
+					debugLog("Vector set");
+				}
 				trUnitSelectClear();
 				trUnitSelectByID(id);
 				trUnitDestroy();

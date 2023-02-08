@@ -267,6 +267,23 @@ void hotkeyAbility(int ability = 0) {
 				}
 			}
 		}
+		if(trPlayerUnitCountSpecific(xGetPointer(dPlayerData), ""+GoatProto) > 0){
+			switch(ability)
+			{
+				case EVENT_BUILD_HOUSE:
+				{
+					uiSetProtoCursor("House", true);
+				}
+				case EVENT_BUILD_GRANARY:
+				{
+					uiSetProtoCursor("Granary", true);
+				}
+				case EVENT_BUILD_STOREHOUSE:
+				{
+					uiSetProtoCursor("Storehouse", true);
+				}
+			}
+		}
 	}
 	xSetPointer(dPlayerData, old);
 }
@@ -335,6 +352,25 @@ void CreateRhino(int p = 1, int x = 1, int z = 1, int heading = 0){
 	trSetSelectedScale(0,1,0);
 	trUnitSelectByQV("P"+p+"Unit");
 	spyEffect(kbGetProtoUnitID("Rhinocerous"), 0, xsVectorSet(dPlayerData,xSpyID,p), vector(1,1,1));
+	//spyEffect(kbGetProtoUnitID("Cinematic Block"), 0, xsVectorSet(dPlayerData,xSecondSpy,p), vector(1,1,1));
+	xSetPointer(dPlayerData, p);
+	xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
+	xSetBool(dPlayerData, xStopDeath, false);
+	/*
+	vector test = kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit"));
+	test = test + HeadingToVector(heading);
+	test = test + HeadingToVector(heading);
+	UnitCreate(p, "Dwarf", xsVectorGetX(test),xsVectorGetZ(test), 0);
+	*/
+}
+
+void CreateGoat(int p = 1, int x = 1, int z = 1, int heading = 0){
+	trQuestVarSet("P"+p+"Unit", trGetNextUnitScenarioNameNumber());
+	UnitCreate(p, ""+GoatProto, x, z, heading);
+	trUnitSelectByQV("P"+p+"Unit");
+	trSetSelectedScale(0,0.3,0);
+	trUnitSelectByQV("P"+p+"Unit");
+	spyEffect(kbGetProtoUnitID("Crowned Crane"), 0, xsVectorSet(dPlayerData,xSpyID,p), vector(1.4,1.4,1.4));
 	//spyEffect(kbGetProtoUnitID("Cinematic Block"), 0, xsVectorSet(dPlayerData,xSecondSpy,p), vector(1,1,1));
 	xSetPointer(dPlayerData, p);
 	xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));

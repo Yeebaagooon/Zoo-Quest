@@ -167,6 +167,9 @@ highFrequency
 		gadgetReal("ShowImageBox-BordersRightTop");
 		gadgetReal("ShowImageBox-CloseButton");
 		//startNPCDialog(1);
+		if(QuickStart == 3){
+			xsEnableRule("TutorialTerrainGoat");
+		}
 		if(QuickStart == 2){
 			xsEnableRule("TutorialTerrainRhino");
 		}

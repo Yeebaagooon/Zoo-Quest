@@ -400,6 +400,9 @@ inactive
 		xsEnableRule("TutorialTerrainRhino");
 	}
 	if(Stage == 3){
+		xsEnableRule("TutorialTerrainGoat");
+	}
+	if(Stage == 4){
 		xsEnableRule("TempEndGame");
 	}
 	trLetterBox(false);
