@@ -42,6 +42,7 @@ inactive
 		trQuestVarSet("PlayersDoneTutorial", 0);
 		for(p=1 ; < cNumberNonGaiaPlayers){
 			trQuestVarSet("P"+p+"DoneTutorial", 0);
+			trQuestVarSet("P"+p+"FountainMsg", 0);
 			trPaintTerrain(5,((p*8)-2),40,((p*8+4)-2),0,15);
 			//trPaintTerrain(7,p*8,7,p*8,0,73); //start sq
 			PaintAtlantisArea(6,p*8-1,8,p*8+1,0,18);  //start sq
@@ -255,7 +256,7 @@ inactive
 		for(p=1 ; < cNumberNonGaiaPlayers){
 			xSetPointer(dPlayerData, p);
 			trVectorQuestVarSet("P"+p+"Pos", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
-			/*if((playerIsPlaying(p) == false) && (xGetBool(dPlayerData, xPlayerActive) == true)){
+			if((playerIsPlaying(p) == false) && (xGetBool(dPlayerData, xPlayerActive) == true)){
 				trUnitSelectByQV("P"+p+"Unit");
 				trUnitChangeProtoUnit("Ragnorok SFX");
 				trUnitSelectByQV("P"+p+"Unit");
@@ -275,7 +276,7 @@ inactive
 						xFreeDatabaseBlock(dTemp);
 					}
 				}
-			}*/
+			}
 			//through wall
 			if((trVectorQuestVarGetX("P"+p+"Pos") > 58) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0) && (1*trQuestVarGet("P"+p+"FountainMsg") == 0)){
 				if(trCurrentPlayer() == p){

@@ -17,37 +17,6 @@ int npcDiag(int npc = 0, int dialog = 0) {
 	int p = 0;
 	switch(npc)
 	{
-		/*
-		case NPC_THANK_YOU_SUBSCRIBER:
-		{
-			switch(dialog)
-			{
-				case 1:
-				{
-					uiMessageBox("Hey, thanks for subscribing to this map on the Steam Workshop!");
-				}
-				case 2:
-				{
-					uiMessageBox("Here, have this Blessing as thanks! You're the best!");
-				}
-				case 3:
-				{
-					trShowImageDialog("icons\special e son of osiris icon 64", "Hello!");
-				}
-				case 4:
-				{
-					uiMessageBox("Thank you again, and have fun!");
-					xsEnableRule("subscribe_complete");
-					dialog = 0;
-				}
-				case 5:
-				{
-					extra = "" + 1*trQuestVarGet("operand1") + " + " + 1*trQuestVarGet("operand2") + " = " + 1*trQuestVarGet("wrongAnswer");
-					uiMessageBox("You fools! We're now trapped in a world where " + extra + "!");
-				}
-			}
-		}
-		*/
 		case 1:
 		{
 			switch(dialog)
@@ -158,6 +127,36 @@ int npcDiag(int npc = 0, int dialog = 0) {
 				case 4:
 				{
 					uiMessageBox("Drink from the fountain to complete this tutorial.");
+					dialog = 0;
+				}
+			}
+		}
+		case 8:
+		{
+			switch(dialog)
+			{
+				case 1:
+				{
+					uiMessageBox("The mountain goat has a slightly different jump mechanic.");
+				}
+				case 1:
+				{
+					uiMessageBox("It will jump directly to the cursor and can double jump.");
+					dialog = 0;
+				}
+			}
+		}
+		case 9:
+		{
+			switch(dialog)
+			{
+				case 1:
+				{
+					uiMessageBox("Press 'W' to interract with nearby objects (such as the x).");
+				}
+				case 2:
+				{
+					uiMessageBox("There are several types of object you can interract with in the act.");
 					dialog = 0;
 				}
 			}

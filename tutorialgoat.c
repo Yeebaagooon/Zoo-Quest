@@ -6,10 +6,11 @@ inactive
 		trCameraCut(vector(-65.460060,123.743729,-65.460060), vector(0.500000,-0.707107,0.500000), vector(0.500000,0.707107,0.500000), vector(0.707107,0.000000,-0.707107));
 		xsDisableRule("DeerTutorialDone");
 		xsDisableRule("RhinoTutorialDone");
+		NewDestroyNumber = trGetNextUnitScenarioNameNumber()-1;
 		TutorialMode = true;
 		Stage = 3;
 		CliffType = 2;
-		CliffSubType = 2;
+		CliffSubType = 3;
 		//trLetterBox(false);
 		clearMap("black", 5.0);
 		trPaintTerrain(0,0,45,cNumberNonGaiaPlayers*8,CliffType,CliffSubType);
@@ -23,7 +24,7 @@ inactive
 					UnitCreate(0, "Cinematic Block", x*2, t*16+8, 90);
 					trUnitSelectClear();
 					trUnitSelect(""+temp);
-					trUnitChangeProtoUnit("Rock Sandstone Big");
+					trUnitChangeProtoUnit("Rock River Icy");
 					trUnitSelectClear();
 					trUnitSelect(""+temp);
 					trSetScale(1.65);
@@ -33,7 +34,7 @@ inactive
 					UnitCreate(0, "Cinematic Block", x*2, t*16+8, 90);
 					trUnitSelectClear();
 					trUnitSelect(""+temp);
-					trUnitChangeProtoUnit("Savannah Tree");
+					trUnitChangeProtoUnit("Pine Snow");
 					trUnitSelectClear();
 					trUnitSelect(""+temp);
 					trSetScale(0.75);
@@ -43,15 +44,24 @@ inactive
 		trQuestVarSet("PlayersDoneTutorial", 0);
 		for(p=1 ; < cNumberNonGaiaPlayers){
 			trQuestVarSet("P"+p+"DoneTutorial", 0);
-			trPaintTerrain(5,((p*8)-2),40,((p*8+4)-2),0,15);
+			trQuestVarSet("P"+p+"FountainMsg", 0);
+			trPaintTerrain(5,((p*8)-2),40,((p*8+4)-2),0,50);
 			//trPaintTerrain(7,p*8,7,p*8,0,73); //start sq
-			PaintAtlantisArea(6,p*8-1,8,p*8+1,0,18);  //start sq
+			PaintAtlantisArea(6,p*8-1,8,p*8+1,0,53);  //start sq
 			trPaintTerrain(28,p*8+2,28,p*8-2,0,74); //end line
+			// cliff
+			trChangeTerrainHeight(12,p*8+2,16,p*8-2,10,false);
+			trPaintTerrain(11,p*8+2,16,p*8-2,CliffType,CliffSubType);
+			trPaintTerrain(12,p*8+1,15,p*8-2,0,50);
+			
+			trChangeTerrainHeight(20,p*8+2,24,p*8-2,10,false);
+			trPaintTerrain(19,p*8+2,24,p*8-2,CliffType,CliffSubType);
+			trPaintTerrain(20,p*8+1,23,p*8-2,0,50);
 			temp = trGetNextUnitScenarioNameNumber();
 			UnitCreate(cNumberNonGaiaPlayers, "Cinematic Block", 28*2, p*16-4, 0);
 			trUnitSelectClear();
 			trUnitSelect(""+temp);
-			trUnitChangeProtoUnit("Fence Wood");
+			trUnitChangeProtoUnit("Fence Stone");
 			xAddDatabaseBlock(dTemp, true);
 			xSetInt(dTemp, xUnitID, temp);
 			xSetInt(dTemp, xExtra, p);
@@ -59,23 +69,29 @@ inactive
 			UnitCreate(cNumberNonGaiaPlayers, "Cinematic Block", 28*2, p*16, 0);
 			trUnitSelectClear();
 			trUnitSelect(""+temp);
-			trUnitChangeProtoUnit("Fence Wood");
+			trUnitChangeProtoUnit("Fence Stone");
 			xAddDatabaseBlock(dTemp, true);
 			xSetInt(dTemp, xUnitID, temp);
 			xSetInt(dTemp, xExtra, p);
 			temp = trGetNextUnitScenarioNameNumber();
-			UnitCreate(cNumberNonGaiaPlayers, "Cinematic Block", 28*2, p*16+4, 0);
+			UnitCreate(cNumberNonGaiaPlayers, "Cinematic Block", 28*2, p*16+4, 180);
 			trUnitSelectClear();
 			trUnitSelect(""+temp);
-			trUnitChangeProtoUnit("Fence Wood");
+			trUnitChangeProtoUnit("Fence Stone");
 			xAddDatabaseBlock(dTemp, true);
 			xSetInt(dTemp, xUnitID, temp);
 			xSetInt(dTemp, xExtra, p);
 			temp = trGetNextUnitScenarioNameNumber();
-			UnitCreate(0, "Cinematic Block", 34*2, p*16, 0);
+			UnitCreate(0, "Cinematic Block", 34*2, p*16, 270);
 			trUnitSelectClear();
 			trUnitSelect(""+temp);
-			trUnitChangeProtoUnit("Fountain");
+			trUnitChangeProtoUnit("Spy Eye");
+			trUnitSelectClear();
+			trUnitSelect(""+temp);
+			trMutateSelected(kbGetProtoUnitID("Shrine"));
+			trUnitSelectClear();
+			trUnitSelect(""+temp);
+			trUnitSetAnimationPath("2,0,0,0,0");
 			xAddDatabaseBlock(dTemp, true);
 			xSetInt(dTemp, xUnitID, temp);
 			xSetInt(dTemp, xExtra, p);
@@ -87,25 +103,40 @@ inactive
 				trCounterAddTime("cdtutorial", -100, -200, "<color={PlayerColor("+p+")}>Press 'Q' to jump to the cursor.", -1);
 			}
 		}
-		trChangeTerrainHeight(10,0,12,30,10,false);
+		
 		refreshPassability();
 		xsEnableRule("Animations");
 		xsEnableRule("GoatJump");
 		xsEnableRule("GoatJumpEnd");
+		xsEnableRule("ExtraJumpTech");
 		//	xsEnableRule("Charge");
-		//	xsDisableRule("Jump");
 		//	xsDisableRule("VectorFirst");
 		//	xsDisableRule("VectorSecond");
-		//	xsEnableRule("GoatTutorialDone");
-		//	trDelayedRuleActivation("GoatTutorialLoops");
-		//	if(QuickStart == 0){
-		//		startNPCDialog(6);
-		//	}
+		xsEnableRule("GoatTutorialDone");
+		trDelayedRuleActivation("GoatTutorialLoops");
+		if(QuickStart == 0){
+			startNPCDialog(8);
+		}
 		refreshPassability();
 		uiZoomToProto(""+GoatProto);
 		uiLookAtProto(""+GoatProto);
 		xsDisableSelf();
 	}
+}
+
+rule ExtraJumpTech
+highFrequency
+inactive
+{
+	//+6 jump range
+	int jumps = 0;
+	while(jumps < 21){
+		for(p=1; < cNumberNonGaiaPlayers){
+			trTechSetStatus(p, 115, 4);
+			jumps = jumps +1;
+		}
+	}
+	xsDisableSelf();
 }
 
 rule GoatJump
@@ -114,35 +145,58 @@ inactive
 {
 	int anim = 0;
 	for(p=1 ; < cNumberNonGaiaPlayers){
+		xSetPointer(dPlayerData, p);
 		if(trPlayerResourceCount(p, "Gold") > 0){
-			xSetPointer(dPlayerData, p);
 			trPlayerGrantResources(p, "Gold", -100000);
 			if(xGetBool(dPlayerData, xReadyToLeave) == false){
-				trUnitSelectClear();
-				trUnitSelectByQV("P"+p+"Unit");
-				trMutateSelected(kbGetProtoUnitID("Anubite"));
-				//trUnitChangeProtoUnit("Hero Greek Bellerophon");
-				trSetSelectedScale(0,6,0);
-				xSetInt(dPlayerData, xOldAnim, -10);
-				trUnitSelectClear();
-				trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
-				trUnitOverrideAnimation(24, 0, true, false, -1, 0);
-				xSetInt(dPlayerData, xTarget, trGetNextUnitScenarioNameNumber());
-				//Greta heading 0 to player heading
-				UnitCreate(cNumberNonGaiaPlayers, "Female", xsVectorGetX(xGetVector(dPlayerData,xGoatTarget)), xsVectorGetZ(xGetVector(dPlayerData,xGoatTarget)), 0);
-				xUnitSelect(dPlayerData, xTarget);
-				trSetSelectedScale(0.1,0.1,0.1);
-				//trSetUnitOrientation(trVectorQuestVarGet("V"+p+"dir"), vector(0,1,0), true);
-				trUnitSelectClear();
-				trUnitSelectByQV("P"+p+"Unit");
-				trUnitDoWorkOnUnit(""+xGetInt(dPlayerData, xTarget),-1);
-				xAddDatabaseBlock(dDestroyMe, true);
-				xSetInt(dDestroyMe, xDestroyName, xGetInt(dPlayerData, xTarget));
-				xSetInt(dDestroyMe, xDestroyTime, trTimeMS()+4800);
+				if(xGetFloat(dPlayerData, xGoatJumpDist) < 225){
+					trUnitSelectClear();
+					trUnitSelectByQV("P"+p+"Unit");
+					trMutateSelected(kbGetProtoUnitID("Anubite"));
+					//trUnitChangeProtoUnit("Hero Greek Bellerophon");
+					//LOS MAINTAINED
+					trSetSelectedScale(0,1,0);
+					xSetInt(dPlayerData, xOldAnim, -10);
+					trUnitSelectClear();
+					trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+					trUnitOverrideAnimation(24, 0, true, false, -1, 0);
+					xSetInt(dPlayerData, xTarget, trGetNextUnitScenarioNameNumber());
+					//Greta heading 0 to player heading
+					UnitCreate(cNumberNonGaiaPlayers, "Female", xsVectorGetX(xGetVector(dPlayerData,xGoatTarget)), xsVectorGetZ(xGetVector(dPlayerData,xGoatTarget)), 0);
+					xUnitSelect(dPlayerData, xTarget);
+					trSetSelectedScale(0.1,0.1,0.1);
+					trSetUnitOrientation(trVectorQuestVarGet("V"+p+"dir"), vector(0,1,0), true);
+					trUnitSelectClear();
+					trUnitSelectByQV("P"+p+"Unit");
+					trUnitDoWorkOnUnit(""+xGetInt(dPlayerData, xTarget),-1);
+					xAddDatabaseBlock(dDestroyMe, true);
+					xSetInt(dDestroyMe, xDestroyName, xGetInt(dPlayerData, xTarget));
+					xSetInt(dDestroyMe, xDestroyTime, trTimeMS()+4800);
+				}
+				else{
+					//jump too far
+					ColouredChatToPlayer(p, "1,0,0", "Jump distance too far!");
+					if(trCurrentPlayer() == p){
+						playSound("cantdothat.wav");
+					}
+				}
 			}
 		}
 		if(trPlayerResourceCount(p, "Wood") > 0){
 			trPlayerGrantResources(p, "Wood", -100000);
+			int temp = trGetNextUnitScenarioNameNumber();
+			tempV = kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit"));
+			UnitCreate(0, "Dwarf", xsVectorGetX(tempV), xsVectorGetZ(tempV), 0);
+			trUnitSelectClear();
+			trUnitSelect(""+temp);
+			trUnitChangeProtoUnit("Deconstruct Unit");
+			trUnitSelectClear();
+			trUnitSelect(""+temp);
+			trUnitOverrideAnimation(18, 0, true, false, -1, 0);
+			//Interract
+			if(TutorialMode == true){
+				trQuestVarSet("P"+p+"FountainMsg", 2);
+			}
 		}
 		if(trPlayerResourceCount(p, "Food") > 0){
 			trPlayerGrantResources(p, "Food", -100000);
@@ -209,5 +263,117 @@ inactive
 			}
 		}
 		trUnitSelectClear();
+	}
+}
+
+rule GoatTutorialLoops
+highFrequency
+inactive
+{
+	if(TutorialMode){
+		int temp = 0;
+		for(p=1 ; < cNumberNonGaiaPlayers){
+			xSetPointer(dPlayerData, p);
+			trVectorQuestVarSet("P"+p+"Pos", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
+			if((playerIsPlaying(p) == false) && (xGetBool(dPlayerData, xPlayerActive) == true)){
+				trUnitSelectByQV("P"+p+"Unit");
+				trUnitChangeProtoUnit("Ragnorok SFX");
+				trUnitSelectByQV("P"+p+"Unit");
+				trUnitDestroy();
+				trUnitSelectClear();
+				trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+				trUnitChangeProtoUnit("Hero Death");
+				xSetBool(dPlayerData, xPlayerActive, false);
+				PlayersActive = PlayersActive-1;
+				trPaintTerrain(5,((p*8)-2),40,((p*8+4)-2),CliffType,CliffSubType);
+				trUnitSelectClear();
+				for(a = xGetDatabaseCount(dTemp) ; > 0){
+					xDatabaseNext(dTemp);
+					if(xGetInt(dTemp, xExtra) == p){
+						xUnitSelect(dTemp, xUnitID);
+						trUnitDestroy();
+						xFreeDatabaseBlock(dTemp);
+					}
+				}
+			}
+			//through wall
+			if((trVectorQuestVarGetX("P"+p+"Pos") > 58) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0) && (1*trQuestVarGet("P"+p+"FountainMsg") == 0)){
+				if(trCurrentPlayer() == p){
+					startNPCDialog(9);
+					trQuestVarSet("P"+p+"FountainMsg", 1);
+					trCounterAddTime("cdtutoriala", -100, -200, "<color={PlayerColor("+p+")}>Press 'W' to interract.", -1);
+				}
+			}
+			if((1*trQuestVarGet("P"+p+"FountainMsg") == 2) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0)){
+				trUnitSelectByQV("P"+p+"Unit");
+				trUnitChangeProtoUnit("Ragnorok SFX");
+				trUnitSelectByQV("P"+p+"Unit");
+				trUnitDestroy();
+				trUnitSelectClear();
+				trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+				trUnitChangeProtoUnit("Hero Death");
+				trQuestVarSet("P"+p+"DoneTutorial", 1);
+				trQuestVarModify("PlayersDoneTutorial", "+", 1);
+				temp = 1*trQuestVarGet("PlayersDoneTutorial");
+				trPaintTerrain(5,((p*8)-2),40,((p*8+4)-2),CliffType,CliffSubType);
+				trUnitSelectClear();
+				for(a = xGetDatabaseCount(dTemp) ; > 0){
+					xDatabaseNext(dTemp);
+					if(xGetInt(dTemp, xExtra) == p){
+						xUnitSelect(dTemp, xUnitID);
+						trUnitDestroy();
+						xFreeDatabaseBlock(dTemp);
+					}
+				}
+				trUnitSelectClear();
+				trClearCounterDisplay();
+				trSetCounterDisplay("<color={PlayerColor(" + GreenText() + ")}>Tutorial complete: " + temp + " / " + PlayersActive);
+				if((temp == 1) && (PlayersActive > 1)){
+					xsEnableRule("TutorialTimeout");
+				}
+				if(trCurrentPlayer() == p){
+					playSound("ageadvance.wav");
+					trCounterAbort("cdtutorial");
+					trCounterAbort("cdtutoriala");
+				}
+			}
+			trUnitSelectByQV("P"+p+"Unit");
+			if((trUnitDead() == true) && (xGetBool(dPlayerData, xPlayerActive) == true) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0)){
+				trUnitSelectByQV("P"+p+"Unit");
+				trUnitChangeProtoUnit("Ragnorok SFX");
+				trUnitSelectByQV("P"+p+"Unit");
+				trUnitDestroy();
+				trUnitSelectClear();
+				trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+				trUnitChangeProtoUnit("Hero Death");
+				CreateRhino(p, 14, p*16, 90);
+			}
+		}
+	}
+}
+
+rule GoatTutorialDone
+highFrequency
+inactive
+{
+	if(PlayersActive == 1*trQuestVarGet("PlayersDoneTutorial")){
+		xsDisableSelf();
+		xsDisableRule("GoatTutorialLoops");
+		xsEnableRule("BuildGoatArea");
+		trClearCounterDisplay();
+		trCounterAbort("cdtutorial");
+		trCounterAbort("cdtutoriala");
+		trCounterAbort("cdtutorialtimeout");
+		trQuestVarSet("PlayersDoneTutorial", 0);
+		trLetterBox(true);
+		trUIFadeToColor(0,0,0,1,1,true);
+		Stage = 3;
+		characterDialog(ActName(Stage), " ", ActIcon(Stage));
+		trSetFogAndBlackmap(true,true);
+		trDelayedRuleActivation("ResetBlackmap");
+		trFadeOutAllSounds(3);
+		trFadeOutMusic(3);
+		xResetDatabase(dTemp);
+		TutorialMode = false;
 	}
 }

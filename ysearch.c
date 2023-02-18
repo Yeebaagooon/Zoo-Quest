@@ -45,7 +45,7 @@ highFrequency
 				if(Stage == 3){
 					xSetPointer(dPlayerData, kbUnitGetOwner(id));
 					xSetVector(dPlayerData, xGoatTarget, kbGetBlockPosition(""+trGetUnitScenarioNameNumber(id)));
-					debugLog("Vector set");
+					xSetFloat(dPlayerData, xGoatJumpDist, distanceBetweenVectors(xGetVector(dPlayerData, xGoatTarget),kbGetBlockPosition(""+1*trQuestVarGet("P"+kbUnitGetOwner(id)+"Unit")),true));
 				}
 				trUnitSelectClear();
 				trUnitSelectByID(id);

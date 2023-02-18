@@ -452,9 +452,11 @@ inactive
 				
 				trUnitSelectByQV("P"+p+"Unit");
 				trImmediateUnitGarrison(""+xGetInt(dPlayerData, xTarget));
-				xUnitSelect(dPlayerData, xTarget);
-				trUnitEjectContained();
-				//trUnitChangeProtoUnit("Dwarf");
+				//xUnitSelect(dPlayerData, xTarget);
+				//trUnitEjectContained();
+				trUnitChangeProtoUnit(""+GazelleProto);
+				trUnitSelectByQV("P"+p+"Unit");
+				trSetSelectedScale(0,1,0);
 				
 				xUnitSelect(dPlayerData, xTarget);
 				trUnitDestroy();

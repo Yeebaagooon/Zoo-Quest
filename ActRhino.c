@@ -477,6 +477,7 @@ highFrequency
 	trUnitSelectClear();
 	trUnitSelect(""+temp);
 	trUnitChangeProtoUnit("Revealer");
+	trQuestVarSet("RhinoMGLOS", temp);
 	trChangeTerrainHeight(xsVectorGetX(StageVector)-1,xsVectorGetZ(StageVector)-1,xsVectorGetX(StageVector)+1,xsVectorGetZ(StageVector)+1,-10, false);
 	refreshPassability();
 	trPaintTerrain(xsVectorGetX(StageVector)-1,xsVectorGetZ(StageVector)-1,xsVectorGetX(StageVector)+1,xsVectorGetZ(StageVector)+1,2,10);
@@ -627,6 +628,8 @@ highFrequency
 	trUnitChangeProtoUnit("Forest Fire SFX");
 	trUnitSelectByQV("PitFire");
 	trUnitChangeProtoUnit("Heavenlight");
+	trUnitSelectByQV("RhinoMGLOS");
+	trUnitDestroy();
 	xsDisableSelf();
 	trFadeOutAllSounds(3);
 	trFadeOutMusic(3);

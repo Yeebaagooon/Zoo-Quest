@@ -34,6 +34,10 @@ string ActName(int num = 0){
 		{
 			actnamed = "Act II - Rhino";
 		}
+		case 3:
+		{
+			actnamed = "Act III - Goat";
+		}
 	}
 	return(actnamed);
 }
@@ -49,6 +53,10 @@ string ActIcon(int num = 0){
 		case 2:
 		{
 			animaliconact = "icons\animal rhino icon 64";
+		}
+		case 3:
+		{
+			animaliconact = "icons\animal goat icon 64";
 		}
 	}
 	return(animaliconact);
@@ -370,7 +378,7 @@ void CreateGoat(int p = 1, int x = 1, int z = 1, int heading = 0){
 	trUnitSelectByQV("P"+p+"Unit");
 	trSetSelectedScale(0,0.3,0);
 	trUnitSelectByQV("P"+p+"Unit");
-	spyEffect(kbGetProtoUnitID("Crowned Crane"), 0, xsVectorSet(dPlayerData,xSpyID,p), vector(1.4,1.4,1.4));
+	spyEffect(kbGetProtoUnitID("Goat"), 0, xsVectorSet(dPlayerData,xSpyID,p), vector(1,1,1));
 	//spyEffect(kbGetProtoUnitID("Cinematic Block"), 0, xsVectorSet(dPlayerData,xSecondSpy,p), vector(1,1,1));
 	xSetPointer(dPlayerData, p);
 	xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));

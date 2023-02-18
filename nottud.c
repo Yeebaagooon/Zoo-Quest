@@ -1465,6 +1465,7 @@ void createMarsh(){
 	paintUnit("SavannahA", "Water Reeds", 0, 0.4);
 	paintUnit("SavannahA", "Rock River Sandy", 0, 0.2);
 	paintUnit("SavannahC", "Rock Sandstone Small", 0, 0.01);
+	paintUnit("SavannahC", "Sand Drift Plain", 0, 0.002);
 	paintUnit("SavannahC", "Rock Sandstone Big", 0, 0.015);
 	paintUnit("SavannahC", "Dust Devil", 0, 0.005);
 	refreshPassability();
@@ -1498,17 +1499,25 @@ void createMarsh(){
 	xsEnableRule("Reset Blackmap");
 }
 
-void createSafeArea(){
-	string baseTerrain = "CliffEgyptianB";
+void createGoatArea(){
+	DestroyNumber = trGetNextUnitScenarioNameNumber();
+	int currentId = 0;
+	for(n = NewDestroyNumber ; < DestroyNumber){
+		trUnitSelectClear();
+		trUnitSelect(""+n);
+		trUnitDestroy();
+	}
+	string baseTerrain = "SnowA";
 	trSetCivAndCulture(0, 0, 0);
 	clearMap("Black", -5.0);
-	int centrePosX = randomInt(toTiles(0.4), toTiles(0.6));
-	int centrePosZ = randomInt(toTiles(0.4), toTiles(0.6));
-	for(i = 0; < 10) {
-		tempV = randomCircleLoc(centrePosX, centrePosZ, 30.0); //dont know what this does
-		for(j = 0; < 20) { //number of circles to make
-			tempV2 = randomCircleLoc(xsVectorGetX(tempV), xsVectorGetZ(tempV), 40.0); //also available area
-			paintCircleHeight(xsVectorGetX(tempV2), xsVectorGetZ(tempV2), toTiles(0.02), "CliffEgyptianB", 30.0); //to tiles is radius and does internal area
+	int centrePosX = randomInt(toTiles(0.45), toTiles(0.55));
+	int centrePosZ = randomInt(toTiles(0.45), toTiles(0.55));
+	int ABORT = 0;
+	for(i = 0; < 40) {
+		tempV = randomCircleLoc(centrePosX, centrePosZ, 80.0); //dont know what this does
+		for(j = 0; < 10) { //number of circles to make
+			tempV2 = randomCircleLoc(xsVectorGetX(tempV), xsVectorGetZ(tempV), 20.0); //also available area
+			paintCircleHeight(xsVectorGetX(tempV2), xsVectorGetZ(tempV2), toTiles(0.02), "CliffNorseB", 10.0); //to tiles is radius and does internal area
 		}
 	}
 	
@@ -1524,21 +1533,95 @@ void createSafeArea(){
 	*even
 	I would do whatever the cohence algorithm in AOM does since I think that does excellent areas but I not got a clue how it does it to repl
 	*/
-	smooth(20);
-	replaceTerrainBelowHeightMin("CliffEgyptianB", "CliffEgyptianA", 12.0);
-	replaceTerrainAboveHeightMax("SandC", "CliffNorseA", 8.0);
-	replaceTerrainAboveHeightMax("SandD", "SandC", 14.0);
-	refreshPassability();
+	smooth(4);
+	replaceTerrainBelowHeightMax("CliffEgyptianB", "CliffEgyptianA", 4.0);
+	replaceTerrainAboveHeightMax("SandD", "SandC", 6.0);
+	replaceTerrainAboveHeightMax("SandC", "CliffNorseA", 0.0);
+	replaceTerrainAboveHeightMin("Black", "SnowA", -999.0);
+	replaceTerrainAtMinSteepness("SnowA", "CliffNorseA", 1.5);
+	vector tileForEnd = getRandomTileMatchingTerrain("SnowA", 10);
+	int EndTileX = xsVectorGetX(tileForEnd);
+	int EndTileZ = xsVectorGetZ(tileForEnd);
+	float EndHeight = 6;
 	
-	paintUnit("Black", "Pine", 0, 0.002);
-	paintUnit("Black", "Oak Tree", 0, 0.01);
-	replaceTerrainAboveHeightMin("Black", "SandC", -999.0);
+	float EndMetreX = EndTileX*2+1;
+	float EndMetreZ = EndTileZ*2+1;
+	
+	vector tileForStart = getRandomTileMatchingTerrain("SnowA", 10);
+	while(distanceBetweenVectors(tileForStart, tileForEnd, true) < 3000-ABORT){
+		tileForStart = getRandomTileMatchingTerrain("SnowA", 10);
+		ABORT = ABORT +1;
+		if(ABORT > 500){
+			trChatSend(0, "ERROR - CANT PAINT END AREA");
+			break;
+		}
+	}
+	int StartTileX = xsVectorGetX(tileForStart);
+	int StartTileZ = xsVectorGetZ(tileForStart);
+	float StartHeight = 8;
+	float StartMetreX = StartTileX*2+1;
+	float StartMetreZ = StartTileZ*2+1;
+	trVectorQuestVarSet("dir", xsVectorSet(11, 0, 0));
+	trVectorQuestVarSet("CentreMap", xsVectorSet(StartMetreX, 0, StartMetreZ));
+	LeaveTerrain = "IceA";
+	paintCircleHeight2(StartTileX, StartTileZ, 8, "CliffNorseA", StartHeight);
+	paintCircleHeight2(StartTileX, StartTileZ, 7, "OlympusA", StartHeight);
+	paintCircleHeight2(EndTileX, EndTileZ, 8, "CliffNorseA", EndHeight);
+	paintCircleHeight2(EndTileX, EndTileZ, 7, "OlympusA", EndHeight);
+	paintCircleHeight2(EndTileX, EndTileZ, 5, LeaveTerrain, EndHeight);
+	//SPAWN PLAYERS
+	float baseCos = xsCos(6.283185 / (cNumberNonGaiaPlayers-1));
+	float baseSin = xsSin(6.283185 / (cNumberNonGaiaPlayers-1));
+	int heading = 90;
+	for(p=1; < cNumberNonGaiaPlayers) {
+		xSetPointer(dPlayerData, p);
+		trVectorQuestVarSet("base", trVectorQuestVarGet("CentreMap") + trVectorQuestVarGet("dir"));
+		heading = heading-(360/(cNumberNonGaiaPlayers-1));
+		if(heading > 360){
+			heading = heading-360;
+		}
+		if(heading < 0){
+			heading = heading+360;
+		}
+		if(xGetBool(dPlayerData, xPlayerActive) == true){
+			CreateGoat(p, trVectorQuestVarGetX("base"), trVectorQuestVarGetZ("base"), heading);
+		}
+		//spyEffect(1*trQuestVarGet("P"+p+"Unit"), kbGetProtoUnitID("Gazelle"), vector(1,1,1), vector(1,1,1));
+		trPlayerKillAllGodPowers(p);
+		trVectorQuestVarSet("dir", rotationMatrix(trVectorQuestVarGet("dir"), baseCos, baseSin));
+		trUnitSelectClear();
+	}
+	currentId = trGetNextUnitScenarioNameNumber();
+	UnitCreate(0, "Cinematic Block", 2*xsVectorGetX(tileForEnd),2*xsVectorGetZ(tileForEnd),0);
+	trUnitSelectClear();
+	trUnitSelect(""+currentId);
+	trUnitChangeProtoUnit("Spy Eye");
+	trUnitSelectClear();
+	trUnitSelect(""+currentId);
+	trMutateSelected(kbGetProtoUnitID("Osiris Box Glow"));
+	trUnitSelectClear();
+	trUnitSelect(""+currentId);
+	trUnitSetAnimationPath("0,0,1,0,0,0");
+	currentId = trGetNextUnitScenarioNameNumber();
+	UnitCreate(0, "Cinematic Block", 2*xsVectorGetX(tileForEnd),2*xsVectorGetZ(tileForEnd),0);
+	trUnitSelectClear();
+	trUnitSelect(""+currentId);
+	trUnitChangeProtoUnit("Flag");
+	trUnitSelectClear();
+	trUnitSelect(""+currentId);
+	trUnitSetAnimationPath("0,0,0,0,0,0");
+	FlagUnitID = currentId;
 	refreshPassability();
 	int templeSafeArea = trGetNextUnitScenarioNameNumber();
-	deployCluster(2.0*centrePosX, 2.0*centrePosZ, "Temple Underworld", 0, 1, 20.0, true);
-	paintUnit("OlympusTile", "Ruins", 0, 0.01);
-	paintUnit("OlympusTile", "Columns", 0, 0.01);
-	paintUnit("OlympusTile", "Fallen Columns", 0, 0.01);
+	//deployCluster(2.0*centrePosX, 2.0*centrePosZ, "Temple Underworld", 0, 1, 20.0, true);
+	paintUnit("SnowA", "Pine Snow", 0, 0.035);
+	paintUnit("SnowA", "Rock River Icy", 0, 0.02);
+	paintUnit("SnowA", "Frost Drift", 0, 0.01);
+	paintUnit("CliffNorseB", "Ice Block", 0, 0.02);
+	paintUnit("CliffNorseB", "Rock Granite Sprite", 0, 0.04);
+	paintUnit("CliffNorseB", "Rock Granite Small", 0, 0.01);
+	//paintUnit("OlympusTile", "Columns", 0, 0.01);
+	//paintUnit("OlympusTile", "Fallen Columns", 0, 0.01);
 }
 
 void createUluru(){
@@ -1653,7 +1736,7 @@ void createForestArea(){
 			replaceCircle(xsVectorGetX(tempV2), xsVectorGetZ(tempV2), toTiles(0.01), "GrassA", "GrassDirt50");
 		}
 	}
-	smooth(3);
+	//smooth(3);
 	
 	
 	refreshPassability();
@@ -1714,14 +1797,6 @@ void createDeepForestArea(){
 	trUnitSelectClear();
 	trUnitSelect(""+currentId);
 	trMutateSelected(kbGetProtoUnitID("Osiris Box Glow"));
-	/*
-	trUnitSelectClear();
-	trUnitSelect(""+currentId);
-	trSetSelectedScale(0,0,0);
-	trUnitSelectClear();
-	trUnitSelect(""+currentId);
-	trSetSelectedUpVector(0,1,0);
-	*/
 	trUnitSelectClear();
 	trUnitSelect(""+currentId);
 	trUnitSetAnimationPath("0,0,1,0,0,0");

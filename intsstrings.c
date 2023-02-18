@@ -26,18 +26,12 @@ instead of the id
 
 FIX PAINT TREES SO LIKE A CHECKBOARD - actually ok for stage one
 
-DEER QUEST
-Eat berries
-Survive poacher
-Find and gather in clearing
 
 [COMMENT]
-Remove stamina chat, change to counter
 
 
 [BUG LIST]
 chest on top of each other
-LOS left after MG 2
 DDestroy me not in  an eternal loop
 
 
@@ -122,6 +116,7 @@ int xRhinoDrinkTime = 0;
 int xRhinoChargeTime = 0;
 int xRhinoChargeTimeMax = 0;
 int xGoatTarget = 0;
+int xGoatJumpDist = 0;
 
 int dDestroyMe = 0;
 int xDestroyName = 0;
@@ -157,6 +152,7 @@ highFrequency
 	xRhinoChargeTime = xInitAddFloat(dPlayerData, "rhino charge", 15);
 	xRhinoChargeTimeMax = xInitAddInt(dPlayerData, "rhino charge max", 15);
 	xGoatTarget = xInitAddVector(dPlayerData, "goat target", vector(0,0,0));
+	xGoatJumpDist = xInitAddFloat(dPlayerData, "goat jump dist", 0.0);
 	xsDisableSelf();
 	for(p=1; <= cNumberNonGaiaPlayers) {
 		xAddDatabaseBlock(dPlayerData, true);
