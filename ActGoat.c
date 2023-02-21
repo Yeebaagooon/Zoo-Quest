@@ -143,9 +143,87 @@ inactive
 				xSetBool(dPlayerData, xPlayerDead, true);
 				PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is dead!");
 			}
+			if(xGetInt(dPlayerData, xHPRegen) > 0){
+				if(trTime() > xGetInt(dPlayerData, xHPRegenNext)){
+					trUnitSelectByQV("P"+p+"Unit");
+					trDamageUnit(-1*xGetInt(dPlayerData, xHPRegen));
+					xSetInt(dPlayerData, xHPRegenNext, trTime()+xGetInt(dPlayerData, xHPRegenTime));
+				}
+			}
 		}
 		if((PlayersActive == PlayersReadyToLeave+PlayersDead) && (PlayersDead != PlayersActive)){
 			xsEnableRule("GoatExit");
+		}
+		if(xGetDatabaseCount(dChests) > 0){
+			xDatabaseNext(dChests);
+			int n = xGetInt(dChests, xUnitID);
+			xUnitSelect(dChests,xUnitID);
+			if(trCountUnitsInArea(""+n,0,"Great Box", 1) == 0){
+				xFreeDatabaseBlock(dChests);
+				debugLog("Chest removed" + n);
+				debugLog(""+kbGetProtoUnitID(""+n));
+				ChestsTotal = ChestsTotal-1;
+				//CreateChest(iModulo(252, trTimeMS()),iModulo(252, trTime()));
+			}
+			if (trUnitIsSelected()) {
+				uiClearSelection();
+				startNPCDialog(5);
+			}
+			trUnitSelectClear();
+			for(pl=1 ; < cNumberNonGaiaPlayers){
+				if(trCountUnitsInArea(""+n,pl,""+GoatProto, 5) > 0){
+					xUnitSelect(dChests,xUnitID);
+					trUnitSetAnimation("SE_Great_Box_Opening",false,-1);
+					xUnitSelect(dChests,xUnitID);
+					trUnitHighlight(3, false);
+					trUnitSelectClear();
+					xUnitSelect(dChests, xUnlockUnitID);
+					trUnitChangeProtoUnit("Spy Eye");
+					trUnitSelectClear();
+					xUnitSelect(dChests, xUnlockUnitID);
+					trMutateSelected(kbGetProtoUnitID("Pyramid Osiris Xpack"));
+					trUnitSelectClear();
+					xUnitSelect(dChests, xUnlockUnitID);
+					trSetSelectedScale(100,0,0);
+					trUnitSelectClear();
+					xUnitSelect(dChests, xUnlockUnitID);
+					trUnitOverrideAnimation(6, 0, false, true, -1);
+					trUnitSelectClear();
+					xUnitSelect(dChests, xUnlockUnitID);
+					trUnitSetAnimationPath("0,1,0,0,0,0");
+					xAddDatabaseBlock(dDestroyMe, true);
+					xSetInt(dDestroyMe, xDestroyName, xGetInt(dChests, xUnlockUnitID));
+					xSetInt(dDestroyMe, xDestroyTime, trTimeMS()+3000);
+					ChestsFound = ChestsFound+1;
+					xFreeDatabaseBlock(dChests);
+					trQuestVarSetFromRand("temp", 1, 2);
+					trQuestVarSetFromRand("temp2", 1, 3);
+					if(1*trQuestVarGet("temp") == 1){
+						if(1*trQuestVarGet("temp2") == 1){
+							PlayerChoice(pl, "Choose your reward:", "+2 hp", 12, "+1.5 charge speed", 14, 10000);
+						}
+						if(1*trQuestVarGet("temp2") == 2){
+							PlayerChoice(pl, "Choose your reward:", "+2 hp", 12, "+2 max stamina", 15, 10000);
+						}
+						if(1*trQuestVarGet("temp2") == 3){
+							PlayerChoice(pl, "Choose your reward:", "+2 hp", 12, "-1s drink time", 16, 10000);
+						}
+					}
+					if(1*trQuestVarGet("temp") == 2){
+						if(1*trQuestVarGet("temp2") == 1){
+							PlayerChoice(pl, "Choose your reward:", "+0.5 base speed", 13, "+1.5 charge speed", 14, 10000);
+						}
+						if(1*trQuestVarGet("temp2") == 2){
+							PlayerChoice(pl, "Choose your reward:", "+0.5 base speed", 13, "+2 max stamina", 15, 10000);
+						}
+						if(1*trQuestVarGet("temp2") == 3){
+							PlayerChoice(pl, "Choose your reward:", "+0.5 base speed", 13, "-1s drink time", 16, 10000);
+						}
+					}
+					
+					
+				}
+			}
 		}
 		
 	}
@@ -373,6 +451,10 @@ highFrequency
 		playSoundCustom("\xpack\xcinematics\7_in\music.mp3", "\Yeebaagooon\Zoo Quest\Minigame3.mp3");
 		trQuestVarSet("MGTime", trTime()+5);
 		xsEnableRule("GoatMinigameEnd");
+		ColouredIconChat("0.0,0.8,0.2", "icons\world column icon 64", "Lower tiles by interracting with columns.");
+		ColouredChat("0.0,0.8,0.2", "They will lower two squares.");
+		ColouredChat("0.0,0.8,0.2", "You get a warning before the tile becomes lava.");
+		ColouredChat("0.0,0.8,0.2", "When this happens, you won't be able to use the column!");
 	}
 	xsDisableSelf();
 }

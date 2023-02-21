@@ -33,11 +33,6 @@ FIX PAINT TREES SO LIKE A CHECKBOARD - actually ok for stage one
 [BUG LIST]
 chest on top of each other
 DDestroy me not in  an eternal loop
-Goat minigame you winfail if you lower the last tile
-Goat act die
-Goat act leave
-Goat act stats and attack
-
 
 //DELETE
 */

@@ -1642,6 +1642,19 @@ void createGoatArea(){
 	trUnitSelectByQV("MinigameStartID");
 	trUnitChangeProtoUnit("Torch");
 	StageVector = tileForMinigame;
+	int chestnum = xsMax(4,cNumberNonGaiaPlayers/2+1);
+	while(chestnum > 0){
+		trQuestVarSetFromRand("x", 0, 252);
+		trQuestVarSetFromRand("z", 0, 252);
+		if((trGetTerrainType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) == getTerrainType(baseTerrain)) && (trGetTerrainSubType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) == getTerrainSubType(baseTerrain))){
+			currentId = trGetNextUnitScenarioNameNumber();
+			UnitCreate(0, "Cinematic Block", 1*trQuestVarGet("x"),1*trQuestVarGet("z"), 0);
+			if(trCountUnitsInArea(""+currentId, 0, "Great Box", 60) == 0){
+				CreateChest(1*trQuestVarGet("x"),1*trQuestVarGet("z"));
+				chestnum = chestnum-1;
+			}
+		}
+	}
 	refreshPassability();
 	int templeSafeArea = trGetNextUnitScenarioNameNumber();
 	//deployCluster(2.0*centrePosX, 2.0*centrePosZ, "Temple Underworld", 0, 1, 20.0, true);

@@ -227,7 +227,11 @@ inactive
 			if(Stage == 2){
 				uiZoomToProto(""+RhinoProto);
 			}
+			if(Stage == 3){
+				uiZoomToProto(""+GoatProto);
+			}
 		}
+		
 		xsDisableSelf();
 	}
 }
