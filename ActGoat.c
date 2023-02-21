@@ -15,7 +15,7 @@ inactive
 		trDelayedRuleActivation("GoatMinigameDetect");
 		trDelayedRuleActivation("TEST");
 		trDelayedRuleActivation("GoatEndZoneSee");
-		//trDelayedRuleActivation("RhinoAllDead");
+		trDelayedRuleActivation("GoatAllDead");
 		//trDelayedRuleActivation("PoacherTimer");
 		xsEnableRule("GoatPoacherMovement");
 		//trSetCounterDisplay("<color={PlayerColor(2)}>Fencing destroyed: "+FencesDone+"/8");
@@ -31,6 +31,10 @@ inactive
 		trDelayedRuleActivation("GoatActLoops");
 		SpawnGoatPoacher(2);
 		modifyProtounitAbsolute("Throwing Axeman", cNumberNonGaiaPlayers, 55, 4);
+		for(p = 1 ; < cNumberNonGaiaPlayers){
+			xSetPointer(dPlayerData, p);
+			xSetInt(dPlayerData, xTimeout, trTimeMS()*2);
+		}
 	}
 }
 
@@ -51,6 +55,7 @@ highFrequency
 			trUnitSelectClear();
 			trUnitSelect(""+FlagUnitID);
 			trUnitHighlight(10, true);
+			trDelayedRuleActivation("GoatLeave");
 			xsDisableSelf();
 		}
 	}
@@ -68,7 +73,13 @@ inactive
 		if(xGetDatabaseCount(dMissiles) > 0){
 			DoMissile();
 		}
-		
+		if(InMinigame == true){
+			if(trTime() > 1*trQuestVarGet("MGTime")){
+				trQuestVarModify("MGTime", "+", 5);
+				//refreshPassability();
+				//sq6?
+			}
+		}
 		for(p = 1; < cNumberNonGaiaPlayers){
 			xSetPointer(dPlayerData, p);
 			if(InMinigame == true){
@@ -84,15 +95,13 @@ inactive
 							trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
 							trUnitChangeProtoUnit("Hero Death");
 							UnitCreate(0, "Tartarian Gate Flame", trVectorQuestVarGetX("P"+p+"PosMG"),trVectorQuestVarGetZ("P"+p+"PosMG"), 90);
-							if(xGetInt(dPlayerData, xTeleportDue) == 0){
-								xSetVector(dPlayerData, xVectorHold, trVectorQuestVarGet("P"+p+"PosMG"));
-							}
 							PlayersMinigaming = PlayersMinigaming-1;
 							trChatSend(0, "Players MG" + PlayersMinigaming);
 							if(trCurrentPlayer() == p){
 								playSound("xlose.wav");
 								trOverlayText("Minigame Failed!", 3.0,-1,-1,600);
 							}
+							break;
 						}
 					}
 				}
@@ -117,6 +126,26 @@ inactive
 					}
 				}
 			}
+			if((playerIsPlaying(p) == false) && (xGetBool(dPlayerData, xPlayerActive) == true)){
+				trUnitSelectByQV("P"+p+"Unit");
+				trUnitChangeProtoUnit("Ragnorok SFX");
+				trUnitSelectByQV("P"+p+"Unit");
+				trUnitDestroy();
+				trUnitSelectClear();
+				trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+				trUnitChangeProtoUnit("Hero Death");
+				xSetBool(dPlayerData, xPlayerActive, false);
+				PlayersActive = PlayersActive-1;
+			}
+			if((xGetBool(dPlayerData, xStopDeath) == false) && (trPlayerUnitCountSpecific(p, ""+GoatProto) == 0) && (trPlayerUnitCountSpecific(p, "Prisoner") == 0) && (trPlayerUnitCountSpecific(p, "Anubite") == 0) && (xGetBool(dPlayerData, xPlayerActive) == true) && (xGetBool(dPlayerData, xPlayerDead) == false) && (InMinigame == false)){
+				//PLAYER DEAD
+				PlayersDead = PlayersDead+1;
+				xSetBool(dPlayerData, xPlayerDead, true);
+				PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is dead!");
+			}
+		}
+		if((PlayersActive == PlayersReadyToLeave+PlayersDead) && (PlayersDead != PlayersActive)){
+			xsEnableRule("GoatExit");
 		}
 		
 	}
@@ -207,6 +236,7 @@ void GoatStatueMake(int x = 0, int z = 0){
 	trQuestVarSetFromRand("temp", 1, 9, true);
 	xSetInt(dInterractables, xSquare2, 1*trQuestVarGet("temp"));
 	//trChatSend(0, "<color=0,0.5,0>Sq2 " + 1*trQuestVarGet("temp"));
+	trUnitSelectClear();
 	xFreeDatabaseBlock(dTemp);
 }
 
@@ -326,11 +356,22 @@ highFrequency
 		}
 		InMinigame = false;
 		xsEnableRule("PlayMusic");
+		trChangeTerrainHeight(xsVectorGetX(StageVector)-10,xsVectorGetZ(StageVector)-10,xsVectorGetX(StageVector)+10,xsVectorGetZ(StageVector)+10,9,false);
+		trPaintTerrain(xsVectorGetX(StageVector)-10,xsVectorGetZ(StageVector)-10,xsVectorGetX(StageVector)+10,xsVectorGetZ(StageVector)+10,0,51);
+		refreshPassability();
+		for(p=1 ; < cNumberNonGaiaPlayers){
+			if(trPlayerUnitCountSpecific(p, ""+GoatProto) == 0){
+				CreateGoat(p, xsVectorGetX(StageVector), xsVectorGetZ(StageVector), 0);
+				debugLog("Path 3");
+				
+			}
+		}
 	}
 	else{
-		trMessageSetText("Instructions", 8000);
-		trCounterAddTime("cdgoatminigame", 90,0,"<color={PlayerColor(0)}>Minigame time remaining", 37);
-		playSound("\xpack\xcinematics\intro\music.mp3");
+		trMessageSetText("Sink 6 tiles into lava while remaining alive yourself!", 8000);
+		trCounterAddTime("cdgoatminigame", 120,0,"<color={PlayerColor(0)}>Minigame time remaining", 37);
+		playSoundCustom("\xpack\xcinematics\7_in\music.mp3", "\Yeebaagooon\Zoo Quest\Minigame3.mp3");
+		trQuestVarSet("MGTime", trTime()+5);
 		xsEnableRule("GoatMinigameEnd");
 	}
 	xsDisableSelf();
@@ -340,18 +381,40 @@ void GoatMGTimeout(int eventID = 0){
 	PlayersMinigaming = 0;
 }
 
+/*rule GoatDebug
+active
+highFrequency
+{
+	if(trChatHistoryContains("Reset", 1)){
+		trChatHistoryClear();
+		refreshPassability();
+	}
+}*/
+
 rule GoatMinigameEnd
 inactive
 highFrequency
 {
-	if(PlayersMinigaming == 0){
+	if(PlayersMinigaming <= 0){
 		vector temp = vector(0,0,0);
-		trPaintTerrain(xsVectorGetX(StageVector)-1,xsVectorGetZ(StageVector)-1,xsVectorGetX(StageVector)+31,xsVectorGetZ(StageVector)+11,0,0);
+		trChangeTerrainHeight(xsVectorGetX(StageVector)-10,xsVectorGetZ(StageVector)-10,xsVectorGetX(StageVector)+10,xsVectorGetZ(StageVector)+10,9,false);
+		trPaintTerrain(xsVectorGetX(StageVector)-10,xsVectorGetZ(StageVector)-10,xsVectorGetX(StageVector)+10,xsVectorGetZ(StageVector)+10,0,51);
 		refreshPassability();
+		debugLog("Cols left:" + xGetDatabaseCount(dInterractables));
+		for(n = xGetDatabaseCount(dInterractables) ; > 0){
+			xDatabaseNext(dInterractables);
+			if(xGetInt(dInterractables, xType) == 1){
+				xUnitSelect(dInterractables, xUnitID);
+				trUnitChangeProtoUnit("Hero Birth");
+				xFreeDatabaseBlock(dInterractables);
+			}
+			//debugLog("cols " + xGetDatabaseCount(dInterractables));
+		}
 		for(p=1 ; < cNumberNonGaiaPlayers){
 			xSetPointer(dPlayerData, p);
 			if((xGetInt(dPlayerData, xTeleportDue) == 1) && (xGetBool(dPlayerData, xPlayerActive) == true)){
-				temp = xGetVector(dPlayerData, xVectorHold)*2;
+				temp = xGetVector(dPlayerData, xVectorHold);
+				debugLog("Path 1");
 				trUnitSelectByQV("P"+p+"Unit");
 				trUnitChangeProtoUnit("Ragnorok SFX");
 				trUnitSelectByQV("P"+p+"Unit");
@@ -364,7 +427,8 @@ highFrequency
 				xSetInt(dPlayerData, xTeleportDue, 0);
 			}
 			else if((xGetInt(dPlayerData, xTeleportDue) == 0) && (xGetBool(dPlayerData, xPlayerActive) == true)){
-				if(trPlayerUnitCountSpecific(p, ""+GazelleProto) == 0){
+				if(trPlayerUnitCountSpecific(p, ""+GoatProto) == 0){
+					debugLog("Path 2");
 					temp = xGetVector(dPlayerData, xVectorHold);
 					trUnitSelectByQV("P"+p+"Unit");
 					trUnitChangeProtoUnit("Ragnorok SFX");
@@ -375,6 +439,11 @@ highFrequency
 					trUnitChangeProtoUnit("Hero Death");
 					CreateGoat(p, xsVectorGetX(temp), xsVectorGetZ(temp), 0);
 				}
+			}
+			if(trPlayerUnitCountSpecific(p, ""+GoatProto) == 0){
+				CreateGoat(p, trVectorQuestVarGetX("P"+p+"PosMG")*2, trVectorQuestVarGetZ("P"+p+"PosMG")*2, 0);
+				debugLog("Path 3");
+				//fail is /2
 			}
 		}
 		uiZoomToProto(""+GoatProto);
@@ -405,66 +474,84 @@ highFrequency
 	}
 }
 
-
-/*rule GoatMinigameEnd
+rule GoatLeave
 inactive
 highFrequency
 {
-	if(PlayersMinigaming == 0){
-		vector temp = vector(0,0,0);
-		//trPaintTerrain(xsVectorGetX(StageVector)-1,xsVectorGetZ(StageVector)-1,xsVectorGetX(StageVector)+31,xsVectorGetZ(StageVector)+11,0,0);
-		//refreshPassability();
-		
-		for(p=1 ; < cNumberNonGaiaPlayers){
-			xSetPointer(dPlayerData, p);
-			if(xGetBool(dPlayerData, xStopDeath) == true){
-				if(trCurrentPlayer() == p){
-					trMessageSetText("Minigame end lose.", 5000);
-					playSound("xlose.wav");
-				}
-			}
-			if((xGetInt(dPlayerData, xTeleportDue) == 1) && (xGetBool(dPlayerData, xPlayerActive) == true)){
-				temp = xGetVector(dPlayerData, xVectorHold);
-				trUnitSelectByQV("P"+p+"Unit");
-				trUnitChangeInArea(p,p,""+GoatProto, "Rocket", 999);
-				trUnitSelectByQV("P"+p+"Unit");
-				trUnitChangeProtoUnit("Ragnorok SFX");
-				trUnitSelectByQV("P"+p+"Unit");
-				trUnitDestroy();
-				trUnitSelectClear();
-				trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
-				trUnitChangeProtoUnit("Hero Death");
-				CreateGoat(p, xsVectorGetX(temp), xsVectorGetZ(temp), 0);
-			}
+	int STOP = 0;
+	trQuestVarModify("PlayerCycle", "+", 1);
+	if(1*trQuestVarGet("PlayerCycle") > cNumberNonGaiaPlayers){
+		trQuestVarSet("PlayerCycle", 1);
+	}
+	int p = 1*trQuestVarGet("PlayerCycle");
+	xSetPointer(dPlayerData, p);
+	tempV = kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit"));
+	if(xGetBool(dPlayerData, xReadyToLeave) == true){
+		if((trGetTerrainType(1*xsVectorGetX(tempV)/2,1*xsVectorGetZ(tempV)/2) != getTerrainType(LeaveTerrain)) || (trGetTerrainSubType(1*xsVectorGetX(tempV)/2,1*xsVectorGetZ(tempV)/2) != getTerrainSubType(LeaveTerrain))){
+			xSetBool(dPlayerData, xReadyToLeave, false);
 			xSetBool(dPlayerData, xStopDeath, false);
-			xSetInt(dPlayerData, xTeleportDue, 0);
+			PlayersReadyToLeave = PlayersReadyToLeave-1;
+			trUnitSelectByQV("P"+p+"Unit");
+			trMutateSelected(kbGetProtoUnitID(""+GoatProto));
+			PlayerColouredChatToSelf(p, "You have left the extraction zone");
+			STOP = 1;
 		}
-		uiZoomToProto(""+GoatProto);
-		uiLookAtProto(""+GoatProto);
-		for(c = xGetDatabaseCount(dTemp) ; > 0){
-			xDatabaseNext(dTemp);
-			xUnitSelect(dTemp, xUnitID);
-			trUnitDestroy();
-			xFreeDatabaseBlock(dTemp);
+	}
+	if((xGetBool(dPlayerData, xReadyToLeave) == false) && (STOP == 0)){
+		if((trGetTerrainType(1*xsVectorGetX(tempV)/2,1*xsVectorGetZ(tempV)/2) == getTerrainType(LeaveTerrain)) && (trGetTerrainSubType(1*xsVectorGetX(tempV)/2,1*xsVectorGetZ(tempV)/2) == getTerrainSubType(LeaveTerrain))){
+			xSetBool(dPlayerData, xReadyToLeave, true);
+			xSetBool(dPlayerData, xStopDeath, true);
+			PlayersReadyToLeave = PlayersReadyToLeave+1;
+			trUnitSelectByQV("P"+p+"Unit");
+			trMutateSelected(kbGetProtoUnitID("Prisoner"));
+			PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is ready to leave");
+			if(trQuestVarGet("P"+p+"LeaveMsg") == 0){
+				trQuestVarSet("P"+p+"LeaveMsg", 1);
+				ColouredChatToPlayer(p, "1,1,0", "You cannot jump or interract in the extraction zone.");
+				ColouredChatToPlayer(p, "1,1,0", "You also cannot die or be attacked.");
+			}
 		}
-		for(b = 0; <xGetDatabaseCount(dPoachers)){
-			xDatabaseNext(dPoachers);
-			xUnitSelect(dPoachers, xUnitID);
-			trUnitChangeProtoUnit("Throwing Axeman");
-		}
-		trUnitSelectByQV("MinigameStartSFX");
-		trUnitChangeProtoUnit("Olympus Temple SFX");
-		trUnitSelectByQV("MinigameStartID");
-		trUnitChangeProtoUnit("Forest Fire SFX");
-		xsDisableSelf();
-		trFadeOutAllSounds(3);
-		trFadeOutMusic(3);
-		xsEnableRule("PlayMusic");
-		InMinigame = false;
-		PlayersMinigaming = 0;
-		trCounterAbort("cdgoatminigame");
-		//trPaintTerrain(xsVectorGetX(StageVector)-2,xsVectorGetZ(StageVector)-2,xsVectorGetX(StageVector)+2,xsVectorGetZ(StageVector)+2,0,17);
-		refreshPassability();
 	}
 }
-*/
+
+rule GoatAllDead
+inactive
+minInterval 5
+{
+	if((Stage == 3) && (PlayersDead == PlayersActive)){
+		trShowWinLose("All players are dead", "xlose.wav");
+		for(p=1 ; < cNumberNonGaiaPlayers){
+			trSetPlayerDefeated(p);
+		}
+		xsDisableSelf();
+		trEndGame();
+	}
+}
+
+rule GoatExit
+inactive
+highFrequency
+{
+	trCounterAbort("poachtimer");
+	xsDisableRule("GoatActLoops");
+	xsDisableRule("GoatAllDead");
+	xsDisableRule("GoatPoacherMovement");
+	xsDisableRule("GoatEndZoneSee");
+	xsDisableRule("GoatLeave");
+	xsDisableRule("GoatTutorialLoops");
+	xsDisableRule("GoatMinigameDetect");
+	xsDisableRule("MGGOGoat");
+	for(p=1 ; < cNumberNonGaiaPlayers){
+		trUnitSelectByQV("P"+p+"Unit");
+		trUnitChangeProtoUnit("Ragnorok SFX");
+		trUnitSelectByQV("P"+p+"Unit");
+		trUnitDestroy();
+		trUnitSelectClear();
+		trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+		trUnitChangeProtoUnit("Hero Death");
+		trCounterAbort("stamina"+p);
+	}
+	trClearCounterDisplay();
+	xsEnableRule("ScoreScreenStart");
+	xsDisableSelf();
+}

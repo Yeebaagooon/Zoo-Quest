@@ -63,6 +63,14 @@ inactive
 						uiLookAtProto(""+RhinoProto);
 					}
 				}
+				if(Stage == 3){
+					trQuestVarSet("P"+p+"Unit", trGetNextUnitScenarioNameNumber());
+					CreateGoat(p, 2*xsVectorGetX(StageVector)+2,2*xsVectorGetZ(StageVector)+2, 0);
+					if(trCurrentPlayer() == p){
+						uiZoomToProto(""+GoatProto);
+						uiLookAtProto(""+GoatProto);
+					}
+				}
 			}
 			case 5:
 			{

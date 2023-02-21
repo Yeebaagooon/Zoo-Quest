@@ -33,6 +33,10 @@ FIX PAINT TREES SO LIKE A CHECKBOARD - actually ok for stage one
 [BUG LIST]
 chest on top of each other
 DDestroy me not in  an eternal loop
+Goat minigame you winfail if you lower the last tile
+Goat act die
+Goat act leave
+Goat act stats and attack
 
 
 //DELETE
@@ -118,6 +122,7 @@ int xRhinoChargeTime = 0;
 int xRhinoChargeTimeMax = 0;
 int xGoatTarget = 0;
 int xGoatJumpDist = 0;
+int xTimeout = 0;
 
 int dDestroyMe = 0;
 int xDestroyName = 0;
@@ -154,6 +159,7 @@ highFrequency
 	xRhinoChargeTimeMax = xInitAddInt(dPlayerData, "rhino charge max", 15);
 	xGoatTarget = xInitAddVector(dPlayerData, "goat target", vector(0,0,0));
 	xGoatJumpDist = xInitAddFloat(dPlayerData, "goat jump dist", 0.0);
+	xTimeout = xInitAddInt(dPlayerData, "goat jump timeout", 1000);
 	xsDisableSelf();
 	for(p=1; <= cNumberNonGaiaPlayers) {
 		xAddDatabaseBlock(dPlayerData, true);

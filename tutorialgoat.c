@@ -99,6 +99,7 @@ inactive
 			xSetPointer(dPlayerData, xPlayerUnitID);
 			xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
 			xSetInt(dPlayerData, xTarget, 0);
+			xSetInt(dPlayerData, xTimeout, trTimeMS()*2);
 			if(trCurrentPlayer() == p){
 				trCounterAddTime("cdtutorial", -100, -200, "<color={PlayerColor("+p+")}>Press 'Q' to jump to the cursor.", -1);
 			}
@@ -157,28 +158,17 @@ void SquareHeight(int sq = 0){
 		}
 		int d = iModulo(3, sq)+1;
 		x = StartX+(d*7-16);
-		float height = trGetTerrainHeight(x+2,z+2)-1;
+		float height = trGetTerrainHeight(x+2,z+2);
 		if(height > 0){
-			trChangeTerrainHeight(x,z,x+5,z+5,height,false);
+			trChangeTerrainHeight(x,z,x+5,z+5,height-1,false);
 		}
-		if(height == 1){
+		if(height == 2){
 			trPaintTerrain(x,z,x+4,z+4,0,6,false);
 		}
-		if(height <= 0){
+		if(height == 1){
 			trPaintTerrain(x,z,x+5,z+5,5,7,false);
 			SquaresDown = SquaresDown+1;
 			trChatSend(0, ""+SquaresDown);
-			/*for(a = 0 ; < xGetDatabaseCount(dInterractables)){
-				xDatabaseNext(dInterractables);
-				if(xGetInt(dInterractables, xType) == 1){
-					dir = kbGetBlockPosition(""+xGetInt(dInterractables, xUnitID));
-					if(xsVectorGetY(dir) <= 0){
-						xUnitSelect(dInterractables, xUnitID);
-						trUnitChangeProtoUnit("Fire Hades");
-						xFreeDatabaseBlock(dInterractables);
-					}
-				}
-			}*/
 		}
 	}
 }
@@ -215,7 +205,9 @@ inactive
 					trUnitDoWorkOnUnit(""+xGetInt(dPlayerData, xTarget),-1);
 					xAddDatabaseBlock(dDestroyMe, true);
 					xSetInt(dDestroyMe, xDestroyName, xGetInt(dPlayerData, xTarget));
-					xSetInt(dDestroyMe, xDestroyTime, trTimeMS()+4800);
+					xSetInt(dDestroyMe, xDestroyTime, trTimeMS()+4000);
+					xSetInt(dPlayerData, xTimeout, trTimeMS()+900);
+					//32 is anim
 				}
 				else{
 					//jump too far
@@ -242,7 +234,7 @@ inactive
 				trQuestVarSet("P"+p+"FountainMsg", 2);
 			}
 			else{
-				for(n = 1 ; <= xGetDatabaseCount(dInterractables)){
+				for(n = xGetDatabaseCount(dInterractables) ; > 0){
 					xDatabaseNext(dInterractables);
 					if(trCountUnitsInArea(""+xGetInt(dInterractables, xUnitID),p,""+GoatProto, 5) > 0){
 						xUnitSelect(dInterractables, xUnitID);
@@ -280,6 +272,7 @@ inactive
 {
 	for(p=1 ; < cNumberNonGaiaPlayers){
 		xSetPointer(dPlayerData, p);
+		int anim = kbUnitGetAnimationActionType(kbGetBlockID(""+1*trQuestVarGet("P"+p+"Unit")+""));
 		if(xGetInt(dPlayerData, xTarget) > 0){
 			trUnitSelectClear();
 			trUnitSelect(""+xGetInt(dPlayerData, xTarget));
@@ -319,6 +312,47 @@ inactive
 				trUnitOverrideAnimation(2, 0, true, true, -1, 0);
 				
 				trVectorQuestVarSet("P"+p+"Pos", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
+			}
+			trUnitSelectClear();
+			if(trTimeMS() > xGetInt(dPlayerData, xTimeout)){
+				if(anim != 32){
+					//end timeout jump
+					xUnitSelect(dPlayerData, xTarget);
+					trUnitConvert(p);
+					trMutateSelected(kbGetProtoUnitID("Transport Ship Greek"));
+					trSetSelectedScale(0,1,0);
+					
+					trUnitSelectByQV("P"+p+"Unit");
+					trImmediateUnitGarrison(""+xGetInt(dPlayerData, xTarget));
+					xUnitSelect(dPlayerData, xTarget);
+					trUnitEjectContained();
+					//trUnitChangeProtoUnit("Dwarf");
+					
+					xUnitSelect(dPlayerData, xTarget);
+					trUnitDestroy();
+					
+					xSetInt(dPlayerData, xTarget, 0);
+					
+					trUnitSelectByQV("P"+p+"Unit");
+					if(xGetBool(dPlayerData, xReadyToLeave) == false){
+						trMutateSelected(kbGetProtoUnitID(""+GoatProto));
+					}
+					if(xGetBool(dPlayerData, xReadyToLeave) == true){
+						trMutateSelected(kbGetProtoUnitID("Prisoner"));
+					}
+					trSetSelectedScale(0,1,0);
+					
+					//trUnitSelectByQV("P"+p+"Unit");
+					//trSetUnitOrientation(trVectorQuestVarGet("V"+p+"dir"), vector(0,1,0), true);
+					
+					xSetInt(dPlayerData, xOldAnim, 2);
+					
+					xUnitSelect(dPlayerData, xSpyID);
+					//trUnitOverrideAnimation(13, 0, false, false, -1, 0);
+					trUnitOverrideAnimation(2, 0, true, true, -1, 0);
+					
+					trVectorQuestVarSet("P"+p+"Pos", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
+				}
 			}
 		}
 		trUnitSelectClear();

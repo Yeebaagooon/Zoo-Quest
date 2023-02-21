@@ -90,9 +90,11 @@ highFrequency
 		modifyProtounitAbsolute(""+RhinoDrinkProto, p, 15, 0);
 		modifyProtounitAbsolute(""+RhinoProto, p, 1, xGetFloat(dPlayerData, xRhinoWalk));
 		modifyProtounitAbsolute(""+RhinoProto, p, 2, 22);
+		modifyProtounitAbsolute(""+GoatProto, p, 0, 6);
 		for(a = 24; <= 29){
 			modifyProtounitAbsolute(""+GazelleProto, p, a, 0);
 			modifyProtounitAbsolute(""+RhinoProto, p, a, 0);
+			modifyProtounitAbsolute(""+GoatProto, p, a, 0);
 			modifyProtounitAbsolute("Hero Greek Bellerophon", p, a, 0);
 		}
 		modifyProtounitAbsolute(""+RhinoProto, p, 27, 15);

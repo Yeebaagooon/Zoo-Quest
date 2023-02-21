@@ -519,7 +519,7 @@ inactive
 		InMinigame = false;
 	}
 	if(PlayersMinigaming > 0){
-		playSound("\cinematics\31_out\music.mp3");
+		playSoundCustom("\cinematics\31_out\music.mp3", "\Yeebaagooon\Zoo Quest\Minigame1.mp3");
 	}
 	xsDisableSelf();
 }

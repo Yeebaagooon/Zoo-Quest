@@ -549,7 +549,7 @@ highFrequency
 	else{
 		trMessageSetText("Yeet all " + xGetDatabaseCount(dTemp) + " villagers into the pit. Players granted extra stamina.", 8000);
 		trCounterAddTime("cdrhinominigame", 90,0,"<color={PlayerColor(0)}>Minigame time remaining", 35);
-		playSound("\xpack\xcinematics\intro\music.mp3");
+		playSoundCustom("\xpack\xcinematics\intro\music.mp3", "\Yeebaagooon\Zoo Quest\Minigame2.mp3");
 	}
 	xsDisableSelf();
 }
