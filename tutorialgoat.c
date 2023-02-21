@@ -85,10 +85,10 @@ inactive
 			UnitCreate(0, "Cinematic Block", 34*2, p*16, 270);
 			trUnitSelectClear();
 			trUnitSelect(""+temp);
-			trUnitChangeProtoUnit("Spy Eye");
-			trUnitSelectClear();
-			trUnitSelect(""+temp);
-			trMutateSelected(kbGetProtoUnitID("Shrine"));
+			trUnitChangeProtoUnit("Shrine");
+			//trUnitSelectClear();
+			//trUnitSelect(""+temp);
+			//trMutateSelected(kbGetProtoUnitID("Shrine"));
 			trUnitSelectClear();
 			trUnitSelect(""+temp);
 			trUnitSetAnimationPath("2,0,0,0,0");
@@ -168,7 +168,7 @@ void SquareHeight(int sq = 0){
 		if(height == 1){
 			trPaintTerrain(x,z,x+5,z+5,5,7,false);
 			SquaresDown = SquaresDown+1;
-			trChatSend(0, ""+SquaresDown);
+			playSound("fireball fall 2.wav");
 		}
 	}
 }
@@ -231,7 +231,12 @@ inactive
 			trUnitOverrideAnimation(18, 0, true, false, -1, 0);
 			//Interract
 			if(TutorialMode == true){
-				trQuestVarSet("P"+p+"FountainMsg", 2);
+				if(trCountUnitsInArea(""+1*trQuestVarGet("P"+p+"Unit"),0,"Shrine", 6) > 0){
+					trQuestVarSet("P"+p+"FountainMsg", 2);
+				}
+				if(QuickStart != 0){
+					trQuestVarSet("P"+p+"FountainMsg", 2);
+				}
 			}
 			else{
 				for(n = xGetDatabaseCount(dInterractables) ; > 0){
@@ -244,6 +249,30 @@ inactive
 							//int statue = xGetInt(dInterractables, xSubtype);
 							SquareHeight(xGetInt(dInterractables, xSquare1));
 							SquareHeight(xGetInt(dInterractables, xSquare2));
+						}
+						if(xGetInt(dInterractables, xType) == 2){
+							//Interracting with shrine
+							if(xGetInt(dInterractables, xSubtype) == 0){
+								xSetInt(dInterractables, xSubtype, 1);
+								xUnitSelect(dInterractables, xUnitID);
+								trQuestVarSetFromRand("temp", ShrineTimeMin, ShrineTimeMax);
+								xSetInt(dInterractables, xSquare1, trTime()+1*trQuestVarGet("temp"));
+								trUnitHighlight(1*trQuestVarGet("temp"), false);
+								tempV = kbGetBlockPosition(""+1*xGetInt(dInterractables, xUnitID));
+								temp = trGetNextUnitScenarioNameNumber();
+								UnitCreate(0, "Dwarf", xsVectorGetX(tempV), xsVectorGetZ(tempV), 0);
+								trUnitSelectClear();
+								trUnitSelect(""+temp);
+								trUnitChangeProtoUnit("Timeshift Out");
+								xSetInt(dInterractables, xSquare2, temp);
+								trUnitSelectClear();
+								trUnitSelect(""+temp);
+								trUnitSetAnimationPath("0,1,0,0,0");
+								if(trCurrentPlayer() == p){
+									playSound("shrine.wav");
+								}
+								ShrinesGot = ShrinesGot+1;
+							}
 						}
 					}
 				}
@@ -439,7 +468,7 @@ inactive
 				trUnitSelectClear();
 				trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
 				trUnitChangeProtoUnit("Hero Death");
-				CreateRhino(p, 14, p*16, 90);
+				CreateGoat(p, 14, p*16, 90);
 			}
 		}
 	}

@@ -33,6 +33,7 @@ FIX PAINT TREES SO LIKE A CHECKBOARD - actually ok for stage one
 [BUG LIST]
 chest on top of each other
 DDestroy me not in  an eternal loop
+MG3 OOB
 
 //DELETE
 */
@@ -40,6 +41,7 @@ DDestroy me not in  an eternal loop
 //---Controls
 //\Yeebaagooon\Zoo Quest\Test sound.mp3
 int QuickStart = 3;
+// 3 for goat
 int Stage = 0;
 string MapVersion = "Test Version";
 string MapName = "Zoo Quest.xs";
@@ -76,6 +78,10 @@ bool TutorialMode = false;
 int ActPart = 0;
 int PoachersDead = 0;
 int PoachersTarget = 0;
+int ShrinesGot = 0;
+int ShrinesMax = 0;
+int ShrineTimeMin = 80;
+int ShrineTimeMax = 200;
 
 //DB STUFF
 int DestroyNumber = 0;

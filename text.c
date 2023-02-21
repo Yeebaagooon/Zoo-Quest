@@ -152,7 +152,7 @@ int npcDiag(int npc = 0, int dialog = 0) {
 			{
 				case 1:
 				{
-					uiMessageBox("Press 'W' to interract with nearby objects (such as the x).");
+					uiMessageBox("Press 'W' to interract with nearby objects (such as the shrine).");
 				}
 				case 2:
 				{

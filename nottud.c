@@ -1655,17 +1655,90 @@ void createGoatArea(){
 			}
 		}
 	}
+	ABORT = 0;
+	int shrinenum = xsMax(12,cNumberNonGaiaPlayers*4);
+	while(shrinenum > 0){
+		trQuestVarSetFromRand("x", 0, 252);
+		trQuestVarSetFromRand("z", 0, 252);
+		currentId = trGetNextUnitScenarioNameNumber();
+		UnitCreate(0, "Cinematic Block", 1*trQuestVarGet("x"),1*trQuestVarGet("z"), 0);
+		if((trGetTerrainType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainType("IceA")) && (trGetTerrainSubType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainSubType("IceA"))){
+			if((trGetTerrainType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainType("OlympusA")) && (trGetTerrainSubType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainSubType("OlympusA"))){
+				if(trCountUnitsInArea(""+currentId, 0, "Shrine", 20) == 0){
+					trUnitSelectClear();
+					trUnitSelect(""+currentId);
+					trUnitChangeProtoUnit("Shrine");
+					trUnitSelectClear();
+					trUnitSelect(""+currentId);
+					trUnitSetAnimationPath("2,0,0,0,0");
+					xAddDatabaseBlock(dInterractables, true);
+					xSetInt(dInterractables, xUnitID, currentId);
+					xSetInt(dInterractables, xType, 2);
+					xSetInt(dInterractables, xSubtype, 0);
+					xSetInt(dInterractables, xSquare1, 0);
+					shrinenum = shrinenum-1;
+				}
+				ABORT = ABORT+1;
+				if(ABORT >500){
+					break;
+					trChatSend(0, "ERROR SHRINE");
+				}
+			}
+		}
+	}
+	int runenum = xsMin(12,cNumberNonGaiaPlayers*4);
+	while(runenum > 0){
+		trQuestVarSetFromRand("x", 0, 252);
+		trQuestVarSetFromRand("z", 0, 252);
+		currentId = trGetNextUnitScenarioNameNumber();
+		trQuestVarSetFromRand("temph",0,360,true);
+		UnitCreate(0, "Cinematic Block", 1*trQuestVarGet("x"),1*trQuestVarGet("z"), 1*trQuestVarGet("temph"));
+		if((trGetTerrainType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainType("IceA")) && (trGetTerrainSubType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainSubType("IceA"))){
+			if((trGetTerrainType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainType("OlympusA")) && (trGetTerrainSubType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainSubType("OlympusA"))){
+				if(trCountUnitsInArea(""+currentId, 0, "Shrine", 20) == 0){
+					trUnitSelectClear();
+					trUnitSelect(""+currentId);
+					trUnitChangeProtoUnit("Runestone");
+					trUnitSelectClear();
+					trUnitSelect(""+currentId);
+					trSetScale(2);
+					xAddDatabaseBlock(dInterractables, true);
+					xSetInt(dInterractables, xUnitID, currentId);
+					xSetInt(dInterractables, xType, 3);
+					xSetInt(dInterractables, xSubtype, 0);
+					xSetInt(dInterractables, xSquare1, 0);
+					xSetInt(dInterractables, xSquare2, 0);
+					runenum = runenum-1;
+				}
+				ABORT = ABORT+1;
+				if(ABORT >500){
+					break;
+					trChatSend(0, "ERROR RUNE");
+				}
+			}
+		}
+	}
 	refreshPassability();
 	int templeSafeArea = trGetNextUnitScenarioNameNumber();
 	//deployCluster(2.0*centrePosX, 2.0*centrePosZ, "Temple Underworld", 0, 1, 20.0, true);
 	paintUnit("SnowA", "Pine Snow", 0, 0.035);
 	paintUnit("SnowA", "Rock River Icy", 0, 0.02);
 	paintUnit("SnowA", "Frost Drift", 0, 0.01);
+	//paintUnit("SnowA", "Runestone", 0, 0.01);
 	paintUnit("CliffNorseB", "Ice Block", 0, 0.02);
 	paintUnit("CliffNorseB", "Rock Granite Sprite", 0, 0.04);
 	paintUnit("CliffNorseB", "Rock Granite Small", 0, 0.01);
 	//paintUnit("OlympusTile", "Columns", 0, 0.01);
 	//paintUnit("OlympusTile", "Fallen Columns", 0, 0.01);
+	LeaveTerrain = "IceA";
+	Stage = 3;
+	StageRequirement = 60;
+	StageScore = 0;
+	PlayersDead = 0;
+	EndPoint = tileForEnd;
+	MinigameFound = false;
+	InMinigame = false;
+	xsEnableRule("Reset Blackmap");
 }
 
 void createUluru(){

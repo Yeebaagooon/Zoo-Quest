@@ -78,7 +78,7 @@ inactive
 				trModifyProtounit(""+GazelleProto, p, 0, 1);
 				trModifyProtounit("Hero Greek Bellerophon", p, 0, 1);
 				if(trCurrentPlayer() == p){
-					playSound("researchcomplete.wav");
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
 				}
 			}
 			case 6:
@@ -87,7 +87,7 @@ inactive
 				trModifyProtounit(""+GazelleProto, p, 2, 4);
 				trModifyProtounit("Hero Greek Bellerophon", p, 2, 4);
 				if(trCurrentPlayer() == p){
-					playSound("researchcomplete.wav");
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
 				}
 			}
 			case 7:
@@ -96,7 +96,7 @@ inactive
 				trModifyProtounit(""+GazelleProto, p, 1, 0.5);
 				trModifyProtounit("Hero Greek Bellerophon", p, 1, 0.5);
 				if(trCurrentPlayer() == p){
-					playSound("researchcomplete.wav");
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
 				}
 			}
 			case 8:
@@ -105,7 +105,7 @@ inactive
 				trModifyProtounit(""+GazelleProto, p, 1, 1);
 				trModifyProtounit("Hero Greek Bellerophon", p, 1, 1);
 				if(trCurrentPlayer() == p){
-					playSound("researchcomplete.wav");
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
 				}
 			}
 			case 9:
@@ -114,7 +114,7 @@ inactive
 				trModifyProtounit(""+GazelleProto, p, 2, 6);
 				trModifyProtounit("Hero Greek Bellerophon", p, 2, 6);
 				if(trCurrentPlayer() == p){
-					playSound("researchcomplete.wav");
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
 				}
 			}
 			case 10:
@@ -123,7 +123,7 @@ inactive
 				trModifyProtounit(""+GazelleProto, p, 1, 2);
 				trModifyProtounit("Hero Greek Bellerophon", p, 1, 2);
 				if(trCurrentPlayer() == p){
-					playSound("researchcomplete.wav");
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
 				}
 			}
 			case 11:
@@ -132,7 +132,7 @@ inactive
 				xSetInt(dPlayerData, xHPRegenTime, 30);
 				xSetInt(dPlayerData, xHPRegen, xGetInt(dPlayerData, xHPRegen)+1);
 				if(trCurrentPlayer() == p){
-					playSound("researchcomplete.wav");
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
 				}
 			}
 			case 12:
@@ -141,7 +141,7 @@ inactive
 				trModifyProtounit(""+RhinoProto, p, 0, 2);
 				trModifyProtounit(""+RhinoDrinkProto, p, 0, 2);
 				if(trCurrentPlayer() == p){
-					playSound("researchcomplete.wav");
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
 				}
 			}
 			case 13:
@@ -149,7 +149,7 @@ inactive
 				//Rhino base Speed
 				xSetFloat(dPlayerData, xRhinoWalk, (xGetFloat(dPlayerData, xRhinoWalk)+0.5));
 				if(trCurrentPlayer() == p){
-					playSound("researchcomplete.wav");
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
 				}
 			}
 			case 14:
@@ -157,7 +157,7 @@ inactive
 				//Rhino charge Speed
 				xSetFloat(dPlayerData, xRhinoRun, (xGetFloat(dPlayerData, xRhinoRun)+1.5));
 				if(trCurrentPlayer() == p){
-					playSound("researchcomplete.wav");
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
 				}
 			}
 			case 15:
@@ -165,7 +165,7 @@ inactive
 				//Rhino charge time
 				xSetInt(dPlayerData, xRhinoChargeTimeMax, (xGetInt(dPlayerData, xRhinoChargeTimeMax)+2));
 				if(trCurrentPlayer() == p){
-					playSound("researchcomplete.wav");
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
 				}
 			}
 			case 16:
@@ -173,17 +173,16 @@ inactive
 				//Rhino drink time
 				xSetFloat(dPlayerData, xRhinoDrinkTime, (xGetFloat(dPlayerData, xRhinoDrinkTime)-1));
 				if(trCurrentPlayer() == p){
-					playSound("researchcomplete.wav");
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
 				}
 			}
 			case 17:
 			{
 				//Rhino minigame reward regen
-				xSetPointer(dPlayerData, p);
 				xSetInt(dPlayerData, xHPRegenTime, 20);
 				xSetInt(dPlayerData, xHPRegen, xGetInt(dPlayerData, xHPRegen)+1);
 				if(trCurrentPlayer() == p){
-					playSound("researchcomplete.wav");
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
 				}
 			}
 			case 18:
@@ -191,7 +190,7 @@ inactive
 				//Rhino minigame charge Speed
 				xSetFloat(dPlayerData, xRhinoRun, (xGetFloat(dPlayerData, xRhinoRun)*1.2));
 				if(trCurrentPlayer() == p){
-					playSound("researchcomplete.wav");
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
 				}
 			}
 			case 19:
@@ -200,7 +199,7 @@ inactive
 				trModifyProtounit(""+RhinoProto, p, 0, 5);
 				trModifyProtounit(""+RhinoDrinkProto, p, 0, 5);
 				if(trCurrentPlayer() == p){
-					playSound("researchcomplete.wav");
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
 				}
 			}
 			case 20:
@@ -208,10 +207,120 @@ inactive
 				//Rhino MG charge time
 				xSetInt(dPlayerData, xRhinoChargeTimeMax, (xGetInt(dPlayerData, xRhinoChargeTimeMax)+5));
 				if(trCurrentPlayer() == p){
-					playSound("researchcomplete.wav");
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
 				}
 			}
-			
+			case 21:
+			{
+				//Goat +2 HP
+				trModifyProtounit(""+GoatProto, p, 0, 2);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 22:
+			{
+				//Goat +0.5 speed
+				trModifyProtounit(""+GoatProto, p, 1, 0.5);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 23:
+			{
+				//Goat +4 LOS
+				trModifyProtounit(""+GoatProto, p, 2, 4);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 24:
+			{
+				//Goat regen +1/30
+				xSetInt(dPlayerData, xHPRegenTime, 20);
+				xSetInt(dPlayerData, xHPRegen, xGetInt(dPlayerData, xHPRegen)+1);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 25:
+			{
+				//Goat +3 HP
+				trModifyProtounit(""+GoatProto, p, 0, 3);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 26:
+			{
+				//Goat +0.75 speed
+				trModifyProtounit(""+GoatProto, p, 1, 0.75);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 27:
+			{
+				//Goat remove snowman
+				if(xGetDatabaseCount(dPoachers) > 0){
+					xDatabaseNext(dPoachers);
+					xUnitSelect(dPoachers, xUnitID);
+					trUnitChangeProtoUnit("Timeshift In");
+					xUnitSelect(dPoachers, xUnitID);
+					trUnitSetAnimationPath("0,1,1,0,0,0");
+				}
+				xFreeDatabaseBlock(dPoachers);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 28:
+			{
+				//Goat +10s shrine min
+				ShrineTimeMin = ShrineTimeMin+10;
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 29:
+			{
+				//Goat +20s shrine max
+				ShrineTimeMax = ShrineTimeMax+20;
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 30:
+			{
+				//Goat +60s all shrines
+				for(x = xGetDatabaseCount(dInterractables); > 0){
+					xDatabaseNext(dInterractables);
+					if(xGetInt(dInterractables, xType) == 2){
+						if(xGetInt(dInterractables, xSubtype) == 1){
+							xSetInt(dInterractables, xSquare1, xGetInt(dInterractables, xSquare1)+60);
+						}
+					}
+				}
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 31:
+			{
+				//Goat +6 HP
+				trModifyProtounit(""+GoatProto, p, 0, 6);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 32:
+			{
+				//Goat +1.5 speed
+				trModifyProtounit(""+GoatProto, p, 1, 1.5);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
 		}
 		trQuestVarSet("P"+ActionChoice+"YesAction", 0);
 		trQuestVarSet("P"+ActionChoice+"NoAction", 0);

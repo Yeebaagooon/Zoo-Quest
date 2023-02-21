@@ -202,6 +202,56 @@ inactive
 		
 		//debugLog("SCORE = " + StageScore);
 	}
+	if(Stage == 3){
+		//COPY FROM STAGE 2 BECAUSE THIS HAS SHRINE WEIGHTING AND IS MESSY
+		//[CALCULATE THE PERCENT COMPLETE]
+		int ShrineTarget = ShrinesMax-2;
+		debugLog("Shrines max = " + ShrinesMax);
+		if(ShrinesGot >= ShrineTarget){
+			//passing score
+			StageScore = StageRequirement;
+			debugLog("Pass, score set to " + StageScore);
+			ExtrasGot = ExtrasGot + (ShrinesGot - ShrineTarget)*3;
+		}
+		else{
+			//failed main goal
+			trQuestVarSet("temp", ShrinesGot);
+			StageScore = StageRequirement*(trQuestVarGet("temp")/ShrinesMax);
+			debugLog("Fail, score set to " + StageScore);
+		}
+		//[CALCULATION PENALTIES]
+		Extras = Extras + (ShrinesMax - ShrineTarget)*3;
+		StageScore = StageScore - (PlayersDead*6);
+		//[ADD ON BONUSES, ADD EXTRAS FOR WEIGHTING AND EXTRASGOT IF A PLAYER HAS IT]
+		//[CHESTS, UP TO 5 EXTRA POACHER DEATHS,]
+		Extras = Extras + ChestsTotal*2;
+		ExtrasGot = ExtrasGot + ChestsFound*2;
+		debugLog("Chests = " + ChestsFound + " out of " + ChestsTotal);
+		
+		Extras = Extras + 2;
+		if(MinigameFound == true){
+			ExtrasGot = ExtrasGot + 2;
+		}
+		Extras = Extras + (PlayersActive*5);
+		if(MinigameWins > 0){
+			ExtrasGot = ExtrasGot + MinigameWins*5;
+		}
+		
+		if(ExtrasGot > 0){
+			calc = ExtrasGot/Extras;
+			StageScore = StageScore + (calc*(100-StageRequirement));
+			debugLog("ExtrasGot = " + ExtrasGot);
+			debugLog("Extras = " + Extras);
+			debugLog("Added to score = " + (calc*(100-StageRequirement)));
+		}
+		if((ExtrasGot >= Extras) && (Extras > 0)){
+			StageScore = 100;
+		}
+		if(ExtrasGot > Extras){
+			trChatSend(0, "ERROR MORE THAN 100 PERCENT COMPLETE");
+		}
+		//debugLog("SCORE = " + StageScore);
+	}
 }
 
 rule DestroyStuff
@@ -437,7 +487,16 @@ inactive
 			}
 		}
 		if(Stage == 2){
-			characterDialog("Bonus unlocked!", "Rhino bonus 1", ActIcon(Stage));
+			characterDialog("Bonus unlocked!", "+4 hitpoints next stage", ActIcon(Stage));
+			for(p = 1 ; < cNumberNonGaiaPlayers){
+				trModifyProtounit(""+GoatProto, p, 0, 4);
+			}
+		}
+		if(Stage == 3){
+			characterDialog("Bonus unlocked!", "Goat Bonus 1", ActIcon(Stage));
+			for(p = 1 ; < cNumberNonGaiaPlayers){
+				trModifyProtounit(""+GoatProto, p, 0, 4);
+			}
 		}
 	}
 	else{
@@ -465,11 +524,18 @@ inactive
 				characterDialog("Bonus unlocked!", "+1 base speed next stage", ActIcon(Stage));
 			}
 			if(Stage == 2){
-				characterDialog("Bonus unlocked!", "Rhino bonus 2", ActIcon(Stage));
+				characterDialog("Bonus unlocked!", "+1hp regen every 30s next stage", ActIcon(Stage));
 			}
 			for(p = 1 ; < cNumberNonGaiaPlayers){
 				xSetPointer(dPlayerData, p);
-				xSetFloat(dPlayerData, xRhinoWalk, xGetFloat(dPlayerData, xRhinoWalk)+1);
+				xSetInt(dPlayerData, xHPRegenTime, 30);
+				xSetInt(dPlayerData, xHPRegen, xGetInt(dPlayerData, xHPRegen)+1);
+			}
+			if(Stage == 3){
+				characterDialog("Bonus unlocked!", "Goat Bonus 2", ActIcon(Stage));
+				for(p = 1 ; < cNumberNonGaiaPlayers){
+					trModifyProtounit(""+GoatProto, p, 0, 4);
+				}
 			}
 		}
 		else{
@@ -498,6 +564,9 @@ inactive
 			}
 			if(Stage == 2){
 				characterDialog("Bonus unlocked!", "rhino max bonus", ActIcon(Stage));
+			}
+			if(Stage == 3){
+				characterDialog("Bonus unlocked!", "goat max bonus", ActIcon(Stage));
 			}
 			playSound("plentybirth.wav");
 		}

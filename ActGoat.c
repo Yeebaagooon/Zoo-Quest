@@ -16,12 +16,13 @@ inactive
 		trDelayedRuleActivation("TEST");
 		trDelayedRuleActivation("GoatEndZoneSee");
 		trDelayedRuleActivation("GoatAllDead");
-		//trDelayedRuleActivation("PoacherTimer");
+		trDelayedRuleActivation("GoatPoacherTimer");
 		xsEnableRule("GoatPoacherMovement");
 		//trSetCounterDisplay("<color={PlayerColor(2)}>Fencing destroyed: "+FencesDone+"/8");
 		ColouredIconChat("1,0.5,0", ActIcon(Stage), "<u>" + ActName(Stage) + "</u>");
-		ColouredIconChat("0.0,0.8,0.2", "icons\icon building wooden fence 64", "Destroy enough fences.");
-		ColouredChat("0.0,0.8,0.2", "Each long fence segment needs at least one break.");
+		ColouredIconChat("0.0,0.8,0.2", "icons\building norse shrine icon 64", "Interract with shrines using W.");
+		ColouredChat("0.0,0.8,0.2", "Each shrine only remains active for a short time.");
+		ColouredChat("0.0,0.8,0.2", "Get as many as you think you need, then head to the extraction zone.");
 		xsEnableRule("PlayMusic");
 		//SpawnRhinoPoacher(xsMax(PlayersActive,3));
 		//SpawnRhinoSuperPoacher(1);
@@ -35,6 +36,8 @@ inactive
 			xSetPointer(dPlayerData, p);
 			xSetInt(dPlayerData, xTimeout, trTimeMS()*2);
 		}
+		ShrinesMax = trPlayerUnitCountSpecific(0, "Shrine");
+		trQuestVarSet("NextPoacherSpawn", trTime()+220);
 	}
 }
 
@@ -73,12 +76,11 @@ inactive
 		if(xGetDatabaseCount(dMissiles) > 0){
 			DoMissile();
 		}
+		if(InMinigame == false){
+			trSetCounterDisplay("<color={PlayerColor(0)}>Shrines Active: " + ShrinesGot);
+		}
 		if(InMinigame == true){
-			if(trTime() > 1*trQuestVarGet("MGTime")){
-				trQuestVarModify("MGTime", "+", 5);
-				//refreshPassability();
-				//sq6?
-			}
+			trSetCounterDisplay("<color={PlayerColor(" + GreenText() + ")}>Squares sunk: " + SquaresDown + "/6");
 		}
 		for(p = 1; < cNumberNonGaiaPlayers){
 			xSetPointer(dPlayerData, p);
@@ -115,10 +117,10 @@ inactive
 						}
 						trQuestVarSetFromRand("temp",1,2,true);
 						if(1*trQuestVarGet("temp") == 1){
-							PlayerChoice(p, "Choose your reward:", "+5 hp", 19, "+5 max stamina", 20, 10000);
+							PlayerChoice(p, "Choose your reward:", "Remove a snowman", 27, "+6 hp", 31, 10000);
 						}
 						else{
-							PlayerChoice(p, "Choose your reward:", "+20 percent charge speed", 18, "+1hp regen every 20s", 17, 10000);
+							PlayerChoice(p, "Choose your reward:", "+1.5 speed", 32, "+60s all shrine current activation time", 30, 10000);
 						}
 						PlayersMinigaming = PlayersMinigaming-1;
 						trChatSend(0, "Players MG" + PlayersMinigaming);
@@ -196,32 +198,56 @@ inactive
 					xSetInt(dDestroyMe, xDestroyTime, trTimeMS()+3000);
 					ChestsFound = ChestsFound+1;
 					xFreeDatabaseBlock(dChests);
-					trQuestVarSetFromRand("temp", 1, 2);
+					trQuestVarSetFromRand("temp", 1, 3);
 					trQuestVarSetFromRand("temp2", 1, 3);
 					if(1*trQuestVarGet("temp") == 1){
 						if(1*trQuestVarGet("temp2") == 1){
-							PlayerChoice(pl, "Choose your reward:", "+2 hp", 12, "+1.5 charge speed", 14, 10000);
+							PlayerChoice(pl, "Choose your reward:", "+2 hp", 21, "+0.5 speed", 22, 10000);
 						}
 						if(1*trQuestVarGet("temp2") == 2){
-							PlayerChoice(pl, "Choose your reward:", "+2 hp", 12, "+2 max stamina", 15, 10000);
+							PlayerChoice(pl, "Choose your reward:", "+2 hp", 21, "+4 LOS", 23, 10000);
 						}
 						if(1*trQuestVarGet("temp2") == 3){
-							PlayerChoice(pl, "Choose your reward:", "+2 hp", 12, "-1s drink time", 16, 10000);
+							PlayerChoice(pl, "Choose your reward:", "+2 hp", 21, "+1hp regen every 30s", 24, 10000);
 						}
 					}
 					if(1*trQuestVarGet("temp") == 2){
 						if(1*trQuestVarGet("temp2") == 1){
-							PlayerChoice(pl, "Choose your reward:", "+0.5 base speed", 13, "+1.5 charge speed", 14, 10000);
+							PlayerChoice(pl, "Choose your reward:", "+3 hp", 25, "+0.75 speed", 26, 10000);
 						}
 						if(1*trQuestVarGet("temp2") == 2){
-							PlayerChoice(pl, "Choose your reward:", "+0.5 base speed", 13, "+2 max stamina", 15, 10000);
+							PlayerChoice(pl, "Choose your reward:", "+0.75 speed", 26, "+4 LOS", 23, 10000);
 						}
 						if(1*trQuestVarGet("temp2") == 3){
-							PlayerChoice(pl, "Choose your reward:", "+0.5 base speed", 13, "-1s drink time", 16, 10000);
+							PlayerChoice(pl, "Choose your reward:", "+3 hp", 25, "+4 LOS", 23, 10000);
+						}
+					}
+					if(1*trQuestVarGet("temp") == 3){
+						if(1*trQuestVarGet("temp2") == 1){
+							PlayerChoice(pl, "Choose your reward:", "Remove a snowman", 27, "+10s shrine min activation time", 28, 10000);
+						}
+						if(1*trQuestVarGet("temp2") == 2){
+							PlayerChoice(pl, "Choose your reward:", "Remove a snowman", 27, "+20s shrine max activation time", 29, 10000);
+						}
+						if(1*trQuestVarGet("temp2") == 3){
+							PlayerChoice(pl, "Choose your reward:", "+20s shrine max activation time", 29, "+60s all shrine current activation time", 30, 10000);
 						}
 					}
 					
 					
+				}
+			}
+		}
+		for(x = xGetDatabaseCount(dInterractables); > 0){
+			xDatabaseNext(dInterractables);
+			if(xGetInt(dInterractables, xType) == 2){
+				if(xGetInt(dInterractables, xSubtype) == 1){
+					if(trTime() > xGetInt(dInterractables, xSquare1)){
+						xSetInt(dInterractables, xSubtype, 0);
+						ShrinesGot = ShrinesGot-1;
+						xUnitSelect(dInterractables, xSquare2);
+						trUnitDestroy();
+					}
 				}
 			}
 		}
@@ -447,14 +473,21 @@ highFrequency
 	}
 	else{
 		trMessageSetText("Sink 6 tiles into lava while remaining alive yourself!", 8000);
-		trCounterAddTime("cdgoatminigame", 120,0,"<color={PlayerColor(0)}>Minigame time remaining", 37);
+		trCounterAddTime("cdgoatminigame", 120,0,"<color={PlayerColor(2)}>Minigame time remaining", 37);
 		playSoundCustom("\xpack\xcinematics\7_in\music.mp3", "\Yeebaagooon\Zoo Quest\Minigame3.mp3");
-		trQuestVarSet("MGTime", trTime()+5);
 		xsEnableRule("GoatMinigameEnd");
 		ColouredIconChat("0.0,0.8,0.2", "icons\world column icon 64", "Lower tiles by interracting with columns.");
 		ColouredChat("0.0,0.8,0.2", "They will lower two squares.");
 		ColouredChat("0.0,0.8,0.2", "You get a warning before the tile becomes lava.");
 		ColouredChat("0.0,0.8,0.2", "When this happens, you won't be able to use the column!");
+	}
+	for(x = xGetDatabaseCount(dInterractables); > 0){
+		xDatabaseNext(dInterractables);
+		if(xGetInt(dInterractables, xType) == 2){
+			if(xGetInt(dInterractables, xSubtype) == 1){
+				xSetInt(dInterractables, xSquare1, xGetInt(dInterractables, xSquare1)+90);
+			}
+		}
 	}
 	xsDisableSelf();
 }
@@ -556,6 +589,21 @@ highFrequency
 	}
 }
 
+rule GoatPoacherTimer
+highFrequency
+inactive
+{
+	if (trTime() > 1*trQuestVarGet("NextPoacherSpawn")) {
+		if(Stage == 3){
+			trQuestVarSet("NextPoacherSpawn", trTime()+60+iModulo(140, trTimeMS()));
+			trQuestVarSetFromRand("temp", 1, 2);
+			SpawnGoatPoacher(1*trQuestVarGet("temp"));
+			trOverlayText("Poachers Spawning...", 5.0,-1,-1,600);
+			playSound("\cinematics\04_in\armyarrive.wav");
+		}
+	}
+}
+
 rule GoatLeave
 inactive
 highFrequency
@@ -614,6 +662,7 @@ rule GoatExit
 inactive
 highFrequency
 {
+	int ShrineMax = trPlayerUnitCountSpecific(0, "Shrine");
 	trCounterAbort("poachtimer");
 	xsDisableRule("GoatActLoops");
 	xsDisableRule("GoatAllDead");
