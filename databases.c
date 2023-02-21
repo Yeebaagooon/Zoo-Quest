@@ -63,6 +63,12 @@ int xMissileCarProto = 0;
 int xMissileAnim = 0;
 int SpyDone = 0;
 
+int dInterractables = 0;
+int xType = 0;
+int xSubtype = 0;
+int xSquare1 = 0;
+int xSquare2 = 0;
+
 rule initialise_spy_database
 active
 highFrequency
@@ -144,6 +150,13 @@ highFrequency
 	xSegment = xInitAddInt(dFences, "segment", 0);
 	
 	MapCentre = xsVectorSet(252/2-1,0,252/2-1);
+	
+	dInterractables = xInitDatabase("interractables");
+	xUnitID = xInitAddInt(dInterractables, "desc", 0);
+	xType = xInitAddInt(dInterractables, "desc", 0);
+	xSubtype = xInitAddInt(dInterractables, "desc", 0);
+	xSquare1 = xInitAddInt(dInterractables, "sq1", 0);
+	xSquare2 = xInitAddInt(dInterractables, "sq2", 0);
 }
 
 /*
@@ -173,6 +186,9 @@ bool rayCollision(vector start = vector(0,0,0), vector dir = vector(1,0,0),
 						return(true);
 					}
 					if((trPlayerUnitCountSpecific(xGetPointer(dPlayerData), ""+RhinoProto) == 1) || (trPlayerUnitCountSpecific(xGetPointer(dPlayerData), ""+RhinoDrinkProto) == 1)){
+						return(true);
+					}
+					if(trPlayerUnitCountSpecific(xGetPointer(dPlayerData), ""+GoatProto) == 1){
 						return(true);
 					}
 				}
@@ -213,6 +229,13 @@ void DoMissile(){
 				break;
 			}
 		}
+		if(Stage == 3){
+			if(rayCollision(prev,dir,dist+2,2)){
+				hit = true;
+				playerhit = xGetPointer(dPlayerData);
+				break;
+			}
+		}
 	}
 	if(hit){
 		//hit effect
@@ -241,6 +264,16 @@ void DoMissile(){
 			xSetPointer(dPlayerData, playerhit);
 			xUnitSelect(dPlayerData, xPlayerUnitID);
 			trDamageUnit(2);
+		}
+		if(Stage == 3){
+			trUnitChangeProtoUnit("Blood Cinematic");
+			if(trCurrentPlayer() == playerhit){
+				playSound("goatselect.wav");
+			}
+			trUnitSelectClear();
+			xSetPointer(dPlayerData, playerhit);
+			xUnitSelect(dPlayerData, xPlayerUnitID);
+			trDamageUnit(1);
 		}
 		//FREE DB LAST
 		xFreeDatabaseBlock(dMissiles);

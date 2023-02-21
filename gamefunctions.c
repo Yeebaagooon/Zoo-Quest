@@ -188,6 +188,49 @@ void SpawnRhinoPoacher(int num = 0){
 	}
 }
 
+void SpawnGoatPoacher(int num = 0){
+	int temp = 0;
+	vector spawn = vector(0,0,0);
+	vector EP = EndPoint*2;
+	int allow = 0;
+	if(InMinigame == false){
+		while(num > 0){
+			temp = trGetNextUnitScenarioNameNumber();
+			trQuestVarSetFromRand("x",0,252);
+			trQuestVarSetFromRand("z",0,252);
+			spawn=xsVectorSet(1*trQuestVarGet("x"),5, 1*trQuestVarGet("z"));
+			while((distanceBetweenVectors(spawn, EP, true) < 2000)){
+				trQuestVarSetFromRand("x",0,252);
+				trQuestVarSetFromRand("z",0,252);
+				spawn=xsVectorSet(1*trQuestVarGet("x"),5, 1*trQuestVarGet("z"));
+				continue;
+			}
+			for(p = 1; < cNumberNonGaiaPlayers){
+				xSetPointer(dPlayerData, p);
+				if((distanceBetweenVectors(spawn, kbGetBlockPosition(""+xGetInt(dPlayerData, xPlayerUnitID)),true) < 800) && (xGetBool(dPlayerData, xPlayerActive) == true)){
+					allow = 1;
+				}
+			}
+			if(allow == 0){
+				UnitCreate(cNumberNonGaiaPlayers, "Throwing Axeman", 1*trQuestVarGet("x"), 1*trQuestVarGet("z"), 0);
+				xAddDatabaseBlock(dPoachers, true);
+				xSetInt(dPoachers, xUnitID, temp);
+				xSetInt(dPoachers, xMoveTime, 0);
+				num = num-1;
+				trUnitSelectClear();
+				trUnitSelect(""+temp);
+				trSetScale(0);
+				trUnitSelectClear();
+				trUnitSelect(""+temp);
+				spyEffect(kbGetProtoUnitID("Snowman"), 0, vector(0,0,0), vector(2,2,2));
+			}
+			else if(allow == 1){
+				allow = 0;
+			}
+		}
+	}
+}
+
 void SpawnRhinoSuperPoacher(int num = 0){
 	int temp = 0;
 	vector spawn = vector(0,0,0);

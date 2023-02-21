@@ -91,6 +91,7 @@ int GlobalTimerMS = 0;
 bool InMinigame = false;
 bool MinigameFound = false;
 int FencesDone = 0;
+int SquaresDown = 0;
 
 int dPlayerData = 0;
 int xSpyID = 0;

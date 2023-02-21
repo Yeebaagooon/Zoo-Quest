@@ -18,6 +18,8 @@ highFrequency
 	trEventSetHandler(33, "TutForceEnd");
 	trEventSetHandler(34, "RhinoMinigameGo");
 	trEventSetHandler(35, "RhinoMGTimeout");
+	trEventSetHandler(36, "GoatMinigameGo");
+	trEventSetHandler(37, "GoatMGTimeout");
 	xsDisableSelf();
 }
 

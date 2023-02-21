@@ -1611,6 +1611,37 @@ void createGoatArea(){
 	trUnitSelect(""+currentId);
 	trUnitSetAnimationPath("0,0,0,0,0,0");
 	FlagUnitID = currentId;
+	//MINIGAME
+	ABORT = 0;
+	vector tileForMinigame = vector(0,0,0);
+	tileForMinigame = getRandomTileMatchingTerrain("CliffNorseB", 15);
+	while((distanceBetweenVectors(tileForStart, tileForMinigame, true) < 4000) && (distanceBetweenVectors(tileForEnd, tileForMinigame, true) < 4000)){
+		tileForMinigame = getRandomTileMatchingTerrain("CliffNorseB", 15);
+		ABORT = ABORT+1;
+		if(ABORT >500){
+			break;
+			trChatSend(0, "ERROR NO MINIGAME TILE");
+		}
+	}
+	int MinigameTileX = xsVectorGetX(tileForMinigame);
+	int MinigameTileZ = xsVectorGetZ(tileForMinigame);
+	float MinigameHeight = trGetTerrainHeight(MinigameTileX, MinigameTileZ);
+	float MinigameMetreX = MinigameTileX*2+1;
+	float MinigameMetreZ = MinigameTileZ*2+1;
+	PaintAtlantisArea(MinigameTileX-1, MinigameTileZ-1, MinigameTileX+1, MinigameTileZ+1, 5, 4);
+	trChangeTerrainHeight(MinigameTileX-1, MinigameTileZ-1, MinigameTileX+1, MinigameTileZ+1, MinigameHeight, false);
+	currentId = trGetNextUnitScenarioNameNumber();
+	UnitCreate(0, "Cinematic Block", MinigameMetreX, MinigameMetreZ,0);
+	trQuestVarSet("MinigameStartID", currentId);
+	currentId = trGetNextUnitScenarioNameNumber();
+	UnitCreate(0, "Cinematic Block", MinigameMetreX, MinigameMetreZ,0);
+	trUnitSelectClear();
+	trUnitSelect(""+currentId);
+	trUnitChangeProtoUnit("Healing SFX");
+	trQuestVarSet("MinigameStartSFX", currentId);
+	trUnitSelectByQV("MinigameStartID");
+	trUnitChangeProtoUnit("Torch");
+	StageVector = tileForMinigame;
 	refreshPassability();
 	int templeSafeArea = trGetNextUnitScenarioNameNumber();
 	//deployCluster(2.0*centrePosX, 2.0*centrePosZ, "Temple Underworld", 0, 1, 20.0, true);

@@ -259,7 +259,9 @@ inactive
 							trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
 							trUnitChangeProtoUnit("Hero Death");
 							UnitCreate(0, "Tartarian Gate Flame", trVectorQuestVarGetX("P"+p+"PosMG"),trVectorQuestVarGetZ("P"+p+"PosMG"), 90);
-							xSetVector(dPlayerData, xVectorHold, trVectorQuestVarGet("P"+p+"PosMG"));
+							if(xGetInt(dPlayerData, xTeleportDue) == 0){
+								xSetVector(dPlayerData, xVectorHold, trVectorQuestVarGet("P"+p+"PosMG"));
+							}
 							PlayersMinigaming = PlayersMinigaming-1;
 							if(trCurrentPlayer() == p){
 								playSound("xlose.wav");

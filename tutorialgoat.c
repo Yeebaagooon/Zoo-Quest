@@ -139,6 +139,50 @@ inactive
 	xsDisableSelf();
 }
 
+void SquareHeight(int sq = 0){
+	int StartX = xsVectorGetX(StageVector);
+	int StartZ = xsVectorGetZ(StageVector);
+	int x = 0;
+	int z = 0;
+	vector dir = vector(0,0,0);
+	if((sq > 0) && (sq < 10)){
+		if((sq >= 1) && (sq <= 3)){
+			z = StartZ+5;
+		}
+		if((sq >= 4) && (sq <= 6)){
+			z = StartZ-2;
+		}
+		if((sq >= 7) && (sq <= 9)){
+			z = StartZ-9;
+		}
+		int d = iModulo(3, sq)+1;
+		x = StartX+(d*7-16);
+		float height = trGetTerrainHeight(x+2,z+2)-1;
+		if(height > 0){
+			trChangeTerrainHeight(x,z,x+5,z+5,height,false);
+		}
+		if(height == 1){
+			trPaintTerrain(x,z,x+4,z+4,0,6,false);
+		}
+		if(height <= 0){
+			trPaintTerrain(x,z,x+5,z+5,5,7,false);
+			SquaresDown = SquaresDown+1;
+			trChatSend(0, ""+SquaresDown);
+			/*for(a = 0 ; < xGetDatabaseCount(dInterractables)){
+				xDatabaseNext(dInterractables);
+				if(xGetInt(dInterractables, xType) == 1){
+					dir = kbGetBlockPosition(""+xGetInt(dInterractables, xUnitID));
+					if(xsVectorGetY(dir) <= 0){
+						xUnitSelect(dInterractables, xUnitID);
+						trUnitChangeProtoUnit("Fire Hades");
+						xFreeDatabaseBlock(dInterractables);
+					}
+				}
+			}*/
+		}
+	}
+}
+
 rule GoatJump
 highFrequency
 inactive
@@ -196,6 +240,21 @@ inactive
 			//Interract
 			if(TutorialMode == true){
 				trQuestVarSet("P"+p+"FountainMsg", 2);
+			}
+			else{
+				for(n = 1 ; <= xGetDatabaseCount(dInterractables)){
+					xDatabaseNext(dInterractables);
+					if(trCountUnitsInArea(""+xGetInt(dInterractables, xUnitID),p,""+GoatProto, 5) > 0){
+						xUnitSelect(dInterractables, xUnitID);
+						trUnitHighlight(1, true);
+						if(xGetInt(dInterractables, xType) == 1){
+							//Interracting with minigame statue
+							//int statue = xGetInt(dInterractables, xSubtype);
+							SquareHeight(xGetInt(dInterractables, xSquare1));
+							SquareHeight(xGetInt(dInterractables, xSquare2));
+						}
+					}
+				}
 			}
 		}
 		if(trPlayerResourceCount(p, "Food") > 0){

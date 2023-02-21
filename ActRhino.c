@@ -482,6 +482,9 @@ highFrequency
 	refreshPassability();
 	trPaintTerrain(xsVectorGetX(StageVector)-1,xsVectorGetZ(StageVector)-1,xsVectorGetX(StageVector)+1,xsVectorGetZ(StageVector)+1,2,10);
 	//trDelayedRuleActivation("DeerMinigameEnd");
+	trUnitSelectByQV("MinigameStartSFX");
+	trUnitChangeInArea(0,0,"Savannah Tree", "Rocket", 8);
+	trUnitChangeInArea(cNumberNonGaiaPlayers,0,"Fence Wood", "Rocket", 8);
 	for(p=1 ; < cNumberNonGaiaPlayers){
 		xSetPointer(dPlayerData, p);
 		if(xGetBool(dPlayerData, xPlayerActive)){
@@ -503,9 +506,6 @@ highFrequency
 				trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
 				trUnitChangeProtoUnit("Hero Death");
 				CreateRhino(p, trVectorQuestVarGetX("P"+p+"PosMG")*2,trVectorQuestVarGetZ("P"+p+"PosMG")*2+10,0);
-				trUnitSelectByQV("MinigameStartSFX");
-				trUnitChangeInArea(0,0,"Savannah Tree", "Rocket", 8);
-				trUnitChangeInArea(cNumberNonGaiaPlayers,0,"Fence Wood", "Rocket", 8);
 				xSetBool(dPlayerData, xStopDeath, true);
 			}
 		}
