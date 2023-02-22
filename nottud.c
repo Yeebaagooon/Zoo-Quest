@@ -1533,12 +1533,33 @@ void createGoatArea(){
 	*even
 	I would do whatever the cohence algorithm in AOM does since I think that does excellent areas but I not got a clue how it does it to repl
 	*/
+	for(i = 0; < 20) {
+		tempV = randomCircleLoc(centrePosX, centrePosZ, 80.0); //dont know what this does
+		for(j = 0; < 10) { //number of circles to make
+			tempV2 = randomCircleLoc(xsVectorGetX(tempV), xsVectorGetZ(tempV), 5.0); //also available area
+			paintCircle(xsVectorGetX(tempV2), xsVectorGetZ(tempV2), toTiles(0.01), "ShorelineAtlanticB"); //to tiles is radius and does internal area
+		}
+	}
+	for(i = 0; < 40) {
+		tempV = randomCircleLoc(centrePosX, centrePosZ, 80.0); //dont know what this does
+		for(j = 0; < 20) { //number of circles to make
+			tempV2 = randomCircleLoc(xsVectorGetX(tempV), xsVectorGetZ(tempV), 4.0); //also available area
+			paintCircle(xsVectorGetX(tempV2), xsVectorGetZ(tempV2), 2, "SnowGrass50"); //to tiles is radius and does internal area
+			for(k = 0; < 2) { //number of circles to make
+				tempV3 = randomCircleLoc(xsVectorGetX(tempV2), xsVectorGetZ(tempV2), 1.0); //also available area
+				paintCircle(xsVectorGetX(tempV3), xsVectorGetZ(tempV3), 1, "SnowGrass25"); //to tiles is radius and does internal area
+			}
+		}
+	}
 	smooth(4);
 	replaceTerrainBelowHeightMax("CliffEgyptianB", "CliffEgyptianA", 4.0);
 	replaceTerrainAboveHeightMax("SandD", "SandC", 6.0);
 	replaceTerrainAboveHeightMax("SandC", "CliffNorseA", 0.0);
 	replaceTerrainAboveHeightMin("Black", "SnowA", -999.0);
 	replaceTerrainAtMinSteepness("SnowA", "CliffNorseA", 1.5);
+	replaceTerrainAtMinSteepness("SnowGrass25", "CliffNorseA", 1.5);
+	replaceTerrainAtMinSteepness("SnowGrass50", "CliffNorseA", 1.5);
+	replaceTerrainAtMinSteepness("ShorelineAtlanticB", "UnderwaterRockC", 1.5);
 	vector tileForEnd = getRandomTileMatchingTerrain("SnowA", 10);
 	int EndTileX = xsVectorGetX(tileForEnd);
 	int EndTileZ = xsVectorGetZ(tileForEnd);
@@ -1611,6 +1632,21 @@ void createGoatArea(){
 	trUnitSelect(""+currentId);
 	trUnitSetAnimationPath("0,0,0,0,0,0");
 	FlagUnitID = currentId;
+	for(i = 0; < 10) {
+		tempV = getRandomTileMatchingTerrain("CliffNorseB", 5);
+		for(j = 0; < 10) { //number of circles to make
+			tempV2 = randomCircleLoc(xsVectorGetX(tempV), xsVectorGetZ(tempV), 8.0); //also available area
+			paintCircle(xsVectorGetX(tempV2), xsVectorGetZ(tempV2), toTiles(0.01), "IceB"); //to tiles is radius and does internal area
+		}
+	}
+	for(i = 0; < 10) {
+		tempV = getRandomTileMatchingTerrain("SnowA", 5);
+		for(j = 0; < 10) { //number of circles to make
+			tempV2 = randomCircleLoc(xsVectorGetX(tempV), xsVectorGetZ(tempV), 8.0); //also available area
+			paintCircle(xsVectorGetX(tempV2), xsVectorGetZ(tempV2), toTiles(0.01), "IceB"); //to tiles is radius and does internal area
+		}
+	}
+	replaceTerrainAtMinSteepness("IceB", "RiverIcyC", 1.5);
 	//MINIGAME
 	ABORT = 0;
 	vector tileForMinigame = vector(0,0,0);
@@ -1721,6 +1757,8 @@ void createGoatArea(){
 	refreshPassability();
 	int templeSafeArea = trGetNextUnitScenarioNameNumber();
 	//deployCluster(2.0*centrePosX, 2.0*centrePosZ, "Temple Underworld", 0, 1, 20.0, true);
+	paintUnit("SnowGrass25", "Pine Snow", 0, 0.07);
+	paintUnit("SnowGrass50", "Pine Snow", 0, 0.12);
 	paintUnit("SnowA", "Pine Snow", 0, 0.035);
 	paintUnit("SnowA", "Rock River Icy", 0, 0.02);
 	paintUnit("SnowA", "Frost Drift", 0, 0.01);
@@ -1730,6 +1768,10 @@ void createGoatArea(){
 	paintUnit("CliffNorseB", "Rock Granite Small", 0, 0.01);
 	//paintUnit("OlympusTile", "Columns", 0, 0.01);
 	//paintUnit("OlympusTile", "Fallen Columns", 0, 0.01);
+	paintUnit("ShorelineAtlanticB", "Snow Drift Barracks", 0, 0.02);
+	paintUnit("ShorelineAtlanticB", "Frost Drift", 0, 0.04);
+	paintUnit("IceB", "Snow Drift Tower", 0, 0.02);
+	paintUnit("IceB", "Frost Drift", 0, 0.04);
 	LeaveTerrain = "IceA";
 	Stage = 3;
 	StageRequirement = 60;
