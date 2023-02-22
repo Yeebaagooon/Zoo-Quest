@@ -411,8 +411,11 @@ inactive
 			trCounterAddTime("CDMG", 12, 0, "<color={PlayerColor("+p+")}>Minigame Starts", 27);
 			MinigameFound = true;
 			for(x=1 ; < cNumberNonGaiaPlayers){
+				xSetPointer(dPlayerData, x);
 				if(x != p){
-					PlayerChoice(x, "Participate in minigame?", "Yes", 4, "No", 0, 11900);
+					if(xGetBool(dPlayerData, xPlayerDead) == false){
+						PlayerChoice(x, "Participate in minigame?", "Yes", 4, "No", 0, 11900);
+					}
 				}
 			}
 			for(b = 0; <xGetDatabaseCount(dPoachers)){
@@ -610,7 +613,7 @@ highFrequency
 			STOP = 1;
 		}
 	}
-	if((xGetBool(dPlayerData, xReadyToLeave) == false) && (STOP == 0)){
+	if((xGetBool(dPlayerData, xReadyToLeave) == false) && (STOP == 0)  && (xGetBool(dPlayerData, xPlayerDead) == false)){
 		if((trGetTerrainType(1*xsVectorGetX(tempV)/2,1*xsVectorGetZ(tempV)/2) == getTerrainType(LeaveTerrain)) && (trGetTerrainSubType(1*xsVectorGetX(tempV)/2,1*xsVectorGetZ(tempV)/2) == getTerrainSubType(LeaveTerrain))){
 			xSetBool(dPlayerData, xReadyToLeave, true);
 			xSetBool(dPlayerData, xStopDeath, true);

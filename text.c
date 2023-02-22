@@ -45,6 +45,10 @@ int npcDiag(int npc = 0, int dialog = 0) {
 					uiZoomToProto(""+GazelleProto);
 					uiLookAtProto(""+GazelleProto);
 					uiMessageBox("Welcome to Zoo Quest. Here's a quick tutorial before we begin.");
+				}
+				case 2:
+				{
+					uiMessageBox("Press 'Q' to jump - you will always jump forward.");
 					dialog = 0;
 				}
 			}

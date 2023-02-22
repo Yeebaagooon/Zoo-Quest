@@ -64,6 +64,9 @@ highFrequency
 	modifyProtounitAbsolute("Villager Egyptian", cNumberNonGaiaPlayers, 0, 10000);
 	modifyProtounitAbsolute("Titan Atlantean", 0, 2, 0);
 	modifyProtounitAbsolute("Titan Gate Dead", 0, 2, 0);
+	modifyProtounitAbsolute("Shrine", 0, 2, 0);
+	modifyProtounitAbsolute("Monument", 0, 2, 0);
+	modifyProtounitAbsolute("Runestone", 0, 2, 0);
 	modifyProtounitAbsolute("Torch", 0, 2, 0);
 	modifyProtounitAbsolute("Flag", 0, 2, 2);
 	modifyProtounitAbsolute("Spy Eye", 0, 2, 2);

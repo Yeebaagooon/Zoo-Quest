@@ -35,6 +35,7 @@ inactive
 			}
 			case 4:
 			{
+				xSetPointer(dPlayerData, p);
 				xSetVector(dPlayerData, xVectorHold, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
 				xSetInt(dPlayerData, xTeleportDue, 1);
 				trUnitSelectByQV("P"+p+"Unit");
@@ -43,6 +44,7 @@ inactive
 				trUnitDestroy();
 				xUnitSelect(dPlayerData, xPlayerUnitID);
 				trUnitDestroy();
+				trChatSendToPlayer(0, p, "Debug TP you should be player " + xGetPointer(dPlayerData));
 				if(Stage == 1){
 					trQuestVarSet("P"+p+"Unit", trGetNextUnitScenarioNameNumber());
 					UnitCreate(p, ""+GazelleProto, 2*xsVectorGetX(StageVector)+7,2*xsVectorGetZ(StageVector)+10, 0);

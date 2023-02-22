@@ -416,6 +416,8 @@ inactive
 		pos = kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit"));
 		if(distanceBetweenVectors(minigame, pos, true) < 10){
 			trUnitSelectByQV("MinigameStartSFX");
+			trUnitChangeInArea(0,0,"Savannah Tree", "Rocket", 8);
+			trUnitSelectByQV("MinigameStartSFX");
 			trUnitChangeProtoUnit("Olympus Temple SFX");
 			trUnitSelectByQV("MinigameStartID");
 			trUnitChangeProtoUnit("Forest Fire SFX");
@@ -425,8 +427,11 @@ inactive
 			trCounterAddTime("CDMG", 12-(QuickStart*5), 0, "<color={PlayerColor("+p+")}>Minigame Starts", 34);
 			MinigameFound = true;
 			for(x=1 ; < cNumberNonGaiaPlayers){
+				xSetPointer(dPlayerData, x);
 				if(x != p){
-					PlayerChoice(x, "Participate in minigame?", "Yes", 4, "No", 0, 11900);
+					if(xGetBool(dPlayerData, xPlayerDead) == false){
+						PlayerChoice(x, "Participate in minigame?", "Yes", 4, "No", 0, 11900);
+					}
 				}
 			}
 			for(b = 0; <xGetDatabaseCount(dPoachers)){
@@ -482,8 +487,6 @@ highFrequency
 	refreshPassability();
 	trPaintTerrain(xsVectorGetX(StageVector)-1,xsVectorGetZ(StageVector)-1,xsVectorGetX(StageVector)+1,xsVectorGetZ(StageVector)+1,2,10);
 	//trDelayedRuleActivation("DeerMinigameEnd");
-	trUnitSelectByQV("MinigameStartSFX");
-	trUnitChangeInArea(0,0,"Savannah Tree", "Rocket", 8);
 	trUnitChangeInArea(cNumberNonGaiaPlayers,0,"Fence Wood", "Rocket", 8);
 	for(p=1 ; < cNumberNonGaiaPlayers){
 		xSetPointer(dPlayerData, p);
@@ -571,6 +574,7 @@ highFrequency
 		if(xGetDatabaseCount(dTemp) == 0){
 			if(xGetBool(dPlayerData, xStopDeath) == true){
 				MinigameWins = 1;
+				modifyProtounitAbsolute(""+RhinoProto, p, 9, 30);
 				if(trCurrentPlayer() == p){
 					playSound("xwin.wav");
 					playSound("\cinematics\15_in\gong.wav");
@@ -665,7 +669,7 @@ highFrequency
 			STOP = 1;
 		}
 	}
-	if((xGetBool(dPlayerData, xReadyToLeave) == false) && (STOP == 0)){
+	if((xGetBool(dPlayerData, xReadyToLeave) == false) && (STOP == 0) && (xGetBool(dPlayerData, xPlayerDead) == false)){
 		if((trGetTerrainType(1*xsVectorGetX(tempV)/2,1*xsVectorGetZ(tempV)/2) == getTerrainType(LeaveTerrain)) && (trGetTerrainSubType(1*xsVectorGetX(tempV)/2,1*xsVectorGetZ(tempV)/2) == getTerrainSubType(LeaveTerrain))){
 			xSetBool(dPlayerData, xReadyToLeave, true);
 			xSetBool(dPlayerData, xStopDeath, true);

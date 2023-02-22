@@ -274,6 +274,48 @@ inactive
 								ShrinesGot = ShrinesGot+1;
 							}
 						}
+						if(xGetInt(dInterractables, xType) == 3){
+							//Interracting with rune
+							if(xGetInt(dInterractables, xSubtype) == 0){
+								xSetInt(dInterractables, xSubtype, 1);
+								xUnitSelect(dInterractables, xUnitID);
+								trQuestVarSetFromRand("temp", ShrineTimeMin/2, ShrineTimeMax/2);
+								xSetInt(dInterractables, xSquare1, trTime()+1*trQuestVarGet("temp"));
+								trUnitHighlight(1*trQuestVarGet("temp"), false);
+								tempV = kbGetBlockPosition(""+1*xGetInt(dInterractables, xUnitID));
+								temp = trGetNextUnitScenarioNameNumber();
+								UnitCreate(0, "Dwarf", xsVectorGetX(tempV), xsVectorGetZ(tempV), 0);
+								trUnitSelectClear();
+								trUnitSelect(""+temp);
+								trUnitChangeProtoUnit("Spy Eye");
+								trUnitSelectClear();
+								trUnitSelect(""+temp);
+								trMutateSelected(kbGetProtoUnitID("Monument"));
+								xSetInt(dInterractables, xSquare2, temp);
+								trUnitSelectClear();
+								trUnitSelect(""+temp);
+								trUnitSetAnimationPath("0,0,0,1,0");
+								trUnitSelectClear();
+								trUnitSelect(""+temp);
+								trSetScale(0);
+								trQuestVarModify("P"+p+"Runes", "+", 1);
+								for(a = xGetDatabaseCount(dInterractables); > 0){
+									xDatabaseNext(dInterractables);
+									if(xGetInt(dInterractables, xType) == 2){
+										if(xGetInt(dInterractables, xSubtype) == 0){
+											tempV = kbGetBlockPosition(""+xGetInt(dInterractables, xUnitID));
+											break;
+										}
+									}
+								}
+								if(trCurrentPlayer() == p){
+									trMinimapFlare(p, 10, tempV, true);
+								}
+								if(1*trQuestVarGet("P"+p+"Runes") == 1){
+									ColouredIconChatToPlayer(p, "1,0,1", "icons\improvement thurisaz rune icon 64", "Runestones will flare an inactive shrine");
+								}
+							}
+						}
 					}
 				}
 			}

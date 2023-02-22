@@ -139,7 +139,7 @@ inactive
 				xSetBool(dPlayerData, xPlayerActive, false);
 				PlayersActive = PlayersActive-1;
 			}
-			if((xGetBool(dPlayerData, xStopDeath) == false) && (trPlayerUnitCountSpecific(p, ""+GoatProto) == 0) && (trPlayerUnitCountSpecific(p, "Prisoner") == 0) && (trPlayerUnitCountSpecific(p, "Anubite") == 0) && (xGetBool(dPlayerData, xPlayerActive) == true) && (xGetBool(dPlayerData, xPlayerDead) == false) && (InMinigame == false)){
+			if((xGetBool(dPlayerData, xStopDeath) == false) && (trPlayerUnitCountSpecific(p, ""+GoatProto) == 0) && (trPlayerUnitCountSpecific(p, "Prisoner") == 0) && (trPlayerGetPopulation(p) == 0) && (trPlayerUnitCountSpecific(p, "Anubite") == 0) && (xGetBool(dPlayerData, xPlayerActive) == true) && (xGetBool(dPlayerData, xPlayerDead) == false) && (InMinigame == false)){
 				//PLAYER DEAD
 				PlayersDead = PlayersDead+1;
 				xSetBool(dPlayerData, xPlayerDead, true);
@@ -250,6 +250,15 @@ inactive
 					}
 				}
 			}
+			if(xGetInt(dInterractables, xType) == 3){
+				if(xGetInt(dInterractables, xSubtype) == 1){
+					if(trTime() > xGetInt(dInterractables, xSquare1)){
+						xSetInt(dInterractables, xSubtype, 0);
+						xUnitSelect(dInterractables, xSquare2);
+						trUnitDestroy();
+					}
+				}
+			}
 		}
 		
 	}
@@ -299,8 +308,11 @@ inactive
 			trCounterAddTime("CDMG", 12-(QuickStart*5), 0, "<color={PlayerColor("+p+")}>Minigame Starts", 36);
 			MinigameFound = true;
 			for(x=1 ; < cNumberNonGaiaPlayers){
+				xSetPointer(dPlayerData, x);
 				if(x != p){
-					PlayerChoice(x, "Participate in minigame?", "Yes", 4, "No", 0, 11900);
+					if(xGetBool(dPlayerData, xPlayerDead) == false){
+						PlayerChoice(x, "Participate in minigame?", "Yes", 4, "No", 0, 11900);
+					}
 				}
 			}
 			for(b = 0; <xGetDatabaseCount(dPoachers)){
@@ -321,7 +333,7 @@ void GoatMinigameGo(int temp = 0){
 
 void GoatStatueMake(int x = 0, int z = 0){
 	int temp = trGetNextUnitScenarioNameNumber();
-	UnitCreate(0, "Dwarf", x*2+4, z*2+4, 180);
+	UnitCreate(0, "Cinematic Block", x*2+4, z*2+4, 180);
 	trUnitSelectClear();
 	trUnitSelect(""+temp);
 	trUnitChangeProtoUnit("Spy Eye");
@@ -627,7 +639,7 @@ highFrequency
 			STOP = 1;
 		}
 	}
-	if((xGetBool(dPlayerData, xReadyToLeave) == false) && (STOP == 0)){
+	if((xGetBool(dPlayerData, xReadyToLeave) == false) && (STOP == 0) && (xGetBool(dPlayerData, xPlayerDead) == false)){
 		if((trGetTerrainType(1*xsVectorGetX(tempV)/2,1*xsVectorGetZ(tempV)/2) == getTerrainType(LeaveTerrain)) && (trGetTerrainSubType(1*xsVectorGetX(tempV)/2,1*xsVectorGetZ(tempV)/2) == getTerrainSubType(LeaveTerrain))){
 			xSetBool(dPlayerData, xReadyToLeave, true);
 			xSetBool(dPlayerData, xStopDeath, true);

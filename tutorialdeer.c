@@ -161,13 +161,14 @@ rule ResetBlackmap
 highFrequency
 inactive
 {
-	if(QuickStart == 0){
+	/*if(QuickStart == 0){
 		trSetFogAndBlackmap(true,true);
 		trPlayerResetBlackMapForAllPlayers();
 	}
 	else{
 		trSetFogAndBlackmap(false,false);
-	}
+	}*/
+	trSetFogAndBlackmap(true,true);
 	xsDisableSelf();
 }
 
@@ -314,7 +315,7 @@ highFrequency
 inactive
 {
 	if (trTime() > cActivationTime + 5) {
-		startNPCDialog(3);
+		//startNPCDialog(3);
 		trDelayedRuleActivation("TutorialLoops");
 		trDelayedRuleActivation("DeerTutorialDone");
 		xsDisableSelf();

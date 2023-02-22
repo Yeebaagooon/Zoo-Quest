@@ -28,12 +28,15 @@ FIX PAINT TREES SO LIKE A CHECKBOARD - actually ok for stage one
 
 
 [COMMENT]
-
+Maybe if S3 jump is too high, jump as far as can
 
 [BUG LIST]
-chest on top of each other
+
 DDestroy me not in  an eternal loop
 MG3 OOB
+
+stage 3 LOS everywhere
+S3 columns not aligned
 
 //DELETE
 */
