@@ -11,6 +11,7 @@ inactive
 	//xsSetContextPlayer(0);
 	//[REMEMBER THIS IS OPEN AND MAY NEED PLAYER SPECIFIC TAG]
 	if(ActionChoice != 0){
+		string stringtemp = "";
 		int p = ActionChoice;
 		xSetPointer(dPlayerData, p);
 		switch(ChoiceEffect)
@@ -322,6 +323,20 @@ inactive
 				if(trCurrentPlayer() == p){
 					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
 				}
+			}
+			case 33:
+			{
+				//Goat target
+				stringtemp = " has discovered the number of active shrines required to progress is ";
+				trMessageSetText(trStringQuestVarGet("p"+p+"name") + stringtemp + ShrineTarget + ".", 10000);
+				playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+			}
+			case 34:
+			{
+				//Goat target
+				stringtemp = " has discovered this act has a total of ";
+				trMessageSetText(trStringQuestVarGet("p"+p+"name") + stringtemp + ShrinesMax + " shrines.", 10000);
+				playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
 			}
 		}
 		trQuestVarSet("P"+ActionChoice+"YesAction", 0);

@@ -205,7 +205,7 @@ inactive
 	if(Stage == 3){
 		//COPY FROM STAGE 2 BECAUSE THIS HAS SHRINE WEIGHTING AND IS MESSY
 		//[CALCULATE THE PERCENT COMPLETE]
-		int ShrineTarget = ShrinesMax-2;
+		//int ShrineTarget = ShrinesMax-2;
 		debugLog("Shrines max = " + ShrinesMax);
 		if(ShrinesGot >= ShrineTarget){
 			//passing score
@@ -484,6 +484,7 @@ inactive
 			characterDialog("Bonus unlocked!", "+4 hitpoints next stage", ActIcon(Stage));
 			for(p = 1 ; < cNumberNonGaiaPlayers){
 				trModifyProtounit(""+RhinoProto, p, 0, 4);
+				trModifyProtounit(""+RhinoDrinkProto, p, 0, 4);
 			}
 		}
 		if(Stage == 2){

@@ -6,6 +6,8 @@ inactive
 		trCameraCut(vector(-65.460060,123.743729,-65.460060), vector(0.500000,-0.707107,0.500000), vector(0.500000,0.707107,0.500000), vector(0.707107,0.000000,-0.707107));
 		xsDisableRule("DeerTutorialDone");
 		xsDisableRule("RhinoTutorialDone");
+		xsDisableRule("Jump");
+		xsDisableRule("JumpEnd");
 		NewDestroyNumber = trGetNextUnitScenarioNameNumber()-1;
 		TutorialMode = true;
 		Stage = 3;
@@ -299,7 +301,12 @@ inactive
 								trUnitSelect(""+temp);
 								trSetScale(0);
 								trQuestVarModify("P"+p+"Runes", "+", 1);
+								trQuestVarSetFromRand("temp",0,30);
+								for(a = 1*trQuestVarGet("temp"); > 0){
+									xDatabaseNext(dInterractables);
+								}
 								for(a = xGetDatabaseCount(dInterractables); > 0){
+									//[THIS WILL ONLY GO TO FIRST UNIT]
 									xDatabaseNext(dInterractables);
 									if(xGetInt(dInterractables, xType) == 2){
 										if(xGetInt(dInterractables, xSubtype) == 0){
@@ -313,6 +320,31 @@ inactive
 								}
 								if(1*trQuestVarGet("P"+p+"Runes") == 1){
 									ColouredIconChatToPlayer(p, "1,0,1", "icons\improvement thurisaz rune icon 64", "Runestones will flare an inactive shrine");
+								}
+							}
+						}
+						if(xGetInt(dInterractables, xType) == 4){
+							xUnitSelect(dInterractables, xUnitID);
+							trUnitChangeProtoUnit("Arkantos God Out");
+							xFreeDatabaseBlock(dInterractables);
+							PlayerChoice(p, "Choose your reward:", "Discover shrine activation requirement", 33, "Discover total number of shrines", 34, 10000);
+						}
+						if(xGetInt(dInterractables, xType) == 5){
+							if(xGetInt(dInterractables, xSubtype) == 0){
+								//camera
+								tempV = kbGetBlockPosition(""+xGetInt(dInterractables, xUnitID));
+								for(a = xGetDatabaseCount(dPoachers); > 0){
+									xDatabaseNext(dPoachers);
+									xUnitSelect(dPoachers, xUnitID);
+									trUnitMoveToPoint(xsVectorGetX(tempV),0,xsVectorGetZ(tempV),-1,true);
+								}
+								xSetInt(dInterractables, xSubtype, 1);
+								xSetInt(dInterractables, xSquare1, trTime()+150);
+								xUnitSelect(dInterractables, xUnitID);
+								trUnitSetAnimationPath("0,0,0,0,0");
+								if(trCurrentPlayer() == p){
+									playSound("attackwarning.wav");
+									trMessageSetText("Poachers are converging on your position!", 6000);
 								}
 							}
 						}
@@ -423,6 +455,7 @@ inactive
 					trUnitOverrideAnimation(2, 0, true, true, -1, 0);
 					
 					trVectorQuestVarSet("P"+p+"Pos", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
+					debugLog("Timeout");
 				}
 			}
 		}
@@ -511,6 +544,10 @@ inactive
 				trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
 				trUnitChangeProtoUnit("Hero Death");
 				CreateGoat(p, 14, p*16, 90);
+			}
+			if((trVectorQuestVarGetZ("P"+p+"Pos") > (p*16+8)) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0)){
+				trUnitSelectByQV("P"+p+"Unit");
+				trUnitTeleport(trVectorQuestVarGetX("P"+p+"Pos"),3,p*16);
 			}
 		}
 	}

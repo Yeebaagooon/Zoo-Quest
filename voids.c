@@ -947,11 +947,14 @@ void FloatingUnitAnim2(string protounitname="", int xx = 0, int yy = 0, int zz =
 
 void FloatingUnitAnimIdle(string protounitname="", int xx = 0, int yy = 0, int zz = 0, int xheadingx = 0,
 	float scalex = 1, float scaley = 1, float scalez = 1, string anim="0,0,0,0,0", int animtype = 2){
-	trArmyDispatch("0,0", "Revealer", 1, xx, yy, zz, xheadingx, true);
+	//trArmyDispatch("0,0", "Revealer", 1, xx, yy, zz, xheadingx, true);
+	float currentheight = 0.0;
 	trQuestVarSet("BuildID", trQuestVarGet("BuildID") + 1);
 	trQuestVarSet("QVHero"+(1*trQuestVarGet("BuildID"))+"", trGetNextUnitScenarioNameNumber());
 	trQuestVarSet("QVHero", trGetNextUnitScenarioNameNumber());
-	trArmyDispatch("0,0", "Flying Medic", 1, xx, yy, zz, xheadingx, true);
+	trArmyDispatch("0,0", "Dwarf", 1, xx, yy, zz, xheadingx, true);
+	vector temp = kbGetBlockPosition(""+1*trQuestVarGet("QVHero"));
+	currentheight = xsVectorGetY(temp);
 	trUnitSelectClear();
 	trUnitSelect(""+1*trQuestVarGet("QVHero"));
 	trUnitChangeProtoUnit("Amanra");
@@ -968,7 +971,7 @@ void FloatingUnitAnimIdle(string protounitname="", int xx = 0, int yy = 0, int z
 	trQuestVarCopy("QVHero", "QVHero"+(1*trQuestVarGet("BuildID"))+"");
 	trVectorQuestVarSet("V1", kbGetBlockPosition("0"));
 	trVectorQuestVarSet("V1", xsVectorSet(trVectorQuestVarGetX("V1") + xx,
-			yy,trVectorQuestVarGetZ("V1") + zz));
+			yy + currentheight,trVectorQuestVarGetZ("V1") + zz));
 	trUnitSelectClear();
 	trUnitSelect(""+1*trQuestVarGet("QVRelic"));
 	trImmediateUnitGarrison(""+(1*trQuestVarGet("QVHero"))+"");

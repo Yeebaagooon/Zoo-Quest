@@ -1,6 +1,8 @@
 /*
 it uses build at pointer instead
 
+For database count use DB first then > smaller number as DB size changes
+
 [10:54 PM]
 Yeebaagooon:
 9
@@ -28,15 +30,14 @@ FIX PAINT TREES SO LIKE A CHECKBOARD - actually ok for stage one
 
 
 [COMMENT]
-Maybe if S3 jump is too high, jump as far as can
+Cinematic
+Messages in stage 1 before poachers after chest for objectives
+
 
 [BUG LIST]
+skul062
 
-DDestroy me not in  an eternal loop
-MG3 OOB
-
-stage 3 LOS everywhere
-S3 columns not aligned
+MG3 that disturbing terrain glitch
 
 //DELETE
 */
@@ -84,6 +85,7 @@ int PoachersTarget = 0;
 int ShrinesGot = 0;
 int ShrinesMax = 0;
 int ShrineTimeMin = 80;
+int ShrineTarget = 0;
 int ShrineTimeMax = 200;
 
 //DB STUFF

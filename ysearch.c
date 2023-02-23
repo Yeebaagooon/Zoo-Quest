@@ -48,6 +48,15 @@ highFrequency
 					xSetPointer(dPlayerData, kbUnitGetOwner(id));
 					xSetVector(dPlayerData, xGoatTarget, kbGetBlockPosition(""+trGetUnitScenarioNameNumber(id)));
 					xSetFloat(dPlayerData, xGoatJumpDist, distanceBetweenVectors(xGetVector(dPlayerData, xGoatTarget),kbGetBlockPosition(""+1*trQuestVarGet("P"+kbUnitGetOwner(id)+"Unit")),true));
+					if(xGetFloat(dPlayerData, xGoatJumpDist) >= 225){
+						//try a fix
+						dir = xGetVector(dPlayerData, xGoatTarget)-kbGetBlockPosition(""+1*trQuestVarGet("P"+kbUnitGetOwner(id)+"Unit"));
+						dir = xsVectorNormalize(dir);
+						vector tempV = kbGetBlockPosition(""+1*trQuestVarGet("P"+kbUnitGetOwner(id)+"Unit"));
+						target = tempV+(dir*15);
+						xSetVector(dPlayerData, xGoatTarget, target);
+						xSetFloat(dPlayerData, xGoatJumpDist, distanceBetweenVectors(xGetVector(dPlayerData, xGoatTarget),kbGetBlockPosition(""+1*trQuestVarGet("P"+kbUnitGetOwner(id)+"Unit")),true));
+					}
 				}
 				trUnitSelectClear();
 				trUnitSelectByID(id);

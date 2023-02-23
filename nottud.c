@@ -1500,6 +1500,7 @@ void createMarsh(){
 }
 
 void createGoatArea(){
+	trBlockAllSounds();
 	DestroyNumber = trGetNextUnitScenarioNameNumber();
 	int currentId = 0;
 	for(n = NewDestroyNumber ; < DestroyNumber){
@@ -1651,8 +1652,8 @@ void createGoatArea(){
 	ABORT = 0;
 	vector tileForMinigame = vector(0,0,0);
 	tileForMinigame = getRandomTileMatchingTerrain("CliffNorseB", 15);
-	while((distanceBetweenVectors(tileForStart, tileForMinigame, true) < 4000) && (distanceBetweenVectors(tileForEnd, tileForMinigame, true) < 4000)){
-		tileForMinigame = getRandomTileMatchingTerrain("CliffNorseB", 15);
+	while((distanceBetweenVectors(tileForStart, tileForMinigame, true) < 3000) && (distanceBetweenVectors(tileForEnd, tileForMinigame, true) < 3000)){
+		tileForMinigame = getRandomTileMatchingTerrain("CliffNorseB", 20);
 		ABORT = ABORT+1;
 		if(ABORT >500){
 			break;
@@ -1724,11 +1725,11 @@ void createGoatArea(){
 	}
 	int runenum = xsMin(12,cNumberNonGaiaPlayers*4);
 	while(runenum > 0){
-		trQuestVarSetFromRand("x", 0, 252);
-		trQuestVarSetFromRand("z", 0, 252);
+		trQuestVarSetFromRand("x", 0, 126);
+		trQuestVarSetFromRand("z", 0, 126);
 		currentId = trGetNextUnitScenarioNameNumber();
 		trQuestVarSetFromRand("temph",0,360,true);
-		UnitCreate(0, "Cinematic Block", 1*trQuestVarGet("x"),1*trQuestVarGet("z"), 1*trQuestVarGet("temph"));
+		UnitCreate(0, "Cinematic Block", 2*trQuestVarGet("x"),2*trQuestVarGet("z"), 1*trQuestVarGet("temph"));
 		if((trGetTerrainType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainType("IceA")) && (trGetTerrainSubType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainSubType("IceA"))){
 			if((trGetTerrainType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainType("OlympusA")) && (trGetTerrainSubType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainSubType("OlympusA"))){
 				if(trCountUnitsInArea(""+currentId, 0, "Shrine", 20) == 0){
@@ -1745,6 +1746,46 @@ void createGoatArea(){
 					xSetInt(dInterractables, xSquare1, 0);
 					xSetInt(dInterractables, xSquare2, 0);
 					runenum = runenum-1;
+				}
+				ABORT = ABORT+1;
+				if(ABORT >500){
+					break;
+					trChatSend(0, "ERROR RUNE");
+				}
+			}
+		}
+	}
+	int camnum = xsMax(2,cNumberNonGaiaPlayers/4);
+	camnum = 6;
+	while(camnum > 0){
+		trQuestVarSetFromRand("x", 0, 126);
+		trQuestVarSetFromRand("z", 0, 126);
+		currentId = trGetNextUnitScenarioNameNumber();
+		trQuestVarSetFromRand("temph",0,360,true);
+		UnitCreate(0, "Cinematic Block", 2*trQuestVarGet("x"),2*trQuestVarGet("z"), 1*trQuestVarGet("temph"));
+		if((trGetTerrainType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainType("IceA")) && (trGetTerrainSubType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainSubType("IceA"))){
+			if((trGetTerrainType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainType("OlympusA")) && (trGetTerrainSubType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainSubType("OlympusA"))){
+				if(trCountUnitsInArea(""+currentId, 0, "Outpost", 20) == 0){
+					trUnitSelectClear();
+					trUnitSelect(""+currentId);
+					trUnitChangeProtoUnit("Spy Eye");
+					trUnitSelectClear();
+					trUnitSelect(""+currentId);
+					trMutateSelected(kbGetProtoUnitID("Outpost"));
+					trUnitSelectClear();
+					trUnitSelect(""+currentId);
+					trSetSelectedScale(1,0.4,1);
+					trUnitSelectClear();
+					trUnitSelect(""+currentId);
+					trUnitSetAnimationPath("0,1,0,0,0");
+					FloatingUnitAnimIdle("Camera", 2*trQuestVarGet("x"), 4, 2*trQuestVarGet("z"), 1*trQuestVarGet("temph"),1,1,1);
+					xAddDatabaseBlock(dInterractables, true);
+					xSetInt(dInterractables, xUnitID, currentId);
+					xSetInt(dInterractables, xType, 5);
+					xSetInt(dInterractables, xSubtype, 0);
+					xSetInt(dInterractables, xSquare1, 1*trQuestVarGet("temph"));
+					xSetInt(dInterractables, xSquare2, 1*trQuestVarGet("QVHero"));
+					camnum = camnum-1;
 				}
 				ABORT = ABORT+1;
 				if(ABORT >500){
@@ -1781,6 +1822,7 @@ void createGoatArea(){
 	MinigameFound = false;
 	InMinigame = false;
 	xsEnableRule("Reset Blackmap");
+	trUnblockAllSounds();
 }
 
 void createUluru(){

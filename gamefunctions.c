@@ -22,6 +22,22 @@ void ShootProjectile(vector dir = vector(0,0,0), vector startpos = vector(0,0,0)
 	xSetInt(dIncomingMissiles, xMissileAnim, anim);
 }
 
+rule DestroyConstant
+highFrequency
+inactive
+{
+	for (x= xGetDatabaseCount(dDestroyMe); > 0) {
+		xDatabaseNext(dDestroyMe);
+		if(trTimeMS() > xGetInt(dDestroyMe, xDestroyTime)){
+			xUnitSelect(dDestroyMe, xDestroyName);
+			trUnitDestroy();
+			//trUnitDestroy();
+			//trChatSend(0, "<color=1,0,0>"+xGetInt(dDestroyMe, xDestroyName));
+			xFreeDatabaseBlock(dDestroyMe);
+		}
+	}
+}
+
 string ActName(int num = 0){
 	string actnamed = "Error";
 	switch(num)

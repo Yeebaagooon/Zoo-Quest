@@ -18,11 +18,13 @@ inactive
 		trDelayedRuleActivation("GoatAllDead");
 		trDelayedRuleActivation("GoatPoacherTimer");
 		xsEnableRule("GoatPoacherMovement");
+		trDelayedRuleActivation("GoatBonus");
 		//trSetCounterDisplay("<color={PlayerColor(2)}>Fencing destroyed: "+FencesDone+"/8");
 		ColouredIconChat("1,0.5,0", ActIcon(Stage), "<u>" + ActName(Stage) + "</u>");
 		ColouredIconChat("0.0,0.8,0.2", "icons\building norse shrine icon 64", "Interract with shrines using W.");
 		ColouredChat("0.0,0.8,0.2", "Each shrine only remains active for a short time.");
 		ColouredChat("0.0,0.8,0.2", "Get as many as you think you need, then head to the extraction zone.");
+		ColouredChat("0.0,0.8,0.2", "You may also be able to interract with other objects...");
 		xsEnableRule("PlayMusic");
 		//SpawnRhinoPoacher(xsMax(PlayersActive,3));
 		//SpawnRhinoSuperPoacher(1);
@@ -38,6 +40,7 @@ inactive
 		}
 		ShrinesMax = trPlayerUnitCountSpecific(0, "Shrine");
 		trQuestVarSet("NextPoacherSpawn", trTime()+220);
+		ShrineTarget = ShrinesMax-2;
 	}
 }
 
@@ -61,6 +64,25 @@ highFrequency
 			trDelayedRuleActivation("GoatLeave");
 			xsDisableSelf();
 		}
+	}
+}
+
+rule GoatBonus
+inactive
+highFrequency
+{
+	if (trTime() > cActivationTime + 70) {
+		int temp = trGetNextUnitScenarioNameNumber();
+		trQuestVarSetFromRand("x", 0, 252);
+		trQuestVarSetFromRand("z", 0, 252);
+		UnitCreate(0, "Cinematic Block", 1*trQuestVarGet("x"),1*trQuestVarGet("z"), 0);
+		trUnitSelectClear();
+		trUnitSelect(""+temp);
+		trUnitChangeProtoUnit("Reindeer");
+		xAddDatabaseBlock(dInterractables, true);
+		xSetInt(dInterractables, xUnitID, temp);
+		xSetInt(dInterractables, xType, 4);
+		xsDisableSelf();
 	}
 }
 
@@ -105,6 +127,15 @@ inactive
 							}
 							break;
 						}
+						if(((xsVectorGetX(tempV)-xsVectorGetX(StageVector)*2) > 19) || ((xsVectorGetX(tempV)-xsVectorGetX(StageVector)*2) < -17) || ((xsVectorGetZ(tempV)-xsVectorGetZ(StageVector)*2) < -17) || ((xsVectorGetZ(tempV)-xsVectorGetZ(StageVector)*2) > 19)){
+							//OOB
+							xSetBool(dPlayerData, xStopDeath, false);
+							PlayersMinigaming = PlayersMinigaming-1;
+							if(trCurrentPlayer() == p){
+								playSound("xlose.wav");
+								trMessageSetText("You have gone out of bounds and been returned to normal play.", 5000);
+							}
+						}
 					}
 				}
 				if(SquaresDown > 5){
@@ -144,6 +175,12 @@ inactive
 				PlayersDead = PlayersDead+1;
 				xSetBool(dPlayerData, xPlayerDead, true);
 				PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is dead!");
+				if(iModulo(2, trTime()) == 0){
+					playSound("\dialog\it\skul062.mp3");
+				}
+				else{
+					playSound("\xpack\xdialog\it\xkri075.mp3");
+				}
 			}
 			if(xGetInt(dPlayerData, xHPRegen) > 0){
 				if(trTime() > xGetInt(dPlayerData, xHPRegenNext)){
@@ -257,6 +294,22 @@ inactive
 						xUnitSelect(dInterractables, xSquare2);
 						trUnitDestroy();
 					}
+				}
+			}
+			if(xGetInt(dInterractables, xType) == 5){
+				if(xGetInt(dInterractables, xSubtype) == 1){
+					if(trTime() > xGetInt(dInterractables, xSquare2)){
+						xSetInt(dInterractables, xSubtype, 0);
+						xUnitSelect(dInterractables, xUnitID);
+						trUnitSetAnimationPath("0,1,0,0,0");
+					}
+					xUnitSelect(dInterractables, xSquare2);
+					trQuestVarModify("TemporaryHeading", "+", 100*timediff);
+					if(1*trQuestVarGet("TemporaryHeading") > 360){
+						trQuestVarSet("TemporaryHeading", 0);
+					}
+					temp = 1*trQuestVarGet("TemporaryHeading");
+					setSelectedUnitHeadingDegress(temp);
 				}
 			}
 		}
@@ -689,7 +742,9 @@ highFrequency
 	xsDisableRule("GoatLeave");
 	xsDisableRule("GoatTutorialLoops");
 	xsDisableRule("GoatMinigameDetect");
+	xsDisableRule("GoatBonus");
 	xsDisableRule("MGGOGoat");
+	xsDisableRule("GoatPoacherTimer");
 	for(p=1 ; < cNumberNonGaiaPlayers){
 		trUnitSelectByQV("P"+p+"Unit");
 		trUnitChangeProtoUnit("Ragnorok SFX");

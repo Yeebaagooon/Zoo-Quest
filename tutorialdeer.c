@@ -161,14 +161,14 @@ rule ResetBlackmap
 highFrequency
 inactive
 {
-	/*if(QuickStart == 0){
+	if(QuickStart == 0){
 		trSetFogAndBlackmap(true,true);
 		trPlayerResetBlackMapForAllPlayers();
 	}
 	else{
 		trSetFogAndBlackmap(false,false);
-	}*/
-	trSetFogAndBlackmap(true,true);
+	}
+	//trSetFogAndBlackmap(true,true);
 	xsDisableSelf();
 }
 
@@ -423,16 +423,6 @@ inactive
 			trPlayerGrantResources(p, "Food", -100000);
 		}
 		//jump set anim to 13
-	}
-	for (x= xGetDatabaseCount(dDestroyMe); > 0) {
-		xDatabaseNext(dDestroyMe);
-		if(trTimeMS() > xGetInt(dDestroyMe, xDestroyTime)){
-			xUnitSelect(dDestroyMe, xDestroyName);
-			trUnitDestroy();
-			//trUnitDestroy();
-			//trChatSend(0, "<color=1,0,0>"+xGetInt(dDestroyMe, xDestroyName));
-			xFreeDatabaseBlock(dDestroyMe);
-		}
 	}
 }
 

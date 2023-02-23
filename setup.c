@@ -187,6 +187,7 @@ highFrequency
 		}
 		xsEnableRule("CustomContentChat");
 		xsEnableRule("ysearch");
+		xsEnableRule("DestroyConstant");
 	}
 }
 

@@ -231,6 +231,12 @@ inactive
 				PlayersDead = PlayersDead+1;
 				xSetBool(dPlayerData, xPlayerDead, true);
 				PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is dead!");
+				if(iModulo(2, trTime()) == 0){
+					playSound("\dialog\fr\skul062.mp3");
+				}
+				else{
+					playSound("\xpack\xdialog\fr\xkri075.mp3");
+				}
 			}
 			xSetVector(dPlayerData, xConstantPos, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
 			if(xGetInt(dPlayerData, xHPRegen) > 0){
