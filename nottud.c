@@ -1756,7 +1756,6 @@ void createGoatArea(){
 		}
 	}
 	int camnum = xsMax(2,cNumberNonGaiaPlayers/4);
-	camnum = 6;
 	while(camnum > 0){
 		trQuestVarSetFromRand("x", 0, 126);
 		trQuestVarSetFromRand("z", 0, 126);

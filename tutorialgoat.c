@@ -455,7 +455,17 @@ inactive
 					trUnitOverrideAnimation(2, 0, true, true, -1, 0);
 					
 					trVectorQuestVarSet("P"+p+"Pos", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
-					debugLog("Timeout");
+					if(distanceBetweenVectors(xGetVector(dPlayerData, xGoatTarget),kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit"))) > 225){
+						debugLog("Vector differential bug, fixed");
+						trUnitSelectByQV("P"+p+"Unit");
+						trUnitChangeProtoUnit("Ragnorok SFX");
+						trUnitSelectByQV("P"+p+"Unit");
+						trUnitDestroy();
+						trUnitSelectClear();
+						trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+						trUnitChangeProtoUnit("Hero Death");
+						CreateGoat(p, xsVectorGetX(xGetVector(dPlayerData, xGoatTarget)), xsVectorGetZ(xGetVector(dPlayerData, xGoatTarget)), 0);
+					}
 				}
 			}
 		}
