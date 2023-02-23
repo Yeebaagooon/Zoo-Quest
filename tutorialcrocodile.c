@@ -102,13 +102,16 @@ inactive
 			UnitCreate(0, "Cinematic Block", 34*2, p*16, 270);
 			trUnitSelectClear();
 			trUnitSelect(""+temp);
-			trUnitChangeProtoUnit("Shrine");
-			//trUnitSelectClear();
-			//trUnitSelect(""+temp);
-			//trMutateSelected(kbGetProtoUnitID("Shrine"));
+			trUnitChangeProtoUnit("Spy Eye");
 			trUnitSelectClear();
 			trUnitSelect(""+temp);
-			trUnitSetAnimationPath("2,0,0,0,0");
+			trMutateSelected(kbGetProtoUnitID("Summoning Tree"));
+			trUnitSelectClear();
+			trUnitSelect(""+temp);
+			trSetScale(0.5);
+			trUnitSelectClear();
+			trUnitSelect(""+temp);
+			trUnitSetAnimationPath("0,1,0,0,0");
 			xAddDatabaseBlock(dTemp, true);
 			xSetInt(dTemp, xUnitID, temp);
 			xSetInt(dTemp, xExtra, p);
@@ -224,7 +227,15 @@ inactive
 					trCounterAddTime("cdtutoriala", -100, -200, "<color={PlayerColor("+p+")}>Press 'Q' to sprint.", -1);
 				}
 			}
-			if((1*trQuestVarGet("P"+p+"FountainMsg") == 2) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0)){
+			if((trVectorQuestVarGetX("P"+p+"Pos") > 56) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0) && (1*trQuestVarGet("P"+p+"FountainMsg") == 1)){
+				if(trCurrentPlayer() == p){
+					startNPCDialog(12);
+					trQuestVarSet("P"+p+"FountainMsg", 2);
+					trCounterAbort("cdtutoriala");
+					trCounterAddTime("cdtutoriala", -100, -200, "<color={PlayerColor("+p+")}>Press 'W' to ???.", -1);
+				}
+			}
+			if((1*trQuestVarGet("P"+p+"FountainMsg") == 3) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0)){
 				trUnitSelectByQV("P"+p+"Unit");
 				trUnitChangeProtoUnit("Ragnorok SFX");
 				trUnitSelectByQV("P"+p+"Unit");
@@ -326,6 +337,9 @@ inactive
 						else{
 							modifyProtounitAbsolute(""+CrocProto, p, 1, xGetFloat(dPlayerData, xCrocLandSpeed)*xGetFloat(dPlayerData, xCrocSprintSpeed));
 						}
+						trUnitSelectClear();
+						trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+						trUnitOverrideAnimation(13, 0, true, true, -1, 0);
 					}
 					else{
 						modifyProtounitAbsolute(""+CrocProto, p, 1, xGetFloat(dPlayerData, xCrocWaterSpeed)*xGetFloat(dPlayerData, xCrocSprintSpeed));
@@ -359,6 +373,9 @@ inactive
 			if(xGetInt(dPlayerData, xCrocSprintState) == 1){
 				if(xGetBool(dPlayerData, xSwimming) == false){
 					modifyProtounitAbsolute(""+CrocProto, p, 1, xGetFloat(dPlayerData, xCrocLandSpeed));
+					trUnitSelectClear();
+					trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+					trUnitOverrideAnimation(15, 0, true, true, -1, 0);
 				}
 				else{
 					modifyProtounitAbsolute(""+CrocProto, p, 1, xGetFloat(dPlayerData, xCrocWaterSpeed));

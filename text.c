@@ -204,6 +204,25 @@ int npcDiag(int npc = 0, int dialog = 0) {
 				}
 			}
 		}
+		case 12:
+		{
+			switch(dialog)
+			{
+				case 1:
+				{
+					uiMessageBox("In this act you start off small and weak.");
+				}
+				case 2:
+				{
+					uiMessageBox("But by eating X you will grow in size and power.");
+				}
+				case 3:
+				{
+					uiMessageBox("Press W to eat the X.");
+					dialog = 0;
+				}
+			}
+		}
 	}
 	return(dialog);
 }
