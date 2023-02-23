@@ -44,7 +44,7 @@ MG3 that disturbing terrain glitch
 
 //---Controls
 //\Yeebaagooon\Zoo Quest\Test sound.mp3
-int QuickStart = 3;
+int QuickStart = 4;
 // 3 for goat
 int Stage = 0;
 string MapVersion = "Test Version";
@@ -56,6 +56,8 @@ vector StageVector = vector(0,0,0);
 vector EndPoint = vector(0,0,0);
 string LeaveTerrain = "";
 string GoatProto = "Hero Greek Heracles";
+string CrocProto = "Hero Greek Atalanta";
+string ChickenProto = "Hero Norse";
 
 //EVENTS
 const int EVENT_BUILD_HOUSE = 28;
@@ -129,6 +131,7 @@ int xRhinoChargeTimeMax = 0;
 int xGoatTarget = 0;
 int xGoatJumpDist = 0;
 int xTimeout = 0;
+int xSwimming = 0;
 
 int dDestroyMe = 0;
 int xDestroyName = 0;
@@ -166,6 +169,7 @@ highFrequency
 	xGoatTarget = xInitAddVector(dPlayerData, "goat target", vector(0,0,0));
 	xGoatJumpDist = xInitAddFloat(dPlayerData, "goat jump dist", 0.0);
 	xTimeout = xInitAddInt(dPlayerData, "goat jump timeout", 1000);
+	xSwimming = xInitAddBool(dPlayerData, "swimming", false);
 	xsDisableSelf();
 	for(p=1; <= cNumberNonGaiaPlayers) {
 		xAddDatabaseBlock(dPlayerData, true);

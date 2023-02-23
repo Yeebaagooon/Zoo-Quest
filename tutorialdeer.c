@@ -356,7 +356,18 @@ inactive
 			trUnitSelectClear();
 			trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
 			if(xGetBool(dPlayerData, xCharge) == false){
-				trUnitOverrideAnimation(15, 0, true, true, -1, 0);
+				if(Stage != 4){
+					trUnitOverrideAnimation(15, 0, true, true, -1, 0);
+				}
+				else{
+					//swim
+					if(xGetBool(dPlayerData, xSwimming) == true){
+						trUnitOverrideAnimation(3, 0, true, true, -1, 0);
+					}
+					else{
+						trUnitOverrideAnimation(15, 0, true, true, -1, 0);
+					}
+				}
 			}
 			else{
 				trUnitOverrideAnimation(13, 0, true, true, -1, 0);

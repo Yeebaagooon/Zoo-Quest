@@ -458,7 +458,7 @@ inactive
 		xsEnableRule("TutorialTerrainGoat");
 	}
 	if(Stage == 4){
-		xsEnableRule("TempEndGame");
+		xsEnableRule("TutorialTerrainCrocodile");
 	}
 	trLetterBox(false);
 	trFadeOutAllSounds(3);

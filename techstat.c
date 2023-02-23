@@ -95,13 +95,18 @@ highFrequency
 		modifyProtounitAbsolute(""+RhinoProto, p, 1, xGetFloat(dPlayerData, xRhinoWalk));
 		modifyProtounitAbsolute(""+RhinoProto, p, 2, 22);
 		modifyProtounitAbsolute(""+GoatProto, p, 0, 6);
+		modifyProtounitAbsolute(""+CrocProto, p, 0, 5);
+		modifyProtounitAbsolute(""+CrocProto, p, 1, 3);
+		modifyProtounitAbsolute(""+CrocProto, p, 2, 10);
 		for(a = 24; <= 29){
 			modifyProtounitAbsolute(""+GazelleProto, p, a, 0);
 			modifyProtounitAbsolute(""+RhinoProto, p, a, 0);
 			modifyProtounitAbsolute(""+GoatProto, p, a, 0);
+			modifyProtounitAbsolute(""+CrocProto, p, a, 0);
 			modifyProtounitAbsolute("Hero Greek Bellerophon", p, a, 0);
 		}
 		modifyProtounitAbsolute(""+RhinoProto, p, 27, 15);
+		modifyProtounitAbsolute(""+CrocProto, p, 29, 5);
 		modifyBuildableProto("House", p);
 		modifyBuildableProto("Granary", p);
 		modifyBuildableProto("Storehouse", p);
@@ -142,6 +147,7 @@ highFrequency
 		trModifyProtounit(""+NoChoiceUnitName + " Hero", p, 17, -9999999999999999999.0);
 		trModifyProtounit(""+NoChoiceUnitName + " Hero", p, 18, -9999999999999999999.0);
 		trModifyProtounit(""+NoChoiceUnitName + " Hero", p, 19, -9999999999999999999.0);
+		trModifyProtounit(""+CrocProto, p, 55, 3);
 	}
 	xsDisableSelf();
 }
@@ -182,4 +188,9 @@ Ranged Attack Hack=30
 Ranged Attack Pierce=31
 Ranged Attack Crush=32
 Movetype = 55
+Delta of 0: Movement Type None.
+Delta of 1: Movement Type Land.
+Delta of 2: Movement Type Water.
+Delta of 3: Movement Type Amphibious.
+Delta of 4: Movement Type Air.
 */
