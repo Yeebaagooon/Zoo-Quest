@@ -14,7 +14,8 @@ void startNPCDialog(int npc = 0) {
 int npcDiag(int npc = 0, int dialog = 0) {
 	dialog = dialog + 1;
 	string extra = "";
-	int p = 0;
+	int p = trCurrentPlayer();
+	xSetPointer(dPlayerData, p);
 	switch(npc)
 	{
 		case 1:
@@ -143,9 +144,9 @@ int npcDiag(int npc = 0, int dialog = 0) {
 				{
 					uiMessageBox("The mountain goat has a slightly different jump mechanic.");
 				}
-				case 1:
+				case 2:
 				{
-					uiMessageBox("It will jump directly to the cursor and can double jump.");
+					uiMessageBox("It will jump directly to the cursor (or as close as allowed) and can double jump.");
 					dialog = 0;
 				}
 			}
@@ -165,7 +166,44 @@ int npcDiag(int npc = 0, int dialog = 0) {
 				}
 			}
 		}
-		
+		case 10:
+		{
+			switch(dialog)
+			{
+				case 1:
+				{
+					uiMessageBox("Now we play as a fearsome Crocodile!");
+				}
+				case 2:
+				{
+					uiMessageBox("You have the ability to swim, so head over to the first island.");
+					dialog = 0;
+				}
+			}
+		}
+		case 11:
+		{
+			switch(dialog)
+			{
+				case 1:
+				{
+					uiMessageBox("You will notice you are much slower on land.");
+				}
+				case 2:
+				{
+					uiMessageBox("You can use 'Q' for a short sprint on land or water.");
+				}
+				case 3:
+				{
+					uiMessageBox("If you use it within " + xGetInt(dPlayerData, xCrocBonusTime) + " seconds of leaving the water, you'll go extra fast.");
+				}
+				case 4:
+				{
+					uiMessageBox("Unlike the Rhino charge, this sprint lasts a set time and then recharges.");
+					dialog = 0;
+				}
+			}
+		}
 	}
 	return(dialog);
 }

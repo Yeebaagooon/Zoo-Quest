@@ -209,16 +209,6 @@ inactive
 			}
 		}
 	}
-	for (x= xGetDatabaseCount(dDestroyMe); > 0) {
-		xDatabaseNext(dDestroyMe);
-		if(trTimeMS() > xGetInt(dDestroyMe, xDestroyTime)){
-			xUnitSelect(dDestroyMe, xDestroyName);
-			trUnitDestroy();
-			//trUnitDestroy();
-			//trChatSend(0, "<color=1,0,0>"+xGetInt(dDestroyMe, xDestroyName));
-			xFreeDatabaseBlock(dDestroyMe);
-		}
-	}
 }
 
 rule RhinoTutorialDone

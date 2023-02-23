@@ -86,6 +86,7 @@ string ActIcon(int num = 0){
 	return(animaliconact);
 }
 
+//unused
 string CurrentProto(int num = 0){
 	string thename = "Error";
 	switch(num)
@@ -194,7 +195,7 @@ void SpawnRhinoPoacher(int num = 0){
 			}
 			for(p = 1; < cNumberNonGaiaPlayers){
 				xSetPointer(dPlayerData, p);
-				if((distanceBetweenVectors(spawn, kbGetBlockPosition(""+xGetInt(dPlayerData, xPlayerUnitID)),true) < 800) && (xGetBool(dPlayerData, xPlayerActive) == true)){
+				if((distanceBetweenVectors(spawn, kbGetBlockPosition(""+xGetInt(dPlayerData, xPlayerUnitID)),true) < 900) && (xGetBool(dPlayerData, xPlayerActive) == true)){
 					allow = 1;
 				}
 			}
@@ -343,6 +344,23 @@ void hotkeyAbility(int ability = 0) {
 			}
 		}
 		if(trPlayerUnitCountSpecific(xGetPointer(dPlayerData), ""+GoatProto) > 0){
+			switch(ability)
+			{
+				case EVENT_BUILD_HOUSE:
+				{
+					uiSetProtoCursor("House", true);
+				}
+				case EVENT_BUILD_GRANARY:
+				{
+					uiSetProtoCursor("Granary", true);
+				}
+				case EVENT_BUILD_STOREHOUSE:
+				{
+					uiSetProtoCursor("Storehouse", true);
+				}
+			}
+		}
+		if(trPlayerUnitCountSpecific(xGetPointer(dPlayerData), ""+CrocProto) > 0){
 			switch(ability)
 			{
 				case EVENT_BUILD_HOUSE:

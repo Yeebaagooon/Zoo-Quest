@@ -132,6 +132,16 @@ int xGoatTarget = 0;
 int xGoatJumpDist = 0;
 int xTimeout = 0;
 int xSwimming = 0;
+int xCrocLandSpeed = 0;
+int xCrocWaterSpeed = 0;
+int xCrocSprintSpeed = 0;
+int xCrocBonusTime = 0;
+int xCrocBonusTimer = 0;
+int xCrocSprintRechargeTime = 0;
+int xCrocSprintRechargeTimer = 0;
+int xCrocSprintDuration = 0;
+int xCrocSprintEndTime = 0;
+int xCrocSprintState = 0;
 
 int dDestroyMe = 0;
 int xDestroyName = 0;
@@ -170,7 +180,16 @@ highFrequency
 	xGoatJumpDist = xInitAddFloat(dPlayerData, "goat jump dist", 0.0);
 	xTimeout = xInitAddInt(dPlayerData, "goat jump timeout", 1000);
 	xSwimming = xInitAddBool(dPlayerData, "swimming", false);
-	xsDisableSelf();
+	xCrocLandSpeed = xInitAddFloat(dPlayerData, "croc land speed", 3.0);
+	xCrocWaterSpeed = xInitAddFloat(dPlayerData, "croc swim speed", 5.0);
+	xCrocSprintSpeed = xInitAddFloat(dPlayerData, "xc", 1.5);
+	xCrocBonusTime = xInitAddInt(dPlayerData, "xc", 3);
+	xCrocBonusTimer = xInitAddInt(dPlayerData, "xc", 30);
+	xCrocSprintRechargeTime = xInitAddInt(dPlayerData, "xc", 20);
+	xCrocSprintRechargeTimer = xInitAddInt(dPlayerData, "xc", 20);
+	xCrocSprintDuration = xInitAddInt(dPlayerData, "xc", 2500);
+	xCrocSprintEndTime = xInitAddInt(dPlayerData, "the end time of the sprint", 0);
+	xCrocSprintState = xInitAddInt(dPlayerData, "xc", 0);
 	for(p=1; <= cNumberNonGaiaPlayers) {
 		xAddDatabaseBlock(dPlayerData, true);
 	}
@@ -178,4 +197,5 @@ highFrequency
 	dDestroyMe = xInitDatabase("destroyme");
 	xDestroyName = xInitAddInt(dDestroyMe, "unit id", -1);
 	xDestroyTime = xInitAddInt(dDestroyMe, "timeMS", 1);
+	xsDisableSelf();
 }
