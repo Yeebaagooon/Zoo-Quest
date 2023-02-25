@@ -214,11 +214,11 @@ int npcDiag(int npc = 0, int dialog = 0) {
 				}
 				case 2:
 				{
-					uiMessageBox("But by eating X you will grow in size and power.");
+					uiMessageBox("But by eating flashing zebras you will grow in size and power.");
 				}
 				case 3:
 				{
-					uiMessageBox("Press W to eat the X.");
+					uiMessageBox("Press W to eat the zebra.");
 					dialog = 0;
 				}
 			}

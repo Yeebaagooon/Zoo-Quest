@@ -1121,6 +1121,24 @@ void paintTrees(string terrain = "", string tree = ""){
 	trUnitChangeInArea(0, 0, "Victory Marker", tree, 999.0);
 }
 
+void paintTrees2(string terrain = "", string tree = ""){
+	int terrainType = getTerrainType(terrain);
+	int terrainSubType = getTerrainSubType(terrain);
+	int k = 0;
+	for(i = 0; < (getMapSize() / 2)) {
+		for(j = 0; < (getMapSize() / 2)) {
+			if(k == 0 && trGetTerrainType(i, j) == terrainType && trGetTerrainSubType(i, j) == terrainSubType){
+				deployLoc(i * 2  + 1, j * 2 + 1, "Victory Marker", 0);
+			}
+			k = 1 - k;
+		}
+		k = 1 - k;
+	}
+	trUnitSelectClear();
+	trUnitSelect("0");
+	trUnitChangeInArea(0, 0, "Victory Marker", tree, 999.0);
+}
+
 
 void paintUnit(string terrain = "", string unit = "", int p = 0, float c = 0.1){
 	int terrainType = getTerrainType(terrain);
@@ -2148,4 +2166,143 @@ void createDeepForestArea(){
 	MinigameFound = false;
 	InMinigame = false;
 	xsEnableRule("Reset Blackmap");
+}
+
+void createCrocArea(){
+	trBlockAllSounds();
+	DestroyNumber = trGetNextUnitScenarioNameNumber();
+	int currentId = 0;
+	for(n = NewDestroyNumber ; < DestroyNumber){
+		trUnitSelectClear();
+		trUnitSelect(""+n);
+		trUnitDestroy();
+	}
+	string baseTerrain = "RiverSandyC";
+	clearMap("RiverSandyC", 0.0);
+	paintWaterKeepingMapPassable(15.0, 20.0, vector(0.4588,0.6588,0.5098));
+	for(i = 0; < 100){
+		tempV = xsVectorSet(toTiles(randomFloat(0.0, 1.0)), 0.0, toTiles(randomFloat(0.0, 1.0)));
+		tempF = randomInt(0, 2) * 10 - 5;
+		//this cuts water channels
+		for(j = 0; < 8) {
+			tempV2 = randomCircleLoc(xsVectorGetX(tempV), xsVectorGetZ(tempV), 10.0);
+			changeCircleHeight(xsVectorGetX(tempV2), xsVectorGetZ(tempV2), toTiles(0.05), tempF);
+		}
+	}
+	smooth(4);
+	replaceTerrainAtMaxSteepness("RiverSandyC", "ShorelineSandA", 1.0);
+	trChangeTerrainHeight(0, 0, toTiles(1.0), toTiles(1.0), 5.0, false);
+	smooth(2);
+	setTerrainHeightForTerrain("RiverSandyC", 2.0);
+	smooth(1);
+	//change water height
+	for(i = 0; < 11) {
+		changeTerrainHeight(1.0);
+		changeGlobalHeight(-1.0);
+	}
+	replaceTerrainAboveHeightMin("ShorelineSandA", "DirtA", 5.0);
+	for(i = 0; < 20) {
+		tempV = xsVectorSet(randomFloat(0, toTiles(1.0)), 0.0, randomFloat(0, toTiles(1.0)));
+		for(j = 0; < 10) {
+			tempV2 = randomCircleLoc(xsVectorGetX(tempV), xsVectorGetZ(tempV), 10.0);
+			replaceCircle(xsVectorGetX(tempV2), xsVectorGetZ(tempV2), toTiles(0.04), "DirtA", "SavannahA");
+		}
+	}
+	for(i = 0; < 40) {
+		tempV = xsVectorSet(randomFloat(0, toTiles(1.0)), 0.0, randomFloat(0, toTiles(1.0)));
+		for(j = 0; < 10) {
+			tempV2 = randomCircleLoc(xsVectorGetX(tempV), xsVectorGetZ(tempV), 10.0);
+			replaceCircle(xsVectorGetX(tempV2), xsVectorGetZ(tempV2), toTiles(0.02), "SavannahA", "SavannahD");
+		}
+	}
+	
+	for(i = 0; < 40) {
+		tempV = xsVectorSet(randomFloat(0, toTiles(1.0)), 0.0, randomFloat(0, toTiles(1.0)));
+		for(j = 0; < 10) {
+			tempV2 = randomCircleLoc(xsVectorGetX(tempV), xsVectorGetZ(tempV), 10.0);
+			replaceCircle(xsVectorGetX(tempV2), xsVectorGetZ(tempV2), toTiles(0.02), "DirtA", "SandC");
+		}
+	}
+	
+	int ABORT = 0;
+	vector tileForEnd = getRandomTileMatchingTerrain("DirtA", 10);
+	int EndTileX = xsVectorGetX(tileForEnd);
+	int EndTileZ = xsVectorGetZ(tileForEnd);
+	float EndHeight = 6;
+	
+	float EndMetreX = EndTileX*2+1;
+	float EndMetreZ = EndTileZ*2+1;
+	
+	vector tileForStart = getRandomTileMatchingTerrain("RiverSandyC", 10);
+	while(distanceBetweenVectors(tileForStart, tileForEnd, true) < 3000-ABORT){
+		tileForStart = getRandomTileMatchingTerrain("RiverSandyC", 10.0);
+		ABORT = ABORT +1;
+		if(ABORT > 10){
+			trChatSend(0, "ERROR - CANT PAINT END AREA");
+			break;
+		}
+	}
+	int StartTileX = xsVectorGetX(tileForStart);
+	int StartTileZ = xsVectorGetZ(tileForStart);
+	float StartHeight = trGetTerrainHeight(StartTileX, StartTileZ);
+	float StartMetreX = StartTileX*2+1;
+	float StartMetreZ = StartTileZ*2+1;
+	trVectorQuestVarSet("dir", xsVectorSet(11, 0, 0));
+	trVectorQuestVarSet("CentreMap", xsVectorSet(StartMetreX, 0, StartMetreZ));
+	LeaveTerrain = "IceA";
+	paintCircleHeight2(StartTileX, StartTileZ, 8, "SandD", 6);
+	paintCircleHeight2(EndTileX, EndTileZ, 8, LeaveTerrain, EndHeight);
+	//SPAWN PLAYERS
+	float baseCos = xsCos(6.283185 / (cNumberNonGaiaPlayers-1));
+	float baseSin = xsSin(6.283185 / (cNumberNonGaiaPlayers-1));
+	int heading = 90;
+	for(p=1; < cNumberNonGaiaPlayers) {
+		xSetPointer(dPlayerData, p);
+		trVectorQuestVarSet("base", trVectorQuestVarGet("CentreMap") + trVectorQuestVarGet("dir"));
+		heading = heading-(360/(cNumberNonGaiaPlayers-1));
+		if(heading > 360){
+			heading = heading-360;
+		}
+		if(heading < 0){
+			heading = heading+360;
+		}
+		if(xGetBool(dPlayerData, xPlayerActive) == true){
+			CreateCroc(p, trVectorQuestVarGetX("base"), trVectorQuestVarGetZ("base"), heading);
+		}
+		//spyEffect(1*trQuestVarGet("P"+p+"Unit"), kbGetProtoUnitID("Gazelle"), vector(1,1,1), vector(1,1,1));
+		trPlayerKillAllGodPowers(p);
+		trVectorQuestVarSet("dir", rotationMatrix(trVectorQuestVarGet("dir"), baseCos, baseSin));
+		trUnitSelectClear();
+	}
+	paintTrees2("SavannahA", "Palm");
+	paintTrees2("SavannahD", "Palm Stump");
+	int chestnum = PlayersActive+1;
+	ABORT = 0;
+	while(chestnum > 0){
+		tempV = getRandomTileMatchingTerrain("SandC", 5);
+		currentId = trGetNextUnitScenarioNameNumber();
+		UnitCreate(0, "Cinematic Block", xsVectorGetX(tempV), xsVectorGetZ(tempV), 0);
+		if(trCountUnitsInArea(""+currentId, 0, "Great Box", 70) == 0){
+			if(xsVectorGetY(kbGetBlockPosition(""+currentId)) > 0){
+				CreateChest(xsVectorGetX(tempV), xsVectorGetZ(tempV));
+				chestnum = chestnum-1;
+			}
+		}
+		ABORT = ABORT+1;
+		if(ABORT >500){
+			trChatSend(0, "ERROR NO CHESTS");
+			break;
+		}
+	}
+	refreshPassability();
+	LeaveTerrain = "IceA";
+	Stage = 4;
+	StageRequirement = 70;
+	StageScore = 0;
+	PlayersDead = 0;
+	EndPoint = tileForEnd;
+	MinigameFound = false;
+	InMinigame = false;
+	xsEnableRule("Reset Blackmap");
+	trUnblockAllSounds();
 }

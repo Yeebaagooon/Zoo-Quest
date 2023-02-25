@@ -71,6 +71,8 @@ highFrequency
 	modifyProtounitAbsolute("Torch", 0, 2, 0);
 	modifyProtounitAbsolute("Flag", 0, 2, 2);
 	modifyProtounitAbsolute("Spy Eye", 0, 2, 2);
+	modifyProtounitAbsolute("Zebra", 0, 1, 0);
+	modifyProtounitAbsolute("Zebra", 0, 0, 1);
 	modifyProtounitAbsolute("Cinematic Block", 0, 2, 2);
 	for(p = 1; <= cNumberNonGaiaPlayers){
 		modifyProtounitAbsolute("Rocket", p, 1, 5);

@@ -59,13 +59,15 @@ inactive
 			trPaintTerrain(5,((p*8)-2),40,((p*8+4)-2),4,29);
 			//trPaintTerrain(7,p*8,7,p*8,0,73); //start sq
 			PaintAtlantisArea(6,p*8-1,8,p*8+1,0,39);  //start sq
-			trPaintTerrain(28,p*8+2,28,p*8-2,0,74); //end line
 			// cliff
 			//main body
 			trChangeTerrainHeight(4,p*8+3,11,p*8-2,2,false);
 			//trChangeTerrainHeight(12,p*8+3,17,p*8-2,-1,false);
 			//first island
 			trChangeTerrainHeight(18,p*8+3,27,p*8-2,2,false);
+			
+			PaintAtlantisArea(34-1, p*8-1, 34+1, p*8+1,0,39);
+			trChangeTerrainHeight(34-1, p*8-1, 34+2, p*8+2,2,false);
 			/*
 			trChangeTerrainHeight(12,p*8+2,16,p*8-2,10,false);
 			trPaintTerrain(11,p*8+2,16,p*8-2,CliffType,CliffSubType);
@@ -102,8 +104,11 @@ inactive
 			UnitCreate(0, "Cinematic Block", 34*2, p*16, 270);
 			trUnitSelectClear();
 			trUnitSelect(""+temp);
-			trUnitChangeProtoUnit("Spy Eye");
+			trUnitChangeProtoUnit("Zebra");
 			trUnitSelectClear();
+			trUnitSelect(""+temp);
+			trUnitHighlight(100, true);
+			/*trUnitSelectClear();
 			trUnitSelect(""+temp);
 			trMutateSelected(kbGetProtoUnitID("Summoning Tree"));
 			trUnitSelectClear();
@@ -111,7 +116,7 @@ inactive
 			trSetScale(0.5);
 			trUnitSelectClear();
 			trUnitSelect(""+temp);
-			trUnitSetAnimationPath("0,1,0,0,0");
+			trUnitSetAnimationPath("0,1,0,0,0");*/
 			xAddDatabaseBlock(dTemp, true);
 			xSetInt(dTemp, xUnitID, temp);
 			xSetInt(dTemp, xExtra, p);
@@ -232,7 +237,7 @@ inactive
 					startNPCDialog(12);
 					trQuestVarSet("P"+p+"FountainMsg", 2);
 					trCounterAbort("cdtutoriala");
-					trCounterAddTime("cdtutoriala", -100, -200, "<color={PlayerColor("+p+")}>Press 'W' to ???.", -1);
+					trCounterAddTime("cdtutoriala", -100, -200, "<color={PlayerColor("+p+")}>Press 'W' to eat", -1);
 				}
 			}
 			if((1*trQuestVarGet("P"+p+"FountainMsg") == 3) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0)){
@@ -247,6 +252,7 @@ inactive
 				trQuestVarModify("PlayersDoneTutorial", "+", 1);
 				temp = 1*trQuestVarGet("PlayersDoneTutorial");
 				trPaintTerrain(5,((p*8)-2),40,((p*8+4)-2),CliffType,CliffSubType);
+				trPaintWaterColor(vector(0,1,0), 0,((p*8)-2),40,((p*8+4)-2));
 				trUnitSelectClear();
 				for(a = xGetDatabaseCount(dTemp) ; > 0){
 					xDatabaseNext(dTemp);
@@ -291,10 +297,10 @@ rule CrocTutorialDone
 highFrequency
 inactive
 {
-	if(PlayersActive+12 == 1*trQuestVarGet("PlayersDoneTutorial")){
+	if(PlayersActive == 1*trQuestVarGet("PlayersDoneTutorial")){
 		xsDisableSelf();
 		xsDisableRule("CrocTutorialLoops");
-		//xsEnableRule("BuildCrocArea");
+		xsEnableRule("BuildCrocArea");
 		trClearCounterDisplay();
 		trCounterAbort("cdtutorial");
 		trCounterAbort("cdtutoriala");
@@ -328,7 +334,7 @@ inactive
 			trPlayerGrantResources(p, "Gold", -100000);
 			//sprint
 			if(xGetBool(dPlayerData, xReadyToLeave) == false){
-				if(trTime() > xGetInt(dPlayerData, xCrocSprintRechargeTimer)){
+				if(trTime() >= xGetInt(dPlayerData, xCrocSprintRechargeTimer)){
 					if(xGetBool(dPlayerData, xSwimming) == false){
 						if(trTime() < xGetInt(dPlayerData, xCrocBonusTimer)){
 							//fast water bonus
@@ -347,8 +353,8 @@ inactive
 					xSetInt(dPlayerData, xCrocSprintRechargeTimer, trTime()+xGetInt(dPlayerData, xCrocSprintRechargeTime)+(xGetInt(dPlayerData, xCrocSprintDuration)/1000));
 					xSetInt(dPlayerData, xCrocSprintEndTime, trTimeMS()+xGetInt(dPlayerData, xCrocSprintDuration));
 					xSetInt(dPlayerData, xCrocSprintState, 1);
-					debugLog("Sprint recharges at " + xGetInt(dPlayerData, xCrocSprintRechargeTimer) + " seconds");
-					debugLog("Sprint ends at " + xGetInt(dPlayerData, xCrocSprintEndTime) + " Mseconds");
+					//debugLog("Sprint recharges at " + xGetInt(dPlayerData, xCrocSprintRechargeTimer) + " seconds");
+					//debugLog("Sprint ends at " + xGetInt(dPlayerData, xCrocSprintEndTime) + " Mseconds");
 					if(trCurrentPlayer() == p){
 						trCounterAddTime("sprinttooltip"+p, xGetInt(dPlayerData, xCrocSprintDuration)/1000, 0, "Sprint active", -1);
 					}
@@ -363,6 +369,16 @@ inactive
 		}
 		if(trPlayerResourceCount(p, "Wood") > 0){
 			trPlayerGrantResources(p, "Wood", -100000);
+			//EAT
+			if(TutorialMode == true){
+				playSound("crocsnap.wav");
+				if(trCountUnitsInArea(""+1*trQuestVarGet("P"+p+"Unit"),0, "Zebra", 5) == 1){
+					trQuestVarSet("P"+p+"FountainMsg", 3);
+				}
+				if(QuickStart != 0){
+					trQuestVarSet("P"+p+"FountainMsg", 3);
+				}
+			}
 		}
 		if(trPlayerResourceCount(p, "Food") > 0){
 			trPlayerGrantResources(p, "Food", -100000);

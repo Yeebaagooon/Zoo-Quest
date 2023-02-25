@@ -718,6 +718,14 @@ void UnitCreate(int xplayerx = 0, string protounitname = "", int xx = 0, int zz 
 	trUnitChangeProtoUnit(protounitname);
 }
 
+void UnitCreateV(int xplayerx = 0, string protounitname = "", vector pos = vector(0,0,0), int xheadingx = 0){
+	trQuestVarSet("CreatingU", trGetNextUnitScenarioNameNumber());
+	trArmyDispatch(""+xplayerx+",0", "Dwarf", 1, xsVectorGetX(pos), 0, xsVectorGetZ(pos), xheadingx, true);
+	trUnitSelectClear();
+	trUnitSelect(""+1*trQuestVarGet("CreatingU"));
+	trUnitChangeProtoUnit(protounitname);
+}
+
 void FloatingUnit(string protounitname="", int xx = 0, int yy = 0, int zz = 0, int xheadingx = 0,
 	float scalex = 1, float scaley = 1, float scalez = 1){
 	//trArmyDispatch("0,0", "Revealer", 1, xx, yy, zz, xheadingx, true);

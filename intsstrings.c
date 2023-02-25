@@ -32,6 +32,7 @@ FIX PAINT TREES SO LIKE A CHECKBOARD - actually ok for stage one
 [COMMENT]
 Cinematic
 Messages in stage 1 before poachers after chest for objectives
+Flashing zebras
 
 
 [BUG LIST]
