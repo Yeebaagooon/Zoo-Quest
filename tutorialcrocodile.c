@@ -379,6 +379,25 @@ inactive
 					trQuestVarSet("P"+p+"FountainMsg", 3);
 				}
 			}
+			else{
+				for(n = xGetDatabaseCount(dEdibles) ; > 0){
+					xDatabaseNext(dEdibles);
+					if(trCountUnitsInArea(""+xGetInt(dEdibles, xUnitID),p,""+CrocProto, 5) > 0){
+						xUnitSelect(dEdibles, xUnitID);
+						trUnitHighlight(1, true);
+						if(xGetInt(dEdibles, xType) == 1){
+							//Interracting with shrine
+							if(xGetInt(dEdibles, xSubtype) == 0){
+								xUnitSelect(dEdibles, xUnitID);
+								trDamageUnit(1000);
+								if(trCurrentPlayer() == p){
+									playSound("crocsnap.wav");
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 		if(trPlayerResourceCount(p, "Food") > 0){
 			trPlayerGrantResources(p, "Food", -100000);

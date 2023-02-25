@@ -301,6 +301,11 @@ inactive
 		trQuestVarSet("ScoreBonus2", 86);
 		trQuestVarSet("ScoreBonus3", 100);
 	}
+	if(Stage == 4){
+		trQuestVarSet("ScoreBonus1", 80);
+		trQuestVarSet("ScoreBonus2", 90);
+		trQuestVarSet("ScoreBonus3", 100);
+	}
 	for(z=1 ; < 51){
 		if((z == 1*trQuestVarGet("ScoreBonus1")/2) || (z == 1*trQuestVarGet("ScoreBonus2")/2) || (z == 1*trQuestVarGet("ScoreBonus3")/2)){
 			CreateDot(63,20+z*2, true);
@@ -459,6 +464,9 @@ inactive
 	}
 	if(Stage == 4){
 		xsEnableRule("TutorialTerrainCrocodile");
+	}
+	if(Stage == 5){
+		xsEnableRule("TempEndGame");
 	}
 	trLetterBox(false);
 	trFadeOutAllSounds(3);

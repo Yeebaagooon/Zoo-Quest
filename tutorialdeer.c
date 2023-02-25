@@ -168,7 +168,8 @@ inactive
 	else{
 		trSetFogAndBlackmap(false,false);
 	}
-	//trSetFogAndBlackmap(true,true);
+	trSetFogAndBlackmap(false,false);
+	//false = revealed
 	xsDisableSelf();
 }
 
@@ -381,6 +382,13 @@ inactive
 				ToggleCharge(p);
 				//ColouredIconChatToPlayer(p, "1,1,0", "icons\icon object stat hit point", "Stamina = " + 1*xGetFloat(dPlayerData, xRhinoChargeTime));
 			}
+		}
+		if(anim == 5){
+			//eating zebra
+			trUnitSelectClear();
+			trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+			trUnitOverrideAnimation(24, 0, true, true, -1, 0);
+			//or 18 birth 24 flail
 		}
 		if(Stage > 1){
 			if((anim == 6) || (anim == 46)){

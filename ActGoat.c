@@ -34,6 +34,7 @@ inactive
 		trDelayedRuleActivation("GoatActLoops");
 		SpawnGoatPoacher(2);
 		modifyProtounitAbsolute("Throwing Axeman", cNumberNonGaiaPlayers, 55, 4);
+		modifyProtounitAbsolute("Throwing Axeman", cNumberNonGaiaPlayers, 2, 30);
 		for(p = 1 ; < cNumberNonGaiaPlayers){
 			xSetPointer(dPlayerData, p);
 			xSetInt(dPlayerData, xTimeout, trTimeMS()*2);
@@ -746,6 +747,7 @@ highFrequency
 	xsDisableRule("MGGOGoat");
 	xsDisableRule("GoatPoacherTimer");
 	for(p=1 ; < cNumberNonGaiaPlayers){
+		xSetPointer(dPlayerData, p);
 		trUnitSelectByQV("P"+p+"Unit");
 		trUnitChangeProtoUnit("Ragnorok SFX");
 		trUnitSelectByQV("P"+p+"Unit");

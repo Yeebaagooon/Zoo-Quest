@@ -57,7 +57,7 @@ vector StageVector = vector(0,0,0);
 vector EndPoint = vector(0,0,0);
 string LeaveTerrain = "";
 string GoatProto = "Hero Greek Heracles";
-string CrocProto = "Hero Greek Atalanta";
+string CrocProto = "Villager Norse";
 string ChickenProto = "Hero Norse";
 
 //EVENTS
@@ -143,6 +143,7 @@ int xCrocSprintRechargeTimer = 0;
 int xCrocSprintDuration = 0;
 int xCrocSprintEndTime = 0;
 int xCrocSprintState = 0;
+int xCrocSize = 0;
 
 int dDestroyMe = 0;
 int xDestroyName = 0;
@@ -191,6 +192,7 @@ highFrequency
 	xCrocSprintDuration = xInitAddInt(dPlayerData, "xc", 2500);
 	xCrocSprintEndTime = xInitAddInt(dPlayerData, "the end time of the sprint", 0);
 	xCrocSprintState = xInitAddInt(dPlayerData, "xc", 0);
+	xCrocSize = xInitAddInt(dPlayerData, "xc", 1);
 	for(p=1; <= cNumberNonGaiaPlayers) {
 		xAddDatabaseBlock(dPlayerData, true);
 	}

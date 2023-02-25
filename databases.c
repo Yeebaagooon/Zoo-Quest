@@ -69,6 +69,10 @@ int xSubtype = 0;
 int xSquare1 = 0;
 int xSquare2 = 0;
 
+int dEdibles = 0;
+int xTime1 = 0;
+int xTime2 = 0;
+
 rule initialise_spy_database
 active
 highFrequency
@@ -157,6 +161,13 @@ highFrequency
 	xSubtype = xInitAddInt(dInterractables, "desc", 0);
 	xSquare1 = xInitAddInt(dInterractables, "sq1", 0);
 	xSquare2 = xInitAddInt(dInterractables, "sq2", 0);
+	
+	dEdibles = xInitDatabase("edibles");
+	xUnitID = xInitAddInt(dEdibles, "id", 0);
+	xType = xInitAddInt(dEdibles, "desc", 0);
+	xSubtype = xInitAddInt(dEdibles, "desc", 0);
+	xTime1 = xInitAddInt(dEdibles, "desc", 0);
+	xTime2 = xInitAddInt(dEdibles, "desc", 0);
 }
 
 /*
@@ -189,6 +200,9 @@ bool rayCollision(vector start = vector(0,0,0), vector dir = vector(1,0,0),
 						return(true);
 					}
 					if(trPlayerUnitCountSpecific(xGetPointer(dPlayerData), ""+GoatProto) == 1){
+						return(true);
+					}
+					if(trPlayerUnitCountSpecific(xGetPointer(dPlayerData), ""+CrocProto) == 1){
 						return(true);
 					}
 				}
@@ -231,6 +245,13 @@ void DoMissile(){
 		}
 		if(Stage == 3){
 			if(rayCollision(prev,dir,dist+2,2)){
+				hit = true;
+				playerhit = xGetPointer(dPlayerData);
+				break;
+			}
+		}
+		if(Stage == 4){
+			if(rayCollision(prev,dir,dist+2,4)){
 				hit = true;
 				playerhit = xGetPointer(dPlayerData);
 				break;

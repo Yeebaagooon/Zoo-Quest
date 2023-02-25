@@ -2232,7 +2232,26 @@ void createCrocArea(){
 	
 	float EndMetreX = EndTileX*2+1;
 	float EndMetreZ = EndTileZ*2+1;
-	
+	currentId = trGetNextUnitScenarioNameNumber();
+	UnitCreate(0, "Cinematic Block", 2*xsVectorGetX(tileForEnd),2*xsVectorGetZ(tileForEnd),0);
+	trUnitSelectClear();
+	trUnitSelect(""+currentId);
+	trUnitChangeProtoUnit("Spy Eye");
+	trUnitSelectClear();
+	trUnitSelect(""+currentId);
+	trMutateSelected(kbGetProtoUnitID("Osiris Box Glow"));
+	trUnitSelectClear();
+	trUnitSelect(""+currentId);
+	trUnitSetAnimationPath("0,0,1,0,0,0");
+	currentId = trGetNextUnitScenarioNameNumber();
+	UnitCreate(0, "Cinematic Block", 2*xsVectorGetX(tileForEnd),2*xsVectorGetZ(tileForEnd),0);
+	trUnitSelectClear();
+	trUnitSelect(""+currentId);
+	trUnitChangeProtoUnit("Flag");
+	trUnitSelectClear();
+	trUnitSelect(""+currentId);
+	trUnitSetAnimationPath("0,0,0,0,0,0");
+	FlagUnitID = currentId;
 	vector tileForStart = getRandomTileMatchingTerrain("RiverSandyC", 10);
 	while(distanceBetweenVectors(tileForStart, tileForEnd, true) < 3000-ABORT){
 		tileForStart = getRandomTileMatchingTerrain("RiverSandyC", 10.0);
@@ -2251,7 +2270,8 @@ void createCrocArea(){
 	trVectorQuestVarSet("CentreMap", xsVectorSet(StartMetreX, 0, StartMetreZ));
 	LeaveTerrain = "IceA";
 	paintCircleHeight2(StartTileX, StartTileZ, 8, "SandD", 6);
-	paintCircleHeight2(EndTileX, EndTileZ, 8, LeaveTerrain, EndHeight);
+	paintCircleHeight2(EndTileX, EndTileZ, 8, "CliffEgyptianB", EndHeight);
+	paintCircleHeight2(EndTileX, EndTileZ, 7, LeaveTerrain, EndHeight);
 	//SPAWN PLAYERS
 	float baseCos = xsCos(6.283185 / (cNumberNonGaiaPlayers-1));
 	float baseSin = xsSin(6.283185 / (cNumberNonGaiaPlayers-1));
@@ -2282,11 +2302,11 @@ void createCrocArea(){
 		tempV = getRandomTileMatchingTerrain("SandC", 5);
 		currentId = trGetNextUnitScenarioNameNumber();
 		UnitCreate(0, "Cinematic Block", xsVectorGetX(tempV), xsVectorGetZ(tempV), 0);
-		if(trCountUnitsInArea(""+currentId, 0, "Great Box", 70) == 0){
-			if(xsVectorGetY(kbGetBlockPosition(""+currentId)) > 0){
-				CreateChest(xsVectorGetX(tempV), xsVectorGetZ(tempV));
-				chestnum = chestnum-1;
-			}
+		if(trCountUnitsInArea(""+currentId, 0, "Great Box", 50) == 0){
+			//if(xsVectorGetY(kbGetBlockPosition(""+currentId)) > 0){
+			CreateChest(xsVectorGetX(tempV), xsVectorGetZ(tempV));
+			chestnum = chestnum-1;
+			//}
 		}
 		ABORT = ABORT+1;
 		if(ABORT >500){
@@ -2294,6 +2314,7 @@ void createCrocArea(){
 			break;
 		}
 	}
+	modifyProtounitAbsolute("Zebra", 0, 1, 6);
 	refreshPassability();
 	LeaveTerrain = "IceA";
 	Stage = 4;
@@ -2305,4 +2326,22 @@ void createCrocArea(){
 	InMinigame = false;
 	xsEnableRule("Reset Blackmap");
 	trUnblockAllSounds();
+}
+
+void SpawnEdible(int num = 0){
+	int currentId = 0;
+	while(num > 0){
+		tempV = getRandomTileMatchingTerrain("ShorelineSandA", 5);
+		currentId = trGetNextUnitScenarioNameNumber();
+		UnitCreate(0, "Cinematic Block", xsVectorGetX(tempV), xsVectorGetZ(tempV), 0);
+		if(xsVectorGetY(kbGetBlockPosition(""+currentId)) > 4){
+			trUnitSelectClear();
+			trUnitSelect(""+currentId);
+			trUnitChangeProtoUnit("Zebra");
+			xAddDatabaseBlock(dEdibles, true);
+			xSetInt(dEdibles, xUnitID, currentId);
+			xSetInt(dEdibles, xType, 1);
+			num = num-1;
+		}
+	}
 }
