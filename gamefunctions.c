@@ -557,3 +557,26 @@ void ToggleCharge(int p = 0){
 		//end
 	}
 }
+
+void CrocGrow(int p = 0){
+	xSetPointer(dPlayerData, p);
+	xSetInt(dPlayerData, xCrocSize, xGetInt(dPlayerData, xCrocSize)+1);
+	xSetFloat(dPlayerData, xCrocFood, 0);
+	xSetFloat(dPlayerData, xCrocNext, 5+2*xGetInt(dPlayerData, xCrocSize));
+	trUnitSelectClear();
+	xUnitSelect(dPlayerData, xSpyID);
+	float scale = 0.25*xGetInt(dPlayerData, xCrocSize)+0.75;
+	trSetScale(scale);
+	debugLog("Scale: " + scale);
+	if(trCurrentPlayer() == p){
+		playSound("ageadvance.wav");
+	}
+	trModifyProtounit(""+CrocProto, p, 0, 2);
+	trModifyProtounit(""+CrocProto, p, 2, 2);
+	trModifyProtounit(""+CrocProto, p, 29, 2);
+	xSetFloat(dPlayerData, xCrocLandSpeed, xGetFloat(dPlayerData, xCrocLandSpeed)+0.2);
+	xSetFloat(dPlayerData, xCrocWaterSpeed, xGetFloat(dPlayerData, xCrocWaterSpeed)+0.35);
+	if(iModulo(4, xGetInt(dPlayerData, xCrocSize)+1) == 0){
+		debugLog("Factor 4");
+	}
+}

@@ -390,8 +390,15 @@ inactive
 							if(xGetInt(dEdibles, xSubtype) == 0){
 								xUnitSelect(dEdibles, xUnitID);
 								trDamageUnit(1000);
+								xFreeDatabaseBlock(dEdibles);
 								if(trCurrentPlayer() == p){
 									playSound("crocsnap.wav");
+								}
+								trQuestVarModify("P"+p+"FountainMsg", "+", 1);
+								if(1*trQuestVarGet("P"+p+"FountainMsg") == 1){
+									if(trCurrentPlayer() == p){
+										trMessageSetText("Now you'll need to eat the deceased Zebra in order to grow. Right click the dead Zebra.", 7500);
+									}
 								}
 							}
 						}
@@ -422,6 +429,11 @@ inactive
 				debugLog("Sprint off");
 			}
 			//}
+		}
+		anim = kbUnitGetAnimationActionType(kbGetBlockID(""+1*trQuestVarGet("P"+p+"Unit")+""));
+		if(anim == 5){
+			xSetFloat(dPlayerData, xCrocFood, xGetFloat(dPlayerData, xCrocFood)+0.01);
+			//about 1000 for level 2
 		}
 	}
 }

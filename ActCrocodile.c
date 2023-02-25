@@ -21,9 +21,9 @@ inactive
 		//trDelayedRuleActivation("GoatBonus");
 		//trSetCounterDisplay("<color={PlayerColor(2)}>Fencing destroyed: "+FencesDone+"/8");
 		ColouredIconChat("1,0.5,0", ActIcon(Stage), "<u>" + ActName(Stage) + "</u>");
-		ColouredIconChat("0.0,0.8,0.2", "icons\building norse shrine icon 64", "Interract with shrines using W.");
-		ColouredChat("0.0,0.8,0.2", "Eat flashing animals to grow in size.");
-		ColouredChat("0.0,0.8,0.2", "Only flashing animals can be eaten!");
+		//ColouredIconChat("0.0,0.8,0.2", "icons\building norse shrine icon 64", "Interract with shrines using W.");
+		ColouredChat("0.0,0.8,0.2", "Use 'W' to kill and eat zebras to grow.");
+		ColouredChat("0.0,0.8,0.2", "As always watch out for poachers.");
 		xsEnableRule("PlayMusic");
 		//SpawnRhinoPoacher(xsMax(PlayersActive,3));
 		//SpawnRhinoSuperPoacher(1);
@@ -35,10 +35,13 @@ inactive
 		modifyProtounitAbsolute("Throwing Axeman", cNumberNonGaiaPlayers, 55, 1);
 		for(p = 1 ; < cNumberNonGaiaPlayers){
 			xSetPointer(dPlayerData, p);
-			//xSetInt(dPlayerData, xTimeout, trTimeMS()*2);
+			xSetInt(dPlayerData, xCrocSize, 1);
+			xSetFloat(dPlayerData, xCrocNext, 5*xGetInt(dPlayerData, xCrocSize));
+			trQuestVarSet("P"+p+"FountainMsg", 0);
 		}
 		trQuestVarSet("NextPoacherSpawn", trTime()+220);
 		SpawnEdible(cNumberNonGaiaPlayers*2);
+		trRateConstruction(20);
 	}
 }
 
@@ -67,6 +70,9 @@ inactive
 				xSetBool(dPlayerData, xPlayerActive, false);
 				PlayersActive = PlayersActive-1;
 			}
+			if(trCurrentPlayer() == p){
+				trSetCounterDisplay("Food: " + 1*xGetFloat(dPlayerData, xCrocFood) + " | Next: " + 1*xGetFloat(dPlayerData, xCrocNext));
+			}
 			if((xGetBool(dPlayerData, xStopDeath) == false) && (trPlayerUnitCountSpecific(p, ""+CrocProto) == 0) && (trPlayerUnitCountSpecific(p, "Prisoner") == 0) && (trPlayerGetPopulation(p) == 0) && (trPlayerUnitCountSpecific(p, "Anubite") == 0) && (xGetBool(dPlayerData, xPlayerActive) == true) && (xGetBool(dPlayerData, xPlayerDead) == false) && (InMinigame == false)){
 				//PLAYER DEAD
 				PlayersDead = PlayersDead+1;
@@ -85,6 +91,9 @@ inactive
 					trDamageUnit(-1*xGetInt(dPlayerData, xHPRegen));
 					xSetInt(dPlayerData, xHPRegenNext, trTime()+xGetInt(dPlayerData, xHPRegenTime));
 				}
+			}
+			if(xGetFloat(dPlayerData, xCrocFood) >= xGetFloat(dPlayerData, xCrocNext)){
+				CrocGrow(p);
 			}
 		}
 		if((PlayersActive == PlayersReadyToLeave+PlayersDead) && (PlayersDead != PlayersActive)){
@@ -172,44 +181,7 @@ inactive
 				}
 			}
 		}
-		/*for(x = xGetDatabaseCount(dInterractables); > 0){
-			xDatabaseNext(dInterractables);
-			if(xGetInt(dInterractables, xType) == 2){
-				if(xGetInt(dInterractables, xSubtype) == 1){
-					if(trTime() > xGetInt(dInterractables, xSquare1)){
-						xSetInt(dInterractables, xSubtype, 0);
-						ShrinesGot = ShrinesGot-1;
-						xUnitSelect(dInterractables, xSquare2);
-						trUnitDestroy();
-					}
-				}
-			}
-			if(xGetInt(dInterractables, xType) == 3){
-				if(xGetInt(dInterractables, xSubtype) == 1){
-					if(trTime() > xGetInt(dInterractables, xSquare1)){
-						xSetInt(dInterractables, xSubtype, 0);
-						xUnitSelect(dInterractables, xSquare2);
-						trUnitDestroy();
-					}
-				}
-			}
-			if(xGetInt(dInterractables, xType) == 5){
-				if(xGetInt(dInterractables, xSubtype) == 1){
-					if(trTime() > xGetInt(dInterractables, xSquare2)){
-						xSetInt(dInterractables, xSubtype, 0);
-						xUnitSelect(dInterractables, xUnitID);
-						trUnitSetAnimationPath("0,1,0,0,0");
-					}
-					xUnitSelect(dInterractables, xSquare2);
-					trQuestVarModify("TemporaryHeading", "+", 100*timediff);
-					if(1*trQuestVarGet("TemporaryHeading") > 360){
-						trQuestVarSet("TemporaryHeading", 0);
-					}
-					temp = 1*trQuestVarGet("TemporaryHeading");
-					setSelectedUnitHeadingDegress(temp);
-				}
-			}
-		}*/
+		//db
 		
 	}
 	

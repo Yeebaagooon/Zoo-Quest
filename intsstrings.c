@@ -144,6 +144,8 @@ int xCrocSprintDuration = 0;
 int xCrocSprintEndTime = 0;
 int xCrocSprintState = 0;
 int xCrocSize = 0;
+int xCrocFood = 0;
+int xCrocNext = 0;
 
 int dDestroyMe = 0;
 int xDestroyName = 0;
@@ -184,7 +186,7 @@ highFrequency
 	xSwimming = xInitAddBool(dPlayerData, "swimming", false);
 	xCrocLandSpeed = xInitAddFloat(dPlayerData, "croc land speed", 3.0);
 	xCrocWaterSpeed = xInitAddFloat(dPlayerData, "croc swim speed", 5.0);
-	xCrocSprintSpeed = xInitAddFloat(dPlayerData, "xc", 1.5);
+	xCrocSprintSpeed = xInitAddFloat(dPlayerData, "speed multiply", 1.5);
 	xCrocBonusTime = xInitAddInt(dPlayerData, "xc", 3);
 	xCrocBonusTimer = xInitAddInt(dPlayerData, "xc", 30);
 	xCrocSprintRechargeTime = xInitAddInt(dPlayerData, "xc", 20);
@@ -193,6 +195,8 @@ highFrequency
 	xCrocSprintEndTime = xInitAddInt(dPlayerData, "the end time of the sprint", 0);
 	xCrocSprintState = xInitAddInt(dPlayerData, "xc", 0);
 	xCrocSize = xInitAddInt(dPlayerData, "xc", 1);
+	xCrocFood = xInitAddFloat(dPlayerData, "xc", 0);
+	xCrocNext = xInitAddFloat(dPlayerData, "next food", 0);
 	for(p=1; <= cNumberNonGaiaPlayers) {
 		xAddDatabaseBlock(dPlayerData, true);
 	}

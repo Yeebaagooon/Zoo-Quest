@@ -100,6 +100,7 @@ highFrequency
 		modifyProtounitAbsolute(""+CrocProto, p, 0, 5);
 		modifyProtounitAbsolute(""+CrocProto, p, 1, xGetFloat(dPlayerData, xCrocLandSpeed));
 		modifyProtounitAbsolute(""+CrocProto, p, 2, 10);
+		modifyProtounitAbsolute(""+CrocProto, p, 22, 10000);
 		for(a = 24; <= 29){
 			modifyProtounitAbsolute(""+GazelleProto, p, a, 0);
 			modifyProtounitAbsolute(""+RhinoProto, p, a, 0);
@@ -108,6 +109,9 @@ highFrequency
 			modifyProtounitAbsolute("Hero Greek Bellerophon", p, a, 0);
 		}
 		modifyProtounitAbsolute(""+RhinoProto, p, 27, 15);
+		modifyProtounitAbsolute(""+CrocProto, p, 11, 2);
+		modifyProtounitAbsolute(""+CrocProto, p, 12, 2);
+		modifyProtounitAbsolute(""+CrocProto, p, 13, 0);
 		modifyProtounitAbsolute(""+CrocProto, p, 29, 5);
 		modifyBuildableProto("House", p);
 		modifyBuildableProto("Granary", p);
