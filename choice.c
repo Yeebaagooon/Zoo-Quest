@@ -420,6 +420,16 @@ inactive
 					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
 				}
 			}
+			case 44:
+			{
+				//MG true
+				xSetInt(dPlayerData, xAnswer, 1);
+			}
+			case 45:
+			{
+				//MG false
+				xSetInt(dPlayerData, xAnswer, 0);
+			}
 		}
 		trQuestVarSet("P"+ActionChoice+"YesAction", 0);
 		trQuestVarSet("P"+ActionChoice+"NoAction", 0);

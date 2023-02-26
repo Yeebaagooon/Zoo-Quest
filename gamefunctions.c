@@ -38,6 +38,20 @@ inactive
 	}
 }
 
+rule CrocQuizQuestions
+highFrequency
+inactive
+{
+	//ODD QUESTIONS ANSWER TRUE
+	//EVEN QUESTIONS ANSWER FALSE
+	trStringQuestVarSet("Question1", "Q1True");
+	trStringQuestVarSet("Question2", "Q2False");
+	trStringQuestVarSet("Question3", "Q3True");
+	trStringQuestVarSet("Question4", "Q4False");
+	trQuestVarSet("MaxQNumber", 4);
+	xsDisableSelf();
+}
+
 string ActName(int num = 0){
 	string actnamed = "Error";
 	switch(num)

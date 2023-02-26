@@ -148,6 +148,10 @@ int xCrocSprintState = 0;
 int xCrocSize = 0;
 int xCrocFood = 0;
 int xCrocNext = 0;
+int xQuestions = 0;
+int xQuestionsCorrect = 0;
+int xAnswer = 0;
+int xQuestionAnswer = 0;
 
 int dDestroyMe = 0;
 int xDestroyName = 0;
@@ -199,6 +203,10 @@ highFrequency
 	xCrocSize = xInitAddInt(dPlayerData, "xc", 1);
 	xCrocFood = xInitAddFloat(dPlayerData, "xc", 0);
 	xCrocNext = xInitAddFloat(dPlayerData, "next food", 0);
+	xQuestions = xInitAddInt(dPlayerData, "qs mg", 0);
+	xQuestionsCorrect = xInitAddInt(dPlayerData, "qs mg", 0);
+	xAnswer = xInitAddInt(dPlayerData, "player answer", -1);
+	xQuestionAnswer = xInitAddInt(dPlayerData, "correct answer", -1);
 	for(p=1; <= cNumberNonGaiaPlayers) {
 		xAddDatabaseBlock(dPlayerData, true);
 	}

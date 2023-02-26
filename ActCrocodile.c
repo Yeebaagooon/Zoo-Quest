@@ -1,3 +1,15 @@
+void AskQuestion(int p = 0){
+	xSetPointer(dPlayerData, p);
+	trQuestVarSetFromRand("temp", 1, 1*trQuestVarGet("MaxQNumber"));
+	PlayerChoice(p, trStringQuestVarGet("Question"+1*trQuestVarGet("temp")), "True", 44, "False", 45, 20000);
+	if(iModulo(2, 1*trQuestVarGet("temp")) == 0){
+		xSetInt(dPlayerData, xQuestionAnswer, 0);
+	}
+	else{
+		xSetInt(dPlayerData, xQuestionAnswer, 1);
+	}
+}
+
 rule BuildCrocArea
 highFrequency
 inactive
@@ -25,8 +37,6 @@ inactive
 		ColouredChat("0.0,0.8,0.2", "Use 'W' to kill and eat zebras to grow.");
 		ColouredChat("0.0,0.8,0.2", "As always watch out for poachers.");
 		xsEnableRule("PlayMusic");
-		//SpawnRhinoPoacher(xsMax(PlayersActive,3));
-		//SpawnRhinoSuperPoacher(1);
 		PlayersDead = 0;
 		timediff = trTimeMS();
 		timelast = trTimeMS();
@@ -40,8 +50,8 @@ inactive
 		trQuestVarSet("NextPoacherSpawn", trTime()+220);
 		SpawnEdible(cNumberNonGaiaPlayers*2);
 		trRateConstruction(20);
-		SpawnCrocPoacher1(2);
-		SpawnCrocPoacher2(1);
+		//SpawnCrocPoacher1(2);
+		//SpawnCrocPoacher2(1);
 		modifyProtounitAbsolute("Chu Ko Nu", cNumberNonGaiaPlayers, 0, 5);
 		modifyProtounitAbsolute("Chu Ko Nu", cNumberNonGaiaPlayers, 12, 3);
 		modifyProtounitAbsolute("Chu Ko Nu", cNumberNonGaiaPlayers, 26, 0);
@@ -97,6 +107,51 @@ inactive
 			}
 			if(xGetFloat(dPlayerData, xCrocFood) >= xGetFloat(dPlayerData, xCrocNext)){
 				CrocGrow(p);
+			}
+			if(InMinigame == true){
+				if(xGetInt(dPlayerData, xAnswer) > -1){
+					if(xGetInt(dPlayerData, xQuestionAnswer) == 1){
+						if(xGetInt(dPlayerData, xAnswer) == 1){
+							debugLog("True is correct");
+							xSetInt(dPlayerData, xQuestionsCorrect, xGetInt(dPlayerData, xQuestionsCorrect)+1);
+						}
+						else{
+							debugLog("True is wrong");
+						}
+					}
+					else{
+						if(xGetInt(dPlayerData, xAnswer) == 0){
+							debugLog("False is correct");
+							xSetInt(dPlayerData, xQuestionsCorrect, xGetInt(dPlayerData, xQuestionsCorrect)+1);
+						}
+						else{
+							debugLog("False is wrong");
+						}
+					}
+					xSetInt(dPlayerData, xAnswer, -1);
+					xSetInt(dPlayerData, xQuestionAnswer, -1);
+					xSetInt(dPlayerData, xQuestions, xGetInt(dPlayerData, xQuestions)-1);
+					if(xGetInt(dPlayerData, xQuestions) > 0){
+						debugLog("Qs remaining: " + xGetInt(dPlayerData, xQuestions));
+						AskQuestion(p);
+					}
+					else{
+						PlayersMinigaming = PlayersMinigaming-1;
+						if(xGetInt(dPlayerData, xQuestionsCorrect) > 2){
+							if(trCurrentPlayer() == p){
+								playSound("xwin.wav");
+							}
+							MinigameWins = MinigameWins+1;
+						}
+						else{
+							if(trCurrentPlayer() == p){
+								playSound("xlose.wav");
+								trOverlayText("Minigame Failed!", 3.0,-1,-1,600);
+							}
+						}
+					}
+					
+				}
 			}
 		}
 		if((PlayersActive == PlayersReadyToLeave+PlayersDead) && (PlayersDead != PlayersActive)){
@@ -358,6 +413,7 @@ inactive
 			}
 			trMusicStop();
 			playSound("\cinematics\22_in\music 2.mp3");
+			xsEnableRule("CrocQuizQuestions");
 			xsDisableSelf();
 		}
 	}
@@ -385,6 +441,8 @@ highFrequency
 				PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is playing");
 				PlayersMinigaming = PlayersMinigaming+1;
 				xSetBool(dPlayerData, xStopDeath, true);
+				xSetInt(dPlayerData, xQuestions, 4);
+				AskQuestion(p);
 				if(xGetInt(dPlayerData, xTeleportDue) == 0){
 					xSetVector(dPlayerData, xVectorHold, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
 				}
@@ -423,7 +481,7 @@ highFrequency
 		}
 	}
 	else{
-		//trMessageSetText("This minigame is a quiz, get 3/4 questions right to win!", 8000);
+		trMessageSetText("This minigame is a quiz, get 3/4 questions right to win!", 8000);
 		trCounterAddTime("cdCrocminigame", 9,0,"<color={PlayerColor(2)}>Minigame time remaining", 39);
 		playSoundCustom("\xpack\xcinematics\7_in\music.mp3", "\Yeebaagooon\Zoo Quest\Minigame3.mp3");
 		xsEnableRule("CrocMinigameEnd");
@@ -473,7 +531,6 @@ highFrequency
 			}
 			if(trPlayerUnitCountSpecific(p, ""+CrocProto) == 0){
 				CreateCroc(p, trVectorQuestVarGetX("P"+p+"PosMG")*2, trVectorQuestVarGetZ("P"+p+"PosMG")*2, 0);
-				//fail is /2
 			}
 		}
 		uiZoomToProto(""+CrocProto);
