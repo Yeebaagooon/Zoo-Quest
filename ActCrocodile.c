@@ -50,8 +50,8 @@ inactive
 		trQuestVarSet("NextPoacherSpawn", trTime()+220);
 		SpawnEdible(cNumberNonGaiaPlayers*2);
 		trRateConstruction(20);
-		//SpawnCrocPoacher1(2);
-		//SpawnCrocPoacher2(1);
+		SpawnCrocPoacher1(2);
+		SpawnCrocPoacher2(1);
 		modifyProtounitAbsolute("Chu Ko Nu", cNumberNonGaiaPlayers, 0, 5);
 		modifyProtounitAbsolute("Chu Ko Nu", cNumberNonGaiaPlayers, 12, 3);
 		modifyProtounitAbsolute("Chu Ko Nu", cNumberNonGaiaPlayers, 26, 0);

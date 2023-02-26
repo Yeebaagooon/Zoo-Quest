@@ -190,6 +190,17 @@ highFrequency
 					}
 				}
 				if(Stage == 4){
+					for(a = xGetDatabaseCount(dPoachers); > 0){
+						xDatabaseNext(dPoachers);
+						if(xGetInt(dPoachers, xUnitID) == closestid){
+							unitcheck = xGetString(dPoachers, xPoacherType);
+							continue;
+						}
+					}
+					if(unitcheck == "Kebenit"){
+						IGUnit = true;
+						IGName = closestid;
+					}
 					ShootProjectile(dir, closevector, "Lampades Bolt", "Wadjet Spit");
 				}
 			}

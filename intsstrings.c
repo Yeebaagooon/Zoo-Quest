@@ -67,6 +67,9 @@ const int EVENT_BUILD_GRANARY = 29;
 const int EVENT_BUILD_STOREHOUSE = 30;
 const int EVENT_REMOVE_CAM_TRACKS = 26;
 const int EVENT_BUILD_AT_CURSOR = 31;
+bool IGUnit = false;
+int IGName = 0;
+string unitcheck = "";
 
 //MAP STUFF
 float timediff = 0.0;

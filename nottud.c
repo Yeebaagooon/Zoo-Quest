@@ -2431,6 +2431,10 @@ void SpawnCrocPoacher1(int num = 0){
 			}
 			while((distanceBetweenVectors(tempV, EP, true) < 1000)){
 				continue;
+				if(ABORT > 50){
+					debugLog("Error chokunu");
+					break;
+				}
 			}
 			for(p = 1; < cNumberNonGaiaPlayers){
 				xSetPointer(dPlayerData, p);
@@ -2500,7 +2504,7 @@ void SpawnCrocPoacher2(int num = 0){
 					trUnitDestroy();
 				}
 			}
-			else if(allow == 1){
+			else{
 				allow = 0;
 			}
 			ABORT = ABORT+1;
