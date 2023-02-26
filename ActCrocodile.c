@@ -12,7 +12,7 @@ inactive
 		uiZoomToProto(""+CrocProto);
 		uiLookAtProto(""+CrocProto);
 		trDelayedRuleActivation("ResetBlackmap");
-		//trDelayedRuleActivation("GoatMinigameDetect");
+		trDelayedRuleActivation("CrocMinigameDetect");
 		trDelayedRuleActivation("TEST");
 		trDelayedRuleActivation("CrocEndZoneSee");
 		trDelayedRuleActivation("CrocAllDead");
@@ -31,8 +31,6 @@ inactive
 		timediff = trTimeMS();
 		timelast = trTimeMS();
 		trDelayedRuleActivation("CrocActLoops");
-		//SpawnGoatPoacher(2);
-		modifyProtounitAbsolute("Throwing Axeman", cNumberNonGaiaPlayers, 55, 1);
 		for(p = 1 ; < cNumberNonGaiaPlayers){
 			xSetPointer(dPlayerData, p);
 			xSetInt(dPlayerData, xCrocSize, 1);
@@ -186,7 +184,7 @@ inactive
 				}
 			}
 		}
-		if(xGetDatabaseCount(dEdibles) < 2){
+		if(Zebras <= PlayersActive/2){
 			SpawnEdible(cNumberNonGaiaPlayers);
 			SpawnCrocPoacher1(2);
 			SpawnCrocPoacher2(1);
@@ -319,4 +317,182 @@ highFrequency
 	trClearCounterDisplay();
 	xsEnableRule("ScoreScreenStart");
 	xsDisableSelf();
+}
+
+
+//---
+
+rule CrocMinigameDetect
+highFrequency
+inactive
+{
+	//xsSetContextPlayer(0);
+	vector pos = vector(0,0,0);
+	vector minigame = kbGetBlockPosition(""+1*trQuestVarGet("MinigameStartID"));
+	for(p=1 ; < cNumberNonGaiaPlayers){
+		pos = kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit"));
+		if(distanceBetweenVectors(minigame, pos, true) < 10){
+			trUnitSelectByQV("MinigameStartSFX");
+			trUnitChangeInArea(0,0,"Palm", "Rocket", 10);
+			trUnitSelectByQV("MinigameStartSFX");
+			trUnitChangeProtoUnit("Olympus Temple SFX");
+			trUnitSelectByQV("MinigameStartID");
+			trUnitChangeProtoUnit("Forest Fire SFX");
+			PaintAtlantisArea(xsVectorGetX(StageVector)-2,xsVectorGetZ(StageVector)-2,xsVectorGetX(StageVector)+2,xsVectorGetZ(StageVector)+2,0,53);
+			refreshPassability();
+			trMessageSetText("Minigame found! Remain in the white square if you wish to play.", 10000);
+			trCounterAddTime("CDMG", 12-(QuickStart*2), 0, "<color={PlayerColor("+p+")}>Minigame Starts", 38);
+			MinigameFound = true;
+			for(x=1 ; < cNumberNonGaiaPlayers){
+				xSetPointer(dPlayerData, x);
+				if(x != p){
+					if(xGetBool(dPlayerData, xPlayerDead) == false){
+						PlayerChoice(x, "Participate in minigame?", "Yes", 4, "No", 0, 11900);
+					}
+				}
+			}
+			for(b = 0; <xGetDatabaseCount(dPoachers)){
+				xDatabaseNext(dPoachers);
+				xUnitSelect(dPoachers, xUnitID);
+				trUnitChangeProtoUnit("Cinematic Block");
+			}
+			trMusicStop();
+			playSound("\cinematics\22_in\music 2.mp3");
+			xsDisableSelf();
+		}
+	}
+}
+
+void CrocMinigameGo(int temp = 0){
+	xsEnableRule("MGGOCroc");
+}
+
+rule MGGOCroc
+inactive
+highFrequency
+{
+	InMinigame = true;
+	int temp = trGetNextUnitScenarioNameNumber();
+	int StartX = xsVectorGetX(StageVector);
+	int StartZ = xsVectorGetZ(StageVector);
+	temp = trGetNextUnitScenarioNameNumber();
+	for(p=1 ; < cNumberNonGaiaPlayers){
+		xSetPointer(dPlayerData, p);
+		if(xGetBool(dPlayerData, xPlayerActive)){
+			trVectorQuestVarSet("P"+p+"PosMG", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
+			trVectorQuestVarSet("P"+p+"PosMG", trVectorQuestVarGet("P"+p+"PosMG")/2);
+			if((trVectorQuestVarGetX("P"+p+"PosMG") > xsVectorGetX(StageVector)-2) && (trVectorQuestVarGetX("P"+p+"PosMG") < xsVectorGetX(StageVector)+2) && (trVectorQuestVarGetZ("P"+p+"PosMG") > xsVectorGetZ(StageVector)-2) && (trVectorQuestVarGetZ("P"+p+"PosMG") < xsVectorGetZ(StageVector)+2)){
+				PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is playing");
+				PlayersMinigaming = PlayersMinigaming+1;
+				xSetBool(dPlayerData, xStopDeath, true);
+				if(xGetInt(dPlayerData, xTeleportDue) == 0){
+					xSetVector(dPlayerData, xVectorHold, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
+				}
+			}
+		}
+	}
+	refreshPassability();
+	if(PlayersMinigaming == 0){
+		//end MG
+		trUnitSelectByQV("MinigameStartSFX");
+		trUnitDestroy();
+		trUnitSelectByQV("MinigameStartID");
+		trUnitDestroy();
+		trMessageSetText("Nobody was on the white tiles. Minigame cancelled.", 5000);
+		for(c = xGetDatabaseCount(dTemp) ; > 0){
+			xDatabaseNext(dTemp);
+			xUnitSelect(dTemp, xUnitID);
+			trUnitDestroy();
+			xFreeDatabaseBlock(dTemp);
+		}
+		for(b = 0; <xGetDatabaseCount(dPoachers)){
+			xDatabaseNext(dPoachers);
+			xUnitSelect(dPoachers, xUnitID);
+			trUnitChangeProtoUnit(xGetString(dPoachers, xPoacherType));
+		}
+		InMinigame = false;
+		xsEnableRule("PlayMusic");
+		trChangeTerrainHeight(xsVectorGetX(StageVector)-10,xsVectorGetZ(StageVector)-10,xsVectorGetX(StageVector)+10,xsVectorGetZ(StageVector)+10,9,false);
+		trPaintTerrain(xsVectorGetX(StageVector)-10,xsVectorGetZ(StageVector)-10,xsVectorGetX(StageVector)+10,xsVectorGetZ(StageVector)+10,0,51);
+		refreshPassability();
+		for(p=1 ; < cNumberNonGaiaPlayers){
+			if(trPlayerUnitCountSpecific(p, ""+CrocProto) == 0){
+				CreateCroc(p, xsVectorGetX(StageVector), xsVectorGetZ(StageVector), 0);
+				
+			}
+		}
+	}
+	else{
+		//trMessageSetText("This minigame is a quiz, get 3/4 questions right to win!", 8000);
+		trCounterAddTime("cdCrocminigame", 9,0,"<color={PlayerColor(2)}>Minigame time remaining", 39);
+		playSoundCustom("\xpack\xcinematics\7_in\music.mp3", "\Yeebaagooon\Zoo Quest\Minigame3.mp3");
+		xsEnableRule("CrocMinigameEnd");
+	}
+	xsDisableSelf();
+}
+
+void CrocMGTimeout(int eventID = 0){
+	PlayersMinigaming = 0;
+}
+
+rule CrocMinigameEnd
+inactive
+highFrequency
+{
+	if(PlayersMinigaming <= 0){
+		vector temp = vector(0,0,0);
+		trPaintTerrain(xsVectorGetX(StageVector)-1,xsVectorGetZ(StageVector)-1,xsVectorGetX(StageVector)+1,xsVectorGetZ(StageVector)+1,0,51);
+		refreshPassability();
+		for(p=1 ; < cNumberNonGaiaPlayers){
+			xSetPointer(dPlayerData, p);
+			if((xGetInt(dPlayerData, xTeleportDue) == 1) && (xGetBool(dPlayerData, xPlayerActive) == true)){
+				temp = xGetVector(dPlayerData, xVectorHold);
+				trUnitSelectByQV("P"+p+"Unit");
+				trUnitChangeProtoUnit("Ragnorok SFX");
+				trUnitSelectByQV("P"+p+"Unit");
+				trUnitDestroy();
+				trUnitSelectClear();
+				trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+				trUnitChangeProtoUnit("Hero Death");
+				CreateCroc(p, xsVectorGetX(temp), xsVectorGetZ(temp), 0);
+				xSetBool(dPlayerData, xStopDeath, false);
+				xSetInt(dPlayerData, xTeleportDue, 0);
+			}
+			else if((xGetInt(dPlayerData, xTeleportDue) == 0) && (xGetBool(dPlayerData, xPlayerActive) == true)){
+				if(trPlayerUnitCountSpecific(p, ""+CrocProto) == 0){
+					temp = xGetVector(dPlayerData, xVectorHold);
+					trUnitSelectByQV("P"+p+"Unit");
+					trUnitChangeProtoUnit("Ragnorok SFX");
+					trUnitSelectByQV("P"+p+"Unit");
+					trUnitDestroy();
+					trUnitSelectClear();
+					trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+					trUnitChangeProtoUnit("Hero Death");
+					CreateCroc(p, xsVectorGetX(temp), xsVectorGetZ(temp), 0);
+				}
+			}
+			if(trPlayerUnitCountSpecific(p, ""+CrocProto) == 0){
+				CreateCroc(p, trVectorQuestVarGetX("P"+p+"PosMG")*2, trVectorQuestVarGetZ("P"+p+"PosMG")*2, 0);
+				//fail is /2
+			}
+		}
+		uiZoomToProto(""+CrocProto);
+		uiLookAtProto(""+CrocProto);
+		for(b = 0; <xGetDatabaseCount(dPoachers)){
+			xDatabaseNext(dPoachers);
+			xUnitSelect(dPoachers, xUnitID);
+			trUnitChangeProtoUnit(xGetString(dPoachers, xPoacherType));
+		}
+		trUnitSelectByQV("MinigameStartSFX");
+		trUnitChangeProtoUnit("Olympus Temple SFX");
+		trUnitSelectByQV("MinigameStartID");
+		trUnitChangeProtoUnit("Forest Fire SFX");
+		xsDisableSelf();
+		InMinigame = false;
+		PlayersMinigaming = 0;
+		trCounterAbort("cdCrocminigame");
+		trFadeOutAllSounds(3);
+		trFadeOutMusic(3);
+		xsEnableRule("PlayMusic");
+	}
 }

@@ -393,6 +393,7 @@ inactive
 								xUnitSelect(dEdibles, xUnitID);
 								trDamageUnit(1000);
 								xFreeDatabaseBlock(dEdibles);
+								Zebras = Zebras-1;
 								if(trCurrentPlayer() == p){
 									playSound("crocsnap.wav");
 								}
@@ -400,6 +401,23 @@ inactive
 								if(1*trQuestVarGet("P"+p+"FountainMsg") == 1){
 									if(trCurrentPlayer() == p){
 										trMessageSetText("Now you'll need to eat the deceased Zebra in order to grow. Right click the dead Zebra.", 7500);
+									}
+								}
+							}
+						}
+						if(xGetInt(dEdibles, xType) == 2){
+							if(xGetInt(dPlayerData, xCrocSize) > 4 ){
+								//Interracting with chokonu
+								if(xGetInt(dEdibles, xSubtype) == 0){
+									xUnitSelect(dEdibles, xUnitID);
+									trDamageUnit(1000);
+									xFreeDatabaseBlock(dEdibles);
+									xUnitSelect(dPoachers, xUnitID);
+									xFreeDatabaseBlock(dPoachers);
+									xSetFloat(dPlayerData, xCrocFood, xGetFloat(dPlayerData, xCrocFood)+2);
+									if(trCurrentPlayer() == p){
+										playSound("crocsnap.wav");
+										playSound("spidermaledeath" + iModulo(6, (trTime())+1) + ".wav");
 									}
 								}
 							}

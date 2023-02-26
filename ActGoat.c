@@ -759,5 +759,6 @@ highFrequency
 	}
 	trClearCounterDisplay();
 	xsEnableRule("ScoreScreenStart");
+	modifyProtounitAbsolute("Throwing Axeman", cNumberNonGaiaPlayers, 55, 1);
 	xsDisableSelf();
 }

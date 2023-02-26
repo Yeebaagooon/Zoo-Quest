@@ -91,6 +91,7 @@ int ShrinesMax = 0;
 int ShrineTimeMin = 80;
 int ShrineTarget = 0;
 int ShrineTimeMax = 200;
+int Zebras = 0;
 
 //DB STUFF
 int DestroyNumber = 0;

@@ -487,6 +487,10 @@ void CreateCroc(int p = 1, int x = 1, int z = 1, int heading = 0){
 	xSetPointer(dPlayerData, p);
 	xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
 	xSetBool(dPlayerData, xStopDeath, false);
+	trUnitSelectClear();
+	xUnitSelect(dPlayerData, xSpyID);
+	float scale = 0.25*xGetInt(dPlayerData, xCrocSize)+0.75;
+	trSetScale(scale);
 	/*
 	vector test = kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit"));
 	test = test + HeadingToVector(heading);
@@ -562,7 +566,8 @@ void CrocGrow(int p = 0){
 	xSetPointer(dPlayerData, p);
 	xSetInt(dPlayerData, xCrocSize, xGetInt(dPlayerData, xCrocSize)+1);
 	xSetFloat(dPlayerData, xCrocFood, 0);
-	xSetFloat(dPlayerData, xCrocNext, 5+2*xGetInt(dPlayerData, xCrocSize));
+	//5+2*xGetInt(dPlayerData, xCrocSize)
+	xSetFloat(dPlayerData, xCrocNext, 1);
 	trUnitSelectClear();
 	xUnitSelect(dPlayerData, xSpyID);
 	float scale = 0.25*xGetInt(dPlayerData, xCrocSize)+0.75;
@@ -585,5 +590,8 @@ void CrocGrow(int p = 0){
 		xSetInt(dPlayerData, xCrocSprintDuration, xGetInt(dPlayerData, xCrocSprintDuration)+1000);
 		xSetInt(dPlayerData, xCrocSprintRechargeTime, xGetInt(dPlayerData, xCrocSprintRechargeTime)-1);
 		trDamageUnit(-1);
+		if(xGetInt(dPlayerData, xCrocSize) == 5){
+			ColouredIconChatToPlayer(p, "0,0,0.7", "icons\animal crocodile icon", "You can now use 'W' to eat Chu Ko Nus!");
+		}
 	}
 }

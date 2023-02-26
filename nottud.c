@@ -1384,6 +1384,8 @@ void createMarsh(){
 	trQuestVarSet("MinigameStartSFX", currentId);
 	trUnitSelectByQV("MinigameStartID");
 	trUnitChangeProtoUnit("Torch");
+	trUnitSelectByQV("MinigameStartID");
+	trUnitSetAnimationPath("0,1,0,0,1,1,1");
 	StageVector = tileForMinigame;
 	for(i = 0; <54){
 		currentId = trGetNextUnitScenarioNameNumber();
@@ -1461,7 +1463,6 @@ void createMarsh(){
 	FlagSFXID = currentId;
 	trUnitSelectClear();
 	trUnitSelect(""+currentId);
-	trUnitSetAnimationPath("0,0,1,0,0,0");
 	currentId = trGetNextUnitScenarioNameNumber();
 	UnitCreate(0, "Cinematic Block", 2*xsVectorGetX(tileForEnd),2*xsVectorGetZ(tileForEnd),0);
 	trUnitSelectClear();
@@ -1696,6 +1697,8 @@ void createGoatArea(){
 	trQuestVarSet("MinigameStartSFX", currentId);
 	trUnitSelectByQV("MinigameStartID");
 	trUnitChangeProtoUnit("Torch");
+	trUnitSelectByQV("MinigameStartID");
+	trUnitSetAnimationPath("0,1,0,0,1,1,1");
 	StageVector = tileForMinigame;
 	int chestnum = xsMax(4,cNumberNonGaiaPlayers/2+1);
 	while(chestnum > 0){
@@ -2057,6 +2060,8 @@ void createDeepForestArea(){
 	trQuestVarSet("MinigameStartSFX", currentId);
 	trUnitSelectByQV("MinigameStartID");
 	trUnitChangeProtoUnit("Torch");
+	trUnitSelectByQV("MinigameStartID");
+	trUnitSetAnimationPath("0,1,0,0,1,1,1");
 	//PaintAtlantisArea(xsVectorGetX(tileForTrack)+26,xsVectorGetZ(tileForTrack)+4,xsVectorGetX(tileForTrack)+28,xsVectorGetZ(tileForTrack)+6,4,90);
 	StageVector = tileForTrack;
 	LeaveTerrain = "IceA";
@@ -2324,6 +2329,8 @@ void createCrocArea(){
 	trQuestVarSet("MinigameStartSFX", currentId);
 	trUnitSelectByQV("MinigameStartID");
 	trUnitChangeProtoUnit("Torch");
+	trUnitSelectByQV("MinigameStartID");
+	trUnitSetAnimationPath("0,1,0,0,1,1,1");
 	StageVector = tileForMinigame;
 	paintTrees2("SavannahA", "Palm");
 	paintTrees2("SavannahD", "Palm Stump");
@@ -2346,6 +2353,32 @@ void createCrocArea(){
 		}
 	}
 	modifyProtounitAbsolute("Zebra", 0, 1, 6);
+	paintUnit("ShorelineSandA", "Water Reeds", 0, 0.05);
+	currentId = trGetNextUnitScenarioNameNumber();
+	paintUnit("RiverSandyC", "Dwarf", 0, 0.025);
+	for(i = currentId; < trGetNextUnitScenarioNameNumber()){
+		trUnitSelectClear();
+		trUnitSelect(""+i);
+		trUnitChangeProtoUnit("Papyrus");
+	}
+	currentId = trGetNextUnitScenarioNameNumber();
+	paintUnit("RiverSandyC", "Dwarf", 0, 0.05);
+	for(i = currentId; < trGetNextUnitScenarioNameNumber()){
+		trUnitSelectClear();
+		trUnitSelect(""+i);
+		trUnitChangeProtoUnit("Seaweed");
+	}
+	paintUnit("RiverSandyC", "Dwarf", 0, 0.015);
+	for(i = currentId; < trGetNextUnitScenarioNameNumber()){
+		trUnitSelectClear();
+		trUnitSelect(""+i);
+		trUnitChangeProtoUnit("Spy Eye");
+		trUnitSelectClear();
+		trUnitSelect(""+i);
+		trMutateSelected(kbGetProtoUnitID("Rock River Sandy"));
+	}
+	paintUnit("RiverSandyC", "Mist", 0, 0.001);
+	paintUnit("DirtA", "Rock Sandstone Small", 0, 0.05);
 	refreshPassability();
 	LeaveTerrain = "IceA";
 	Stage = 4;
@@ -2357,6 +2390,9 @@ void createCrocArea(){
 	InMinigame = false;
 	xsEnableRule("Reset Blackmap");
 	trUnblockAllSounds();
+	if(QuickStart == 0){
+		trSetLighting("night", 0.1);
+	}
 }
 
 void SpawnEdible(int num = 0){
@@ -2373,6 +2409,7 @@ void SpawnEdible(int num = 0){
 			xSetInt(dEdibles, xUnitID, currentId);
 			xSetInt(dEdibles, xType, 1);
 			num = num-1;
+			Zebras = Zebras+1;
 		}
 	}
 }
@@ -2388,7 +2425,7 @@ void SpawnCrocPoacher1(int num = 0){
 			temp = trGetNextUnitScenarioNameNumber();
 			tempV = getRandomTileMatchingTerrain("ShorelineSandA", 5);
 			ABORT = ABORT+1;
-			if(ABORT > 500){
+			if(ABORT > 50){
 				debugLog("Error chokunu");
 				break;
 			}
@@ -2410,7 +2447,11 @@ void SpawnCrocPoacher1(int num = 0){
 					trUnitChangeProtoUnit("Chu Ko Nu");
 					xAddDatabaseBlock(dPoachers, true);
 					xSetInt(dPoachers, xUnitID, temp);
+					xSetString(dPoachers, xPoacherType, "Chu Ko Nu");
 					xSetInt(dPoachers, xMoveTime, 0);
+					xAddDatabaseBlock(dEdibles, true);
+					xSetInt(dEdibles, xUnitID, temp);
+					xSetInt(dEdibles, xType, 2);
 					num = num-1;
 				}
 			}
@@ -2444,8 +2485,12 @@ void SpawnCrocPoacher2(int num = 0){
 					trUnitSelectClear();
 					trUnitSelect(""+temp);
 					trUnitChangeProtoUnit("Kebenit");
+					trUnitSelectClear();
+					trUnitSelect(""+temp);
+					trSetScale(0.6);
 					xAddDatabaseBlock(dPoachers, true);
 					xSetInt(dPoachers, xUnitID, temp);
+					xSetString(dPoachers, xPoacherType, "Kebenit");
 					xSetInt(dPoachers, xMoveTime, 0);
 					num = num-1;
 				}
@@ -2459,7 +2504,7 @@ void SpawnCrocPoacher2(int num = 0){
 				allow = 0;
 			}
 			ABORT = ABORT+1;
-			if(ABORT > 500){
+			if(ABORT > 50){
 				debugLog("Error kebenit");
 				break;
 			}

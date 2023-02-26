@@ -20,6 +20,8 @@ highFrequency
 	trEventSetHandler(35, "RhinoMGTimeout");
 	trEventSetHandler(36, "GoatMinigameGo");
 	trEventSetHandler(37, "GoatMGTimeout");
+	trEventSetHandler(38, "CrocMinigameGo");
+	trEventSetHandler(39, "CrocMGTimeout");
 	xsDisableSelf();
 }
 
