@@ -18,7 +18,7 @@ highFrequency
 		trTechSetStatus(p, 30, 4);
 		trTechSetStatus(p, 350, 4);
 		trTechSetStatus(p, 27, 4);
-		for(n=930; >0) {
+		for(n=930; > 0) {
 			trForbidProtounit(p,kbGetProtoUnitName(n));
 		}
 	}
@@ -62,6 +62,10 @@ highFrequency
 	modifyProtounitAbsolute("Javelin Flaming", cNumberNonGaiaPlayers, 1, 6);
 	modifyProtounitAbsolute("Javelin Flaming", cNumberNonGaiaPlayers, 8, 10);
 	modifyProtounitAbsolute("Villager Egyptian", cNumberNonGaiaPlayers, 0, 10000);
+	modifyProtounitAbsolute("Kebenit", cNumberNonGaiaPlayers, 0, 10);
+	modifyProtounitAbsolute("Kebenit", cNumberNonGaiaPlayers, 31, 1);
+	modifyProtounitAbsolute("Kebenit", cNumberNonGaiaPlayers, 13, 1);
+	modifyProtounitAbsolute("Kebenit", cNumberNonGaiaPlayers, 26, 0);
 	modifyProtounitAbsolute("Titan Atlantean", 0, 2, 0);
 	modifyProtounitAbsolute("Titan Gate Dead", 0, 2, 0);
 	modifyProtounitAbsolute("Shrine", 0, 2, 0);
@@ -154,6 +158,14 @@ highFrequency
 		trModifyProtounit(""+NoChoiceUnitName + " Hero", p, 18, -9999999999999999999.0);
 		trModifyProtounit(""+NoChoiceUnitName + " Hero", p, 19, -9999999999999999999.0);
 		trModifyProtounit(""+CrocProto, p, 55, 3);
+		trModifyProtounit("Huskarl", 0, 55, 4);
+		trModifyProtounit("Trident Soldier", 0, 55, 4);
+		trModifyProtounit("Dwarf", 0, 55, 4);
+		trModifyProtounit("Huskarl", cNumberNonGaiaPlayers, 55, 4);
+		trModifyProtounit("Trident Soldier", cNumberNonGaiaPlayers, 55, 4);
+		trModifyProtounit("Dwarf", cNumberNonGaiaPlayers, 55, 4);
+		trModifyProtounit("Invisible Target", 0, 55, 4);
+		trModifyProtounit("Invisible Target", cNumberNonGaiaPlayers, 55, 4);
 	}
 	xsDisableSelf();
 }

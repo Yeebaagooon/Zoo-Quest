@@ -177,15 +177,20 @@ highFrequency
 				dest = kbGetBlockPosition(""+trGetUnitScenarioNameNumber(kbUnitGetTargetUnitID(kbGetBlockID(""+closestid))));
 				xsSetContextPlayer(0);
 				dir = xsVectorNormalize(dest-closevector);
-				//rotate to L, for loop shoot
-				baseCos = 0.965926; //cos15
-				baseSin = 0.258819; //sin15
-				//calculator for sin and cos(angle) required
-				//so for 15 degrees and 5 projs our angles are 30,15,0,-15-,-30, so set to cos/sin -30 then loop for +15
-				dir = rotationMatrix(dir, 0.866025, -0.5); //dir, -30cos, -30sin
-				for(a = 1; < 6){
+				if(Stage == 2){
+					//rotate to L, for loop shoot
+					baseCos = 0.965926; //cos15
+					baseSin = 0.258819; //sin15
+					//calculator for sin and cos(angle) required
+					//so for 15 degrees and 5 projs our angles are 30,15,0,-15-,-30, so set to cos/sin -30 then loop for +15
+					dir = rotationMatrix(dir, 0.866025, -0.5); //dir, -30cos, -30sin
+					for(a = 1; < 6){
+						ShootProjectile(dir, closevector, "Lampades Bolt", "Wadjet Spit");
+						dir = rotationMatrix(dir, baseCos, baseSin);
+					}
+				}
+				if(Stage == 4){
 					ShootProjectile(dir, closevector, "Lampades Bolt", "Wadjet Spit");
-					dir = rotationMatrix(dir, baseCos, baseSin);
 				}
 			}
 		}

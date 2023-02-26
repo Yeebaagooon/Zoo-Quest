@@ -17,7 +17,7 @@ inactive
 		trDelayedRuleActivation("CrocEndZoneSee");
 		trDelayedRuleActivation("CrocAllDead");
 		//trDelayedRuleActivation("GoatPoacherTimer");
-		//xsEnableRule("GoatPoacherMovement");
+		xsEnableRule("CrocPoacherMovement");
 		//trDelayedRuleActivation("GoatBonus");
 		//trSetCounterDisplay("<color={PlayerColor(2)}>Fencing destroyed: "+FencesDone+"/8");
 		ColouredIconChat("1,0.5,0", ActIcon(Stage), "<u>" + ActName(Stage) + "</u>");
@@ -42,6 +42,11 @@ inactive
 		trQuestVarSet("NextPoacherSpawn", trTime()+220);
 		SpawnEdible(cNumberNonGaiaPlayers*2);
 		trRateConstruction(20);
+		SpawnCrocPoacher1(2);
+		SpawnCrocPoacher2(1);
+		modifyProtounitAbsolute("Chu Ko Nu", cNumberNonGaiaPlayers, 0, 5);
+		modifyProtounitAbsolute("Chu Ko Nu", cNumberNonGaiaPlayers, 12, 3);
+		modifyProtounitAbsolute("Chu Ko Nu", cNumberNonGaiaPlayers, 26, 0);
 	}
 }
 
@@ -145,35 +150,35 @@ inactive
 					trQuestVarSetFromRand("temp2", 1, 3);
 					if(1*trQuestVarGet("temp") == 1){
 						if(1*trQuestVarGet("temp2") == 1){
-							PlayerChoice(pl, "Choose your reward:", "+2 hp", 21, "+0.5 speed", 22, 10000);
+							PlayerChoice(pl, "Choose your reward:", "+5 hp", 36, "+4 LOS", 37, 10000);
 						}
 						if(1*trQuestVarGet("temp2") == 2){
-							PlayerChoice(pl, "Choose your reward:", "+2 hp", 21, "+4 LOS", 23, 10000);
+							PlayerChoice(pl, "Choose your reward:", "+5 hp", 36, "+1s sprint time", 40, 10000);
 						}
 						if(1*trQuestVarGet("temp2") == 3){
-							PlayerChoice(pl, "Choose your reward:", "+2 hp", 21, "+1hp regen every 30s", 24, 10000);
+							PlayerChoice(pl, "Choose your reward:", "Instant grow", 35, "+1hp regen every 20s", 43, 10000);
 						}
 					}
 					if(1*trQuestVarGet("temp") == 2){
 						if(1*trQuestVarGet("temp2") == 1){
-							PlayerChoice(pl, "Choose your reward:", "+3 hp", 25, "+0.75 speed", 26, 10000);
+							PlayerChoice(pl, "Choose your reward:", "+4 LOS", 37, "+0.4 land speed", 38, 10000);
 						}
 						if(1*trQuestVarGet("temp2") == 2){
-							PlayerChoice(pl, "Choose your reward:", "+0.75 speed", 26, "+4 LOS", 23, 10000);
+							PlayerChoice(pl, "Choose your reward:", "+4 LOS", 37, "+0.6 swim speed", 39, 10000);
 						}
 						if(1*trQuestVarGet("temp2") == 3){
-							PlayerChoice(pl, "Choose your reward:", "+3 hp", 25, "+4 LOS", 23, 10000);
+							PlayerChoice(pl, "Choose your reward:", "+0.3 sprint speed multiplier", 42, "-2s sprint cd", 41, 10000);
 						}
 					}
 					if(1*trQuestVarGet("temp") == 3){
 						if(1*trQuestVarGet("temp2") == 1){
-							PlayerChoice(pl, "Choose your reward:", "Remove a snowman", 27, "+10s shrine min activation time", 28, 10000);
+							PlayerChoice(pl, "Choose your reward:", "+1s sprint time", 40, "-2s sprint cd", 41, 10000);
 						}
 						if(1*trQuestVarGet("temp2") == 2){
-							PlayerChoice(pl, "Choose your reward:", "Remove a snowman", 27, "+20s shrine max activation time", 29, 10000);
+							PlayerChoice(pl, "Choose your reward:", "Instant grow", 35, "+0.3 sprint speed multiplier", 42, 10000);
 						}
 						if(1*trQuestVarGet("temp2") == 3){
-							PlayerChoice(pl, "Choose your reward:", "+20s shrine max activation time", 29, "+60s all shrine current activation time", 30, 10000);
+							PlayerChoice(pl, "Choose your reward:", "+0.4 land speed", 38, "+0.6 swim speed", 39, 10000);
 						}
 					}
 					
@@ -181,7 +186,11 @@ inactive
 				}
 			}
 		}
-		//db
+		if(xGetDatabaseCount(dEdibles) < 2){
+			SpawnEdible(cNumberNonGaiaPlayers);
+			SpawnCrocPoacher1(2);
+			SpawnCrocPoacher2(1);
+		}
 		
 	}
 	
@@ -223,6 +232,23 @@ highFrequency
 				ColouredChatToPlayer(p, "1,1,0", "You cannot use abilities in the extraction zone.");
 				ColouredChatToPlayer(p, "1,1,0", "You also cannot die or be attacked.");
 			}
+		}
+	}
+}
+
+rule CrocPoacherMovement
+inactive
+highFrequency
+{
+	if(xGetDatabaseCount(dPoachers) > 0){
+		xDatabaseNext(dPoachers);
+		if(xGetInt(dPoachers, xMoveTime) < trTime()){
+			trQuestVarSetFromRand("x",0,252);
+			trQuestVarSetFromRand("y",30,80);
+			trQuestVarSetFromRand("z",0,252);
+			xSetInt(dPoachers, xMoveTime, trTime()+1*trQuestVarGet("y"));
+			xUnitSelect(dPoachers, xUnitID);
+			trUnitMoveToPoint(1*trQuestVarGet("x"),5,1*trQuestVarGet("z"),-1,true);
 		}
 	}
 }

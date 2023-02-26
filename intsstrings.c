@@ -39,6 +39,7 @@ Flashing zebras
 skul062
 
 MG3 that disturbing terrain glitch
+?HP regen overlap
 
 //DELETE
 */

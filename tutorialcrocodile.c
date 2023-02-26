@@ -54,6 +54,8 @@ inactive
 		}
 		trQuestVarSet("PlayersDoneTutorial", 0);
 		for(p=1 ; < cNumberNonGaiaPlayers){
+			trForbidProtounit(p, "Farm");
+			trForbidProtounit(p, "Ulsfark");
 			trQuestVarSet("P"+p+"DoneTutorial", 0);
 			trQuestVarSet("P"+p+"FountainMsg", 0);
 			trPaintTerrain(5,((p*8)-2),40,((p*8+4)-2),4,29);
@@ -386,7 +388,7 @@ inactive
 						xUnitSelect(dEdibles, xUnitID);
 						trUnitHighlight(1, true);
 						if(xGetInt(dEdibles, xType) == 1){
-							//Interracting with shrine
+							//Interracting with zebra
 							if(xGetInt(dEdibles, xSubtype) == 0){
 								xUnitSelect(dEdibles, xUnitID);
 								trDamageUnit(1000);

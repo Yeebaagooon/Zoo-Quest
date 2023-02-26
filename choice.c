@@ -240,7 +240,7 @@ inactive
 			case 24:
 			{
 				//Goat regen +1/30
-				xSetInt(dPlayerData, xHPRegenTime, 20);
+				xSetInt(dPlayerData, xHPRegenTime, 30);
 				xSetInt(dPlayerData, xHPRegen, xGetInt(dPlayerData, xHPRegen)+1);
 				if(trCurrentPlayer() == p){
 					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
@@ -338,6 +338,80 @@ inactive
 				trMessageSetText(trStringQuestVarGet("p"+p+"name") + stringtemp + ShrinesMax + " shrines.", 10000);
 				playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
 			}
+			case 35:
+			{
+				//Croc grow
+				CrocGrow(p);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 36:
+			{
+				//Croc +5 HP
+				trModifyProtounit(""+CrocProto, p, 0, 5);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 37:
+			{
+				//Croc +4 LOS
+				trModifyProtounit(""+CrocProto, p, 1, 4);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 38:
+			{
+				//Croc +0.4 land speed
+				xSetFloat(dPlayerData, xCrocLandSpeed, xGetFloat(dPlayerData, xCrocLandSpeed)+0.4);
+				modifyProtounitAbsolute(""+CrocProto, p, 1, xGetFloat(dPlayerData, xCrocLandSpeed));
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 39:
+			{
+				//Croc +0.6 swim speed
+				xSetFloat(dPlayerData, xCrocWaterSpeed, xGetFloat(dPlayerData, xCrocWaterSpeed)+0.6);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 40:
+			{
+				//Croc +1s sprint time
+				xSetInt(dPlayerData, xCrocSprintDuration, xGetInt(dPlayerData, xCrocSprintDuration)+1000);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 41:
+			{
+				//Croc -2s sprint cd
+				xSetInt(dPlayerData, xCrocSprintRechargeTime, xGetInt(dPlayerData, xCrocSprintRechargeTime)-2);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 42:
+			{
+				//Croc 0.3 sprint speed multiplier
+				xSetFloat(dPlayerData, xCrocSprintSpeed, xGetFloat(dPlayerData, xCrocSprintSpeed)+0.3);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 43:
+			{
+				//Croc regen +1/20
+				xSetInt(dPlayerData, xHPRegenTime, 20);
+				xSetInt(dPlayerData, xHPRegen, xGetInt(dPlayerData, xHPRegen)+1);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
 		}
 		trQuestVarSet("P"+ActionChoice+"YesAction", 0);
 		trQuestVarSet("P"+ActionChoice+"NoAction", 0);
@@ -355,6 +429,9 @@ inactive
 			}
 			if(Stage == 3){
 				uiZoomToProto(""+GoatProto);
+			}
+			if(Stage == 4){
+				uiZoomToProto(""+CrocProto);
 			}
 		}
 		

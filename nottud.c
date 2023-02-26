@@ -2294,6 +2294,37 @@ void createCrocArea(){
 		trVectorQuestVarSet("dir", rotationMatrix(trVectorQuestVarGet("dir"), baseCos, baseSin));
 		trUnitSelectClear();
 	}
+	//MINIGAME
+	ABORT = 0;
+	vector tileForMinigame = vector(0,0,0);
+	tileForMinigame = getRandomTileMatchingTerrain("SavannahD", 11);
+	while((distanceBetweenVectors(tileForStart, tileForMinigame, true) < 3000) && (distanceBetweenVectors(tileForEnd, tileForMinigame, true) < 3000)){
+		tileForMinigame = getRandomTileMatchingTerrain("SavannahD", 11);
+		ABORT = ABORT+1;
+		if(ABORT >500){
+			break;
+			trChatSend(0, "ERROR NO MINIGAME TILE");
+		}
+	}
+	int MinigameTileX = xsVectorGetX(tileForMinigame);
+	int MinigameTileZ = xsVectorGetZ(tileForMinigame);
+	float MinigameHeight = trGetTerrainHeight(MinigameTileX, MinigameTileZ);
+	float MinigameMetreX = MinigameTileX*2+1;
+	float MinigameMetreZ = MinigameTileZ*2+1;
+	PaintAtlantisArea(MinigameTileX-1, MinigameTileZ-1, MinigameTileX+1, MinigameTileZ+1, 5, 4);
+	trChangeTerrainHeight(MinigameTileX-1, MinigameTileZ-1, MinigameTileX+1, MinigameTileZ+1, MinigameHeight, false);
+	currentId = trGetNextUnitScenarioNameNumber();
+	UnitCreate(0, "Cinematic Block", MinigameMetreX, MinigameMetreZ,0);
+	trQuestVarSet("MinigameStartID", currentId);
+	currentId = trGetNextUnitScenarioNameNumber();
+	UnitCreate(0, "Cinematic Block", MinigameMetreX, MinigameMetreZ,0);
+	trUnitSelectClear();
+	trUnitSelect(""+currentId);
+	trUnitChangeProtoUnit("Healing SFX");
+	trQuestVarSet("MinigameStartSFX", currentId);
+	trUnitSelectByQV("MinigameStartID");
+	trUnitChangeProtoUnit("Torch");
+	StageVector = tileForMinigame;
 	paintTrees2("SavannahA", "Palm");
 	paintTrees2("SavannahD", "Palm Stump");
 	int chestnum = PlayersActive+1;
@@ -2345,3 +2376,94 @@ void SpawnEdible(int num = 0){
 		}
 	}
 }
+
+void SpawnCrocPoacher1(int num = 0){
+	int temp = 0;
+	int ABORT = 0;
+	vector spawn = vector(0,0,0);
+	vector EP = EndPoint*2;
+	int allow = 0;
+	if(InMinigame == false){
+		while(num > 0){
+			temp = trGetNextUnitScenarioNameNumber();
+			tempV = getRandomTileMatchingTerrain("ShorelineSandA", 5);
+			ABORT = ABORT+1;
+			if(ABORT > 500){
+				debugLog("Error chokunu");
+				break;
+			}
+			while((distanceBetweenVectors(tempV, EP, true) < 1000)){
+				continue;
+			}
+			for(p = 1; < cNumberNonGaiaPlayers){
+				xSetPointer(dPlayerData, p);
+				if((distanceBetweenVectors(tempV, kbGetBlockPosition(""+xGetInt(dPlayerData, xPlayerUnitID)),true) < 1000) && (xGetBool(dPlayerData, xPlayerActive) == true)){
+					allow = 1;
+				}
+			}
+			if(allow == 0){
+				temp = trGetNextUnitScenarioNameNumber();
+				UnitCreateV(cNumberNonGaiaPlayers, "Cinematic Block", tempV, 0);
+				if(xsVectorGetY(kbGetBlockPosition(""+temp)) > 4){
+					trUnitSelectClear();
+					trUnitSelect(""+temp);
+					trUnitChangeProtoUnit("Chu Ko Nu");
+					xAddDatabaseBlock(dPoachers, true);
+					xSetInt(dPoachers, xUnitID, temp);
+					xSetInt(dPoachers, xMoveTime, 0);
+					num = num-1;
+				}
+			}
+			else if(allow == 1){
+				allow = 0;
+			}
+		}
+	}
+}
+
+void SpawnCrocPoacher2(int num = 0){
+	int temp = 0;
+	vector spawn = vector(0,0,0);
+	vector EP = EndPoint*2;
+	int allow = 0;
+	int ABORT = 0;
+	if(InMinigame == false){
+		while(num > 0){
+			temp = trGetNextUnitScenarioNameNumber();
+			tempV = getRandomTileMatchingTerrain("RiverSandyC", 5);
+			for(p = 1; < cNumberNonGaiaPlayers){
+				xSetPointer(dPlayerData, p);
+				if((distanceBetweenVectors(tempV, kbGetBlockPosition(""+xGetInt(dPlayerData, xPlayerUnitID)),true) < 1000) && (xGetBool(dPlayerData, xPlayerActive) == true)){
+					allow = 1;
+				}
+			}
+			if(allow == 0){
+				temp = trGetNextUnitScenarioNameNumber();
+				UnitCreateV(cNumberNonGaiaPlayers, "Dwarf", tempV, 0);
+				if(xsVectorGetY(kbGetBlockPosition(""+temp)) < 4){
+					trUnitSelectClear();
+					trUnitSelect(""+temp);
+					trUnitChangeProtoUnit("Kebenit");
+					xAddDatabaseBlock(dPoachers, true);
+					xSetInt(dPoachers, xUnitID, temp);
+					xSetInt(dPoachers, xMoveTime, 0);
+					num = num-1;
+				}
+				else{
+					trUnitSelectClear();
+					trUnitSelect(""+temp);
+					trUnitDestroy();
+				}
+			}
+			else if(allow == 1){
+				allow = 0;
+			}
+			ABORT = ABORT+1;
+			if(ABORT > 500){
+				debugLog("Error kebenit");
+				break;
+			}
+		}
+	}
+}
+

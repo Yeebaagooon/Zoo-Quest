@@ -279,7 +279,7 @@ void DoMissile(){
 		if(Stage == 2){
 			trUnitChangeProtoUnit("Blood Cinematic");
 			if(trCurrentPlayer() == playerhit){
-				playSound("rhinogrunt1.wav");
+				playSound("rhinogrunt" + (1*iModulo(2,trTime())+1) + ".wav");
 			}
 			trUnitSelectClear();
 			xSetPointer(dPlayerData, playerhit);
@@ -290,6 +290,16 @@ void DoMissile(){
 			trUnitChangeProtoUnit("Blood Cinematic");
 			if(trCurrentPlayer() == playerhit){
 				playSound("goatselect.wav");
+			}
+			trUnitSelectClear();
+			xSetPointer(dPlayerData, playerhit);
+			xUnitSelect(dPlayerData, xPlayerUnitID);
+			trDamageUnit(1);
+		}
+		if(Stage == 4){
+			trUnitChangeProtoUnit("Blood Cinematic");
+			if(trCurrentPlayer() == playerhit){
+				playSound("crocodilegrunt" + (1*iModulo(2,trTime())+1) + ".wav");
 			}
 			trUnitSelectClear();
 			xSetPointer(dPlayerData, playerhit);

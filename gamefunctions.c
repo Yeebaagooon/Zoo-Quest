@@ -576,7 +576,14 @@ void CrocGrow(int p = 0){
 	trModifyProtounit(""+CrocProto, p, 29, 2);
 	xSetFloat(dPlayerData, xCrocLandSpeed, xGetFloat(dPlayerData, xCrocLandSpeed)+0.2);
 	xSetFloat(dPlayerData, xCrocWaterSpeed, xGetFloat(dPlayerData, xCrocWaterSpeed)+0.35);
-	if(iModulo(4, xGetInt(dPlayerData, xCrocSize)+1) == 0){
-		debugLog("Factor 4");
+	trUnitSelectByQV("P"+p+"Unit");
+	trDamageUnit(-1);
+	if(iModulo(4, xGetInt(dPlayerData, xCrocSize)-1) == 0){
+		//debugLog("Factor 4");
+		trModifyProtounit(""+CrocProto, p, 0, 5);
+		trModifyProtounit(""+CrocProto, p, 29, 6);
+		xSetInt(dPlayerData, xCrocSprintDuration, xGetInt(dPlayerData, xCrocSprintDuration)+1000);
+		xSetInt(dPlayerData, xCrocSprintRechargeTime, xGetInt(dPlayerData, xCrocSprintRechargeTime)-1);
+		trDamageUnit(-1);
 	}
 }
