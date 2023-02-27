@@ -642,7 +642,7 @@ highFrequency
 			trUnitDestroy();
 			xFreeDatabaseBlock(dTemp);
 		}
-		for(b = 0; <xGetDatabaseCount(dPoachers)){
+		for(b = xGetDatabaseCount(dPoachers); > 0){
 			xDatabaseNext(dPoachers);
 			xUnitSelect(dPoachers, xUnitID);
 			trUnitChangeProtoUnit("Throwing Axeman");

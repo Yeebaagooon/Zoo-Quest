@@ -59,11 +59,19 @@ inactive
 {
 	//ODD QUESTIONS ANSWER TRUE
 	//EVEN QUESTIONS ANSWER FALSE
-	trStringQuestVarSet("Question1", "Q1True");
-	trStringQuestVarSet("Question2", "Q2False");
-	trStringQuestVarSet("Question3", "Q3True");
-	trStringQuestVarSet("Question4", "Q4False");
-	trQuestVarSet("MaxQNumber", 4);
+	trStringQuestVarSet("Question1" ,"There are multiple crocodile species");
+	trStringQuestVarSet("Question2", "Crocodiles cannot hear");
+	trStringQuestVarSet("Question3", "Crocodiles lay eggs");
+	trStringQuestVarSet("Question4", "The crocodile has a horizontal pupil");
+	trStringQuestVarSet("Question5", "Alligators and crocodiles are different species");
+	trStringQuestVarSet("Question6", "Crocodile feet are webbed");
+	trStringQuestVarSet("Question7", "Generally, crocodiles are larger than alligators");
+	trStringQuestVarSet("Question8", "Crocodiles enjoy cold weather");
+	trStringQuestVarSet("Question9", "Crocodiles can grow beyond 6 metres in length");
+	trStringQuestVarSet("Question10", "Steve Irwin was killed by a crocodile");
+	trStringQuestVarSet("Question11", "Crocodiles eat humans");
+	trStringQuestVarSet("Question12", "Crocodiles cannot grow new teeth");
+	trQuestVarSet("MaxQNumber", 12);
 	xsDisableSelf();
 }
 

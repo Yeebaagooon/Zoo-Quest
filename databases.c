@@ -111,8 +111,8 @@ highFrequency
 	
 	dPoachers = xInitDatabase("Poachers");
 	xUnitID = xInitAddInt(dPoachers, "unit id");
-	xPoacherType = xInitAddString(dPoachers, "protoid", "Throwing Axeman");
 	xMoveTime = xInitAddInt(dPoachers, "time", 0);
+	xPoacherType = xInitAddString(dPoachers, "protoid", "Throwing Axeman");
 	
 	dMissiles = xInitDatabase("Missiles DB");
 	xUnitID = xInitAddInt(dMissiles, "missile unit id", -1);

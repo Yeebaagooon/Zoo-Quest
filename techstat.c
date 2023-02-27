@@ -45,6 +45,7 @@ highFrequency
 {
 	trModifyProtounit("Dwarf", 0, 55, 4);
 	trModifyProtounit("Kronny Birth", 0, 8, 0.3);
+	trModifyProtounit("Palm", 0, 0, 9999999999999999999.0);
 	modifyProtounitAbsolute("Throwing Axeman", cNumberNonGaiaPlayers, 2, 36);
 	modifyProtounitAbsolute("Throwing Axeman", cNumberNonGaiaPlayers, 0, 100);
 	modifyProtounitAbsolute("Throwing Axeman", cNumberNonGaiaPlayers, 30, 1);
@@ -66,6 +67,8 @@ highFrequency
 	modifyProtounitAbsolute("Kebenit", cNumberNonGaiaPlayers, 31, 1);
 	modifyProtounitAbsolute("Kebenit", cNumberNonGaiaPlayers, 13, 1);
 	modifyProtounitAbsolute("Kebenit", cNumberNonGaiaPlayers, 26, 0);
+	modifyProtounitAbsolute("Kebenit", cNumberNonGaiaPlayers, 2, 20);
+	modifyProtounitAbsolute("Kebenit", cNumberNonGaiaPlayers, 11, 14);
 	modifyProtounitAbsolute("Titan Atlantean", 0, 2, 0);
 	modifyProtounitAbsolute("Titan Gate Dead", 0, 2, 0);
 	modifyProtounitAbsolute("Shrine", 0, 2, 0);

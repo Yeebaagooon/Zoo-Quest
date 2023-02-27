@@ -70,6 +70,13 @@ inactive
 		if(xGetDatabaseCount(dMissiles) > 0){
 			DoMissile();
 		}
+		for(a = xGetDatabaseCount(dPoachers); > 0){
+			xDatabaseNext(dPoachers);
+			xUnitSelect(dPoachers, xUnitID);
+			if(trUnitDead() == true){
+				xFreeDatabaseBlock(dPoachers);
+			}
+		}
 		for(p = 1; < cNumberNonGaiaPlayers){
 			xSetPointer(dPlayerData, p);
 			if((playerIsPlaying(p) == false) && (xGetBool(dPlayerData, xPlayerActive) == true)){
@@ -112,36 +119,54 @@ inactive
 				if(xGetInt(dPlayerData, xAnswer) > -1){
 					if(xGetInt(dPlayerData, xQuestionAnswer) == 1){
 						if(xGetInt(dPlayerData, xAnswer) == 1){
-							debugLog("True is correct");
+							ColouredChatToPlayer(p, "0,1,0", "Correct!");
 							xSetInt(dPlayerData, xQuestionsCorrect, xGetInt(dPlayerData, xQuestionsCorrect)+1);
+							if(trCurrentPlayer() == p){
+								playSoundCustom("favordump.wav", "\Yeebaagooon\Zoo Quest\Gem.mp3");
+							}
 						}
 						else{
-							debugLog("True is wrong");
+							ColouredChatToPlayer(p, "1,0,0", "Wrong!");
+							if(trCurrentPlayer() == p){
+								playSoundCustom("cantdothat.wav", "cantdothat.wav");
+							}
 						}
 					}
 					else{
 						if(xGetInt(dPlayerData, xAnswer) == 0){
-							debugLog("False is correct");
+							ColouredChatToPlayer(p, "0,1,0", "Correct!");
+							if(trCurrentPlayer() == p){
+								playSoundCustom("favordump.wav", "\Yeebaagooon\Zoo Quest\Gem.mp3");
+							}
 							xSetInt(dPlayerData, xQuestionsCorrect, xGetInt(dPlayerData, xQuestionsCorrect)+1);
 						}
 						else{
-							debugLog("False is wrong");
+							ColouredChatToPlayer(p, "1,0,0", "Wrong!");
+							if(trCurrentPlayer() == p){
+								playSoundCustom("cantdothat.wav", "cantdothat.wav");
+							}
 						}
 					}
 					xSetInt(dPlayerData, xAnswer, -1);
 					xSetInt(dPlayerData, xQuestionAnswer, -1);
 					xSetInt(dPlayerData, xQuestions, xGetInt(dPlayerData, xQuestions)-1);
 					if(xGetInt(dPlayerData, xQuestions) > 0){
-						debugLog("Qs remaining: " + xGetInt(dPlayerData, xQuestions));
+						//	debugLog("Qs remaining: " + xGetInt(dPlayerData, xQuestions));
 						AskQuestion(p);
 					}
 					else{
-						PlayersMinigaming = PlayersMinigaming-1;
 						if(xGetInt(dPlayerData, xQuestionsCorrect) > 2){
 							if(trCurrentPlayer() == p){
 								playSound("xwin.wav");
 							}
 							MinigameWins = MinigameWins+1;
+							if(iModulo(2, trTime()) == 0){
+								PlayerChoice(p, "Choose your reward:", "Instant grow", 35, "+2 hp regen every 20s", 46, 10000);
+							}
+							else{
+								PlayerChoice(p, "Choose your reward:", "+2s sprint time", 47, "-4s sprint cooldown", 48, 10000);
+							}
+							
 						}
 						else{
 							if(trCurrentPlayer() == p){
@@ -149,6 +174,7 @@ inactive
 								trOverlayText("Minigame Failed!", 3.0,-1,-1,600);
 							}
 						}
+						PlayersMinigaming = PlayersMinigaming-1;
 					}
 					
 				}
@@ -374,9 +400,6 @@ highFrequency
 	xsDisableSelf();
 }
 
-
-//---
-
 rule CrocMinigameDetect
 highFrequency
 inactive
@@ -406,7 +429,7 @@ inactive
 					}
 				}
 			}
-			for(b = 0; <xGetDatabaseCount(dPoachers)){
+			for(b = xGetDatabaseCount(dPoachers); > 0){
 				xDatabaseNext(dPoachers);
 				xUnitSelect(dPoachers, xUnitID);
 				trUnitChangeProtoUnit("Cinematic Block");
@@ -457,21 +480,14 @@ highFrequency
 		trUnitSelectByQV("MinigameStartID");
 		trUnitDestroy();
 		trMessageSetText("Nobody was on the white tiles. Minigame cancelled.", 5000);
-		for(c = xGetDatabaseCount(dTemp) ; > 0){
-			xDatabaseNext(dTemp);
-			xUnitSelect(dTemp, xUnitID);
-			trUnitDestroy();
-			xFreeDatabaseBlock(dTemp);
-		}
-		for(b = 0; <xGetDatabaseCount(dPoachers)){
+		for(b = xGetDatabaseCount(dPoachers); > 0){
 			xDatabaseNext(dPoachers);
 			xUnitSelect(dPoachers, xUnitID);
 			trUnitChangeProtoUnit(xGetString(dPoachers, xPoacherType));
 		}
 		InMinigame = false;
 		xsEnableRule("PlayMusic");
-		trChangeTerrainHeight(xsVectorGetX(StageVector)-10,xsVectorGetZ(StageVector)-10,xsVectorGetX(StageVector)+10,xsVectorGetZ(StageVector)+10,9,false);
-		trPaintTerrain(xsVectorGetX(StageVector)-10,xsVectorGetZ(StageVector)-10,xsVectorGetX(StageVector)+10,xsVectorGetZ(StageVector)+10,0,51);
+		trPaintTerrain(xsVectorGetX(StageVector)-1,xsVectorGetZ(StageVector)-1,xsVectorGetX(StageVector)+1,xsVectorGetZ(StageVector)+1,0,51);
 		refreshPassability();
 		for(p=1 ; < cNumberNonGaiaPlayers){
 			if(trPlayerUnitCountSpecific(p, ""+CrocProto) == 0){
@@ -483,7 +499,7 @@ highFrequency
 	else{
 		trMessageSetText("This minigame is a quiz, get 3/4 questions right to win!", 8000);
 		trCounterAddTime("cdCrocminigame", 9,0,"<color={PlayerColor(2)}>Minigame time remaining", 39);
-		playSoundCustom("\xpack\xcinematics\7_in\music.mp3", "\Yeebaagooon\Zoo Quest\Minigame3.mp3");
+		playSoundCustom("\xpack\xcinematics\6_a\music.mp3", "\Yeebaagooon\Zoo Quest\Minigame4.mp3");
 		xsEnableRule("CrocMinigameEnd");
 	}
 	xsDisableSelf();
@@ -501,6 +517,7 @@ highFrequency
 		vector temp = vector(0,0,0);
 		trPaintTerrain(xsVectorGetX(StageVector)-1,xsVectorGetZ(StageVector)-1,xsVectorGetX(StageVector)+1,xsVectorGetZ(StageVector)+1,0,51);
 		refreshPassability();
+		//for some reason the player data db is destroyed in this minigame - fixed, playerdeath bool
 		for(p=1 ; < cNumberNonGaiaPlayers){
 			xSetPointer(dPlayerData, p);
 			if((xGetInt(dPlayerData, xTeleportDue) == 1) && (xGetBool(dPlayerData, xPlayerActive) == true)){
@@ -532,13 +549,18 @@ highFrequency
 			if(trPlayerUnitCountSpecific(p, ""+CrocProto) == 0){
 				CreateCroc(p, trVectorQuestVarGetX("P"+p+"PosMG")*2, trVectorQuestVarGetZ("P"+p+"PosMG")*2, 0);
 			}
+			xSetBool(dPlayerData, xStopDeath, false);
 		}
 		uiZoomToProto(""+CrocProto);
 		uiLookAtProto(""+CrocProto);
-		for(b = 0; <xGetDatabaseCount(dPoachers)){
+		for(b = xGetDatabaseCount(dPoachers); > 0){
 			xDatabaseNext(dPoachers);
 			xUnitSelect(dPoachers, xUnitID);
 			trUnitChangeProtoUnit(xGetString(dPoachers, xPoacherType));
+			if(xGetString(dPoachers, xPoacherType) == "Kebenit"){
+				xUnitSelect(dPoachers, xUnitID);
+				trSetScale(0.6);
+			}
 		}
 		trUnitSelectByQV("MinigameStartSFX");
 		trUnitChangeProtoUnit("Olympus Temple SFX");

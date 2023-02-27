@@ -430,6 +430,31 @@ inactive
 				//MG false
 				xSetInt(dPlayerData, xAnswer, 0);
 			}
+			case 46:
+			{
+				//Croc regen +2/20
+				xSetInt(dPlayerData, xHPRegenTime, 20);
+				xSetInt(dPlayerData, xHPRegen, xGetInt(dPlayerData, xHPRegen)+2);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 47:
+			{
+				//Croc +2s sprint time
+				xSetInt(dPlayerData, xCrocSprintDuration, xGetInt(dPlayerData, xCrocSprintDuration)+2000);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 48:
+			{
+				//Croc -4s sprint cd
+				xSetInt(dPlayerData, xCrocSprintRechargeTime, xGetInt(dPlayerData, xCrocSprintRechargeTime)-4);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
 		}
 		trQuestVarSet("P"+ActionChoice+"YesAction", 0);
 		trQuestVarSet("P"+ActionChoice+"NoAction", 0);
