@@ -97,9 +97,12 @@ highFrequency
 				for(a=0 ; < xGetDatabaseCount(dPoachers)){
 					xDatabaseNext(dPoachers);
 					dir = kbGetBlockPosition(""+xGetInt(dPoachers, xUnitID));
-					if(distanceBetweenVectors(dir, axevector, true) < closest){
-						closest = distanceBetweenVectors(dir, axevector, true);
-						closestid = xGetInt(dPoachers, xUnitID);
+					xUnitSelect(dPoachers, xUnitID);
+					if(trUnitDead() == false){
+						if(distanceBetweenVectors(dir, slingvector, true) < closest){
+							closest = distanceBetweenVectors(dir, slingvector, true);
+							closestid = xGetInt(dPoachers, xUnitID);
+						}
 					}
 				}
 				closevector = kbGetBlockPosition(""+closestid);
@@ -118,7 +121,7 @@ highFrequency
 					//so for 15 degrees and 5 projs our angles are 30,15,0,-15-,-30, so set to cos/sin -30 then loop for +15
 					dir = rotationMatrix(dir, 0.965926, -0.258819); //dir, -30cos, -30sin
 					for(a = 1; < 4){
-						ShootProjectile(dir, closevector, "Lampades Bolt", "Wadjet Spit");
+						ShootProjectile(dir, closevector, "Lampades Bolt", "Wadjet Spit", 0, 1, 8000);
 						dir = rotationMatrix(dir, baseCos, baseSin);
 					}
 				}
@@ -139,9 +142,12 @@ highFrequency
 				for(a=0 ; < xGetDatabaseCount(dPoachers)){
 					xDatabaseNext(dPoachers);
 					dir = kbGetBlockPosition(""+xGetInt(dPoachers, xUnitID));
-					if(distanceBetweenVectors(dir, slingvector, true) < closest){
-						closest = distanceBetweenVectors(dir, slingvector, true);
-						closestid = xGetInt(dPoachers, xUnitID);
+					xUnitSelect(dPoachers, xUnitID);
+					if(trUnitDead() == false){
+						if(distanceBetweenVectors(dir, slingvector, true) < closest){
+							closest = distanceBetweenVectors(dir, slingvector, true);
+							closestid = xGetInt(dPoachers, xUnitID);
+						}
 					}
 				}
 				closevector = kbGetBlockPosition(""+closestid);
@@ -166,9 +172,12 @@ highFrequency
 				for(a=0 ; < xGetDatabaseCount(dPoachers)){
 					xDatabaseNext(dPoachers);
 					dir = kbGetBlockPosition(""+xGetInt(dPoachers, xUnitID));
-					if(distanceBetweenVectors(dir, slingvector, true) < closest){
-						closest = distanceBetweenVectors(dir, slingvector, true);
-						closestid = xGetInt(dPoachers, xUnitID);
+					xUnitSelect(dPoachers, xUnitID);
+					if(trUnitDead() == false){
+						if(distanceBetweenVectors(dir, slingvector, true) < closest){
+							closest = distanceBetweenVectors(dir, slingvector, true);
+							closestid = xGetInt(dPoachers, xUnitID);
+						}
 					}
 				}
 				closevector = kbGetBlockPosition(""+closestid);
@@ -194,13 +203,12 @@ highFrequency
 						IGUnit = true;
 						IGName = closestid;
 					}
-					ShootProjectile(dir, closevector, "Lampades Bolt", "Wadjet Spit", 0, 2);
+					ShootProjectile(dir, closevector, "Lampades Bolt", "Wadjet Spit", 0, 2, 7000);
 					dir = rotationMatrix(dir, baseCos, baseSin);
 				}
 			}
-			case kbGetProtoUnitID("Arrow Flaming"):
+			case kbGetProtoUnitID("Spear Flaming"):
 			{
-				//axe
 				slingvector = kbGetBlockPosition(""+i);
 				trUnitSelectClear();
 				trUnitSelectByID(id);
@@ -214,9 +222,53 @@ highFrequency
 				for(a=0 ; < xGetDatabaseCount(dPoachers)){
 					xDatabaseNext(dPoachers);
 					dir = kbGetBlockPosition(""+xGetInt(dPoachers, xUnitID));
-					if(distanceBetweenVectors(dir, slingvector, true) < closest){
-						closest = distanceBetweenVectors(dir, slingvector, true);
-						closestid = xGetInt(dPoachers, xUnitID);
+					xUnitSelect(dPoachers, xUnitID);
+					if(trUnitDead() == false){
+						if(distanceBetweenVectors(dir, slingvector, true) < closest){
+							closest = distanceBetweenVectors(dir, slingvector, true);
+							closestid = xGetInt(dPoachers, xUnitID);
+						}
+					}
+				}
+				closevector = kbGetBlockPosition(""+closestid);
+				xsSetContextPlayer(cNumberNonGaiaPlayers);
+				dest = kbGetBlockPosition(""+trGetUnitScenarioNameNumber(kbUnitGetTargetUnitID(kbGetBlockID(""+closestid))));
+				xsSetContextPlayer(0);
+				dir = xsVectorNormalize(dest-closevector);
+				if(Stage == 4){
+					//rotate to L, for loop shoot
+					baseCos = 0.965926; //cos15
+					baseSin = 0.258819; //sin15
+					//calculator for sin and cos(angle) required
+					//so for 15 degrees and 5 projs our angles are 30,15,0,-15-,-30, so set to cos/sin -30 then loop for +15
+					dir = rotationMatrix(dir, 0.866025, -0.5); //dir, -30cos, -30sin
+					for(a = 1; < 6){
+						ShootProjectile(dir, closevector, "Ball of Fire", "Maceman", 0, 5, 4000);
+						dir = rotationMatrix(dir, baseCos, baseSin);
+					}
+				}
+			}
+			case kbGetProtoUnitID("Arrow Flaming"):
+			{
+				slingvector = kbGetBlockPosition(""+i);
+				trUnitSelectClear();
+				trUnitSelectByID(id);
+				trUnitDestroy();
+				dir = vector(0,0,0);
+				closevector = vector(0,0,0);
+				target = vector(0,0,0);
+				closest = 10000;
+				closestid = 0;
+				//cycle through all poachers to find the closest
+				for(a=0 ; < xGetDatabaseCount(dPoachers)){
+					xDatabaseNext(dPoachers);
+					dir = kbGetBlockPosition(""+xGetInt(dPoachers, xUnitID));
+					xUnitSelect(dPoachers, xUnitID);
+					if(trUnitDead() == false){
+						if(distanceBetweenVectors(dir, slingvector, true) < closest){
+							closest = distanceBetweenVectors(dir, slingvector, true);
+							closestid = xGetInt(dPoachers, xUnitID);
+						}
 					}
 				}
 				closevector = kbGetBlockPosition(""+closestid);
@@ -296,7 +348,7 @@ highFrequency
 					xSetInt(dMissiles, xMissileDmg, xGetInt(dIncomingMissiles, xIMissileDmg));
 					xAddDatabaseBlock(dDestroyMe, true);
 					xSetInt(dDestroyMe, xUnitID, xGetInt(dIncomingMissiles, xUnitID));
-					xSetInt(dDestroyMe, xDestroyTime, trTimeMS()+10000);
+					xSetInt(dDestroyMe, xDestroyTime, trTimeMS()+xGetInt(dIncomingMissiles, xIMissileTime));
 					xUnitSelect(dIncomingMissiles, xMissileSpyID);
 					trUnitChangeProtoUnit("Huskarl");
 					xUnitSelect(dIncomingMissiles, xMissileSpyID);

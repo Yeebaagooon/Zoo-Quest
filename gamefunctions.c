@@ -1,4 +1,4 @@
-void ShootProjectile(vector dir = vector(0,0,0), vector startpos = vector(0,0,0), string protounit = "", string car = "", int anim = 0, int dmg = 1){
+void ShootProjectile(vector dir = vector(0,0,0), vector startpos = vector(0,0,0), string protounit = "", string car = "", int anim = 0, int dmg = 1, int time = 10000){
 	int temp = 0;
 	vector orient = xsVectorSet(xsVectorGetX(dir),0,xsVectorGetZ(dir));
 	temp = trGetNextUnitScenarioNameNumber();
@@ -36,6 +36,7 @@ void ShootProjectile(vector dir = vector(0,0,0), vector startpos = vector(0,0,0)
 	xSetInt(dIncomingMissiles, xMissileCarProto , kbGetProtoUnitID(car));
 	xSetInt(dIncomingMissiles, xMissileAnim, anim);
 	xSetInt(dIncomingMissiles, xIMissileDmg, dmg);
+	xSetInt(dIncomingMissiles, xIMissileTime, time);
 }
 
 rule DestroyConstant
@@ -72,7 +73,11 @@ inactive
 	trStringQuestVarSet("Question10", "Steve Irwin was killed by a crocodile");
 	trStringQuestVarSet("Question11", "Crocodiles eat humans");
 	trStringQuestVarSet("Question12", "Crocodiles cannot grow new teeth");
-	trQuestVarSet("MaxQNumber", 12);
+	trQuestVarSet("MaxQNumber", 16);
+	trStringQuestVarSet("Question13", "Deer antlers will grow back");
+	trStringQuestVarSet("Question14", "Deer eyes are on the front of the head");
+	trStringQuestVarSet("Question15", "Deer can be white");
+	trStringQuestVarSet("Question16", "Reindeer can be found in Antarctica");
 	xsDisableSelf();
 }
 
@@ -603,6 +608,7 @@ void ToggleCharge(int p = 0){
 void CrocGrow(int p = 0){
 	xSetPointer(dPlayerData, p);
 	xSetInt(dPlayerData, xCrocSize, xGetInt(dPlayerData, xCrocSize)+1);
+	CrocProgress = CrocProgress+1;
 	xSetFloat(dPlayerData, xCrocFood, 0);
 	//5+2*xGetInt(dPlayerData, xCrocSize)
 	xSetFloat(dPlayerData, xCrocNext, 1);
@@ -610,7 +616,7 @@ void CrocGrow(int p = 0){
 	xUnitSelect(dPlayerData, xSpyID);
 	float scale = 0.25*xGetInt(dPlayerData, xCrocSize)+0.75;
 	trSetScale(scale);
-	debugLog("Scale: " + scale);
+	//debugLog("Scale: " + scale);
 	if(trCurrentPlayer() == p){
 		playSound("ageadvance.wav");
 	}
@@ -634,5 +640,11 @@ void CrocGrow(int p = 0){
 	}
 	if(xGetInt(dPlayerData, xCrocSize) == 5){
 		ColouredIconChatToPlayer(p, "0,0,0.7", "icons\animal crocodile icon", "You can now use 'W' to eat Chu Ko Nus!");
+	}
+	if(xGetInt(dPlayerData, xCrocSize) == 8){
+		ColouredIconChatToPlayer(p, "0,0,0.7", "icons\animal crocodile icon", "You can now use 'W' to eat Peltasts!");
+	}
+	if(xGetInt(dPlayerData, xCrocSize) == 10){
+		ColouredIconChatToPlayer(p, "0,0,0.7", "icons\animal crocodile icon", "You can now use 'W' to eat Sentinels!");
 	}
 }

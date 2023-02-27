@@ -365,7 +365,7 @@ inactive
 			case 37:
 			{
 				//Croc +4 LOS
-				trModifyProtounit(""+CrocProto, p, 1, 4);
+				trModifyProtounit(""+CrocProto, p, 2, 4);
 				if(trCurrentPlayer() == p){
 					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
 				}

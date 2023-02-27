@@ -437,6 +437,37 @@ inactive
 								}
 							}
 						}
+						if(xGetInt(dEdibles, xType) == 4){
+							if(xGetInt(dPlayerData, xCrocSize) > 9 ){
+								//Interracting with sentinel
+								if(xGetInt(dEdibles, xSubtype) == 0){
+									xUnitSelect(dEdibles, xUnitID);
+									trDamageUnit(1000);
+									xFreeDatabaseBlock(dEdibles);
+									xUnitSelect(dPoachers, xUnitID);
+									xFreeDatabaseBlock(dPoachers);
+									if(trCurrentPlayer() == p){
+										playSound("crocsnap.wav");
+									}
+								}
+							}
+						}
+						if(xGetInt(dEdibles, xType) == 5){
+							if(xGetInt(dPlayerData, xCrocSize) > 7 ){
+								//Interracting with peltast
+								if(xGetInt(dEdibles, xSubtype) == 0){
+									xUnitSelect(dEdibles, xUnitID);
+									trDamageUnit(1000);
+									xFreeDatabaseBlock(dEdibles);
+									xUnitSelect(dPoachers, xUnitID);
+									xFreeDatabaseBlock(dPoachers);
+									if(trCurrentPlayer() == p){
+										playSound("crocsnap.wav");
+										playSound("spidermaledeath" + iModulo(6, (trTime())+1) + ".wav");
+									}
+								}
+							}
+						}
 					}
 				}
 			}
@@ -461,7 +492,10 @@ inactive
 				if(trCurrentPlayer() == p){
 					trCounterAddTime("sprinttooltip"+p, xGetInt(dPlayerData, xCrocSprintRechargeTimer)-trTime(), 0, "Sprint recharging", -1);
 				}
-				debugLog("Sprint off");
+				//debugLog("Sprint off");
+				if(trCurrentPlayer() == p){
+					playSound("godpowerfailed.wav");
+				}
 			}
 			//}
 		}

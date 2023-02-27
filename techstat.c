@@ -62,6 +62,7 @@ highFrequency
 	modifyProtounitAbsolute("Lampades Bolt", cNumberNonGaiaPlayers, 8, 10);
 	modifyProtounitAbsolute("Javelin Flaming", cNumberNonGaiaPlayers, 1, 6);
 	modifyProtounitAbsolute("Javelin Flaming", cNumberNonGaiaPlayers, 8, 10);
+	modifyProtounitAbsolute("Maceman", 0, 1, 14);
 	modifyProtounitAbsolute("Villager Egyptian", cNumberNonGaiaPlayers, 0, 10000);
 	modifyProtounitAbsolute("Kebenit", cNumberNonGaiaPlayers, 0, 10);
 	modifyProtounitAbsolute("Kebenit", cNumberNonGaiaPlayers, 31, 1);
@@ -84,11 +85,17 @@ highFrequency
 	modifyProtounitAbsolute("Sentinel Main", cNumberNonGaiaPlayers, 0, 30);
 	modifyProtounitAbsolute("Sentinel Main", cNumberNonGaiaPlayers, 31, 2);
 	modifyProtounitAbsolute("Sentinel Main", cNumberNonGaiaPlayers, 26, 0);
+	modifyProtounitAbsolute("Peltast", cNumberNonGaiaPlayers, 0, 30);
+	modifyProtounitAbsolute("Peltast", cNumberNonGaiaPlayers, 31, 5);
+	modifyProtounitAbsolute("Peltast", cNumberNonGaiaPlayers, 26, 0);
+	modifyProtounitAbsolute("Peltast", cNumberNonGaiaPlayers, 2, 30);
+	modifyProtounitAbsolute("Peltast", cNumberNonGaiaPlayers, 11, 24);
 	for(p = 1; <= cNumberNonGaiaPlayers){
 		modifyProtounitAbsolute("Rocket", p, 1, 5);
 		modifyProtounitAbsolute("Rocket", p, 8, 10);
 		modifyProtounitAbsolute("Wadjet Spit", p, 1, 9);
 		modifyProtounitAbsolute("Wadjet Spit", p, 8, 10);
+		modifyProtounitAbsolute("Maceman", p, 1, 14);
 		trModifyProtounit("Dwarf", p, 55, 4);
 		trModifyProtounit("Animal Attractor", p, 55, 4);
 		trModifyProtounit("Hero Greek Bellerophon", p, 55, 4);
@@ -172,6 +179,8 @@ highFrequency
 		trModifyProtounit("Dwarf", cNumberNonGaiaPlayers, 55, 4);
 		trModifyProtounit("Invisible Target", 0, 55, 4);
 		trModifyProtounit("Invisible Target", cNumberNonGaiaPlayers, 55, 4);
+		trModifyProtounit("Maceman", 0, 55, 4);
+		trModifyProtounit("Maceman", cNumberNonGaiaPlayers, 55, 4);
 	}
 	xsDisableSelf();
 }

@@ -2424,6 +2424,7 @@ void SpawnCrocPoacher1(int num = 0){
 		while(num > 0){
 			temp = trGetNextUnitScenarioNameNumber();
 			tempV = getRandomTileMatchingTerrain("ShorelineSandA", 5);
+			tempV = tempV*2;
 			ABORT = ABORT+1;
 			if(ABORT > 50){
 				debugLog("Error chokunu");
@@ -2476,6 +2477,7 @@ void SpawnCrocPoacher2(int num = 0){
 		while(num > 0){
 			temp = trGetNextUnitScenarioNameNumber();
 			tempV = getRandomTileMatchingTerrain("RiverSandyC", 5);
+			tempV = tempV*2;
 			for(p = 1; < cNumberNonGaiaPlayers){
 				xSetPointer(dPlayerData, p);
 				if((distanceBetweenVectors(tempV, kbGetBlockPosition(""+xGetInt(dPlayerData, xPlayerUnitID)),true) < 1000) && (xGetBool(dPlayerData, xPlayerActive) == true)){
@@ -2529,6 +2531,7 @@ void SpawnCrocPoacher3(int num = 0){
 		while(num > 0){
 			temp = trGetNextUnitScenarioNameNumber();
 			tempV = getRandomTileMatchingTerrain("ShorelineSandA", 5);
+			tempV = tempV*2;
 			ABORT = ABORT+1;
 			if(ABORT > 50){
 				debugLog("Error sentinel");
@@ -2570,3 +2573,57 @@ void SpawnCrocPoacher3(int num = 0){
 		}
 	}
 }
+
+void SpawnCrocPoacher4(int num = 0){
+	int temp = 0;
+	int ABORT = 0;
+	vector spawn = vector(0,0,0);
+	vector EP = EndPoint*2;
+	int allow = 0;
+	if(InMinigame == false){
+		while(num > 0){
+			temp = trGetNextUnitScenarioNameNumber();
+			tempV = getRandomTileMatchingTerrain("DirtA", 5);
+			tempV = tempV*2;
+			ABORT = ABORT+1;
+			if(ABORT > 50){
+				debugLog("Error peltast");
+				break;
+			}
+			while((distanceBetweenVectors(tempV, EP, true) < 1000)){
+				continue;
+				if(ABORT > 50){
+					debugLog("Errorpeltast");
+					break;
+				}
+			}
+			for(p = 1; < cNumberNonGaiaPlayers){
+				xSetPointer(dPlayerData, p);
+				if((distanceBetweenVectors(tempV, kbGetBlockPosition(""+xGetInt(dPlayerData, xPlayerUnitID)),true) < 1000) && (xGetBool(dPlayerData, xPlayerActive) == true)){
+					allow = 1;
+				}
+			}
+			if(allow == 0){
+				temp = trGetNextUnitScenarioNameNumber();
+				UnitCreateV(cNumberNonGaiaPlayers, "Cinematic Block", tempV, 0);
+				if(xsVectorGetY(kbGetBlockPosition(""+temp)) > 4){
+					trUnitSelectClear();
+					trUnitSelect(""+temp);
+					trUnitChangeProtoUnit("Peltast");
+					xAddDatabaseBlock(dPoachers, true);
+					xSetInt(dPoachers, xUnitID, temp);
+					xSetString(dPoachers, xPoacherType, "Peltast");
+					xSetInt(dPoachers, xMoveTime, 0);
+					xAddDatabaseBlock(dEdibles, true);
+					xSetInt(dEdibles, xUnitID, temp);
+					xSetInt(dEdibles, xType, 5);
+					num = num-1;
+				}
+			}
+			else if(allow == 1){
+				allow = 0;
+			}
+		}
+	}
+}
+

@@ -397,6 +397,18 @@ inactive
 				trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
 				trUnitOverrideAnimation(1, 0, true, true, -1, 0);
 			}
+			if(anim == 8){
+				//eating zebra
+				trUnitSelectClear();
+				trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+				trUnitOverrideAnimation(18, 0, true, true, -1, 0);
+				if(1*trQuestVarGet("P"+p+"MsgWarn") == 0){
+					trQuestVarSet("P"+p+"MsgWarn", 47);
+					if(trCurrentPlayer() == p){
+						startNPCDialog(13);
+					}
+				}
+			}
 		}
 		//jump set anim to 13
 	}

@@ -36,6 +36,7 @@ inactive
 		//ColouredIconChat("0.0,0.8,0.2", "icons\building norse shrine icon 64", "Interract with shrines using W.");
 		ColouredChat("0.0,0.8,0.2", "Use 'W' to kill and eat zebras to grow.");
 		ColouredChat("0.0,0.8,0.2", "As always watch out for poachers.");
+		ColouredChat("0.0,0.8,0.2", "Grow at least one player to level 7.");
 		xsEnableRule("PlayMusic");
 		PlayersDead = 0;
 		timediff = trTimeMS();
@@ -48,15 +49,18 @@ inactive
 			trQuestVarSet("P"+p+"FountainMsg", 0);
 		}
 		trQuestVarSet("NextPoacherSpawn", trTime()+220);
+		trQuestVarSet("NextFoodSpawn", trTime()+90);
 		SpawnEdible(cNumberNonGaiaPlayers*2);
 		trRateConstruction(20);
-		SpawnCrocPoacher1(2);
-		SpawnCrocPoacher2(1);
-		SpawnCrocPoacher3(1);
+		SpawnCrocPoacher1(xsMax(4, cNumberNonGaiaPlayers+2));
+		SpawnCrocPoacher2(xsMax(3, cNumberNonGaiaPlayers));
+		SpawnCrocPoacher3(xsMax(1, cNumberNonGaiaPlayers/4));
 		modifyProtounitAbsolute("Chu Ko Nu", cNumberNonGaiaPlayers, 0, 5);
 		modifyProtounitAbsolute("Chu Ko Nu", cNumberNonGaiaPlayers, 12, 3);
 		modifyProtounitAbsolute("Chu Ko Nu", cNumberNonGaiaPlayers, 26, 0);
 		modifyProtounitAbsolute("Chu Ko Nu", cNumberNonGaiaPlayers, 31, 1);
+		ActPart = 1;
+		//SpawnCrocPoacher4(1);
 	}
 }
 
@@ -79,6 +83,11 @@ inactive
 				xFreeDatabaseBlock(dPoachers);
 			}
 		}
+		if(ActPart == 1){
+			if(CrocProgress >= 7){
+				ActPart = 2;
+			}
+		}
 		for(p = 1; < cNumberNonGaiaPlayers){
 			xSetPointer(dPlayerData, p);
 			if((playerIsPlaying(p) == false) && (xGetBool(dPlayerData, xPlayerActive) == true)){
@@ -93,7 +102,14 @@ inactive
 				PlayersActive = PlayersActive-1;
 			}
 			if(trCurrentPlayer() == p){
-				trSetCounterDisplay("Food: " + 1*xGetFloat(dPlayerData, xCrocFood) + " | Next: " + 1*xGetFloat(dPlayerData, xCrocNext));
+				if(xGetInt(dPlayerData, xCrocSize) < 7){
+					trSetCounterDisplay("Level: " + xGetInt(dPlayerData, xCrocSize) + "/7");
+				}
+				else{
+					trSetCounterDisplay("Level: " + xGetInt(dPlayerData, xCrocSize));
+				}
+				trCounterAbort("CrocC"+p);
+				trCounterAddTime("CrocC"+p, -100, -10, "Food: " + 1*xGetFloat(dPlayerData, xCrocFood) + " | Next: " + 1*xGetFloat(dPlayerData, xCrocNext), -1);
 			}
 			if((xGetBool(dPlayerData, xStopDeath) == false) && (trPlayerUnitCountSpecific(p, ""+CrocProto) == 0) && (trPlayerUnitCountSpecific(p, "Prisoner") == 0) && (trPlayerGetPopulation(p) == 0) && (trPlayerUnitCountSpecific(p, "Anubite") == 0) && (xGetBool(dPlayerData, xPlayerActive) == true) && (xGetBool(dPlayerData, xPlayerDead) == false) && (InMinigame == false)){
 				//PLAYER DEAD

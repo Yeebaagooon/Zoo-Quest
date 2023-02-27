@@ -223,6 +223,17 @@ int npcDiag(int npc = 0, int dialog = 0) {
 				}
 			}
 		}
+		case 13:
+		{
+			switch(dialog)
+			{
+				case 1:
+				{
+					uiMessageBox("You can't right click. Move close and use 'W' to kill.");
+					dialog = 0;
+				}
+			}
+		}
 	}
 	return(dialog);
 }

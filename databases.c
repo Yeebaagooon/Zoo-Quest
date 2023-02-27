@@ -39,6 +39,7 @@ int xMissileDir = 0;
 int xMissileCentre = 0;
 int xMissilePrev = 0;
 int xMissileDmg = 0;
+int xMissileTime = 0;
 
 int dDots = 0;
 int xPercent = 0;
@@ -65,6 +66,7 @@ int xMissileCarProto = 0;
 int xMissileAnim = 0;
 int SpyDone = 0;
 int xIMissileDmg = 0;
+int xIMissileTime = 0;
 
 int dInterractables = 0;
 int xType = 0;
@@ -123,6 +125,7 @@ highFrequency
 	xMissileDir = xInitAddVector(dMissiles, "direction", vector(0,0,0));
 	xMissilePrev = xInitAddVector(dMissiles, "prev", vector(0,0,0));
 	xMissileDmg = xInitAddInt(dMissiles, "dmg", 1);
+	xMissileTime = xInitAddInt(dMissiles, "time", 10000);
 	
 	dIncomingMissiles = xInitDatabase("Incoming DB");
 	xUnitID = xInitAddInt(dIncomingMissiles, "missile unit id", -1);
@@ -136,6 +139,7 @@ highFrequency
 	xMissileAnim = xInitAddInt(dIncomingMissiles, "anim", 0);
 	SpyDone = xInitAddBool(dIncomingMissiles, "spy done", false);
 	xIMissileDmg = xInitAddInt(dIncomingMissiles, "dmg", 1);
+	xIMissileTime = xInitAddInt(dIncomingMissiles, "time", 10000);
 	
 	dDots = xInitDatabase("Dot DB");
 	xUnitID = xInitAddInt(dDots, "unit id", 0);

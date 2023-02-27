@@ -95,6 +95,7 @@ int ShrineTimeMin = 80;
 int ShrineTarget = 0;
 int ShrineTimeMax = 200;
 int Zebras = 0;
+int CrocProgress = 0;
 
 //DB STUFF
 int DestroyNumber = 0;
