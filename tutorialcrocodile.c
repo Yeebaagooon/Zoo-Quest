@@ -422,6 +422,21 @@ inactive
 								}
 							}
 						}
+						if(xGetInt(dEdibles, xType) == 3){
+							if(xGetInt(dPlayerData, xCrocSize) > 2 ){
+								//Interracting with kebenit
+								if(xGetInt(dEdibles, xSubtype) == 0){
+									xUnitSelect(dEdibles, xUnitID);
+									trDamageUnit(1000);
+									xFreeDatabaseBlock(dEdibles);
+									xUnitSelect(dPoachers, xUnitID);
+									xFreeDatabaseBlock(dPoachers);
+									if(trCurrentPlayer() == p){
+										playSound("crocsnap.wav");
+									}
+								}
+							}
+						}
 					}
 				}
 			}

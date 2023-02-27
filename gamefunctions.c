@@ -1,4 +1,4 @@
-void ShootProjectile(vector dir = vector(0,0,0), vector startpos = vector(0,0,0), string protounit = "", string car = "", int anim = 0){
+void ShootProjectile(vector dir = vector(0,0,0), vector startpos = vector(0,0,0), string protounit = "", string car = "", int anim = 0, int dmg = 1){
 	int temp = 0;
 	vector orient = xsVectorSet(xsVectorGetX(dir),0,xsVectorGetZ(dir));
 	temp = trGetNextUnitScenarioNameNumber();
@@ -35,6 +35,7 @@ void ShootProjectile(vector dir = vector(0,0,0), vector startpos = vector(0,0,0)
 	xSetInt(dIncomingMissiles, xMissileProto, kbGetProtoUnitID(protounit));
 	xSetInt(dIncomingMissiles, xMissileCarProto , kbGetProtoUnitID(car));
 	xSetInt(dIncomingMissiles, xMissileAnim, anim);
+	xSetInt(dIncomingMissiles, xIMissileDmg, dmg);
 }
 
 rule DestroyConstant
@@ -627,8 +628,11 @@ void CrocGrow(int p = 0){
 		xSetInt(dPlayerData, xCrocSprintDuration, xGetInt(dPlayerData, xCrocSprintDuration)+1000);
 		xSetInt(dPlayerData, xCrocSprintRechargeTime, xGetInt(dPlayerData, xCrocSprintRechargeTime)-1);
 		trDamageUnit(-1);
-		if(xGetInt(dPlayerData, xCrocSize) == 5){
-			ColouredIconChatToPlayer(p, "0,0,0.7", "icons\animal crocodile icon", "You can now use 'W' to eat Chu Ko Nus!");
-		}
+	}
+	if(xGetInt(dPlayerData, xCrocSize) == 3){
+		ColouredIconChatToPlayer(p, "0,0,0.7", "icons\animal crocodile icon", "You can now use 'W' to sink Kebenits!");
+	}
+	if(xGetInt(dPlayerData, xCrocSize) == 5){
+		ColouredIconChatToPlayer(p, "0,0,0.7", "icons\animal crocodile icon", "You can now use 'W' to eat Chu Ko Nus!");
 	}
 }

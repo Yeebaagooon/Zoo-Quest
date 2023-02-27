@@ -81,6 +81,9 @@ highFrequency
 	modifyProtounitAbsolute("Zebra", 0, 1, 0);
 	modifyProtounitAbsolute("Zebra", 0, 0, 1);
 	modifyProtounitAbsolute("Cinematic Block", 0, 2, 2);
+	modifyProtounitAbsolute("Sentinel Main", cNumberNonGaiaPlayers, 0, 30);
+	modifyProtounitAbsolute("Sentinel Main", cNumberNonGaiaPlayers, 31, 2);
+	modifyProtounitAbsolute("Sentinel Main", cNumberNonGaiaPlayers, 26, 0);
 	for(p = 1; <= cNumberNonGaiaPlayers){
 		modifyProtounitAbsolute("Rocket", p, 1, 5);
 		modifyProtounitAbsolute("Rocket", p, 8, 10);

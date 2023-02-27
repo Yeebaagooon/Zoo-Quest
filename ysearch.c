@@ -151,6 +151,53 @@ highFrequency
 				dir = xsVectorNormalize(dest-closevector);
 				ShootProjectile(dir, closevector, "Lampades Bolt", "Rocket");
 			}
+			case kbGetProtoUnitID("Arrow"):
+			{
+				slingvector = kbGetBlockPosition(""+i);
+				trUnitSelectClear();
+				trUnitSelectByID(id);
+				trUnitDestroy();
+				dir = vector(0,0,0);
+				closevector = vector(0,0,0);
+				target = vector(0,0,0);
+				closest = 10000;
+				closestid = 0;
+				//cycle through all poachers to find the closest
+				for(a=0 ; < xGetDatabaseCount(dPoachers)){
+					xDatabaseNext(dPoachers);
+					dir = kbGetBlockPosition(""+xGetInt(dPoachers, xUnitID));
+					if(distanceBetweenVectors(dir, slingvector, true) < closest){
+						closest = distanceBetweenVectors(dir, slingvector, true);
+						closestid = xGetInt(dPoachers, xUnitID);
+					}
+				}
+				closevector = kbGetBlockPosition(""+closestid);
+				xsSetContextPlayer(cNumberNonGaiaPlayers);
+				dest = kbGetBlockPosition(""+trGetUnitScenarioNameNumber(kbUnitGetTargetUnitID(kbGetBlockID(""+closestid))));
+				xsSetContextPlayer(0);
+				dir = xsVectorNormalize(dest-closevector);
+				//rotate to L, for loop shoot
+				baseCos = 0.996195; //cos5
+				baseSin = 0.087156; //sin5
+				//calculator for sin and cos(angle) required
+				//so for 15 degrees and 5 projs our angles are 30,15,0,-15-,-30, so set to cos/sin -30 then loop for +15
+				dir = rotationMatrix(dir, 0.965926, -0.258819); //dir, -15cos, -15sin
+				for(a = 1; < 6){
+					for(b = xGetDatabaseCount(dPoachers); > 0){
+						xDatabaseNext(dPoachers);
+						if(xGetInt(dPoachers, xUnitID) == closestid){
+							unitcheck = xGetString(dPoachers, xPoacherType);
+							continue;
+						}
+					}
+					if(unitcheck == "Sentinel Main"){
+						IGUnit = true;
+						IGName = closestid;
+					}
+					ShootProjectile(dir, closevector, "Lampades Bolt", "Wadjet Spit", 0, 2);
+					dir = rotationMatrix(dir, baseCos, baseSin);
+				}
+			}
 			case kbGetProtoUnitID("Arrow Flaming"):
 			{
 				//axe
@@ -246,6 +293,7 @@ highFrequency
 					xSetVector(dMissiles, xMissilePos, xGetVector(dIncomingMissiles, xMissilePos));
 					xSetVector(dMissiles, xMissilePrev, xGetVector(dIncomingMissiles, xMissilePos));
 					xSetVector(dMissiles, xMissileDir, xGetVector(dIncomingMissiles, xMissileDir));
+					xSetInt(dMissiles, xMissileDmg, xGetInt(dIncomingMissiles, xIMissileDmg));
 					xAddDatabaseBlock(dDestroyMe, true);
 					xSetInt(dDestroyMe, xUnitID, xGetInt(dIncomingMissiles, xUnitID));
 					xSetInt(dDestroyMe, xDestroyTime, trTimeMS()+10000);

@@ -2496,6 +2496,9 @@ void SpawnCrocPoacher2(int num = 0){
 					xSetInt(dPoachers, xUnitID, temp);
 					xSetString(dPoachers, xPoacherType, "Kebenit");
 					xSetInt(dPoachers, xMoveTime, 0);
+					xAddDatabaseBlock(dEdibles, true);
+					xSetInt(dEdibles, xUnitID, temp);
+					xSetInt(dEdibles, xType, 3);
 					num = num-1;
 				}
 				else{
@@ -2516,3 +2519,54 @@ void SpawnCrocPoacher2(int num = 0){
 	}
 }
 
+void SpawnCrocPoacher3(int num = 0){
+	int temp = 0;
+	int ABORT = 0;
+	vector spawn = vector(0,0,0);
+	vector EP = EndPoint*2;
+	int allow = 0;
+	if(InMinigame == false){
+		while(num > 0){
+			temp = trGetNextUnitScenarioNameNumber();
+			tempV = getRandomTileMatchingTerrain("ShorelineSandA", 5);
+			ABORT = ABORT+1;
+			if(ABORT > 50){
+				debugLog("Error sentinel");
+				break;
+			}
+			while((distanceBetweenVectors(tempV, EP, true) < 1000)){
+				continue;
+				if(ABORT > 50){
+					debugLog("Errorsentinel");
+					break;
+				}
+			}
+			for(p = 1; < cNumberNonGaiaPlayers){
+				xSetPointer(dPlayerData, p);
+				if((distanceBetweenVectors(tempV, kbGetBlockPosition(""+xGetInt(dPlayerData, xPlayerUnitID)),true) < 1000) && (xGetBool(dPlayerData, xPlayerActive) == true)){
+					allow = 1;
+				}
+			}
+			if(allow == 0){
+				temp = trGetNextUnitScenarioNameNumber();
+				UnitCreateV(cNumberNonGaiaPlayers, "Cinematic Block", tempV, 0);
+				if(xsVectorGetY(kbGetBlockPosition(""+temp)) > 4){
+					trUnitSelectClear();
+					trUnitSelect(""+temp);
+					trUnitChangeProtoUnit("Sentinel Main");
+					xAddDatabaseBlock(dPoachers, true);
+					xSetInt(dPoachers, xUnitID, temp);
+					xSetString(dPoachers, xPoacherType, "Sentinel Main");
+					xSetInt(dPoachers, xMoveTime, 0);
+					xAddDatabaseBlock(dEdibles, true);
+					xSetInt(dEdibles, xUnitID, temp);
+					xSetInt(dEdibles, xType, 4);
+					num = num-1;
+				}
+			}
+			else if(allow == 1){
+				allow = 0;
+			}
+		}
+	}
+}
