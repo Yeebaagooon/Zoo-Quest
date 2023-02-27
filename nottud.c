@@ -2400,6 +2400,7 @@ void SpawnEdible(int num = 0){
 	while(num > 0){
 		tempV = getRandomTileMatchingTerrain("ShorelineSandA", 5);
 		currentId = trGetNextUnitScenarioNameNumber();
+		tempV = tempV*2;
 		UnitCreate(0, "Cinematic Block", xsVectorGetX(tempV), xsVectorGetZ(tempV), 0);
 		if(xsVectorGetY(kbGetBlockPosition(""+currentId)) > 4){
 			trUnitSelectClear();
@@ -2430,39 +2431,36 @@ void SpawnCrocPoacher1(int num = 0){
 				debugLog("Error chokunu");
 				break;
 			}
-			while((distanceBetweenVectors(tempV, EP, true) < 1000)){
-				continue;
-				if(ABORT > 50){
-					debugLog("Error chokunu");
-					break;
+			if((distanceBetweenVectors(tempV, EP, true) < 1000)){
+				for(p = 1; < cNumberNonGaiaPlayers){
+					xSetPointer(dPlayerData, p);
+					if((distanceBetweenVectors(tempV, kbGetBlockPosition(""+xGetInt(dPlayerData, xPlayerUnitID)),true) < 1000) && (xGetBool(dPlayerData, xPlayerActive) == true)){
+						allow = 1;
+					}
 				}
-			}
-			for(p = 1; < cNumberNonGaiaPlayers){
-				xSetPointer(dPlayerData, p);
-				if((distanceBetweenVectors(tempV, kbGetBlockPosition(""+xGetInt(dPlayerData, xPlayerUnitID)),true) < 1000) && (xGetBool(dPlayerData, xPlayerActive) == true)){
-					allow = 1;
-				}
-			}
-			if(allow == 0){
-				temp = trGetNextUnitScenarioNameNumber();
-				UnitCreateV(cNumberNonGaiaPlayers, "Cinematic Block", tempV, 0);
-				if(xsVectorGetY(kbGetBlockPosition(""+temp)) > 4){
-					trUnitSelectClear();
-					trUnitSelect(""+temp);
-					trUnitChangeProtoUnit("Chu Ko Nu");
-					xAddDatabaseBlock(dPoachers, true);
-					xSetInt(dPoachers, xUnitID, temp);
-					xSetString(dPoachers, xPoacherType, "Chu Ko Nu");
-					xSetInt(dPoachers, xMoveTime, 0);
-					xAddDatabaseBlock(dEdibles, true);
-					xSetInt(dEdibles, xUnitID, temp);
-					xSetInt(dEdibles, xType, 2);
-					num = num-1;
+				if(allow == 0){
+					temp = trGetNextUnitScenarioNameNumber();
+					UnitCreateV(cNumberNonGaiaPlayers, "Cinematic Block", tempV, 0);
+					if(xsVectorGetY(kbGetBlockPosition(""+temp)) > 4){
+						trUnitSelectClear();
+						trUnitSelect(""+temp);
+						trUnitChangeProtoUnit("Chu Ko Nu");
+						xAddDatabaseBlock(dPoachers, true);
+						xSetInt(dPoachers, xUnitID, temp);
+						xSetString(dPoachers, xPoacherType, "Chu Ko Nu");
+						xSetInt(dPoachers, xMoveTime, 0);
+						xAddDatabaseBlock(dEdibles, true);
+						xSetInt(dEdibles, xUnitID, temp);
+						xSetInt(dEdibles, xType, 2);
+						num = num-1;
+						PoachersTarget = PoachersTarget+1;
+					}
 				}
 			}
 			else if(allow == 1){
 				allow = 0;
 			}
+			ABORT = ABORT+1;
 		}
 	}
 }
@@ -2502,6 +2500,7 @@ void SpawnCrocPoacher2(int num = 0){
 					xSetInt(dEdibles, xUnitID, temp);
 					xSetInt(dEdibles, xType, 3);
 					num = num-1;
+					PoachersTarget = PoachersTarget+1;
 				}
 				else{
 					trUnitSelectClear();
@@ -2537,38 +2536,34 @@ void SpawnCrocPoacher3(int num = 0){
 				debugLog("Error sentinel");
 				break;
 			}
-			while((distanceBetweenVectors(tempV, EP, true) < 1000)){
-				continue;
-				if(ABORT > 50){
-					debugLog("Errorsentinel");
-					break;
+			if((distanceBetweenVectors(tempV, EP, true) < 1000)){
+				for(p = 1; < cNumberNonGaiaPlayers){
+					xSetPointer(dPlayerData, p);
+					if((distanceBetweenVectors(tempV, kbGetBlockPosition(""+xGetInt(dPlayerData, xPlayerUnitID)),true) < 1000) && (xGetBool(dPlayerData, xPlayerActive) == true)){
+						allow = 1;
+					}
 				}
-			}
-			for(p = 1; < cNumberNonGaiaPlayers){
-				xSetPointer(dPlayerData, p);
-				if((distanceBetweenVectors(tempV, kbGetBlockPosition(""+xGetInt(dPlayerData, xPlayerUnitID)),true) < 1000) && (xGetBool(dPlayerData, xPlayerActive) == true)){
-					allow = 1;
+				if(allow == 0){
+					temp = trGetNextUnitScenarioNameNumber();
+					UnitCreateV(cNumberNonGaiaPlayers, "Cinematic Block", tempV, 0);
+					if(xsVectorGetY(kbGetBlockPosition(""+temp)) > 4){
+						trUnitSelectClear();
+						trUnitSelect(""+temp);
+						trUnitChangeProtoUnit("Sentinel Main");
+						xAddDatabaseBlock(dPoachers, true);
+						xSetInt(dPoachers, xUnitID, temp);
+						xSetString(dPoachers, xPoacherType, "Sentinel Main");
+						xSetInt(dPoachers, xMoveTime, 0);
+						xAddDatabaseBlock(dEdibles, true);
+						xSetInt(dEdibles, xUnitID, temp);
+						xSetInt(dEdibles, xType, 4);
+						num = num-1;
+						PoachersTarget = PoachersTarget+1;
+					}
 				}
-			}
-			if(allow == 0){
-				temp = trGetNextUnitScenarioNameNumber();
-				UnitCreateV(cNumberNonGaiaPlayers, "Cinematic Block", tempV, 0);
-				if(xsVectorGetY(kbGetBlockPosition(""+temp)) > 4){
-					trUnitSelectClear();
-					trUnitSelect(""+temp);
-					trUnitChangeProtoUnit("Sentinel Main");
-					xAddDatabaseBlock(dPoachers, true);
-					xSetInt(dPoachers, xUnitID, temp);
-					xSetString(dPoachers, xPoacherType, "Sentinel Main");
-					xSetInt(dPoachers, xMoveTime, 0);
-					xAddDatabaseBlock(dEdibles, true);
-					xSetInt(dEdibles, xUnitID, temp);
-					xSetInt(dEdibles, xType, 4);
-					num = num-1;
+				else if(allow == 1){
+					allow = 0;
 				}
-			}
-			else if(allow == 1){
-				allow = 0;
 			}
 		}
 	}
@@ -2590,38 +2585,34 @@ void SpawnCrocPoacher4(int num = 0){
 				debugLog("Error peltast");
 				break;
 			}
-			while((distanceBetweenVectors(tempV, EP, true) < 1000)){
-				continue;
-				if(ABORT > 50){
-					debugLog("Errorpeltast");
-					break;
+			if((distanceBetweenVectors(tempV, EP, true) < 1000)){
+				for(p = 1; < cNumberNonGaiaPlayers){
+					xSetPointer(dPlayerData, p);
+					if((distanceBetweenVectors(tempV, kbGetBlockPosition(""+xGetInt(dPlayerData, xPlayerUnitID)),true) < 1000) && (xGetBool(dPlayerData, xPlayerActive) == true)){
+						allow = 1;
+					}
 				}
-			}
-			for(p = 1; < cNumberNonGaiaPlayers){
-				xSetPointer(dPlayerData, p);
-				if((distanceBetweenVectors(tempV, kbGetBlockPosition(""+xGetInt(dPlayerData, xPlayerUnitID)),true) < 1000) && (xGetBool(dPlayerData, xPlayerActive) == true)){
-					allow = 1;
+				if(allow == 0){
+					temp = trGetNextUnitScenarioNameNumber();
+					UnitCreateV(cNumberNonGaiaPlayers, "Cinematic Block", tempV, 0);
+					if(xsVectorGetY(kbGetBlockPosition(""+temp)) > 4){
+						trUnitSelectClear();
+						trUnitSelect(""+temp);
+						trUnitChangeProtoUnit("Peltast");
+						xAddDatabaseBlock(dPoachers, true);
+						xSetInt(dPoachers, xUnitID, temp);
+						xSetString(dPoachers, xPoacherType, "Peltast");
+						xSetInt(dPoachers, xMoveTime, 0);
+						xAddDatabaseBlock(dEdibles, true);
+						xSetInt(dEdibles, xUnitID, temp);
+						xSetInt(dEdibles, xType, 5);
+						num = num-1;
+						PoachersTarget = PoachersTarget+1;
+					}
 				}
-			}
-			if(allow == 0){
-				temp = trGetNextUnitScenarioNameNumber();
-				UnitCreateV(cNumberNonGaiaPlayers, "Cinematic Block", tempV, 0);
-				if(xsVectorGetY(kbGetBlockPosition(""+temp)) > 4){
-					trUnitSelectClear();
-					trUnitSelect(""+temp);
-					trUnitChangeProtoUnit("Peltast");
-					xAddDatabaseBlock(dPoachers, true);
-					xSetInt(dPoachers, xUnitID, temp);
-					xSetString(dPoachers, xPoacherType, "Peltast");
-					xSetInt(dPoachers, xMoveTime, 0);
-					xAddDatabaseBlock(dEdibles, true);
-					xSetInt(dEdibles, xUnitID, temp);
-					xSetInt(dEdibles, xType, 5);
-					num = num-1;
+				else if(allow == 1){
+					allow = 0;
 				}
-			}
-			else if(allow == 1){
-				allow = 0;
 			}
 		}
 	}

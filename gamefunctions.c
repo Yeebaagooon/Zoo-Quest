@@ -73,11 +73,15 @@ inactive
 	trStringQuestVarSet("Question10", "Steve Irwin was killed by a crocodile");
 	trStringQuestVarSet("Question11", "Crocodiles eat humans");
 	trStringQuestVarSet("Question12", "Crocodiles cannot grow new teeth");
-	trQuestVarSet("MaxQNumber", 16);
 	trStringQuestVarSet("Question13", "Deer antlers will grow back");
 	trStringQuestVarSet("Question14", "Deer eyes are on the front of the head");
 	trStringQuestVarSet("Question15", "Deer can be white");
 	trStringQuestVarSet("Question16", "Reindeer can be found in Antarctica");
+	trQuestVarSet("MaxQNumber", 20);
+	trStringQuestVarSet("Question17", "The word rhinoceros is a combination of two Greek words – rhino (nose) and ceros (horn)");
+	trStringQuestVarSet("Question18", "Rhino horns are made of bone");
+	trStringQuestVarSet("Question19", "Deer antlers are made of bone");
+	trStringQuestVarSet("Question20", "A group of Rhinos is called a herd");
 	xsDisableSelf();
 }
 
@@ -611,7 +615,7 @@ void CrocGrow(int p = 0){
 	CrocProgress = CrocProgress+1;
 	xSetFloat(dPlayerData, xCrocFood, 0);
 	//5+2*xGetInt(dPlayerData, xCrocSize)
-	xSetFloat(dPlayerData, xCrocNext, 1);
+	xSetFloat(dPlayerData, xCrocNext, 4+2*xGetInt(dPlayerData, xCrocSize));
 	trUnitSelectClear();
 	xUnitSelect(dPlayerData, xSpyID);
 	float scale = 0.25*xGetInt(dPlayerData, xCrocSize)+0.75;
@@ -641,10 +645,22 @@ void CrocGrow(int p = 0){
 	if(xGetInt(dPlayerData, xCrocSize) == 5){
 		ColouredIconChatToPlayer(p, "0,0,0.7", "icons\animal crocodile icon", "You can now use 'W' to eat Chu Ko Nus!");
 	}
+	if(xGetInt(dPlayerData, xCrocSize) == 7){
+		ColouredIconChatToPlayer(p, "0,0,0.7", "icons\animal crocodile icon", "Goal achieved!");
+		ColouredChatToPlayer(p, "0,0,0.7", "You can still grow further");
+		ColouredChatToPlayer(p, "0,0,0.7", "But you may attract even more deadly poachers...");
+		if(trCurrentPlayer() == p){
+			playSoundCustom("cinematics\10_in\clearedcity.wav", "\Yeebaagooon\Zoo Quest\Skillpoint.mp3");
+		}
+	}
 	if(xGetInt(dPlayerData, xCrocSize) == 8){
 		ColouredIconChatToPlayer(p, "0,0,0.7", "icons\animal crocodile icon", "You can now use 'W' to eat Peltasts!");
+		ColouredChatToPlayer(p, "0,0,0.7", "They do a lot of damage so you may want to avoid them.");
 	}
 	if(xGetInt(dPlayerData, xCrocSize) == 10){
 		ColouredIconChatToPlayer(p, "0,0,0.7", "icons\animal crocodile icon", "You can now use 'W' to eat Sentinels!");
+	}
+	if(xGetInt(dPlayerData, xCrocSize) == 12){
+		ColouredIconChatToPlayer(p, "1,0,0", "icons\animal crocodile icon", "You have become an infamous man eater!");
 	}
 }

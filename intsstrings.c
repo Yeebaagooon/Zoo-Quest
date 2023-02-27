@@ -40,6 +40,7 @@ skul062
 
 MG3 that disturbing terrain glitch
 ?HP regen overlap
+Minigame S4 revives dead players
 
 //DELETE
 */
@@ -96,6 +97,7 @@ int ShrineTarget = 0;
 int ShrineTimeMax = 200;
 int Zebras = 0;
 int CrocProgress = 0;
+int CrocTarget = 0;
 
 //DB STUFF
 int DestroyNumber = 0;

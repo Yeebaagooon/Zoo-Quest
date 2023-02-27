@@ -252,6 +252,64 @@ inactive
 		}
 		//debugLog("SCORE = " + StageScore);
 	}
+	if(Stage == 4){
+		//[CALCULATE THE PERCENT COMPLETE]
+		if(CrocProgress >= CrocTarget){
+			//passing score
+			StageScore = StageRequirement;
+			debugLog("Pass, score set to " + StageScore);
+		}
+		else{
+			//failed main goal
+			trQuestVarSet("temp", CrocProgress);
+			StageScore = StageRequirement*(trQuestVarGet("temp")/CrocTarget);
+			StageScore = StageScore-8;
+			debugLog("Fail, score set to " + StageScore);
+		}
+		//[CALCULATION PENALTIES]
+		
+		StageScore = StageScore - (PlayersDead*7);
+		//[ADD ON BONUSES, ADD EXTRAS FOR WEIGHTING AND EXTRASGOT IF A PLAYER HAS IT]
+		//[CHESTS, UP TO 5 EXTRA POACHER DEATHS,]
+		Extras = Extras + ChestsTotal*2;
+		ExtrasGot = ExtrasGot + ChestsFound*2;
+		//debugLog("Chests = " + ChestsFound + " out of " + ChestsTotal);
+		
+		Extras = Extras+3;
+		if(MinigameFound == true){
+			ExtrasGot = ExtrasGot + 3;
+		}
+		Extras = Extras + (PlayersActive*3);
+		if(MinigameWins > 0){
+			ExtrasGot = ExtrasGot + (MinigameWins*3);
+		}
+		
+		//Extras = Extras + PlayersActive*2;
+		//ExtrasGot = ExtrasGot + MinigameWins*2;
+		if(ExtrasGot > 0){
+			calc = ExtrasGot/Extras;
+			StageScore = StageScore + (calc*(100-StageRequirement));
+			debugLog("ExtrasGot = " + ExtrasGot);
+			debugLog("Extras = " + Extras);
+			debugLog("Added to score = " + (calc*(100-StageRequirement)));
+		}
+		/*if((ExtrasGot >= Extras) && (Extras > 0)){
+			StageScore = 100;
+		}*/
+		//This make score 100 even if player fails
+		if(StageScore < 0){
+			StageScore = 2;
+		}
+		if(StageScore > 100){
+			StageScore = 100;
+		}
+		if(ExtrasGot > Extras){
+			trChatSend(0, "ERROR MORE THAN 100 PERCENT COMPLETE");
+		}
+		debugLog("Poachers total = " + PoachersTarget);
+		debugLog("Poachers killed = " + PoachersDead);
+		//debugLog("SCORE = " + StageScore);
+	}
 }
 
 rule DestroyStuff
@@ -502,9 +560,9 @@ inactive
 			}
 		}
 		if(Stage == 3){
-			characterDialog("Bonus unlocked!", "Goat Bonus 1", ActIcon(Stage));
+			characterDialog("Bonus unlocked!", "+4 LOS next stage", ActIcon(Stage));
 			for(p = 1 ; < cNumberNonGaiaPlayers){
-				trModifyProtounit(""+GoatProto, p, 0, 4);
+				trModifyProtounit(""+CrocProto, p, 2, 4);
 			}
 		}
 	}
@@ -541,9 +599,10 @@ inactive
 				xSetInt(dPlayerData, xHPRegen, xGetInt(dPlayerData, xHPRegen)+1);
 			}
 			if(Stage == 3){
-				characterDialog("Bonus unlocked!", "Goat Bonus 2", ActIcon(Stage));
+				characterDialog("Bonus unlocked!", "+0.5 sprint speed multiplier next stage", ActIcon(Stage));
 				for(p = 1 ; < cNumberNonGaiaPlayers){
-					trModifyProtounit(""+GoatProto, p, 0, 4);
+					xSetPointer(dPlayerData, p);
+					xSetFloat(dPlayerData, xCrocSprintSpeed, xGetFloat(dPlayerData, xCrocSprintSpeed)+0.5);
 				}
 			}
 		}

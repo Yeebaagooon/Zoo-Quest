@@ -28,7 +28,7 @@ inactive
 		trDelayedRuleActivation("TEST");
 		trDelayedRuleActivation("CrocEndZoneSee");
 		trDelayedRuleActivation("CrocAllDead");
-		//trDelayedRuleActivation("GoatPoacherTimer");
+		trDelayedRuleActivation("CrocPoacherTimer");
 		xsEnableRule("CrocPoacherMovement");
 		//trDelayedRuleActivation("GoatBonus");
 		//trSetCounterDisplay("<color={PlayerColor(2)}>Fencing destroyed: "+FencesDone+"/8");
@@ -61,6 +61,47 @@ inactive
 		modifyProtounitAbsolute("Chu Ko Nu", cNumberNonGaiaPlayers, 31, 1);
 		ActPart = 1;
 		//SpawnCrocPoacher4(1);
+		CrocTarget = 7*PlayersActive;
+	}
+}
+
+rule CrocPoacherTimer
+highFrequency
+inactive
+{
+	if (trTime() > 1*trQuestVarGet("NextPoacherSpawn")) {
+		if(Stage == 4){
+			SpawnEdible(cNumberNonGaiaPlayers+1);
+			trQuestVarSet("NextPoacherSpawn", trTime()+40+iModulo(90, trTimeMS()));
+			SpawnCrocPoacher1(xsMin(4, cNumberNonGaiaPlayers+2));
+			if(CrocProgress < 7){
+				SpawnCrocPoacher2(xsMax(3, cNumberNonGaiaPlayers));
+			}
+			if(CrocProgress >= 5){
+				SpawnCrocPoacher3(2);
+				SpawnEdible(1);
+			}
+			if(CrocProgress >= 9){
+				SpawnCrocPoacher4(iModulo(2, trTime())+1);
+				trOverlayText("Super Poachers Spawning...", 5.0,-1,-1,600);
+				SpawnCrocPoacher4(xsMax(1,PlayersActive-2));
+				playSound("\cinematics\04_in\armyarrive.wav");
+			}
+		}
+	}
+}
+
+rule CrocFoodTimer
+highFrequency
+inactive
+{
+	if (trTime() > 1*trQuestVarGet("NextFoodSpawn")) {
+		if(Stage == 4){
+			trQuestVarSet("NextFoodSpawn", trTime()+30+iModulo(120, trTimeMS()));
+			if(Zebras < PlayersActive*2){
+				SpawnEdible(xsMax(4, CrocProgress));
+			}
+		}
 	}
 }
 
@@ -81,6 +122,7 @@ inactive
 			xUnitSelect(dPoachers, xUnitID);
 			if(trUnitDead() == true){
 				xFreeDatabaseBlock(dPoachers);
+				PoachersDead = PoachersDead+1;
 			}
 		}
 		if(ActPart == 1){
@@ -516,7 +558,7 @@ highFrequency
 	}
 	else{
 		trMessageSetText("This minigame is a quiz, get 3/4 questions right to win!", 8000);
-		trCounterAddTime("cdCrocminigame", 9,0,"<color={PlayerColor(2)}>Minigame time remaining", 39);
+		trCounterAddTime("cdCrocminigame", 90,0,"<color={PlayerColor(2)}>Minigame time remaining", 39);
 		playSoundCustom("\xpack\xcinematics\6_a\music.mp3", "\Yeebaagooon\Zoo Quest\Minigame4.mp3");
 		xsEnableRule("CrocMinigameEnd");
 	}

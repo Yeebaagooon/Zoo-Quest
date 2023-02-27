@@ -9,6 +9,7 @@ inactive
 		xsDisableRule("GoatTutorialDone");
 		xsDisableRule("Jump");
 		xsDisableRule("JumpEnd");
+		QuickStart = 0;
 		NewDestroyNumber = trGetNextUnitScenarioNameNumber()-1;
 		TutorialMode = true;
 		Stage = 4;
@@ -461,6 +462,7 @@ inactive
 									xFreeDatabaseBlock(dEdibles);
 									xUnitSelect(dPoachers, xUnitID);
 									xFreeDatabaseBlock(dPoachers);
+									xSetFloat(dPlayerData, xCrocFood, xGetFloat(dPlayerData, xCrocFood)+3);
 									if(trCurrentPlayer() == p){
 										playSound("crocsnap.wav");
 										playSound("spidermaledeath" + iModulo(6, (trTime())+1) + ".wav");
