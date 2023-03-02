@@ -78,7 +78,7 @@ inactive
 	trStringQuestVarSet("Question15", "Deer can be white");
 	trStringQuestVarSet("Question16", "Reindeer can be found in Antarctica");
 	trQuestVarSet("MaxQNumber", 20);
-	trStringQuestVarSet("Question17", "The word rhinoceros is a combination of two Greek words – rhino (nose) and ceros (horn)");
+	trStringQuestVarSet("Question17", "The word rhinoceros is a combination of two Greek words – 'rhino' and 'ceros'");
 	trStringQuestVarSet("Question18", "Rhino horns are made of bone");
 	trStringQuestVarSet("Question19", "Deer antlers are made of bone");
 	trStringQuestVarSet("Question20", "A group of Rhinos is called a herd");
@@ -105,6 +105,10 @@ string ActName(int num = 0){
 		{
 			actnamed = "Act IV - Crocodile";
 		}
+		case 5:
+		{
+			actnamed = "Act V - Chicken";
+		}
 	}
 	return(actnamed);
 }
@@ -128,6 +132,10 @@ string ActIcon(int num = 0){
 		case 4:
 		{
 			animaliconact = "icons\animal crocodile icon 64";
+		}
+		case 5:
+		{
+			animaliconact = "icons\animal chicken icon 64";
 		}
 	}
 	return(animaliconact);
@@ -613,8 +621,8 @@ void CrocGrow(int p = 0){
 	xSetPointer(dPlayerData, p);
 	xSetInt(dPlayerData, xCrocSize, xGetInt(dPlayerData, xCrocSize)+1);
 	CrocProgress = CrocProgress+1;
-	xSetFloat(dPlayerData, xCrocFood, 0);
-	//5+2*xGetInt(dPlayerData, xCrocSize)
+	xSetFloat(dPlayerData, xCrocFood, xGetFloat(dPlayerData, xCrocFood)-xGetFloat(dPlayerData, xCrocNext));
+	//4+2*xGetInt(dPlayerData, xCrocSize)
 	xSetFloat(dPlayerData, xCrocNext, 4+2*xGetInt(dPlayerData, xCrocSize));
 	trUnitSelectClear();
 	xUnitSelect(dPlayerData, xSpyID);

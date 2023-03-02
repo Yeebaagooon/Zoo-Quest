@@ -2376,6 +2376,48 @@ void createCrocArea(){
 			break;
 		}
 	}
+	int runenum = xsMin(8,cNumberNonGaiaPlayers*3);
+	int temp = 0;
+	while(runenum > 0){
+		trQuestVarSetFromRand("x", 0, 126);
+		trQuestVarSetFromRand("z", 0, 126);
+		currentId = trGetNextUnitScenarioNameNumber();
+		trQuestVarSetFromRand("temph",0,360,true);
+		UnitCreate(0, "Cinematic Block", 2*trQuestVarGet("x"),2*trQuestVarGet("z"), 1*trQuestVarGet("temph"));
+		if((trGetTerrainType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainType("IceA")) && (trGetTerrainSubType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainSubType("IceA"))){
+			//if((trGetTerrainType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainType("OlympusA")) && (trGetTerrainSubType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainSubType("OlympusA"))){
+			if(trCountUnitsInArea(""+currentId, 0, "Great Box", 20) == 0){
+				temp = trGetNextUnitScenarioNameNumber();
+				UnitCreate(0, "Cinematic Block", 2*trQuestVarGet("x"),2*trQuestVarGet("z"), 1*trQuestVarGet("temph"));
+				trUnitSelectClear();
+				trUnitSelect(""+currentId);
+				trUnitChangeProtoUnit("Milestone");
+				trUnitSelectClear();
+				trUnitSelect(""+currentId);
+				trUnitSetAnimationPath("0,0,0,0,0,0,0");
+				trUnitSelectClear();
+				trUnitSelect(""+temp);
+				trUnitChangeProtoUnit("Spy Eye");
+				trUnitSelectClear();
+				trUnitSelect(""+temp);
+				trMutateSelected(kbGetProtoUnitID("Vortex finish linked"));
+				trUnitSelectClear();
+				trUnitSelect(""+temp);
+				trUnitSetAnimationPath("0,1,0,0,0,0,0");
+				xAddDatabaseBlock(dEdibles, true);
+				xSetInt(dEdibles, xUnitID, currentId);
+				xSetInt(dEdibles, xType, 10);
+				xSetInt(dEdibles, xSubtype, temp);
+				runenum = runenum-1;
+			}
+			ABORT = ABORT+1;
+			if(ABORT >500){
+				break;
+				trChatSend(0, "ERROR Mile");
+			}
+			//}
+		}
+	}
 	modifyProtounitAbsolute("Zebra", 0, 1, 6);
 	paintUnit("ShorelineSandA", "Water Reeds", 0, 0.05);
 	currentId = trGetNextUnitScenarioNameNumber();
@@ -2444,6 +2486,46 @@ void SpawnEdible(int num = 0){
 	}
 }
 
+void SpawnRelic(int num = 0){
+	int temp = 0;
+	int currentId = 0;
+	while(num > 0){
+		trQuestVarSetFromRand("x", 0, 126);
+		trQuestVarSetFromRand("z", 0, 126);
+		currentId = trGetNextUnitScenarioNameNumber();
+		trQuestVarSetFromRand("temph",0,360,true);
+		UnitCreate(0, "Cinematic Block", 2*trQuestVarGet("x"),2*trQuestVarGet("z"), 1*trQuestVarGet("temph"));
+		if((trGetTerrainType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainType("IceA")) && (trGetTerrainSubType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainSubType("IceA"))){
+			//if((trGetTerrainType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainType("OlympusA")) && (trGetTerrainSubType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainSubType("OlympusA"))){
+			if(trCountUnitsInArea(""+currentId, 0, "Great Box", 20) == 0){
+				temp = trGetNextUnitScenarioNameNumber();
+				UnitCreate(0, "Cinematic Block", 2*trQuestVarGet("x"),2*trQuestVarGet("z"), 1*trQuestVarGet("temph"));
+				trUnitSelectClear();
+				trUnitSelect(""+currentId);
+				trUnitChangeProtoUnit("Relic");
+				trUnitSelectClear();
+				trUnitSelect(""+currentId);
+				trSetScale(0.5);
+				trUnitSelectClear();
+				trUnitSelect(""+temp);
+				trUnitChangeProtoUnit("Spy Eye");
+				trUnitSelectClear();
+				trUnitSelect(""+temp);
+				trMutateSelected(kbGetProtoUnitID("Tower Mirror"));
+				trUnitSelectClear();
+				trUnitSelect(""+temp);
+				trSetScale(0);
+				xAddDatabaseBlock(dEdibles, true);
+				xSetInt(dEdibles, xUnitID, currentId);
+				xSetInt(dEdibles, xType, 11);
+				xSetInt(dEdibles, xSubtype, temp);
+				num = num-1;
+			}
+			//}
+		}
+	}
+}
+
 void SpawnCrocPoacher1(int num = 0){
 	int temp = 0;
 	int ABORT = 0;
@@ -2457,7 +2539,7 @@ void SpawnCrocPoacher1(int num = 0){
 			spawn = xGetVector(dShore, xShoreLoc);
 			temp = trGetNextUnitScenarioNameNumber();
 			UnitCreate(cNumberNonGaiaPlayers, "Cinematic Block", xsVectorGetX(spawn), xsVectorGetZ(spawn), 0);
-			if((distanceBetweenVectors(spawn, EP, true) < 1000)){
+			if((distanceBetweenVectors(spawn, EP, true) > 1000)){
 				for(p = 1; < cNumberNonGaiaPlayers){
 					xSetPointer(dPlayerData, p);
 					if((distanceBetweenVectors(spawn, kbGetBlockPosition(""+xGetInt(dPlayerData, xPlayerUnitID)),true) < 1000) && (xGetBool(dPlayerData, xPlayerActive) == true)){
@@ -2504,7 +2586,7 @@ void SpawnCrocPoacher2(int num = 0){
 			spawn = xGetVector(dRiver, xRiverLoc);
 			temp = trGetNextUnitScenarioNameNumber();
 			UnitCreate(cNumberNonGaiaPlayers, "Cinematic Block", xsVectorGetX(spawn), xsVectorGetZ(spawn), 0);
-			if((distanceBetweenVectors(spawn, EP, true) < 1000)){
+			if((distanceBetweenVectors(spawn, EP, true) > 1000)){
 				for(p = 1; < cNumberNonGaiaPlayers){
 					xSetPointer(dPlayerData, p);
 					if((distanceBetweenVectors(spawn, kbGetBlockPosition(""+xGetInt(dPlayerData, xPlayerUnitID)),true) < 1000) && (xGetBool(dPlayerData, xPlayerActive) == true)){
@@ -2554,7 +2636,7 @@ void SpawnCrocPoacher3(int num = 0){
 			spawn = xGetVector(dShore, xShoreLoc);
 			temp = trGetNextUnitScenarioNameNumber();
 			UnitCreate(cNumberNonGaiaPlayers, "Cinematic Block", xsVectorGetX(spawn), xsVectorGetZ(spawn), 0);
-			if((distanceBetweenVectors(spawn, EP, true) < 1000)){
+			if((distanceBetweenVectors(spawn, EP, true) > 1000)){
 				for(p = 1; < cNumberNonGaiaPlayers){
 					xSetPointer(dPlayerData, p);
 					if((distanceBetweenVectors(spawn, kbGetBlockPosition(""+xGetInt(dPlayerData, xPlayerUnitID)),true) < 1000) && (xGetBool(dPlayerData, xPlayerActive) == true)){

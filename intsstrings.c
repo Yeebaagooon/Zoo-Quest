@@ -158,6 +158,7 @@ int xQuestions = 0;
 int xQuestionsCorrect = 0;
 int xAnswer = 0;
 int xQuestionAnswer = 0;
+int xRelics = 0;
 
 int dDestroyMe = 0;
 int xDestroyName = 0;
@@ -213,6 +214,7 @@ highFrequency
 	xQuestionsCorrect = xInitAddInt(dPlayerData, "qs mg", 0);
 	xAnswer = xInitAddInt(dPlayerData, "player answer", -1);
 	xQuestionAnswer = xInitAddInt(dPlayerData, "correct answer", -1);
+	xRelics = xInitAddInt(dPlayerData, "relics", 0);
 	for(p=1; <= cNumberNonGaiaPlayers) {
 		xAddDatabaseBlock(dPlayerData, true);
 	}

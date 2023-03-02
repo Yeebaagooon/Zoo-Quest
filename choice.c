@@ -13,6 +13,7 @@ inactive
 	if(ActionChoice != 0){
 		string stringtemp = "";
 		int p = ActionChoice;
+		int temp = 0;
 		xSetPointer(dPlayerData, p);
 		switch(ChoiceEffect)
 		{
@@ -23,10 +24,16 @@ inactive
 			case 1:
 			{
 				trTechGodPower(p, "Vision", 1);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
 			}
 			case 2:
 			{
-				trTechGodPower(p, "Serpents", 1);
+				trTechGodPower(p, "Restoration", 1);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
 			}
 			case 3:
 			{
@@ -451,6 +458,56 @@ inactive
 			{
 				//Croc -4s sprint cd
 				xSetInt(dPlayerData, xCrocSprintRechargeTime, xGetInt(dPlayerData, xCrocSprintRechargeTime)-4);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 49:
+			{
+				//flare nearest zebra
+				vector dir = vector(0,0,0);
+				int closest = 100000;
+				temp = 0;
+				for(a=xGetDatabaseCount(dEdibles) ; > 0){
+					xDatabaseNext(dEdibles);
+					if(xGetInt(dEdibles, xType) == 1){
+						dir = kbGetBlockPosition(""+xGetInt(dEdibles, xUnitID));
+						if(distanceBetweenVectors(dir, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")), true) < closest){
+							closest = distanceBetweenVectors(dir, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")), true);
+							temp = xGetInt(dEdibles, xUnitID);
+						}
+					}
+				}
+				dir = kbGetBlockPosition(""+temp);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+					trMinimapFlare(p,10,dir,true);
+				}
+			}
+			case 50:
+			{
+				//spawn 2 zebra
+				SpawnEdible(2);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 51:
+			{
+				//spawn zebra
+				temp = trGetNextUnitScenarioNameNumber();
+				UnitCreateV(0, "Zebra", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
+				xAddDatabaseBlock(dEdibles, true);
+				xSetInt(dEdibles, xUnitID, temp);
+				xSetInt(dEdibles, xType, 1);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 52:
+			{
+				//4 food
+				xSetFloat(dPlayerData, xCrocFood, xGetFloat(dPlayerData, xCrocFood)+4);
 				if(trCurrentPlayer() == p){
 					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
 				}

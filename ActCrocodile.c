@@ -62,6 +62,7 @@ inactive
 		ActPart = 1;
 		//SpawnCrocPoacher4(1);
 		CrocTarget = 7*PlayersActive;
+		SpawnRelic(PlayersActive);
 	}
 }
 
@@ -151,7 +152,14 @@ inactive
 					trSetCounterDisplay("Level: " + xGetInt(dPlayerData, xCrocSize));
 				}
 				trCounterAbort("CrocC"+p);
+				trCounterAbort("CrocR"+p);
 				trCounterAddTime("CrocC"+p, -100, -10, "Food: " + 1*xGetFloat(dPlayerData, xCrocFood) + " | Next: " + 1*xGetFloat(dPlayerData, xCrocNext), -1);
+				if(xGetInt(dPlayerData, xRelics) == 1){
+					trCounterAddTime("CrocR"+p, -100, -10, "Gold: " + 1*xGetInt(dPlayerData, xRelics) + "/2", -1);
+				}
+				if(xGetInt(dPlayerData, xRelics) == 2){
+					trCounterAddTime("CrocR"+p, -100, -10, "Press E for ranged attack", -1);
+				}
 			}
 			if((xGetBool(dPlayerData, xStopDeath) == false) && (trPlayerUnitCountSpecific(p, ""+CrocProto) == 0) && (trPlayerUnitCountSpecific(p, "Prisoner") == 0) && (trPlayerGetPopulation(p) == 0) && (trPlayerUnitCountSpecific(p, "Anubite") == 0) && (xGetBool(dPlayerData, xPlayerActive) == true) && (xGetBool(dPlayerData, xPlayerDead) == false) && (InMinigame == false)){
 				//PLAYER DEAD
@@ -454,6 +462,8 @@ highFrequency
 		trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
 		trUnitChangeProtoUnit("Hero Death");
 		trCounterAbort("sprinttooltip"+p);
+		trCounterAbort("CrocC"+p);
+		trCounterAbort("CrocR"+p);
 	}
 	trClearCounterDisplay();
 	xsEnableRule("ScoreScreenStart");

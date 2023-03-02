@@ -469,6 +469,40 @@ inactive
 								}
 							}
 						}
+						if(xGetInt(dEdibles, xType) == 10){
+							//Interracting with milestone
+							xUnitSelect(dEdibles, xUnitID);
+							trUnitChangeProtoUnit("Arkantos God Out");
+							xUnitSelect(dEdibles, xUnitID);
+							trUnitSetAnimationPath("0,1,1,0,0,0,0");
+							xUnitSelect(dEdibles, xSubtype);
+							trUnitDestroy();
+							xFreeDatabaseBlock(dEdibles);
+							if(iModulo(3, trTimeMS()) == 0){
+								PlayerChoice(p, "Choose your help", "Vision", 1, "Flare nearest zebra", 49, 10000);
+							}
+							else if(iModulo(2, trTimeMS()) == 0){
+								PlayerChoice(p, "Choose your help", "Spawn 2 zebras", 50, "+4 food", 52, 10000);
+							}
+							else{
+								PlayerChoice(p, "Choose your help", "Restoration", 2, "Spawn zebra here", 51, 10000);
+							}
+						}
+						if(xGetInt(dEdibles, xType) == 11){
+							//Interracting with relic
+							xUnitSelect(dEdibles, xUnitID);
+							trUnitChangeProtoUnit("Arkantos God Out");
+							xUnitSelect(dEdibles, xUnitID);
+							trUnitSetAnimationPath("0,1,1,1,0,0,0");
+							xUnitSelect(dEdibles, xSubtype);
+							trUnitDestroy();
+							xFreeDatabaseBlock(dEdibles);
+							SpawnRelic(1);
+							xSetInt(dPlayerData, xRelics, xGetInt(dPlayerData, xRelics)+1);
+							if(trCurrentPlayer() == p){
+								playSound("relicselect.wav");
+							}
+						}
 					}
 				}
 			}
