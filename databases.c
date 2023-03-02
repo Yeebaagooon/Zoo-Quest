@@ -78,6 +78,15 @@ int dEdibles = 0;
 int xTime1 = 0;
 int xTime2 = 0;
 
+int dShore = 0;
+int xShoreLoc = 0;
+
+int dDirtA = 0;
+int xDirtLoc = 0;
+
+int dRiver = 0;
+int xRiverLoc = 0;
+
 rule initialise_spy_database
 active
 highFrequency
@@ -178,6 +187,16 @@ highFrequency
 	xSubtype = xInitAddInt(dEdibles, "desc", 0);
 	xTime1 = xInitAddInt(dEdibles, "desc", 0);
 	xTime2 = xInitAddInt(dEdibles, "desc", 0);
+	
+	dShore = xInitDatabase("dShore");
+	xShoreLoc = xInitAddVector(dShore, "loc", vector(0,0,0));
+	
+	dDirtA = xInitDatabase("dirta");
+	xDirtLoc = xInitAddVector(dDirtA, "loc", vector(0,0,0));
+	
+	dRiver = xInitDatabase("river");
+	xRiverLoc = xInitAddVector(dRiver, "loc", vector(0,0,0));
+	
 }
 
 /*

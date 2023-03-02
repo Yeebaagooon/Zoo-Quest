@@ -9909,6 +9909,7 @@ WhirlwindAttack=39;</javadoc>
         <parameters type="int" name="unitid"/>
 		<javadoc>Unsure what resource refers to in this context. Currently been unable to return anything other than 0.000000 for a unit.</javadoc>
 	</method>
+    
 	<method return="int" name="kbUnitGetResourceType">
         <parameters type="int" name="unitid"/>
 		<javadoc>Retrieves the resource type id the unit id currently contains. (0 gold, 1 wood, 2 food, 3 favor).</javadoc>
