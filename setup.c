@@ -80,6 +80,7 @@ highFrequency
 	//map("q", "game", "uiSetSpecialPower(220) uiSpecialPowerAtPointer");
 	map("q", "game", "trackInsert(); trackAddWaypoint();trackPlay(-1,28);");
 	map("w", "game", "trackInsert(); trackAddWaypoint();trackPlay(-1,29);");
+	map("e", "game", "trackInsert(); trackAddWaypoint();trackPlay(-1,30);");
 	%
 	for(p=1; < cNumberNonGaiaPlayers) {
 		code("trStringQuestVarSet(\"p"+p+"name\", \""+rmGetPlayerName(p)+"\");");

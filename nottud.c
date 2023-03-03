@@ -2391,7 +2391,10 @@ void createCrocArea(){
 				UnitCreate(0, "Cinematic Block", 2*trQuestVarGet("x"),2*trQuestVarGet("z"), 1*trQuestVarGet("temph"));
 				trUnitSelectClear();
 				trUnitSelect(""+currentId);
-				trUnitChangeProtoUnit("Milestone");
+				trUnitChangeProtoUnit("Spy Eye");
+				trUnitSelectClear();
+				trUnitSelect(""+currentId);
+				trMutateSelected(kbGetProtoUnitID("Milestone"));
 				trUnitSelectClear();
 				trUnitSelect(""+currentId);
 				trUnitSetAnimationPath("0,0,0,0,0,0,0");
@@ -2404,10 +2407,9 @@ void createCrocArea(){
 				trUnitSelectClear();
 				trUnitSelect(""+temp);
 				trUnitSetAnimationPath("0,1,0,0,0,0,0");
-				xAddDatabaseBlock(dEdibles, true);
-				xSetInt(dEdibles, xUnitID, currentId);
-				xSetInt(dEdibles, xType, 10);
-				xSetInt(dEdibles, xSubtype, temp);
+				xAddDatabaseBlock(dHelp, true);
+				xSetInt(dHelp, xUnitID, temp);
+				xSetInt(dHelp, xSubID, currentId);
 				runenum = runenum-1;
 			}
 			ABORT = ABORT+1;

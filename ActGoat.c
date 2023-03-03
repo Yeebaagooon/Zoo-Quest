@@ -176,6 +176,7 @@ inactive
 				PlayersDead = PlayersDead+1;
 				xSetBool(dPlayerData, xPlayerDead, true);
 				PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is dead!");
+				trPlayerKillAllGodPowers(p);
 				if(iModulo(2, trTime()) == 0){
 					playSound("\dialog\it\skul062.mp3");
 				}
@@ -373,6 +374,12 @@ inactive
 				xDatabaseNext(dPoachers);
 				xUnitSelect(dPoachers, xUnitID);
 				trUnitChangeProtoUnit("Cinematic Block");
+			}
+			for(c = xGetDatabaseCount(dMissiles); > 0){
+				xDatabaseNext(dMissiles);
+				xUnitSelect(dMissiles, xUnitID);
+				trUnitDestroy();
+				xFreeDatabaseBlock(dMissiles);
 			}
 			trMusicStop();
 			playSound("\cinematics\22_in\music 2.mp3");

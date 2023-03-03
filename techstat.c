@@ -116,6 +116,10 @@ highFrequency
 		modifyProtounitAbsolute(""+CrocProto, p, 1, xGetFloat(dPlayerData, xCrocLandSpeed));
 		modifyProtounitAbsolute(""+CrocProto, p, 2, 10);
 		modifyProtounitAbsolute(""+CrocProto, p, 22, 10000);
+		modifyProtounitAbsolute("Petsuchos", p, 0, 5);
+		modifyProtounitAbsolute("Petsuchos", p, 1, xGetFloat(dPlayerData, xCrocLandSpeed));
+		modifyProtounitAbsolute("Petsuchos", p, 2, 10);
+		modifyProtounitAbsolute("Petsuchos", p, 22, 10000);
 		for(a = 24; <= 29){
 			modifyProtounitAbsolute(""+GazelleProto, p, a, 0);
 			modifyProtounitAbsolute(""+RhinoProto, p, a, 0);
@@ -169,6 +173,7 @@ highFrequency
 		trModifyProtounit(""+NoChoiceUnitName + " Hero", p, 18, -9999999999999999999.0);
 		trModifyProtounit(""+NoChoiceUnitName + " Hero", p, 19, -9999999999999999999.0);
 		trModifyProtounit(""+CrocProto, p, 55, 3);
+		trModifyProtounit("Petsuchos", p, 55, 3);
 		trModifyProtounit("Huskarl", 0, 55, 4);
 		trModifyProtounit("Trident Soldier", 0, 55, 4);
 		trModifyProtounit("Dwarf", 0, 55, 4);

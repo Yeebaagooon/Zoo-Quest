@@ -87,6 +87,9 @@ int xDirtLoc = 0;
 int dRiver = 0;
 int xRiverLoc = 0;
 
+int dHelp = 0;
+int xSubID = 0;
+
 rule initialise_spy_database
 active
 highFrequency
@@ -197,6 +200,10 @@ highFrequency
 	dRiver = xInitDatabase("river");
 	xRiverLoc = xInitAddVector(dRiver, "loc", vector(0,0,0));
 	
+	dHelp = xInitDatabase("Helpers DB");
+	xUnitID = xInitAddInt(dHelp, "unit id", -1);
+	xSubID = xInitAddInt(dHelp, "sub type", -1);
+	
 }
 
 /*
@@ -232,6 +239,9 @@ bool rayCollision(vector start = vector(0,0,0), vector dir = vector(1,0,0),
 						return(true);
 					}
 					if(trPlayerUnitCountSpecific(xGetPointer(dPlayerData), ""+CrocProto) == 1){
+						return(true);
+					}
+					if(trPlayerUnitCountSpecific(xGetPointer(dPlayerData), "Petsuchos") == 1){
 						return(true);
 					}
 				}

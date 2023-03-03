@@ -71,6 +71,14 @@ highFrequency
 				trUnitDestroy();
 				break;
 			}
+			case kbGetProtoUnitID("Storehouse"):
+			{
+				trPlayerGrantResources(kbUnitGetOwner(id), "Food", 1);
+				trUnitSelectClear();
+				trUnitSelectByID(id);
+				trUnitDestroy();
+				break;
+			}
 			case kbGetProtoUnitID("Fence Wood"):
 			{
 				//Stage 2 destroy fences underwater (-1.5)

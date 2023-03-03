@@ -154,11 +154,11 @@ inactive
 				trCounterAbort("CrocC"+p);
 				trCounterAbort("CrocR"+p);
 				trCounterAddTime("CrocC"+p, -100, -10, "Food: " + 1*xGetFloat(dPlayerData, xCrocFood) + " | Next: " + 1*xGetFloat(dPlayerData, xCrocNext), -1);
-				if(xGetInt(dPlayerData, xRelics) == 1){
+				if((xGetInt(dPlayerData, xRelics) == 1) && (xGetString(dPlayerData, xCrocProto) == CrocProto)){
 					trCounterAddTime("CrocR"+p, -100, -10, "Gold: " + 1*xGetInt(dPlayerData, xRelics) + "/2", -1);
 				}
-				if(xGetInt(dPlayerData, xRelics) == 2){
-					trCounterAddTime("CrocR"+p, -100, -10, "Press E for ranged attack", -1);
+				if((xGetInt(dPlayerData, xRelics) > 1) && (xGetString(dPlayerData, xCrocProto) == CrocProto)){
+					trCounterAddTime("CrocR"+p, -100, -10, "Press E for temporary ranged attack", -1);
 				}
 			}
 			if((xGetBool(dPlayerData, xStopDeath) == false) && (trPlayerUnitCountSpecific(p, ""+CrocProto) == 0) && (trPlayerUnitCountSpecific(p, "Prisoner") == 0) && (trPlayerGetPopulation(p) == 0) && (trPlayerUnitCountSpecific(p, "Anubite") == 0) && (xGetBool(dPlayerData, xPlayerActive) == true) && (xGetBool(dPlayerData, xPlayerDead) == false) && (InMinigame == false)){
@@ -166,6 +166,7 @@ inactive
 				PlayersDead = PlayersDead+1;
 				xSetBool(dPlayerData, xPlayerDead, true);
 				PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is dead!");
+				trPlayerKillAllGodPowers(p);
 				if(iModulo(2, trTime()) == 0){
 					playSound("\dialog\ko\skul062.mp3");
 				}
@@ -217,7 +218,7 @@ inactive
 					}
 					xSetInt(dPlayerData, xAnswer, -1);
 					xSetInt(dPlayerData, xQuestionAnswer, -1);
-					xSetInt(dPlayerData, xQuestions, xGetInt(dPlayerData, xQuestions)-1);
+					//xSetInt(dPlayerData, xQuestions, xGetInt(dPlayerData, xQuestions)-1);
 					if(xGetInt(dPlayerData, xQuestions) > 0){
 						//	debugLog("Qs remaining: " + xGetInt(dPlayerData, xQuestions));
 						AskQuestion(p);
@@ -268,7 +269,7 @@ inactive
 			}
 			trUnitSelectClear();
 			for(pl=1 ; < cNumberNonGaiaPlayers){
-				if(trCountUnitsInArea(""+n,pl,""+CrocProto, 5) > 0){
+				if(trCountUnitsInArea(""+n,pl,xGetString(dPlayerData, xCrocProto), 5) > 0){
 					xUnitSelect(dChests,xUnitID);
 					trUnitSetAnimation("SE_Great_Box_Opening",false,-1);
 					xUnitSelect(dChests,xUnitID);
@@ -503,6 +504,12 @@ inactive
 				xDatabaseNext(dPoachers);
 				xUnitSelect(dPoachers, xUnitID);
 				trUnitChangeProtoUnit("Cinematic Block");
+			}
+			for(c = xGetDatabaseCount(dMissiles); > 0){
+				xDatabaseNext(dMissiles);
+				xUnitSelect(dMissiles, xUnitID);
+				trUnitDestroy();
+				xFreeDatabaseBlock(dMissiles);
 			}
 			trMusicStop();
 			playSound("\cinematics\22_in\music 2.mp3");

@@ -42,6 +42,8 @@ MG3 that disturbing terrain glitch
 ?HP regen overlap
 Minigame S4 revives dead players
 
+pelt error
+
 //DELETE
 */
 
@@ -159,6 +161,8 @@ int xQuestionsCorrect = 0;
 int xAnswer = 0;
 int xQuestionAnswer = 0;
 int xRelics = 0;
+int xCrocProto = 0;
+int xCrocRangedTime = 0;
 
 int dDestroyMe = 0;
 int xDestroyName = 0;
@@ -215,6 +219,8 @@ highFrequency
 	xAnswer = xInitAddInt(dPlayerData, "player answer", -1);
 	xQuestionAnswer = xInitAddInt(dPlayerData, "correct answer", -1);
 	xRelics = xInitAddInt(dPlayerData, "relics", 0);
+	xCrocProto = xInitAddString(dPlayerData, "croc proto", CrocProto);
+	xCrocRangedTime = xInitAddInt(dPlayerData, "rangetime", 0);
 	for(p=1; <= cNumberNonGaiaPlayers) {
 		xAddDatabaseBlock(dPlayerData, true);
 	}

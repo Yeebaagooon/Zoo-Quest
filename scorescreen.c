@@ -293,6 +293,10 @@ inactive
 			debugLog("Extras = " + Extras);
 			debugLog("Added to score = " + (calc*(100-StageRequirement)));
 		}
+		Extras = Extras+10;
+		if(PoachersDead*2 > PoachersTarget){
+			ExtrasGot = ExtrasGot+10;
+		}
 		/*if((ExtrasGot >= Extras) && (Extras > 0)){
 			StageScore = 100;
 		}*/

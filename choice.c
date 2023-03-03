@@ -431,11 +431,13 @@ inactive
 			{
 				//MG true
 				xSetInt(dPlayerData, xAnswer, 1);
+				xSetInt(dPlayerData, xQuestions, xGetInt(dPlayerData, xQuestions)-1);
 			}
 			case 45:
 			{
 				//MG false
 				xSetInt(dPlayerData, xAnswer, 0);
+				xSetInt(dPlayerData, xQuestions, xGetInt(dPlayerData, xQuestions)-1);
 			}
 			case 46:
 			{
@@ -500,6 +502,7 @@ inactive
 				xAddDatabaseBlock(dEdibles, true);
 				xSetInt(dEdibles, xUnitID, temp);
 				xSetInt(dEdibles, xType, 1);
+				xSetInt(dEdibles, xSubtype, 0);
 				if(trCurrentPlayer() == p){
 					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
 				}
@@ -531,7 +534,7 @@ inactive
 				uiZoomToProto(""+GoatProto);
 			}
 			if(Stage == 4){
-				uiZoomToProto(""+CrocProto);
+				uiZoomToProto(xGetString(dPlayerData, xCrocProto));
 			}
 		}
 		

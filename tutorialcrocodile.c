@@ -170,9 +170,12 @@ highFrequency
 				trUnitSelectClear();
 				trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
 				trUnitOverrideAnimation(3, 0, true, true, -1, 0);
-				trUnitSelectByQV("P"+p+"Unit");
-				trSetSelectedScale(0,2,0);
+				if(xGetString(dPlayerData, xCrocProto) == CrocProto){
+					trUnitSelectByQV("P"+p+"Unit");
+					trSetSelectedScale(0,2,0);
+				}
 				modifyProtounitAbsolute(""+CrocProto, p, 1, xGetFloat(dPlayerData, xCrocWaterSpeed));
+				modifyProtounitAbsolute("Petsuchos", p, 1, xGetFloat(dPlayerData, xCrocWaterSpeed));
 			}
 		}
 		else{
@@ -181,9 +184,12 @@ highFrequency
 				trUnitSelectClear();
 				trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
 				trUnitOverrideAnimation(15, 0, true, true, -1, 0);
-				trUnitSelectByQV("P"+p+"Unit");
-				trSetSelectedScale(0,1,0);
+				if(xGetString(dPlayerData, xCrocProto) == CrocProto){
+					trUnitSelectByQV("P"+p+"Unit");
+					trSetSelectedScale(0,1,0);
+				}
 				modifyProtounitAbsolute(""+CrocProto, p, 1, xGetFloat(dPlayerData, xCrocLandSpeed));
+				modifyProtounitAbsolute("Petsuchos", p, 1, xGetFloat(dPlayerData, xCrocLandSpeed));
 				xSetInt(dPlayerData, xCrocBonusTimer, trTime()+xGetInt(dPlayerData, xCrocBonusTime));
 			}
 		}
@@ -341,9 +347,11 @@ inactive
 						if(trTime() < xGetInt(dPlayerData, xCrocBonusTimer)){
 							//fast water bonus
 							modifyProtounitAbsolute(""+CrocProto, p, 1, xGetFloat(dPlayerData, xCrocLandSpeed)*xGetFloat(dPlayerData, xCrocSprintSpeed)*1.25);
+							modifyProtounitAbsolute("Petsuchos", p, 1, xGetFloat(dPlayerData, xCrocLandSpeed)*xGetFloat(dPlayerData, xCrocSprintSpeed)*1.25);
 						}
 						else{
 							modifyProtounitAbsolute(""+CrocProto, p, 1, xGetFloat(dPlayerData, xCrocLandSpeed)*xGetFloat(dPlayerData, xCrocSprintSpeed));
+							modifyProtounitAbsolute("Petsuchos", p, 1, xGetFloat(dPlayerData, xCrocLandSpeed)*xGetFloat(dPlayerData, xCrocSprintSpeed));
 						}
 						trUnitSelectClear();
 						trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
@@ -351,6 +359,7 @@ inactive
 					}
 					else{
 						modifyProtounitAbsolute(""+CrocProto, p, 1, xGetFloat(dPlayerData, xCrocWaterSpeed)*xGetFloat(dPlayerData, xCrocSprintSpeed));
+						modifyProtounitAbsolute("Petsuchos", p, 1, xGetFloat(dPlayerData, xCrocWaterSpeed)*xGetFloat(dPlayerData, xCrocSprintSpeed));
 					}
 					xSetInt(dPlayerData, xCrocSprintRechargeTimer, trTime()+xGetInt(dPlayerData, xCrocSprintRechargeTime)+(xGetInt(dPlayerData, xCrocSprintDuration)/1000));
 					xSetInt(dPlayerData, xCrocSprintEndTime, trTimeMS()+xGetInt(dPlayerData, xCrocSprintDuration));
@@ -384,7 +393,7 @@ inactive
 			else{
 				for(n = xGetDatabaseCount(dEdibles) ; > 0){
 					xDatabaseNext(dEdibles);
-					if(trCountUnitsInArea(""+xGetInt(dEdibles, xUnitID),p,""+CrocProto, 5) > 0){
+					if(trCountUnitsInArea(""+xGetInt(dEdibles, xUnitID),p,xGetString(dPlayerData, xCrocProto), 5) > 0){
 						xUnitSelect(dEdibles, xUnitID);
 						trUnitHighlight(1, true);
 						if(xGetInt(dEdibles, xType) == 1){
@@ -469,25 +478,6 @@ inactive
 								}
 							}
 						}
-						if(xGetInt(dEdibles, xType) == 10){
-							//Interracting with milestone
-							xUnitSelect(dEdibles, xUnitID);
-							trUnitChangeProtoUnit("Arkantos God Out");
-							xUnitSelect(dEdibles, xUnitID);
-							trUnitSetAnimationPath("0,1,1,0,0,0,0");
-							xUnitSelect(dEdibles, xSubtype);
-							trUnitDestroy();
-							xFreeDatabaseBlock(dEdibles);
-							if(iModulo(3, trTimeMS()) == 0){
-								PlayerChoice(p, "Choose your help", "Vision", 1, "Flare nearest zebra", 49, 10000);
-							}
-							else if(iModulo(2, trTimeMS()) == 0){
-								PlayerChoice(p, "Choose your help", "Spawn 2 zebras", 50, "+4 food", 52, 10000);
-							}
-							else{
-								PlayerChoice(p, "Choose your help", "Restoration", 2, "Spawn zebra here", 51, 10000);
-							}
-						}
 						if(xGetInt(dEdibles, xType) == 11){
 							//Interracting with relic
 							xUnitSelect(dEdibles, xUnitID);
@@ -505,10 +495,47 @@ inactive
 						}
 					}
 				}
+				if(xGetDatabaseCount(dHelp) > 0){
+					for(n = xGetDatabaseCount(dHelp); > 0){
+						xDatabaseNext(dHelp);
+						if(trCountUnitsInArea(""+xGetInt(dHelp, xUnitID),p,xGetString(dPlayerData, xCrocProto), 5) > 0){
+							//Interracting with milestone
+							xUnitSelect(dHelp, xUnitID);
+							trUnitChangeProtoUnit("Arkantos God Out");
+							xUnitSelect(dHelp, xUnitID);
+							trUnitSetAnimationPath("0,1,1,0,0,0,0");
+							xUnitSelect(dHelp, xSubID);
+							trUnitDestroy();
+							xFreeDatabaseBlock(dHelp);
+							if(iModulo(3, trTimeMS()) == 0){
+								PlayerChoice(p, "Choose your help", "Vision", 1, "Flare nearest zebra", 49, 10000);
+							}
+							else if(iModulo(2, trTimeMS()) == 0){
+								PlayerChoice(p, "Choose your help", "Spawn 2 zebras", 50, "+4 food", 52, 10000);
+							}
+							else{
+								PlayerChoice(p, "Choose your help", "Restoration", 2, "Spawn zebra here", 51, 10000);
+							}
+						}
+					}
+				}
 			}
 		}
 		if(trPlayerResourceCount(p, "Food") > 0){
 			trPlayerGrantResources(p, "Food", -100000);
+			if(xGetInt(dPlayerData, xRelics) > 1){
+				trUnitSelectByQV("P"+p+"Unit");
+				trMutateSelected(kbGetProtoUnitID("Petsuchos"));
+				trUnitSelectByQV("P"+p+"Unit");
+				float scale = 0.25*xGetInt(dPlayerData, xCrocSize)+0.75;
+				trSetScale(scale);
+				xUnitSelect(dPlayerData, xSpyID);
+				trMutateSelected(kbGetProtoUnitID("Increase Prosperity Small"));
+				trSetScale(0);
+				xSetString(dPlayerData, xCrocProto, "Petsuchos");
+				xSetInt(dPlayerData, xCrocRangedTime, trTime()+15);
+				xSetInt(dPlayerData, xRelics, xGetInt(dPlayerData, xRelics)-2);
+			}
 		}
 		if(trTimeMS() > xGetInt(dPlayerData, xCrocSprintEndTime)){
 			//if(xGetInt(dPlayerData, xCrocSprintEndTime) != 0){
@@ -516,12 +543,14 @@ inactive
 			if(xGetInt(dPlayerData, xCrocSprintState) == 1){
 				if(xGetBool(dPlayerData, xSwimming) == false){
 					modifyProtounitAbsolute(""+CrocProto, p, 1, xGetFloat(dPlayerData, xCrocLandSpeed));
+					modifyProtounitAbsolute("Petsuchos", p, 1, xGetFloat(dPlayerData, xCrocLandSpeed));
 					trUnitSelectClear();
 					trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
 					trUnitOverrideAnimation(15, 0, true, true, -1, 0);
 				}
 				else{
 					modifyProtounitAbsolute(""+CrocProto, p, 1, xGetFloat(dPlayerData, xCrocWaterSpeed));
+					modifyProtounitAbsolute("Petsuchos", p, 1, xGetFloat(dPlayerData, xCrocWaterSpeed));
 				}
 				xSetInt(dPlayerData, xCrocSprintState, 0);
 				if(trCurrentPlayer() == p){
@@ -533,6 +562,23 @@ inactive
 				}
 			}
 			//}
+		}
+		if(xGetString(dPlayerData, xCrocProto) == "Petsuchos"){
+			if(trTime() > xGetInt(dPlayerData, xCrocRangedTime)){
+				//change back
+				trUnitSelectByQV("P"+p+"Unit");
+				trMutateSelected(kbGetProtoUnitID(""+CrocProto));
+				trUnitSelectByQV("P"+p+"Unit");
+				trSetSelectedScale(0,1,0);
+				xUnitSelect(dPlayerData, xSpyID);
+				trMutateSelected(kbGetProtoUnitID("Crocodile"));
+				float scaleb = 0.25*xGetInt(dPlayerData, xCrocSize)+0.75;
+				trSetScale(scaleb);
+				xSetString(dPlayerData, xCrocProto, CrocProto);
+				if(trCurrentPlayer() == p){
+					playSound("godpowerfailed.wav");
+				}
+			}
 		}
 		anim = kbUnitGetAnimationActionType(kbGetBlockID(""+1*trQuestVarGet("P"+p+"Unit")+""));
 		if(anim == 5){

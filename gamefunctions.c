@@ -432,6 +432,23 @@ void hotkeyAbility(int ability = 0) {
 				}
 			}
 		}
+		if(trPlayerUnitCountSpecific(xGetPointer(dPlayerData), "Petsuchos") > 0){
+			switch(ability)
+			{
+				case EVENT_BUILD_HOUSE:
+				{
+					uiSetProtoCursor("House", true);
+				}
+				case EVENT_BUILD_GRANARY:
+				{
+					uiSetProtoCursor("Granary", true);
+				}
+				case EVENT_BUILD_STOREHOUSE:
+				{
+					uiSetProtoCursor("Storehouse", true);
+				}
+			}
+		}
 	}
 	xSetPointer(dPlayerData, old);
 }
@@ -624,6 +641,9 @@ void CrocGrow(int p = 0){
 	xSetFloat(dPlayerData, xCrocFood, xGetFloat(dPlayerData, xCrocFood)-xGetFloat(dPlayerData, xCrocNext));
 	//4+2*xGetInt(dPlayerData, xCrocSize)
 	xSetFloat(dPlayerData, xCrocNext, 4+2*xGetInt(dPlayerData, xCrocSize));
+	if(xGetFloat(dPlayerData, xCrocFood) < 0){
+		xSetFloat(dPlayerData, xCrocFood, 0);
+	}
 	trUnitSelectClear();
 	xUnitSelect(dPlayerData, xSpyID);
 	float scale = 0.25*xGetInt(dPlayerData, xCrocSize)+0.75;
@@ -635,6 +655,9 @@ void CrocGrow(int p = 0){
 	trModifyProtounit(""+CrocProto, p, 0, 2);
 	trModifyProtounit(""+CrocProto, p, 2, 2);
 	trModifyProtounit(""+CrocProto, p, 29, 2);
+	trModifyProtounit("Petsuchos", p, 0, 2);
+	trModifyProtounit("Petsuchos", p, 2, 2);
+	trModifyProtounit("Petsuchos", p, 29, 2);
 	xSetFloat(dPlayerData, xCrocLandSpeed, xGetFloat(dPlayerData, xCrocLandSpeed)+0.2);
 	xSetFloat(dPlayerData, xCrocWaterSpeed, xGetFloat(dPlayerData, xCrocWaterSpeed)+0.35);
 	trUnitSelectByQV("P"+p+"Unit");
@@ -642,19 +665,20 @@ void CrocGrow(int p = 0){
 	if(iModulo(4, xGetInt(dPlayerData, xCrocSize)-1) == 0){
 		//debugLog("Factor 4");
 		trModifyProtounit(""+CrocProto, p, 0, 5);
+		trModifyProtounit("Petsuchos", p, 0, 5);
 		trModifyProtounit(""+CrocProto, p, 29, 6);
 		xSetInt(dPlayerData, xCrocSprintDuration, xGetInt(dPlayerData, xCrocSprintDuration)+1000);
 		xSetInt(dPlayerData, xCrocSprintRechargeTime, xGetInt(dPlayerData, xCrocSprintRechargeTime)-1);
 		trDamageUnit(-1);
 	}
 	if(xGetInt(dPlayerData, xCrocSize) == 3){
-		ColouredIconChatToPlayer(p, "0,0,0.7", "icons\animal crocodile icon", "You can now use 'W' to sink Kebenits!");
+		ColouredIconChatToPlayer(p, "0,0,0.7", "icons\animal crocodile icon 64", "You can now use 'W' to sink Kebenits!");
 	}
 	if(xGetInt(dPlayerData, xCrocSize) == 5){
-		ColouredIconChatToPlayer(p, "0,0,0.7", "icons\animal crocodile icon", "You can now use 'W' to eat Chu Ko Nus!");
+		ColouredIconChatToPlayer(p, "0,0,0.7", "icons\animal crocodile icon 64", "You can now use 'W' to eat Chu Ko Nus!");
 	}
 	if(xGetInt(dPlayerData, xCrocSize) == 7){
-		ColouredIconChatToPlayer(p, "0,0,0.7", "icons\animal crocodile icon", "Goal achieved!");
+		ColouredIconChatToPlayer(p, "0,0,0.7", "icons\animal crocodile icon 64", "Goal achieved!");
 		ColouredChatToPlayer(p, "0,0,0.7", "You can still grow further");
 		ColouredChatToPlayer(p, "0,0,0.7", "But you may attract even more deadly poachers...");
 		if(trCurrentPlayer() == p){
@@ -662,13 +686,13 @@ void CrocGrow(int p = 0){
 		}
 	}
 	if(xGetInt(dPlayerData, xCrocSize) == 8){
-		ColouredIconChatToPlayer(p, "0,0,0.7", "icons\animal crocodile icon", "You can now use 'W' to eat Peltasts!");
+		ColouredIconChatToPlayer(p, "0,0,0.7", "icons\animal crocodile icon 64", "You can now use 'W' to eat Peltasts!");
 		ColouredChatToPlayer(p, "0,0,0.7", "They do a lot of damage so you may want to avoid them.");
 	}
 	if(xGetInt(dPlayerData, xCrocSize) == 10){
-		ColouredIconChatToPlayer(p, "0,0,0.7", "icons\animal crocodile icon", "You can now use 'W' to eat Sentinels!");
+		ColouredIconChatToPlayer(p, "0,0,0.7", "icons\animal crocodile icon 64", "You can now use 'W' to eat Sentinels!");
 	}
 	if(xGetInt(dPlayerData, xCrocSize) == 12){
-		ColouredIconChatToPlayer(p, "1,0,0", "icons\animal crocodile icon", "You have become an infamous man eater!");
+		ColouredIconChatToPlayer(p, "1,0,0", "icons\animal crocodile icon 64", "You have become an infamous man eater!");
 	}
 }
