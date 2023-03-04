@@ -32,7 +32,6 @@ FIX PAINT TREES SO LIKE A CHECKBOARD - actually ok for stage one
 [COMMENT]
 Cinematic
 Messages in stage 1 before poachers after chest for objectives
-Flashing zebras
 
 
 [BUG LIST]
@@ -50,7 +49,8 @@ pelt error
 //---Controls
 //\Yeebaagooon\Zoo Quest\Test sound.mp3
 int QuickStart = 4;
-// 3 for goat
+bool LOS = false;
+//false = reveal
 int Stage = 0;
 string MapVersion = "Test Version";
 string MapName = "Zoo Quest.xs";

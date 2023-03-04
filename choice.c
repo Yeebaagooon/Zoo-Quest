@@ -138,8 +138,8 @@ inactive
 			case 10:
 			{
 				//Deer minigame reward hp
-				trModifyProtounit(""+GazelleProto, p, 1, 2);
-				trModifyProtounit("Hero Greek Bellerophon", p, 1, 2);
+				trModifyProtounit(""+GazelleProto, p, 0, 2);
+				trModifyProtounit("Hero Greek Bellerophon", p, 0, 2);
 				if(trCurrentPlayer() == p){
 					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
 				}
@@ -431,13 +431,11 @@ inactive
 			{
 				//MG true
 				xSetInt(dPlayerData, xAnswer, 1);
-				xSetInt(dPlayerData, xQuestions, xGetInt(dPlayerData, xQuestions)-1);
 			}
 			case 45:
 			{
 				//MG false
 				xSetInt(dPlayerData, xAnswer, 0);
-				xSetInt(dPlayerData, xQuestions, xGetInt(dPlayerData, xQuestions)-1);
 			}
 			case 46:
 			{

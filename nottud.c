@@ -2517,10 +2517,9 @@ void SpawnRelic(int num = 0){
 				trUnitSelectClear();
 				trUnitSelect(""+temp);
 				trSetScale(0);
-				xAddDatabaseBlock(dEdibles, true);
-				xSetInt(dEdibles, xUnitID, currentId);
-				xSetInt(dEdibles, xType, 11);
-				xSetInt(dEdibles, xSubtype, temp);
+				xAddDatabaseBlock(dRelics, true);
+				xSetInt(dRelics, xUnitID, currentId);
+				xSetInt(dRelics, xSubID, temp);
 				num = num-1;
 			}
 			//}

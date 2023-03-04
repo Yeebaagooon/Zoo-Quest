@@ -363,53 +363,14 @@ rule GoatJumpEnd
 highFrequency
 inactive
 {
-	for(p=1 ; < cNumberNonGaiaPlayers){
-		xSetPointer(dPlayerData, p);
-		int anim = kbUnitGetAnimationActionType(kbGetBlockID(""+1*trQuestVarGet("P"+p+"Unit")+""));
-		if(xGetInt(dPlayerData, xTarget) > 0){
-			trUnitSelectClear();
-			trUnitSelect(""+xGetInt(dPlayerData, xTarget));
-			if((trUnitPercentDamaged() > 0) || (trUnitDead())){
-				xUnitSelect(dPlayerData, xTarget);
-				trUnitConvert(p);
-				trMutateSelected(kbGetProtoUnitID("Transport Ship Greek"));
-				trSetSelectedScale(0,1,0);
-				
-				trUnitSelectByQV("P"+p+"Unit");
-				trImmediateUnitGarrison(""+xGetInt(dPlayerData, xTarget));
-				xUnitSelect(dPlayerData, xTarget);
-				trUnitEjectContained();
-				//trUnitChangeProtoUnit("Dwarf");
-				
-				xUnitSelect(dPlayerData, xTarget);
-				trUnitDestroy();
-				
-				xSetInt(dPlayerData, xTarget, 0);
-				
-				trUnitSelectByQV("P"+p+"Unit");
-				if(xGetBool(dPlayerData, xReadyToLeave) == false){
-					trMutateSelected(kbGetProtoUnitID(""+GoatProto));
-				}
-				if(xGetBool(dPlayerData, xReadyToLeave) == true){
-					trMutateSelected(kbGetProtoUnitID("Prisoner"));
-				}
-				trSetSelectedScale(0,1,0);
-				
-				//trUnitSelectByQV("P"+p+"Unit");
-				//trSetUnitOrientation(trVectorQuestVarGet("V"+p+"dir"), vector(0,1,0), true);
-				
-				xSetInt(dPlayerData, xOldAnim, 2);
-				
-				xUnitSelect(dPlayerData, xSpyID);
-				//trUnitOverrideAnimation(13, 0, false, false, -1, 0);
-				trUnitOverrideAnimation(2, 0, true, true, -1, 0);
-				
-				trVectorQuestVarSet("P"+p+"Pos", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
-			}
-			trUnitSelectClear();
-			if(trTimeMS() > xGetInt(dPlayerData, xTimeout)){
-				if(anim != 32){
-					//end timeout jump
+	if(Stage == 3){
+		for(p=1 ; < cNumberNonGaiaPlayers){
+			xSetPointer(dPlayerData, p);
+			int anim = kbUnitGetAnimationActionType(kbGetBlockID(""+1*trQuestVarGet("P"+p+"Unit")+""));
+			if(xGetInt(dPlayerData, xTarget) > 0){
+				trUnitSelectClear();
+				trUnitSelect(""+xGetInt(dPlayerData, xTarget));
+				if((trUnitPercentDamaged() > 0) || (trUnitDead())){
 					xUnitSelect(dPlayerData, xTarget);
 					trUnitConvert(p);
 					trMutateSelected(kbGetProtoUnitID("Transport Ship Greek"));
@@ -445,21 +406,62 @@ inactive
 					trUnitOverrideAnimation(2, 0, true, true, -1, 0);
 					
 					trVectorQuestVarSet("P"+p+"Pos", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
-					if(distanceBetweenVectors(xGetVector(dPlayerData, xGoatTarget),kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit"))) > 225){
-						debugLog("Vector differential bug, fixed");
+				}
+				trUnitSelectClear();
+				if(trTimeMS() > xGetInt(dPlayerData, xTimeout)){
+					if(anim != 32){
+						//end timeout jump
+						xUnitSelect(dPlayerData, xTarget);
+						trUnitConvert(p);
+						trMutateSelected(kbGetProtoUnitID("Transport Ship Greek"));
+						trSetSelectedScale(0,1,0);
+						
 						trUnitSelectByQV("P"+p+"Unit");
-						trUnitChangeProtoUnit("Ragnorok SFX");
-						trUnitSelectByQV("P"+p+"Unit");
+						trImmediateUnitGarrison(""+xGetInt(dPlayerData, xTarget));
+						xUnitSelect(dPlayerData, xTarget);
+						trUnitEjectContained();
+						//trUnitChangeProtoUnit("Dwarf");
+						
+						xUnitSelect(dPlayerData, xTarget);
 						trUnitDestroy();
-						trUnitSelectClear();
-						trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
-						trUnitChangeProtoUnit("Hero Death");
-						CreateGoat(p, xsVectorGetX(xGetVector(dPlayerData, xGoatTarget)), xsVectorGetZ(xGetVector(dPlayerData, xGoatTarget)), 0);
+						
+						xSetInt(dPlayerData, xTarget, 0);
+						
+						trUnitSelectByQV("P"+p+"Unit");
+						if(xGetBool(dPlayerData, xReadyToLeave) == false){
+							trMutateSelected(kbGetProtoUnitID(""+GoatProto));
+						}
+						if(xGetBool(dPlayerData, xReadyToLeave) == true){
+							trMutateSelected(kbGetProtoUnitID("Prisoner"));
+						}
+						trSetSelectedScale(0,1,0);
+						
+						//trUnitSelectByQV("P"+p+"Unit");
+						//trSetUnitOrientation(trVectorQuestVarGet("V"+p+"dir"), vector(0,1,0), true);
+						
+						xSetInt(dPlayerData, xOldAnim, 2);
+						
+						xUnitSelect(dPlayerData, xSpyID);
+						//trUnitOverrideAnimation(13, 0, false, false, -1, 0);
+						trUnitOverrideAnimation(2, 0, true, true, -1, 0);
+						
+						trVectorQuestVarSet("P"+p+"Pos", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
+						if(distanceBetweenVectors(xGetVector(dPlayerData, xGoatTarget),kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit"))) > 225){
+							debugLog("Vector differential bug, fixed");
+							trUnitSelectByQV("P"+p+"Unit");
+							trUnitChangeProtoUnit("Ragnorok SFX");
+							trUnitSelectByQV("P"+p+"Unit");
+							trUnitDestroy();
+							trUnitSelectClear();
+							trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+							trUnitChangeProtoUnit("Hero Death");
+							CreateGoat(p, xsVectorGetX(xGetVector(dPlayerData, xGoatTarget)), xsVectorGetZ(xGetVector(dPlayerData, xGoatTarget)), 0);
+						}
 					}
 				}
 			}
+			trUnitSelectClear();
 		}
-		trUnitSelectClear();
 	}
 }
 

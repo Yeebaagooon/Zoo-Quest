@@ -74,6 +74,7 @@ highFrequency
 			case kbGetProtoUnitID("Storehouse"):
 			{
 				trPlayerGrantResources(kbUnitGetOwner(id), "Food", 1);
+				debugLog("Build " + kbUnitGetOwner(id));
 				trUnitSelectClear();
 				trUnitSelectByID(id);
 				trUnitDestroy();
@@ -102,13 +103,13 @@ highFrequency
 				closest = 10000;
 				closestid = 0;
 				//cycle through all throwing axemen to find the closest
-				for(a=0 ; < xGetDatabaseCount(dPoachers)){
+				for(a=xGetDatabaseCount(dPoachers) ; > 0){
 					xDatabaseNext(dPoachers);
 					dir = kbGetBlockPosition(""+xGetInt(dPoachers, xUnitID));
 					xUnitSelect(dPoachers, xUnitID);
 					if(trUnitDead() == false){
-						if(distanceBetweenVectors(dir, slingvector, true) < closest){
-							closest = distanceBetweenVectors(dir, slingvector, true);
+						if(distanceBetweenVectors(dir, axevector, true) < closest){
+							closest = distanceBetweenVectors(dir, axevector, true);
 							closestid = xGetInt(dPoachers, xUnitID);
 						}
 					}
@@ -118,10 +119,10 @@ highFrequency
 				dest = kbGetBlockPosition(""+trGetUnitScenarioNameNumber(kbUnitGetTargetUnitID(kbGetBlockID(""+closestid))));
 				xsSetContextPlayer(0);
 				dir = xsVectorNormalize(dest-closevector);
-				if(Stage < 3){
+				if(Stage != 3){
 					ShootProjectile(dir, closevector, "Lampades Bolt", "Rocket");
 				}
-				else{
+				if(Stage == 3){
 					//rotate to L, for loop shoot
 					baseCos = 0.965926; //cos15
 					baseSin = 0.258819; //sin15
@@ -131,6 +132,8 @@ highFrequency
 					for(a = 1; < 4){
 						ShootProjectile(dir, closevector, "Lampades Bolt", "Wadjet Spit", 0, 1, 8000);
 						dir = rotationMatrix(dir, baseCos, baseSin);
+						debugLog(""+dir);
+						debugLog(""+closevector);
 					}
 				}
 			}

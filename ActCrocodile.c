@@ -216,11 +216,12 @@ inactive
 							}
 						}
 					}
+					
 					xSetInt(dPlayerData, xAnswer, -1);
 					xSetInt(dPlayerData, xQuestionAnswer, -1);
-					//xSetInt(dPlayerData, xQuestions, xGetInt(dPlayerData, xQuestions)-1);
+					xSetInt(dPlayerData, xQuestions, xGetInt(dPlayerData, xQuestions)-1);
 					if(xGetInt(dPlayerData, xQuestions) > 0){
-						//	debugLog("Qs remaining: " + xGetInt(dPlayerData, xQuestions));
+						debugLog("Qs remaining: " + xGetInt(dPlayerData, xQuestions));
 						AskQuestion(p);
 					}
 					else{

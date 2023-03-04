@@ -753,6 +753,9 @@ highFrequency
 	xsDisableRule("GoatBonus");
 	xsDisableRule("MGGOGoat");
 	xsDisableRule("GoatPoacherTimer");
+	xsDisableRule("GoatJump");
+	xsDisableRule("GoatJumpEnd");
+	xsDisableRule("ExtraJumpTech");
 	for(p=1 ; < cNumberNonGaiaPlayers){
 		xSetPointer(dPlayerData, p);
 		trUnitSelectByQV("P"+p+"Unit");

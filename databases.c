@@ -90,6 +90,8 @@ int xRiverLoc = 0;
 int dHelp = 0;
 int xSubID = 0;
 
+int dRelics = 0;
+
 rule initialise_spy_database
 active
 highFrequency
@@ -203,6 +205,10 @@ highFrequency
 	dHelp = xInitDatabase("Helpers DB");
 	xUnitID = xInitAddInt(dHelp, "unit id", -1);
 	xSubID = xInitAddInt(dHelp, "sub type", -1);
+	
+	dRelics = xInitDatabase("Relics DB");
+	xUnitID = xInitAddInt(dRelics, "unit id", -1);
+	xSubID = xInitAddInt(dRelics, "sub type", -1);
 	
 }
 

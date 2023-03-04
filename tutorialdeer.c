@@ -168,7 +168,7 @@ inactive
 	else{
 		trSetFogAndBlackmap(false,false);
 	}
-	trSetFogAndBlackmap(true,true);
+	trSetFogAndBlackmap(LOS,LOS);
 	//false = revealed
 	xsDisableSelf();
 }

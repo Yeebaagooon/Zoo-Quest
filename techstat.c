@@ -30,6 +30,7 @@ highFrequency
 void modifyBuildableProto(string proto = "", int p = 0) {
 	trModifyProtounit(proto, p, 55, 4);
 	modifyProtounitAbsolute(proto, p, 2, 0);
+	trUnforbidProtounit(p, proto);
 	for(i=16; <= 19) {
 		trModifyProtounit(proto, p, i, 9999999999999999999.0);
 		trModifyProtounit(proto, p, i, -9999999999999999999.0);
@@ -174,17 +175,17 @@ highFrequency
 		trModifyProtounit(""+NoChoiceUnitName + " Hero", p, 19, -9999999999999999999.0);
 		trModifyProtounit(""+CrocProto, p, 55, 3);
 		trModifyProtounit("Petsuchos", p, 55, 3);
-		trModifyProtounit("Huskarl", 0, 55, 4);
-		trModifyProtounit("Trident Soldier", 0, 55, 4);
-		trModifyProtounit("Dwarf", 0, 55, 4);
-		trModifyProtounit("Huskarl", cNumberNonGaiaPlayers, 55, 4);
-		trModifyProtounit("Trident Soldier", cNumberNonGaiaPlayers, 55, 4);
-		trModifyProtounit("Dwarf", cNumberNonGaiaPlayers, 55, 4);
-		trModifyProtounit("Invisible Target", 0, 55, 4);
-		trModifyProtounit("Invisible Target", cNumberNonGaiaPlayers, 55, 4);
-		trModifyProtounit("Maceman", 0, 55, 4);
-		trModifyProtounit("Maceman", cNumberNonGaiaPlayers, 55, 4);
 	}
+	trModifyProtounit("Huskarl", 0, 55, 4);
+	trModifyProtounit("Trident Soldier", 0, 55, 4);
+	trModifyProtounit("Dwarf", 0, 55, 4);
+	trModifyProtounit("Huskarl", cNumberNonGaiaPlayers, 55, 4);
+	trModifyProtounit("Trident Soldier", cNumberNonGaiaPlayers, 55, 4);
+	trModifyProtounit("Dwarf", cNumberNonGaiaPlayers, 55, 4);
+	trModifyProtounit("Invisible Target", 0, 55, 4);
+	trModifyProtounit("Invisible Target", cNumberNonGaiaPlayers, 55, 4);
+	trModifyProtounit("Maceman", 0, 55, 4);
+	trModifyProtounit("Maceman", cNumberNonGaiaPlayers, 55, 4);
 	xsDisableSelf();
 }
 

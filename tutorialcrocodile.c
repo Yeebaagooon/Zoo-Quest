@@ -293,6 +293,16 @@ inactive
 				trUnitChangeProtoUnit("Hero Death");
 				CreateCroc(p, 14, p*16, 90);
 			}
+			if((trPlayerUnitCountSpecific(p, CrocProto) == 0) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0)){
+				trUnitSelectByQV("P"+p+"Unit");
+				trUnitChangeProtoUnit("Ragnorok SFX");
+				trUnitSelectByQV("P"+p+"Unit");
+				trUnitDestroy();
+				trUnitSelectClear();
+				trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+				trUnitChangeProtoUnit("Hero Death");
+				CreateCroc(p, 14, p*16, 90);
+			}
 			if((trVectorQuestVarGetZ("P"+p+"Pos") > (p*16+8)) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0)){
 				trUnitSelectByQV("P"+p+"Unit");
 				trUnitTeleport(trVectorQuestVarGetX("P"+p+"Pos"),3,p*16);
@@ -478,21 +488,6 @@ inactive
 								}
 							}
 						}
-						if(xGetInt(dEdibles, xType) == 11){
-							//Interracting with relic
-							xUnitSelect(dEdibles, xUnitID);
-							trUnitChangeProtoUnit("Arkantos God Out");
-							xUnitSelect(dEdibles, xUnitID);
-							trUnitSetAnimationPath("0,1,1,1,0,0,0");
-							xUnitSelect(dEdibles, xSubtype);
-							trUnitDestroy();
-							xFreeDatabaseBlock(dEdibles);
-							SpawnRelic(1);
-							xSetInt(dPlayerData, xRelics, xGetInt(dPlayerData, xRelics)+1);
-							if(trCurrentPlayer() == p){
-								playSound("relicselect.wav");
-							}
-						}
 					}
 				}
 				if(xGetDatabaseCount(dHelp) > 0){
@@ -519,9 +514,30 @@ inactive
 						}
 					}
 				}
+				if(xGetDatabaseCount(dRelics) > 0){
+					for(n = xGetDatabaseCount(dRelics); > 0){
+						xDatabaseNext(dRelics);
+						if(trCountUnitsInArea(""+xGetInt(dRelics, xUnitID),p,xGetString(dPlayerData, xCrocProto), 5) > 0){
+							//Interracting with relic
+							xUnitSelect(dRelics, xUnitID);
+							trUnitChangeProtoUnit("Arkantos God Out");
+							xUnitSelect(dRelics, xUnitID);
+							trUnitSetAnimationPath("0,1,1,1,0,0,0");
+							xUnitSelect(dRelics, xSubID);
+							trUnitDestroy();
+							xFreeDatabaseBlock(dRelics);
+							SpawnRelic(1);
+							xSetInt(dPlayerData, xRelics, xGetInt(dPlayerData, xRelics)+1);
+							if(trCurrentPlayer() == p){
+								playSound("relicselect.wav");
+							}
+						}
+					}
+				}
 			}
 		}
 		if(trPlayerResourceCount(p, "Food") > 0){
+			debugLog("Food");
 			trPlayerGrantResources(p, "Food", -100000);
 			if(xGetInt(dPlayerData, xRelics) > 1){
 				trUnitSelectByQV("P"+p+"Unit");
