@@ -235,7 +235,9 @@ inactive
 				PlayersDead = PlayersDead+1;
 				xSetBool(dPlayerData, xPlayerDead, true);
 				PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is dead!");
+				PlayerColouredChatToSelf(p, "You'll be able to join the next act if your team pass this one.");
 				trPlayerKillAllGodPowers(p);
+				trTechGodPower(1, "Rain", 1);
 				if(iModulo(2, trTime()) == 0){
 					playSound("\dialog\fr\skul062.mp3");
 				}
@@ -576,6 +578,9 @@ highFrequency
 					trUnitChangeProtoUnit("Cinematic Block");
 					CreateGazelle(p, xsVectorGetX(temp), xsVectorGetZ(temp), 0);
 				}
+			}
+			if((trPlayerUnitCountSpecific(p, GazelleProto) == 0) && (xGetBool(dPlayerData, xPlayerDead) == false)){
+				CreateGazelle(p, trVectorQuestVarGetX("P"+p+"PosMG"),trVectorQuestVarGetZ("P"+p+"PosMG"));
 			}
 		}
 		uiZoomToProto(""+GazelleProto);

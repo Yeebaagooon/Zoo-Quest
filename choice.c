@@ -438,11 +438,13 @@ inactive
 			case 44:
 			{
 				//MG true
+				xSetPointer(dPlayerData, p);
 				xSetInt(dPlayerData, xAnswer, 1);
 			}
 			case 45:
 			{
 				//MG false
+				xSetPointer(dPlayerData, p);
 				xSetInt(dPlayerData, xAnswer, 0);
 			}
 			case 46:

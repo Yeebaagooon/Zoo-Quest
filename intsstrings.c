@@ -34,6 +34,13 @@ Messages in stage 1 before poachers after chest for objectives
 skul062
 tile for minigame is *2 for vector
 
+*MG1 dead
+*rhino chest start zone
+*mg2 end msg
+a3 score???
+*croc mg qs
+
+
 S3 super
 S4 uber
 
@@ -43,7 +50,7 @@ S4 uber
 
 //---Controls
 //\Yeebaagooon\Zoo Quest\Test sound.mp3
-int QuickStart = 5;
+int QuickStart = 4;
 bool LOS = true;
 int Stage = 0;
 string MapVersion = "Test Version";
@@ -71,6 +78,9 @@ string unitcheck = "";
 //MAP STUFF
 float timediff = 0.0;
 int timelast = 0;
+
+float timediff2 = 0.0;
+float timelast2 = 0.0;
 vector MapCentre = vector(0,0,0);
 int StageRequirement = 0;
 int StageScore = 0;

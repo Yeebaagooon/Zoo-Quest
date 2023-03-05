@@ -102,12 +102,11 @@ inactive
 			CreateChicken(p,14,16*p,90);
 			xSetPointer(dPlayerData, p);
 			xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
-			playSound("\cinematics\16_in\music.mp3");
 			if(trCurrentPlayer() == p){
 				trCounterAddTime("cdtutorial", -100, -200, "<color={PlayerColor("+p+")}>Swim to the first island.", -1);
 			}
 		}
-		
+		playSound("\cinematics\16_in\music.mp3");
 		refreshPassability();
 		xsEnableRule("Animations");
 		//bored anim when swimming and maybe pivot height scale to 2

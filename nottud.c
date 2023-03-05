@@ -1514,6 +1514,7 @@ void createMarsh(){
 	refreshPassability();
 	int chestnum = xsMax(4,PlayersActive/2+1);
 	ABORT = 0;
+	tileForStart = tileForStart*2;
 	while(chestnum > 0){
 		trQuestVarSetFromRand("x", 0, 126);
 		trQuestVarSetFromRand("z", 0, 126);
@@ -1521,8 +1522,10 @@ void createMarsh(){
 		UnitCreate(0, "Cinematic Block", 1*trQuestVarGet("x"),1*trQuestVarGet("z"), 0);
 		if(trCountUnitsInArea(""+currentId, 0, "Great Box", 40) == 0){
 			if(xsVectorGetY(kbGetBlockPosition(""+currentId)) > 0){
-				CreateChest(1*trQuestVarGet("x"),1*trQuestVarGet("z"));
-				chestnum = chestnum-1;
+				if(distanceBetweenVectors(tileForStart, kbGetBlockPosition(""+currentId)) > 1500){
+					CreateChest(1*trQuestVarGet("x"),1*trQuestVarGet("z"));
+					chestnum = chestnum-1;
+				}
 			}
 		}
 		ABORT = ABORT+1;

@@ -225,7 +225,9 @@ inactive
 				PlayersDead = PlayersDead+1;
 				xSetBool(dPlayerData, xPlayerDead, true);
 				PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is dead!");
+				PlayerColouredChatToSelf(p, "You'll be able to join the next act if your team pass this one.");
 				trPlayerKillAllGodPowers(p);
+				trTechGodPower(1, "Rain", 1);
 				if(iModulo(2, trTime()) == 0){
 					playSound("\dialog\jp\skul062.mp3");
 				}
@@ -609,7 +611,7 @@ highFrequency
 		else{
 			if(xGetBool(dPlayerData, xStopDeath) == true){
 				if(trCurrentPlayer() == p){
-					trMessageSetText("Minigame end lose.", 5000);
+					trOverlayText("Minigame Failed!", 3.0,-1,-1,600);
 					playSound("xlose.wav");
 				}
 			}

@@ -141,6 +141,7 @@ inactive
 		trUnitMoveToPoint(16,0,p*16+1, -1, false);
 		xSetPointer(dPlayerData, xPlayerUnitID);
 		xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
+		trVectorQuestVarSet("V"+p+"Second", xsVectorSet(18, 0, p*16));
 		if(trCurrentPlayer() == p){
 			trCounterAddTime("cdtutorial", -100, -200, "<color={PlayerColor("+p+")}>Press 'Q' to jump forward.", -1);
 		}

@@ -127,13 +127,12 @@ inactive
 			xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
 			xSetInt(dPlayerData, xCrocSprintRechargeTimer, trTime());
 			xSetInt(dPlayerData, xCrocSprintRechargeTime, xGetInt(dPlayerData, xCrocSprintRechargeTime)/4);
-			playSound("\xpack\xcinematics\6_a\music.mp3");
 			//For act 5 = cinematics\16_in\music.mp3
 			if(trCurrentPlayer() == p){
 				trCounterAddTime("cdtutorial", -100, -200, "<color={PlayerColor("+p+")}>Swim to the first island.", -1);
 			}
 		}
-		
+		playSound("\xpack\xcinematics\6_a\music.mp3");
 		refreshPassability();
 		xsEnableRule("Animations");
 		//bored anim when swimming and maybe pivot height scale to 2
@@ -347,6 +346,8 @@ rule CrocMechanicLoops
 highFrequency
 inactive
 {
+	timediff2 = 0.001 * (trTimeMS() - timelast2); // calculate timediff
+	timelast2 = trTimeMS();
 	int anim = 0;
 	for(p=1 ; < cNumberNonGaiaPlayers){
 		xSetPointer(dPlayerData, p);
@@ -599,7 +600,7 @@ inactive
 		}
 		anim = kbUnitGetAnimationActionType(kbGetBlockID(""+1*trQuestVarGet("P"+p+"Unit")+""));
 		if(anim == 5){
-			xSetFloat(dPlayerData, xCrocFood, xGetFloat(dPlayerData, xCrocFood)+0.01);
+			xSetFloat(dPlayerData, xCrocFood, xGetFloat(dPlayerData, xCrocFood)+timediff2*0.4);
 			//about 1000 for level 2
 		}
 	}

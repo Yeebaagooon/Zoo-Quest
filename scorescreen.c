@@ -219,6 +219,8 @@ inactive
 			StageScore = StageRequirement*(trQuestVarGet("temp")/ShrinesMax);
 			debugLog("Fail, score set to " + StageScore);
 		}
+		debugLog("Shrine Got = " + ShrinesGot);
+		debugLog("Shrine Target = " + ShrineTarget);
 		//[CALCULATION PENALTIES]
 		Extras = Extras + (ShrinesMax - ShrineTarget)*3;
 		StageScore = StageScore - (PlayersDead*6);

@@ -774,3 +774,51 @@ void CrocGrow(int p = 0){
 		ColouredIconChatToPlayer(p, "1,0,0", "icons\animal crocodile icon 64", "The world's top poachers are coming for you.");
 	}
 }
+
+
+rule DebugRevive
+highFrequency
+active
+{
+	if(trCheckGPActive("Rain", 1)){
+		//[revive debug]
+		for(p = 1; < cNumberNonGaiaPlayers){
+			xSetPointer(dPlayerData, p);
+			if(xGetBool(dPlayerData, xPlayerActive) == true){
+				if(xGetBool(dPlayerData, xPlayerDead) == true){
+					xSetBool(dPlayerData, xPlayerDead, false);
+					PlayersDead = PlayersDead-1;
+					if(Stage == 1){
+						CreateGazelle(p, xsVectorGetX(StageVector)*2, xsVectorGetZ(StageVector)*2, 0);
+					}
+					if(Stage == 2){
+						CreateRhino(p, xsVectorGetX(StageVector)*2, xsVectorGetZ(StageVector)*2, 0);
+					}
+					if(Stage == 3){
+						CreateGoat(p, xsVectorGetX(StageVector)*2, xsVectorGetZ(StageVector)*2, 0);
+					}
+					if(Stage == 4){
+						CreateCroc(p, xsVectorGetX(StageVector)*2, xsVectorGetZ(StageVector)*2, 0);
+					}
+					if(Stage == 5){
+						CreateChicken(p, xsVectorGetX(StageVector)*2, xsVectorGetZ(StageVector)*2, 0);
+					}
+				}
+			}
+		}
+		xsDisableSelf();
+		xsEnableRule("DebugTimer");
+		playSound("herorevived.wav");
+		trOverlayText("DEBUG: Players revived!", 3.0,-1,-1,600);
+	}
+}
+
+rule DebugTimer
+highFrequency
+inactive
+{
+	if (trTime() > cActivationTime + 1) {
+		xsDisableSelf();
+		xsEnableRule("DebugRevive");
+	}
+}

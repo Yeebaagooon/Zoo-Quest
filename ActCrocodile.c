@@ -163,12 +163,14 @@ inactive
 					trCounterAddTime("CrocR"+p, -100, -10, "Press E for temporary ranged attack", -1);
 				}
 			}
-			if((xGetBool(dPlayerData, xStopDeath) == false) && (trPlayerUnitCountSpecific(p, ""+CrocProto) == 0) && (trPlayerUnitCountSpecific(p, "Prisoner") == 0) && (trPlayerGetPopulation(p) == 0) && (trPlayerUnitCountSpecific(p, "Anubite") == 0) && (xGetBool(dPlayerData, xPlayerActive) == true) && (xGetBool(dPlayerData, xPlayerDead) == false) && (InMinigame == false)){
+			if((xGetBool(dPlayerData, xStopDeath) == false) && (trPlayerUnitCountSpecific(p, ""+CrocProto) == 0) && (trPlayerUnitCountSpecific(p, "Prisoner") == 0) && (trPlayerGetPopulation(p) == 0) && (xGetBool(dPlayerData, xPlayerActive) == true) && (xGetBool(dPlayerData, xPlayerDead) == false) && (InMinigame == false)){
 				//PLAYER DEAD
 				PlayersDead = PlayersDead+1;
 				xSetBool(dPlayerData, xPlayerDead, true);
 				PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is dead!");
+				PlayerColouredChatToSelf(p, "You'll be able to join the next act if your team pass this one.");
 				trPlayerKillAllGodPowers(p);
+				trTechGodPower(1, "Rain", 1);
 				if(iModulo(2, trTime()) == 0){
 					playSound("\dialog\ko\skul062.mp3");
 				}
@@ -223,10 +225,12 @@ inactive
 					xSetInt(dPlayerData, xQuestionAnswer, -1);
 					xSetInt(dPlayerData, xQuestions, xGetInt(dPlayerData, xQuestions)-1);
 					if(xGetInt(dPlayerData, xQuestions) > 0){
-						debugLog("Qs remaining: " + xGetInt(dPlayerData, xQuestions));
 						AskQuestion(p);
+						debugLog("Q asked to P" + p);
+						debugLog("Qs remaining P"+p+": " + xGetInt(dPlayerData, xQuestions));
 					}
 					else{
+						xSetInt(dPlayerData, xAnswer, -1);
 						if(xGetInt(dPlayerData, xQuestionsCorrect) > 2){
 							if(trCurrentPlayer() == p){
 								playSound("xwin.wav");
@@ -248,8 +252,12 @@ inactive
 						}
 						PlayersMinigaming = PlayersMinigaming-1;
 					}
-					
 				}
+			}
+			//save
+			if((xGetInt(dPlayerData, xQuestions) > 0) && (1*trQuestVarGet("P"+p+"ChoiceDialog") == 0)){
+				AskQuestion(p);
+				debugLog("Saved P" + p);
 			}
 		}
 		if((PlayersActive == PlayersReadyToLeave+PlayersDead) && (PlayersDead != PlayersActive)){
@@ -570,9 +578,9 @@ highFrequency
 		trPaintTerrain(xsVectorGetX(StageVector)-1,xsVectorGetZ(StageVector)-1,xsVectorGetX(StageVector)+1,xsVectorGetZ(StageVector)+1,0,51);
 		refreshPassability();
 		for(p=1 ; < cNumberNonGaiaPlayers){
-			if(trPlayerUnitCountSpecific(p, ""+CrocProto) == 0){
+			xSetPointer(dPlayerData, p);
+			if((trPlayerUnitCountSpecific(p, ""+CrocProto) == 0) && (xGetBool(dPlayerData, xPlayerDead) == false)){
 				CreateCroc(p, xsVectorGetX(StageVector), xsVectorGetZ(StageVector), 0);
-				
 			}
 		}
 	}
