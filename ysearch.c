@@ -74,7 +74,6 @@ highFrequency
 			case kbGetProtoUnitID("Storehouse"):
 			{
 				trPlayerGrantResources(kbUnitGetOwner(id), "Food", 1);
-				debugLog("Build " + kbUnitGetOwner(id));
 				trUnitSelectClear();
 				trUnitSelectByID(id);
 				trUnitDestroy();
@@ -132,8 +131,6 @@ highFrequency
 					for(a = 1; < 4){
 						ShootProjectile(dir, closevector, "Lampades Bolt", "Wadjet Spit", 0, 1, 8000);
 						dir = rotationMatrix(dir, baseCos, baseSin);
-						debugLog(""+dir);
-						debugLog(""+closevector);
 					}
 				}
 			}

@@ -61,7 +61,7 @@ inactive
 		modifyProtounitAbsolute("Chu Ko Nu", cNumberNonGaiaPlayers, 31, 1);
 		ActPart = 1;
 		//SpawnCrocPoacher4(1);
-		CrocTarget = 7*PlayersActive;
+		CrocTarget = 5*PlayersActive;
 		SpawnRelic(PlayersActive);
 	}
 }
@@ -71,22 +71,24 @@ highFrequency
 inactive
 {
 	if (trTime() > 1*trQuestVarGet("NextPoacherSpawn")) {
-		if(Stage == 4){
-			SpawnEdible(cNumberNonGaiaPlayers+1);
-			trQuestVarSet("NextPoacherSpawn", trTime()+40+iModulo(90, trTimeMS()));
-			SpawnCrocPoacher1(xsMin(4, cNumberNonGaiaPlayers+2));
-			if(CrocProgress < 7){
-				SpawnCrocPoacher2(xsMax(3, cNumberNonGaiaPlayers));
-			}
-			if(CrocProgress >= 5){
-				SpawnCrocPoacher3(2);
-				SpawnEdible(1);
-			}
-			if(CrocProgress >= 9){
-				SpawnCrocPoacher4(iModulo(2, trTime())+1);
-				trOverlayText("Super Poachers Spawning...", 5.0,-1,-1,600);
-				SpawnCrocPoacher4(xsMax(1,PlayersActive-2));
-				playSound("\cinematics\04_in\armyarrive.wav");
+		if(InMinigame == false){
+			if(Stage == 4){
+				SpawnEdible(cNumberNonGaiaPlayers+1);
+				trQuestVarSet("NextPoacherSpawn", trTime()+40+iModulo(90, trTimeMS()));
+				SpawnCrocPoacher1(xsMin(4, cNumberNonGaiaPlayers+2));
+				if(CrocProgress < 7){
+					SpawnCrocPoacher2(xsMax(3, cNumberNonGaiaPlayers));
+				}
+				if(CrocProgress >= 5){
+					SpawnCrocPoacher3(2);
+					SpawnEdible(1);
+				}
+				if(CrocProgress >= 9){
+					SpawnCrocPoacher4(iModulo(2, trTime())+1);
+					trOverlayText("Super Poachers Spawning...", 5.0,-1,-1,600);
+					SpawnCrocPoacher4(xsMax(1,PlayersActive-2));
+					playSound("\cinematics\04_in\armyarrive.wav");
+				}
 			}
 		}
 	}
@@ -133,7 +135,7 @@ inactive
 		}
 		for(p = 1; < cNumberNonGaiaPlayers){
 			xSetPointer(dPlayerData, p);
-			if((playerIsPlaying(p) == false) && (xGetBool(dPlayerData, xPlayerActive) == true)){
+			if((playerIsPlaying(p) == false) && (xGetBool(dPlayerData, xPlayerActive) == true) && (xGetBool(dPlayerData, xPlayerDead) == false)){
 				trUnitSelectByQV("P"+p+"Unit");
 				trUnitChangeProtoUnit("Ragnorok SFX");
 				trUnitSelectByQV("P"+p+"Unit");
@@ -600,28 +602,23 @@ highFrequency
 			xSetPointer(dPlayerData, p);
 			if((xGetInt(dPlayerData, xTeleportDue) == 1) && (xGetBool(dPlayerData, xPlayerActive) == true)){
 				temp = xGetVector(dPlayerData, xVectorHold);
+				trQuestVarSet("P"+p+"IG", trGetNextUnitScenarioNameNumber());
+				UnitCreateV(p, "Roc", temp, 0);
 				trUnitSelectByQV("P"+p+"Unit");
-				trUnitChangeProtoUnit("Ragnorok SFX");
-				trUnitSelectByQV("P"+p+"Unit");
-				trUnitDestroy();
-				trUnitSelectClear();
-				trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
-				trUnitChangeProtoUnit("Hero Death");
-				CreateCroc(p, xsVectorGetX(temp), xsVectorGetZ(temp), 0);
+				trImmediateUnitGarrison(""+1*trQuestVarGet("P"+p+"IG"));
+				trUnitSelectByQV("P"+p+"IG");
+				trUnitChangeProtoUnit("Cinematic Block");
 				xSetBool(dPlayerData, xStopDeath, false);
 				xSetInt(dPlayerData, xTeleportDue, 0);
 			}
 			else if((xGetInt(dPlayerData, xTeleportDue) == 0) && (xGetBool(dPlayerData, xPlayerActive) == true)){
 				if(trPlayerUnitCountSpecific(p, ""+CrocProto) == 0){
-					temp = xGetVector(dPlayerData, xVectorHold);
+					trQuestVarSet("P"+p+"IG", trGetNextUnitScenarioNameNumber());
+					UnitCreateV(p, "Roc", temp, 0);
 					trUnitSelectByQV("P"+p+"Unit");
-					trUnitChangeProtoUnit("Ragnorok SFX");
-					trUnitSelectByQV("P"+p+"Unit");
-					trUnitDestroy();
-					trUnitSelectClear();
-					trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
-					trUnitChangeProtoUnit("Hero Death");
-					CreateCroc(p, xsVectorGetX(temp), xsVectorGetZ(temp), 0);
+					trImmediateUnitGarrison(""+1*trQuestVarGet("P"+p+"IG"));
+					trUnitSelectByQV("P"+p+"IG");
+					trUnitChangeProtoUnit("Cinematic Block");
 				}
 			}
 			if(trPlayerUnitCountSpecific(p, ""+CrocProto) == 0){

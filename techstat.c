@@ -113,6 +113,7 @@ highFrequency
 		modifyProtounitAbsolute(""+RhinoProto, p, 1, xGetFloat(dPlayerData, xRhinoWalk));
 		modifyProtounitAbsolute(""+RhinoProto, p, 2, 22);
 		modifyProtounitAbsolute(""+GoatProto, p, 0, 6);
+		modifyProtounitAbsolute(""+GoatProto, p, 5, 0);
 		modifyProtounitAbsolute(""+CrocProto, p, 0, 5);
 		modifyProtounitAbsolute(""+CrocProto, p, 1, xGetFloat(dPlayerData, xCrocLandSpeed));
 		modifyProtounitAbsolute(""+CrocProto, p, 2, 10);

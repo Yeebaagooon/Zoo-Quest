@@ -92,6 +92,12 @@ int xSubID = 0;
 
 int dRelics = 0;
 
+int dShop = 0;
+int xPower = 0;
+int xPowerName = 0;
+int xDecorationID = 0;
+int xCost = 0;
+
 rule initialise_spy_database
 active
 highFrequency
@@ -209,6 +215,13 @@ highFrequency
 	dRelics = xInitDatabase("Relics DB");
 	xUnitID = xInitAddInt(dRelics, "unit id", -1);
 	xSubID = xInitAddInt(dRelics, "sub type", -1);
+	
+	dShop = xInitDatabase("Shop");
+	xUnitID = xInitAddInt(dShop, "shop", 0);
+	xPower = xInitAddString(dShop, "shop", "power");
+	xPowerName = xInitAddString(dShop, "shop", "power");
+	xDecorationID = xInitAddInt(dShop, "shop", 0);
+	xCost = xInitAddInt(dShop, "shop", 0);
 	
 }
 

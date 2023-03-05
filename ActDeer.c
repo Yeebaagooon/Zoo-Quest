@@ -75,17 +75,19 @@ highFrequency
 inactive
 {
 	if (trTime() > cActivationTime + 64) {
-		if(Stage == 1){
-			trCounterAddTime("poachtimer", 122, 0, "<color={PlayerColor(2)}>Poachers spawn", 32);
-			trQuestVarSet("NextPoacherSpawn", trTime()+200);
-			xsEnableRule("PoacherSpawnLoop");
-			ColouredIconChat("1,0,0", "icons\archer n throwing axeman icon 64", "<u>Watch out for poachers!</u>");
-			ColouredChat("0.9,0.3,0.3", "They can hide amongst the trees or actively scout for you.");
-			ColouredChat("0.9,0.3,0.3", "You will be attacked on sight.");
-			ColouredChat("0.9,0.3,0.3", "But can run or jump over the attacks.");
+		if(InMinigame == false){
+			if(Stage == 1){
+				trCounterAddTime("poachtimer", 122, 0, "<color={PlayerColor(2)}>Poachers spawn", 32);
+				trQuestVarSet("NextPoacherSpawn", trTime()+200);
+				xsEnableRule("PoacherSpawnLoop");
+				ColouredIconChat("1,0,0", "icons\archer n throwing axeman icon 64", "<u>Watch out for poachers!</u>");
+				ColouredChat("0.9,0.3,0.3", "They can hide amongst the trees or actively scout for you.");
+				ColouredChat("0.9,0.3,0.3", "You will be attacked on sight.");
+				ColouredChat("0.9,0.3,0.3", "But can run or jump over the attacks.");
+			}
+			xsDisableSelf();
+			xsEnableRule("ChestTimer");
 		}
-		xsDisableSelf();
-		xsEnableRule("ChestTimer");
 	}
 }
 
@@ -94,14 +96,16 @@ highFrequency
 inactive
 {
 	if (trTime() > cActivationTime + 54) {
-		int x = xGetDatabaseCount(dChests);
-		if((Stage == 1) && (x > 0)){
-			ColouredIconChat("0,1,0", "icons\special e osiris box icon 64", "<u>Look out for chests!</u>");
-			ColouredChat("0.3,0.9,0.3", "There are " + x + " unopened chests still to find.");
-			ColouredChat("0.3,0.9,0.3", "Move near a chest to open it.");
-			ColouredChat("0.3,0.9,0.3", "A stat bonus is granted for the player who does this.");
+		if(InMinigame == false){
+			int x = xGetDatabaseCount(dChests);
+			if((Stage == 1) && (x > 0)){
+				ColouredIconChat("0,1,0", "icons\special e osiris box icon 64", "<u>Look out for chests!</u>");
+				ColouredChat("0.3,0.9,0.3", "There are " + x + " unopened chests still to find.");
+				ColouredChat("0.3,0.9,0.3", "Move near a chest to open it.");
+				ColouredChat("0.3,0.9,0.3", "A stat bonus is granted for the player who does this.");
+			}
+			xsDisableSelf();
 		}
-		xsDisableSelf();
 	}
 }
 
@@ -215,7 +219,7 @@ inactive
 		}
 		for(p=1 ; < cNumberNonGaiaPlayers){
 			xSetPointer(dPlayerData, p);
-			if((playerIsPlaying(p) == false) && (xGetBool(dPlayerData, xPlayerActive) == true)){
+			if((playerIsPlaying(p) == false) && (xGetBool(dPlayerData, xPlayerActive) == true) && (xGetBool(dPlayerData, xPlayerDead) == false)){
 				trUnitSelectByQV("P"+p+"Unit");
 				trUnitChangeProtoUnit("Ragnorok SFX");
 				trUnitSelectByQV("P"+p+"Unit");
@@ -552,27 +556,24 @@ highFrequency
 			xSetPointer(dPlayerData, p);
 			if((xGetInt(dPlayerData, xTeleportDue) == 1) && (xGetBool(dPlayerData, xPlayerActive) == true)){
 				temp = xGetVector(dPlayerData, xVectorHold);
+				trQuestVarSet("P"+p+"IG", trGetNextUnitScenarioNameNumber());
+				UnitCreateV(p, "Roc", temp, 0);
 				trUnitSelectByQV("P"+p+"Unit");
-				trUnitChangeProtoUnit("Ragnorok SFX");
-				trUnitSelectByQV("P"+p+"Unit");
-				trUnitDestroy();
-				trUnitSelectClear();
-				trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
-				trUnitChangeProtoUnit("Hero Death");
-				CreateGazelle(p, xsVectorGetX(temp), xsVectorGetZ(temp), 0);
+				trImmediateUnitGarrison(""+1*trQuestVarGet("P"+p+"IG"));
+				trUnitSelectByQV("P"+p+"IG");
+				trUnitChangeProtoUnit("Cinematic Block");
 				xSetBool(dPlayerData, xStopDeath, false);
 				xSetInt(dPlayerData, xTeleportDue, 0);
 			}
 			else if((xGetInt(dPlayerData, xTeleportDue) == 0) && (xGetBool(dPlayerData, xPlayerActive) == true)){
 				if(trPlayerUnitCountSpecific(p, ""+GazelleProto) == 0){
 					temp = xGetVector(dPlayerData, xVectorHold);
+					trQuestVarSet("P"+p+"IG", trGetNextUnitScenarioNameNumber());
+					UnitCreateV(p, "Roc", temp, 0);
 					trUnitSelectByQV("P"+p+"Unit");
-					trUnitChangeProtoUnit("Ragnorok SFX");
-					trUnitSelectByQV("P"+p+"Unit");
-					trUnitDestroy();
-					trUnitSelectClear();
-					trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
-					trUnitChangeProtoUnit("Hero Death");
+					trImmediateUnitGarrison(""+1*trQuestVarGet("P"+p+"IG"));
+					trUnitSelectByQV("P"+p+"IG");
+					trUnitChangeProtoUnit("Cinematic Block");
 					CreateGazelle(p, xsVectorGetX(temp), xsVectorGetZ(temp), 0);
 				}
 			}

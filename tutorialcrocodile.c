@@ -127,6 +127,8 @@ inactive
 			xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
 			xSetInt(dPlayerData, xCrocSprintRechargeTimer, trTime());
 			xSetInt(dPlayerData, xCrocSprintRechargeTime, xGetInt(dPlayerData, xCrocSprintRechargeTime)/4);
+			playSound("\xpack\xcinematics\6_a\music.mp3");
+			//For act 5 = cinematics\16_in\music.mp3
 			if(trCurrentPlayer() == p){
 				trCounterAddTime("cdtutorial", -100, -200, "<color={PlayerColor("+p+")}>Swim to the first island.", -1);
 			}
@@ -381,7 +383,7 @@ inactive
 					}
 				}
 				else{
-					debugLog("Sprint not ready, wait " + (xGetInt(dPlayerData, xCrocSprintRechargeTimer)-trTime()) + " seconds!");
+					ColouredChatToPlayer(p, "1,0,0" ,"Sprint not ready, wait " + (xGetInt(dPlayerData, xCrocSprintRechargeTimer)-trTime()) + " seconds!");
 					if(trCurrentPlayer() == p){
 						playSound("cantdothat.wav");
 					}
@@ -537,7 +539,6 @@ inactive
 			}
 		}
 		if(trPlayerResourceCount(p, "Food") > 0){
-			debugLog("Food");
 			trPlayerGrantResources(p, "Food", -100000);
 			if(xGetInt(dPlayerData, xRelics) > 1){
 				trUnitSelectByQV("P"+p+"Unit");

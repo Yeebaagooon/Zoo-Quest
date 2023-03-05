@@ -634,6 +634,47 @@ void ToggleCharge(int p = 0){
 	}
 }
 
+void SpawnShop(string powertechname = "", string powerdispname = "", int costofpower = 1){
+	int temp = 0;
+	int firstunit = 0;
+	int num = 1;
+	while(num > 0){
+		trQuestVarSetFromRand("x", 0, 126);
+		trQuestVarSetFromRand("z", 0, 126);
+		firstunit = trGetNextUnitScenarioNameNumber();
+		trQuestVarSetFromRand("temph",0,360,true);
+		UnitCreate(0, "Cinematic Block", 2*trQuestVarGet("x"),2*trQuestVarGet("z"), 1*trQuestVarGet("temph"));
+		if((trGetTerrainType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainType("IceA")) && (trGetTerrainSubType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainSubType("IceA"))){
+			if(trCountUnitsInArea(""+firstunit, 0, "Obelisk", 20) == 0){
+				temp = trGetNextUnitScenarioNameNumber();
+				UnitCreate(0, "Cinematic Block", 2*trQuestVarGet("x"),2*trQuestVarGet("z"), 1*trQuestVarGet("temph"));
+				trUnitSelectClear();
+				trUnitSelect(""+firstunit);
+				trUnitChangeProtoUnit("Obelisk");
+				trUnitSelectClear();
+				trUnitSelect(""+firstunit);
+				trUnitSetAnimationPath("2,0,0,0,0,0");
+				trUnitSelectClear();
+				trUnitSelect(""+temp);
+				trUnitChangeProtoUnit("Spy Eye");
+				trUnitSelectClear();
+				trUnitSelect(""+temp);
+				trMutateSelected(kbGetProtoUnitID("Guardian XP"));
+				trUnitSelectClear();
+				trUnitSelect(""+temp);
+				trSetScale(0);
+				xAddDatabaseBlock(dShop, true);
+				xSetInt(dShop, xUnitID, firstunit);
+				xSetString(dShop, xPower, powerdispname);
+				xSetString(dShop, xPowerName, powertechname);
+				xSetInt(dShop, xDecorationID, temp);
+				xSetInt(dShop, xCost, costofpower);
+				num = 0;
+			}
+		}
+	}
+}
+
 void CrocGrow(int p = 0){
 	xSetPointer(dPlayerData, p);
 	xSetInt(dPlayerData, xCrocSize, xGetInt(dPlayerData, xCrocSize)+1);
@@ -694,5 +735,6 @@ void CrocGrow(int p = 0){
 	}
 	if(xGetInt(dPlayerData, xCrocSize) == 12){
 		ColouredIconChatToPlayer(p, "1,0,0", "icons\animal crocodile icon 64", "You have become an infamous man eater!");
+		ColouredIconChatToPlayer(p, "1,0,0", "icons\animal crocodile icon 64", "The world's top poachers are coming for you.");
 	}
 }

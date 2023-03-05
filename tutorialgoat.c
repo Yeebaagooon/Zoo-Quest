@@ -123,6 +123,7 @@ inactive
 		refreshPassability();
 		uiZoomToProto(""+GoatProto);
 		uiLookAtProto(""+GoatProto);
+		playSound("\xpack\xcinematics\2_in\music.mp3");
 		xsDisableSelf();
 	}
 }
@@ -345,6 +346,48 @@ inactive
 								if(trCurrentPlayer() == p){
 									playSound("attackwarning.wav");
 									trMessageSetText("Poachers are converging on your position!", 6000);
+								}
+							}
+						}
+					}
+				}
+				if(xGetDatabaseCount(dRelics) > 0){
+					for(n = xGetDatabaseCount(dRelics); > 0){
+						xDatabaseNext(dRelics);
+						if(trCountUnitsInArea(""+xGetInt(dRelics, xUnitID),p,""+GoatProto, 5) > 0){
+							//Interracting with relic
+							xUnitSelect(dRelics, xUnitID);
+							trUnitChangeProtoUnit("Arkantos God Out");
+							xUnitSelect(dRelics, xUnitID);
+							trUnitSetAnimationPath("0,1,1,1,0,0,0");
+							xUnitSelect(dRelics, xSubID);
+							trUnitDestroy();
+							xFreeDatabaseBlock(dRelics);
+							SpawnRelic(1);
+							xSetInt(dPlayerData, xRelics, xGetInt(dPlayerData, xRelics)+1);
+							if(trCurrentPlayer() == p){
+								playSound("relicselect.wav");
+							}
+						}
+					}
+				}
+				if(xGetDatabaseCount(dShop) > 0){
+					for(n = xGetDatabaseCount(dShop); > 0){
+						xDatabaseNext(dShop);
+						if(trCountUnitsInArea(""+xGetInt(dShop, xUnitID),p,""+GoatProto, 5) > 0){
+							//Interracting with shop
+							if(xGetInt(dPlayerData, xRelics) >= xGetInt(dShop, xCost)){
+								xSetInt(dPlayerData, xRelics, xGetInt(dPlayerData, xRelics)-xGetInt(dShop, xCost));
+								trTechGodPower(p, xGetString(dShop, xPowerName), 1);
+								if(trCurrentPlayer() == p){
+									playSound("tributereceived.wav");
+									playSound("\cinematics\24_in\magic.mp3");
+								}
+							}
+							else{
+								if(trCurrentPlayer() == p){
+									trMessageSetText("To purchase " + xGetString(dShop, xPower) + " - you need " + xGetInt(dShop, xCost) + " relics.", 6000);
+									playSound("cantdothat.wav");
 								}
 							}
 						}

@@ -1839,6 +1839,10 @@ void createGoatArea(){
 			}
 		}
 	}
+	SpawnShop("Vision", "vision", iModulo(2,trTime())+1);
+	//SpawnShop("Sandstorm", "shifting sands", iModulo(3,trTime())+2);
+	SpawnShop("Vortex", "vortex", iModulo(3,trTime())+2);
+	SpawnShop("Bolt", "bolt", iModulo(4,trTime())+3);
 	refreshPassability();
 	int templeSafeArea = trGetNextUnitScenarioNameNumber();
 	//deployCluster(2.0*centrePosX, 2.0*centrePosZ, "Temple Underworld", 0, 1, 20.0, true);

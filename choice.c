@@ -46,44 +46,50 @@ inactive
 				xSetPointer(dPlayerData, p);
 				xSetVector(dPlayerData, xVectorHold, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
 				xSetInt(dPlayerData, xTeleportDue, 1);
-				trUnitSelectByQV("P"+p+"Unit");
-				trUnitDestroy();
-				xUnitSelect(dPlayerData, xSpyID);
-				trUnitDestroy();
-				xUnitSelect(dPlayerData, xPlayerUnitID);
-				trUnitDestroy();
 				trChatSendToPlayer(0, p, "Debug TP you should be player " + xGetPointer(dPlayerData));
 				if(Stage == 1){
-					trQuestVarSet("P"+p+"Unit", trGetNextUnitScenarioNameNumber());
-					UnitCreate(p, ""+GazelleProto, 2*xsVectorGetX(StageVector)+7,2*xsVectorGetZ(StageVector)+10, 0);
+					trQuestVarSet("P"+p+"IG", trGetNextUnitScenarioNameNumber());
+					UnitCreate(p, "Roc", 2*xsVectorGetX(StageVector)+7,2*xsVectorGetZ(StageVector)+10, 0);
 					trUnitSelectByQV("P"+p+"Unit");
-					trSetSelectedScale(0,1,0);
-					trUnitSelectByQV("P"+p+"Unit");
-					spyEffect(kbGetProtoUnitID("Gazelle"), 0, xsVectorSet(dPlayerData,xSpyID,p), vector(1,1,1));
+					trImmediateUnitGarrison(""+1*trQuestVarGet("P"+p+"IG"));
+					trUnitSelectByQV("P"+p+"IG");
+					trUnitChangeProtoUnit("Cinematic Block");
 					if(trCurrentPlayer() == p){
 						uiZoomToProto(""+GazelleProto);
 						uiLookAtProto(""+GazelleProto);
 					}
 				}
 				if(Stage == 2){
-					trQuestVarSet("P"+p+"Unit", trGetNextUnitScenarioNameNumber());
-					CreateRhino(p, 2*xsVectorGetX(StageVector)+2,2*xsVectorGetZ(StageVector)+2, 0);
+					trQuestVarSet("P"+p+"IG", trGetNextUnitScenarioNameNumber());
+					UnitCreate(p, "Roc", 2*xsVectorGetX(StageVector)+2,2*xsVectorGetZ(StageVector)+2, 0);
+					trUnitSelectByQV("P"+p+"Unit");
+					trImmediateUnitGarrison(""+1*trQuestVarGet("P"+p+"IG"));
+					trUnitSelectByQV("P"+p+"IG");
+					trUnitChangeProtoUnit("Cinematic Block");
 					if(trCurrentPlayer() == p){
 						uiZoomToProto(""+RhinoProto);
 						uiLookAtProto(""+RhinoProto);
 					}
 				}
 				if(Stage == 3){
-					trQuestVarSet("P"+p+"Unit", trGetNextUnitScenarioNameNumber());
-					CreateGoat(p, 2*xsVectorGetX(StageVector)+2,2*xsVectorGetZ(StageVector)+2, 0);
+					trQuestVarSet("P"+p+"IG", trGetNextUnitScenarioNameNumber());
+					UnitCreate(p, "Roc", 2*xsVectorGetX(StageVector)+2,2*xsVectorGetZ(StageVector)+2, 0);
+					trUnitSelectByQV("P"+p+"Unit");
+					trImmediateUnitGarrison(""+1*trQuestVarGet("P"+p+"IG"));
+					trUnitSelectByQV("P"+p+"IG");
+					trUnitChangeProtoUnit("Cinematic Block");
 					if(trCurrentPlayer() == p){
 						uiZoomToProto(""+GoatProto);
 						uiLookAtProto(""+GoatProto);
 					}
 				}
 				if(Stage == 4){
-					trQuestVarSet("P"+p+"Unit", trGetNextUnitScenarioNameNumber());
-					CreateCroc(p, 2*xsVectorGetX(StageVector)+2,2*xsVectorGetZ(StageVector)+2, 0);
+					trQuestVarSet("P"+p+"IG", trGetNextUnitScenarioNameNumber());
+					UnitCreate(p, "Roc", 2*xsVectorGetX(StageVector)+2,2*xsVectorGetZ(StageVector)+2, 0);
+					trUnitSelectByQV("P"+p+"Unit");
+					trImmediateUnitGarrison(""+1*trQuestVarGet("P"+p+"IG"));
+					trUnitSelectByQV("P"+p+"IG");
+					trUnitChangeProtoUnit("Cinematic Block");
 					if(trCurrentPlayer() == p){
 						uiZoomToProto(""+CrocProto);
 						uiLookAtProto(""+CrocProto);

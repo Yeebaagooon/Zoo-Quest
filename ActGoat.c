@@ -41,7 +41,9 @@ inactive
 		}
 		ShrinesMax = trPlayerUnitCountSpecific(0, "Shrine");
 		trQuestVarSet("NextPoacherSpawn", trTime()+220);
-		ShrineTarget = ShrinesMax-2;
+		ShrineTarget = ShrinesMax-2-PlayersActive;
+		SpawnRelic(PlayersActive*2+1);
+		trDelayedRuleActivation("GoatRelicChat");
 	}
 }
 
@@ -87,6 +89,23 @@ highFrequency
 	}
 }
 
+rule GoatRelicChat
+highFrequency
+inactive
+{
+	if (trTime() > cActivationTime + 24) {
+		if(InMinigame == false){
+			if(Stage == 3){
+				ColouredIconChat("1,1,0", "icons\icon unit relic", "<u>Look out for relics!</u>");
+				ColouredChat("0.9,0.9,0.3", "Interract with 'W' to collect them.");
+				ColouredIconChat("0.9,0.9,0.3", "icons\world obelisk icon 64", "You can then spend them on god powers at obelisks.");
+				ColouredChat("0.9,0.9,0.3", "Click an obelsik to find what it sells, use interract to purchase.");
+			}
+			xsDisableSelf();
+		}
+	}
+}
+
 rule GoatActLoops
 highFrequency
 inactive
@@ -99,8 +118,19 @@ inactive
 		if(xGetDatabaseCount(dMissiles) > 0){
 			DoMissile();
 		}
+		for(p = 1; < cNumberNonGaiaPlayers){
+			trCounterAbort("GoatC"+p);
+		}
 		if(InMinigame == false){
 			trSetCounterDisplay("<color={PlayerColor(0)}>Shrines Active: " + ShrinesGot);
+			for(p = 1; < cNumberNonGaiaPlayers){
+				xSetPointer(dPlayerData, p);
+				if(trCurrentPlayer() == p){
+					if(xGetInt(dPlayerData, xRelics) > 0){
+						trCounterAddTime("GoatC"+p, -100, -10, "</color>Relics: " + 1*xGetInt(dPlayerData, xRelics), -1);
+					}
+				}
+			}
 		}
 		if(InMinigame == true){
 			trSetCounterDisplay("<color={PlayerColor(" + GreenText() + ")}>Squares sunk: " + SquaresDown + "/6");
@@ -160,7 +190,7 @@ inactive
 					}
 				}
 			}
-			if((playerIsPlaying(p) == false) && (xGetBool(dPlayerData, xPlayerActive) == true)){
+			if((playerIsPlaying(p) == false) && (xGetBool(dPlayerData, xPlayerActive) == true) && (xGetBool(dPlayerData, xPlayerDead) == false)){
 				trUnitSelectByQV("P"+p+"Unit");
 				trUnitChangeProtoUnit("Ragnorok SFX");
 				trUnitSelectByQV("P"+p+"Unit");
@@ -314,6 +344,15 @@ inactive
 					setSelectedUnitHeadingDegress(temp);
 				}
 			}
+		}
+		if(xGetDatabaseCount(dShop) > 0){
+			xDatabaseNext(dShop);
+			xUnitSelect(dShop,xUnitID);
+			if (trUnitIsSelected()) {
+				uiClearSelection();
+				trMessageSetText("Purchase " + xGetString(dShop, xPower) + " - Cost: " + xGetInt(dShop, xCost), 6000);
+			}
+			trUnitSelectClear();
 		}
 		
 	}
@@ -594,7 +633,6 @@ highFrequency
 		trChangeTerrainHeight(xsVectorGetX(StageVector)-10,xsVectorGetZ(StageVector)-10,xsVectorGetX(StageVector)+10,xsVectorGetZ(StageVector)+10,9,false);
 		trPaintTerrain(xsVectorGetX(StageVector)-10,xsVectorGetZ(StageVector)-10,xsVectorGetX(StageVector)+10,xsVectorGetZ(StageVector)+10,0,51);
 		refreshPassability();
-		debugLog("Cols left:" + xGetDatabaseCount(dInterractables));
 		for(n = xGetDatabaseCount(dInterractables) ; > 0){
 			xDatabaseNext(dInterractables);
 			if(xGetInt(dInterractables, xType) == 1){
@@ -609,14 +647,12 @@ highFrequency
 			if((xGetInt(dPlayerData, xTeleportDue) == 1) && (xGetBool(dPlayerData, xPlayerActive) == true)){
 				temp = xGetVector(dPlayerData, xVectorHold);
 				debugLog("Path 1");
+				trQuestVarSet("P"+p+"IG", trGetNextUnitScenarioNameNumber());
+				UnitCreateV(p, "Roc", temp, 0);
 				trUnitSelectByQV("P"+p+"Unit");
-				trUnitChangeProtoUnit("Ragnorok SFX");
-				trUnitSelectByQV("P"+p+"Unit");
-				trUnitDestroy();
-				trUnitSelectClear();
-				trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
-				trUnitChangeProtoUnit("Hero Death");
-				CreateGoat(p, xsVectorGetX(temp), xsVectorGetZ(temp), 0);
+				trImmediateUnitGarrison(""+1*trQuestVarGet("P"+p+"IG"));
+				trUnitSelectByQV("P"+p+"IG");
+				trUnitChangeProtoUnit("Cinematic Block");
 				xSetBool(dPlayerData, xStopDeath, false);
 				xSetInt(dPlayerData, xTeleportDue, 0);
 			}
@@ -624,14 +660,12 @@ highFrequency
 				if(trPlayerUnitCountSpecific(p, ""+GoatProto) == 0){
 					debugLog("Path 2");
 					temp = xGetVector(dPlayerData, xVectorHold);
+					trQuestVarSet("P"+p+"IG", trGetNextUnitScenarioNameNumber());
+					UnitCreateV(p, "Roc", temp, 0);
 					trUnitSelectByQV("P"+p+"Unit");
-					trUnitChangeProtoUnit("Ragnorok SFX");
-					trUnitSelectByQV("P"+p+"Unit");
-					trUnitDestroy();
-					trUnitSelectClear();
-					trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
-					trUnitChangeProtoUnit("Hero Death");
-					CreateGoat(p, xsVectorGetX(temp), xsVectorGetZ(temp), 0);
+					trImmediateUnitGarrison(""+1*trQuestVarGet("P"+p+"IG"));
+					trUnitSelectByQV("P"+p+"IG");
+					trUnitChangeProtoUnit("Cinematic Block");
 				}
 			}
 			if(trPlayerUnitCountSpecific(p, ""+GoatProto) == 0){
@@ -672,13 +706,15 @@ rule GoatPoacherTimer
 highFrequency
 inactive
 {
-	if (trTime() > 1*trQuestVarGet("NextPoacherSpawn")) {
-		if(Stage == 3){
-			trQuestVarSet("NextPoacherSpawn", trTime()+60+iModulo(140, trTimeMS()));
-			trQuestVarSetFromRand("temp", 1, 2);
-			SpawnGoatPoacher(1*trQuestVarGet("temp"));
-			trOverlayText("Poachers Spawning...", 5.0,-1,-1,600);
-			playSound("\cinematics\04_in\armyarrive.wav");
+	if(InMinigame == false){
+		if (trTime() > 1*trQuestVarGet("NextPoacherSpawn")) {
+			if(Stage == 3){
+				trQuestVarSet("NextPoacherSpawn", trTime()+60+iModulo(140, trTimeMS()));
+				trQuestVarSetFromRand("temp", 1, 2);
+				SpawnGoatPoacher(1*trQuestVarGet("temp"));
+				trOverlayText("Poachers Spawning...", 5.0,-1,-1,600);
+				playSound("\cinematics\04_in\armyarrive.wav");
+			}
 		}
 	}
 }
@@ -756,6 +792,7 @@ highFrequency
 	xsDisableRule("GoatJump");
 	xsDisableRule("GoatJumpEnd");
 	xsDisableRule("ExtraJumpTech");
+	xsDisableRule("GoatRelicChat");
 	for(p=1 ; < cNumberNonGaiaPlayers){
 		xSetPointer(dPlayerData, p);
 		trUnitSelectByQV("P"+p+"Unit");
@@ -766,6 +803,7 @@ highFrequency
 		trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
 		trUnitChangeProtoUnit("Hero Death");
 		trCounterAbort("stamina"+p);
+		trCounterAbort("GoatC"+p);
 	}
 	trClearCounterDisplay();
 	xsEnableRule("ScoreScreenStart");

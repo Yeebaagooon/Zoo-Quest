@@ -25,10 +25,6 @@ and of course the cost needs to be set to 0
 since kbGetBlockPosition requires the unit name
 instead of the id
 
-
-FIX PAINT TREES SO LIKE A CHECKBOARD - actually ok for stage one
-
-
 [COMMENT]
 Cinematic
 Messages in stage 1 before poachers after chest for objectives
@@ -36,21 +32,19 @@ Messages in stage 1 before poachers after chest for objectives
 
 [BUG LIST]
 skul062
+tile for minigame is *2 for vector
 
-MG3 that disturbing terrain glitch
-?HP regen overlap
-Minigame S4 revives dead players
+S3 super
+S4 uber
 
-pelt error
 
 //DELETE
 */
 
 //---Controls
 //\Yeebaagooon\Zoo Quest\Test sound.mp3
-int QuickStart = 4;
-bool LOS = false;
-//false = reveal
+int QuickStart = 3;
+bool LOS = true;
 int Stage = 0;
 string MapVersion = "Test Version";
 string MapName = "Zoo Quest.xs";

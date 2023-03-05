@@ -63,16 +63,18 @@ void ProcessRhinoFence(int count = 5){
 		}
 	}
 	//trClearCounterDisplay();
-	if(FencesDone < 8){
-		trSetCounterDisplay("<color={PlayerColor(2)}>Fencing destroyed: "+FencesDone+"/8");
-	}
-	else{
-		trSetCounterDisplay("<color={PlayerColor(3)}>Fencing destroyed: "+FencesDone+"/8");
-		playSoundCustom("xnew_objective.wav", "\Yeebaagooon\Zoo Quest\Skillpoint.mp3");
-		if(xGetDatabaseCount(dPoachers) == 0){
-			trQuestVarModify("RhinoBonuses", "+", 2);
+	if(InMinigame == false){
+		if(FencesDone < 8){
+			trSetCounterDisplay("<color={PlayerColor(2)}>Fencing destroyed: "+FencesDone+"/8");
 		}
-		xsEnableRule("RhinoPartTwo");
+		else{
+			trSetCounterDisplay("<color={PlayerColor(3)}>Fencing destroyed: "+FencesDone+"/8");
+			playSoundCustom("xnew_objective.wav", "\Yeebaagooon\Zoo Quest\Skillpoint.mp3");
+			if(xGetDatabaseCount(dPoachers) == 0){
+				trQuestVarModify("RhinoBonuses", "+", 2);
+			}
+			xsEnableRule("RhinoPartTwo");
+		}
 	}
 }
 
@@ -108,34 +110,36 @@ rule RhinoPartTwo
 highFrequency
 inactive
 {
-	if (trTime() > cActivationTime + 4) {
-		PoachersTarget = xsMax(PlayersActive*3,5);
-		if(PoachersDead > PoachersTarget){
-			PoachersTarget = PoachersDead+cNumberNonGaiaPlayers;
+	if(InMinigame == false){
+		if (trTime() > cActivationTime + 4) {
+			PoachersTarget = xsMax(PlayersActive*3,5);
+			if(PoachersDead > PoachersTarget){
+				PoachersTarget = PoachersDead+cNumberNonGaiaPlayers;
+			}
+			trSetCounterDisplay("<color={PlayerColor(2)}>Poachers killed: "+PoachersDead+"/" + PoachersTarget);
+			ActPart = 2;
+			trOverlayText("Poachers Spawning...", 5.0,-1,-1,600);
+			SpawnRhinoPoacher(2);
+			playSound("\cinematics\04_in\armyarrive.wav");
+			xsDisableSelf();
+			trQuestVarSet("NextPoacherSpawn", trTime()+30);
+			xsEnableRule("RhinoPoacherSpawnLoop");
+			paintCircle(xsVectorGetX(EndPoint),xsVectorGetZ(EndPoint),8,LeaveTerrain);
+			trUnitSelectClear();
+			trUnitSelect(""+FlagUnitID);
+			trMutateSelected(kbGetProtoUnitID("Flag"));
+			trUnitSelectClear();
+			trUnitSelect(""+FlagUnitID);
+			trUnitSetAnimationPath("0,0,0,0,0,0");
+			trUnitSelectClear();
+			trUnitSelect(""+FlagSFXID);
+			trMutateSelected(kbGetProtoUnitID("Osiris Box Glow"));
+			trUnitSelectClear();
+			trUnitSelect(""+FlagSFXID);
+			trUnitSetAnimationPath("0,0,1,0,0,0");
+			trDelayedRuleActivation("RhinoEndZoneSee");
+			trDelayedRuleActivation("RhinoLeave");
 		}
-		trSetCounterDisplay("<color={PlayerColor(2)}>Poachers killed: "+PoachersDead+"/" + PoachersTarget);
-		ActPart = 2;
-		trOverlayText("Poachers Spawning...", 5.0,-1,-1,600);
-		SpawnRhinoPoacher(2);
-		playSound("\cinematics\04_in\armyarrive.wav");
-		xsDisableSelf();
-		trQuestVarSet("NextPoacherSpawn", trTime()+30);
-		xsEnableRule("RhinoPoacherSpawnLoop");
-		paintCircle(xsVectorGetX(EndPoint),xsVectorGetZ(EndPoint),8,LeaveTerrain);
-		trUnitSelectClear();
-		trUnitSelect(""+FlagUnitID);
-		trMutateSelected(kbGetProtoUnitID("Flag"));
-		trUnitSelectClear();
-		trUnitSelect(""+FlagUnitID);
-		trUnitSetAnimationPath("0,0,0,0,0,0");
-		trUnitSelectClear();
-		trUnitSelect(""+FlagSFXID);
-		trMutateSelected(kbGetProtoUnitID("Osiris Box Glow"));
-		trUnitSelectClear();
-		trUnitSelect(""+FlagSFXID);
-		trUnitSetAnimationPath("0,0,1,0,0,0");
-		trDelayedRuleActivation("RhinoEndZoneSee");
-		trDelayedRuleActivation("RhinoLeave");
 	}
 }
 
@@ -205,7 +209,7 @@ inactive
 				//Charge effects
 				xSetFloat(dPlayerData, xRhinoChargeTime, xGetFloat(dPlayerData, xRhinoChargeTime)-timediff);
 			}
-			if((playerIsPlaying(p) == false) && (xGetBool(dPlayerData, xPlayerActive) == true)){
+			if((playerIsPlaying(p) == false) && (xGetBool(dPlayerData, xPlayerActive) == true) && (xGetBool(dPlayerData, xPlayerDead) == false)){
 				trUnitSelectByQV("P"+p+"Unit");
 				trUnitChangeProtoUnit("Ragnorok SFX");
 				trUnitSelectByQV("P"+p+"Unit");
@@ -612,16 +616,12 @@ highFrequency
 		}
 		if((xGetInt(dPlayerData, xTeleportDue) == 1) && (xGetBool(dPlayerData, xPlayerActive) == true)){
 			temp = xGetVector(dPlayerData, xVectorHold);
+			trQuestVarSet("P"+p+"IG", trGetNextUnitScenarioNameNumber());
+			UnitCreateV(p, "Roc", temp, 0);
 			trUnitSelectByQV("P"+p+"Unit");
-			trUnitChangeInArea(p,p,""+RhinoProto, "Rocket", 999);
-			trUnitSelectByQV("P"+p+"Unit");
-			trUnitChangeProtoUnit("Ragnorok SFX");
-			trUnitSelectByQV("P"+p+"Unit");
-			trUnitDestroy();
-			trUnitSelectClear();
-			trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
-			trUnitChangeProtoUnit("Hero Death");
-			CreateRhino(p, xsVectorGetX(temp), xsVectorGetZ(temp), 0);
+			trImmediateUnitGarrison(""+1*trQuestVarGet("P"+p+"IG"));
+			trUnitSelectByQV("P"+p+"IG");
+			trUnitChangeProtoUnit("Cinematic Block");
 		}
 		xSetBool(dPlayerData, xStopDeath, false);
 		xSetInt(dPlayerData, xTeleportDue, 0);

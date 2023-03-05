@@ -263,12 +263,12 @@ inactive
 			//failed main goal
 			trQuestVarSet("temp", CrocProgress);
 			StageScore = StageRequirement*(trQuestVarGet("temp")/CrocTarget);
-			StageScore = StageScore-8;
+			StageScore = StageScore-6;
 			debugLog("Fail, score set to " + StageScore);
 		}
 		//[CALCULATION PENALTIES]
 		
-		StageScore = StageScore - (PlayersDead*7);
+		StageScore = StageScore - (PlayersDead*6);
 		//[ADD ON BONUSES, ADD EXTRAS FOR WEIGHTING AND EXTRASGOT IF A PLAYER HAS IT]
 		//[CHESTS, UP TO 5 EXTRA POACHER DEATHS,]
 		Extras = Extras + ChestsTotal*2;
@@ -686,6 +686,7 @@ inactive
 			xSetBool(dPlayerData, xStopDeath, false);
 			xSetVector(dPlayerData, xVectorHold, vector(0,0,0));
 			xSetInt(dPlayerData, xTeleportDue, 0);
+			xSetInt(dPlayerData, xRelics, 0);
 		}
 	}
 	xResetDatabase(dTemp);
