@@ -528,7 +528,7 @@ inactive
 		xsEnableRule("TutorialTerrainCrocodile");
 	}
 	if(Stage == 5){
-		xsEnableRule("TempEndGame");
+		xsEnableRule("TutorialTerrainChicken");
 	}
 	trLetterBox(false);
 	trFadeOutAllSounds(3);

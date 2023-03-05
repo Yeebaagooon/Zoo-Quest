@@ -382,7 +382,12 @@ inactive
 		if(anim == 9){
 			trUnitSelectClear();
 			trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
-			trUnitOverrideAnimation(2, 0, true, true, -1, 0);
+			if(Stage != 5){
+				trUnitOverrideAnimation(2, 0, true, true, -1, 0);
+			}
+			else{
+				trUnitOverrideAnimation(3, 0, true, true, -1, 0);
+			}
 			if(xGetBool(dPlayerData, xCharge) == true){
 				ToggleCharge(p);
 				//ColouredIconChatToPlayer(p, "1,1,0", "icons\icon object stat hit point", "Stamina = " + 1*xGetFloat(dPlayerData, xRhinoChargeTime));
@@ -393,6 +398,13 @@ inactive
 			trUnitSelectClear();
 			trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
 			trUnitOverrideAnimation(24, 0, true, true, -1, 0);
+			//or 18 birth 24 flail
+		}
+		if(anim == 1){
+			//chicken building
+			trUnitSelectClear();
+			trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+			trUnitOverrideAnimation(2, 0, true, true, -1, 0);
 			//or 18 birth 24 flail
 		}
 		if(Stage > 1){

@@ -78,7 +78,7 @@ inactive
 	trStringQuestVarSet("Question15", "Deer can be white");
 	trStringQuestVarSet("Question16", "Reindeer can be found in Antarctica");
 	trQuestVarSet("MaxQNumber", 20);
-	trStringQuestVarSet("Question17", "The word rhinoceros is a combination of two Greek words – 'rhino' and 'ceros'");
+	trStringQuestVarSet("Question17", "The word rhinoceros is a combination of two Greek words, 'rhino' and 'ceros'");
 	trStringQuestVarSet("Question18", "Rhino horns are made of bone");
 	trStringQuestVarSet("Question19", "Deer antlers are made of bone");
 	trStringQuestVarSet("Question20", "A group of Rhinos is called a herd");
@@ -449,6 +449,23 @@ void hotkeyAbility(int ability = 0) {
 				}
 			}
 		}
+		if(trPlayerUnitCountSpecific(xGetPointer(dPlayerData), ""+ChickenProto) > 0){
+			switch(ability)
+			{
+				case EVENT_BUILD_HOUSE:
+				{
+					uiSetProtoCursor("Tower", true);
+				}
+				case EVENT_BUILD_GRANARY:
+				{
+					uiSetProtoCursor("Granary", true);
+				}
+				case EVENT_BUILD_STOREHOUSE:
+				{
+					uiSetProtoCursor("Storehouse", true);
+				}
+			}
+		}
 	}
 	xSetPointer(dPlayerData, old);
 }
@@ -563,6 +580,25 @@ void CreateCroc(int p = 1, int x = 1, int z = 1, int heading = 0){
 	xUnitSelect(dPlayerData, xSpyID);
 	float scale = 0.25*xGetInt(dPlayerData, xCrocSize)+0.75;
 	trSetScale(scale);
+	/*
+	vector test = kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit"));
+	test = test + HeadingToVector(heading);
+	test = test + HeadingToVector(heading);
+	UnitCreate(p, "Dwarf", xsVectorGetX(test),xsVectorGetZ(test), 0);
+	*/
+}
+
+void CreateChicken(int p = 1, int x = 1, int z = 1, int heading = 0){
+	trQuestVarSet("P"+p+"Unit", trGetNextUnitScenarioNameNumber());
+	UnitCreate(p, ""+ChickenProto, x, z, heading);
+	trUnitSelectByQV("P"+p+"Unit");
+	trSetSelectedScale(0,0,0);
+	trUnitSelectByQV("P"+p+"Unit");
+	spyEffect(kbGetProtoUnitID("Chicken"), 0, xsVectorSet(dPlayerData,xSpyID,p), vector(2,2,2));
+	//spyEffect(kbGetProtoUnitID("Cinematic Block"), 0, xsVectorSet(dPlayerData,xSecondSpy,p), vector(1,1,1));
+	xSetPointer(dPlayerData, p);
+	xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
+	xSetBool(dPlayerData, xStopDeath, false);
 	/*
 	vector test = kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit"));
 	test = test + HeadingToVector(heading);

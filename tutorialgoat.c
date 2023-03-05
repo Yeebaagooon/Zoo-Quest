@@ -393,6 +393,30 @@ inactive
 						}
 					}
 				}
+				if(xGetDatabaseCount(dHelp) > 0){
+					for(n = xGetDatabaseCount(dHelp); > 0){
+						xDatabaseNext(dHelp);
+						if(trCountUnitsInArea(""+xGetInt(dHelp, xUnitID),p,GoatProto, 5) > 0){
+							//Interracting with milestone
+							xUnitSelect(dHelp, xUnitID);
+							trUnitChangeProtoUnit("Arkantos God Out");
+							xUnitSelect(dHelp, xUnitID);
+							trUnitSetAnimationPath("0,1,1,0,0,0,0");
+							xUnitSelect(dHelp, xSubID);
+							trUnitDestroy();
+							xFreeDatabaseBlock(dHelp);
+							if(iModulo(3, trTimeMS()) == 0){
+								PlayerChoice(p, "Choose your help", "Flare nearest relic", 54, "Flare nearest inactive shrine", 53, 10000);
+							}
+							else if(iModulo(2, trTimeMS()) == 0){
+								PlayerChoice(p, "Choose your help", "+10s minimum shrine activation time", 28, "+15s current shrine activation time", 56, 10000);
+							}
+							else{
+								PlayerChoice(p, "Choose your help", "+10s maximum shrine activation time", 55, "+15s current shrine activation time", 56, 10000);
+							}
+						}
+					}
+				}
 			}
 		}
 		if(trPlayerResourceCount(p, "Food") > 0){

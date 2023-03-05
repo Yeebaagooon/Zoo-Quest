@@ -1746,25 +1746,27 @@ void createGoatArea(){
 		UnitCreate(0, "Cinematic Block", 1*trQuestVarGet("x"),1*trQuestVarGet("z"), 0);
 		if((trGetTerrainType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainType("IceA")) && (trGetTerrainSubType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainSubType("IceA"))){
 			if((trGetTerrainType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainType("OlympusA")) && (trGetTerrainSubType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainSubType("OlympusA"))){
-				if(trCountUnitsInArea(""+currentId, 0, "Shrine", 20) == 0){
-					trUnitSelectClear();
-					trUnitSelect(""+currentId);
-					trUnitChangeProtoUnit("Shrine");
-					trUnitSelectClear();
-					trUnitSelect(""+currentId);
-					trUnitSetAnimationPath("2,0,0,0,0");
-					xAddDatabaseBlock(dInterractables, true);
-					xSetInt(dInterractables, xUnitID, currentId);
-					xSetInt(dInterractables, xType, 2);
-					xSetInt(dInterractables, xSubtype, 0);
-					xSetInt(dInterractables, xSquare1, 0);
-					shrinenum = shrinenum-1;
+				if((trGetTerrainType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainType("CliffNorseA")) && (trGetTerrainSubType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainSubType("CliffNorseA"))){
+					if(trCountUnitsInArea(""+currentId, 0, "Shrine", 20) == 0){
+						trUnitSelectClear();
+						trUnitSelect(""+currentId);
+						trUnitChangeProtoUnit("Shrine");
+						trUnitSelectClear();
+						trUnitSelect(""+currentId);
+						trUnitSetAnimationPath("2,0,0,0,0");
+						xAddDatabaseBlock(dInterractables, true);
+						xSetInt(dInterractables, xUnitID, currentId);
+						xSetInt(dInterractables, xType, 2);
+						xSetInt(dInterractables, xSubtype, 0);
+						xSetInt(dInterractables, xSquare1, 0);
+						shrinenum = shrinenum-1;
+					}
 				}
-				ABORT = ABORT+1;
-				if(ABORT >500){
-					break;
-					trChatSend(0, "ERROR SHRINE");
-				}
+			}
+			ABORT = ABORT+1;
+			if(ABORT >500){
+				break;
+				trChatSend(0, "ERROR SHRINE");
 			}
 		}
 	}
@@ -1777,26 +1779,28 @@ void createGoatArea(){
 		UnitCreate(0, "Cinematic Block", 2*trQuestVarGet("x"),2*trQuestVarGet("z"), 1*trQuestVarGet("temph"));
 		if((trGetTerrainType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainType("IceA")) && (trGetTerrainSubType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainSubType("IceA"))){
 			if((trGetTerrainType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainType("OlympusA")) && (trGetTerrainSubType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainSubType("OlympusA"))){
-				if(trCountUnitsInArea(""+currentId, 0, "Shrine", 20) == 0){
-					trUnitSelectClear();
-					trUnitSelect(""+currentId);
-					trUnitChangeProtoUnit("Runestone");
-					trUnitSelectClear();
-					trUnitSelect(""+currentId);
-					trSetScale(2);
-					xAddDatabaseBlock(dInterractables, true);
-					xSetInt(dInterractables, xUnitID, currentId);
-					xSetInt(dInterractables, xType, 3);
-					xSetInt(dInterractables, xSubtype, 0);
-					xSetInt(dInterractables, xSquare1, 0);
-					xSetInt(dInterractables, xSquare2, 0);
-					runenum = runenum-1;
+				if((trGetTerrainType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainType("CliffNorseA")) && (trGetTerrainSubType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainSubType("CliffNorseA"))){
+					if(trCountUnitsInArea(""+currentId, 0, "Shrine", 20) == 0){
+						trUnitSelectClear();
+						trUnitSelect(""+currentId);
+						trUnitChangeProtoUnit("Runestone");
+						trUnitSelectClear();
+						trUnitSelect(""+currentId);
+						trSetScale(2);
+						xAddDatabaseBlock(dInterractables, true);
+						xSetInt(dInterractables, xUnitID, currentId);
+						xSetInt(dInterractables, xType, 3);
+						xSetInt(dInterractables, xSubtype, 0);
+						xSetInt(dInterractables, xSquare1, 0);
+						xSetInt(dInterractables, xSquare2, 0);
+						runenum = runenum-1;
+					}
 				}
-				ABORT = ABORT+1;
-				if(ABORT >500){
-					break;
-					trChatSend(0, "ERROR RUNE");
-				}
+			}
+			ABORT = ABORT+1;
+			if(ABORT >500){
+				break;
+				trChatSend(0, "ERROR RUNE");
 			}
 		}
 	}
@@ -1809,34 +1813,80 @@ void createGoatArea(){
 		UnitCreate(0, "Cinematic Block", 2*trQuestVarGet("x"),2*trQuestVarGet("z"), 1*trQuestVarGet("temph"));
 		if((trGetTerrainType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainType("IceA")) && (trGetTerrainSubType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainSubType("IceA"))){
 			if((trGetTerrainType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainType("OlympusA")) && (trGetTerrainSubType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainSubType("OlympusA"))){
-				if(trCountUnitsInArea(""+currentId, 0, "Outpost", 20) == 0){
+				if((trGetTerrainType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainType("CliffNorseA")) && (trGetTerrainSubType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainSubType("CliffNorseA"))){
+					if(trCountUnitsInArea(""+currentId, 0, "Outpost", 20) == 0){
+						trUnitSelectClear();
+						trUnitSelect(""+currentId);
+						trUnitChangeProtoUnit("Spy Eye");
+						trUnitSelectClear();
+						trUnitSelect(""+currentId);
+						trMutateSelected(kbGetProtoUnitID("Outpost"));
+						trUnitSelectClear();
+						trUnitSelect(""+currentId);
+						trSetSelectedScale(1,0.4,1);
+						trUnitSelectClear();
+						trUnitSelect(""+currentId);
+						trUnitSetAnimationPath("0,1,0,0,0");
+						FloatingUnitAnimIdle("Camera", 2*trQuestVarGet("x"), 4, 2*trQuestVarGet("z"), 1*trQuestVarGet("temph"),1,1,1);
+						xAddDatabaseBlock(dInterractables, true);
+						xSetInt(dInterractables, xUnitID, currentId);
+						xSetInt(dInterractables, xType, 5);
+						xSetInt(dInterractables, xSubtype, 0);
+						xSetInt(dInterractables, xSquare1, 1*trQuestVarGet("temph"));
+						xSetInt(dInterractables, xSquare2, 1*trQuestVarGet("QVHero"));
+						camnum = camnum-1;
+					}
+				}
+			}
+			ABORT = ABORT+1;
+			if(ABORT >500){
+				break;
+				trChatSend(0, "ERROR RUNE");
+			}
+		}
+	}
+	int helpnum = xsMin(8,cNumberNonGaiaPlayers*2);
+	int temp = 0;
+	while(helpnum > 0){
+		trQuestVarSetFromRand("x", 0, 126);
+		trQuestVarSetFromRand("z", 0, 126);
+		currentId = trGetNextUnitScenarioNameNumber();
+		trQuestVarSetFromRand("temph",0,360,true);
+		UnitCreate(0, "Cinematic Block", 2*trQuestVarGet("x"),2*trQuestVarGet("z"), 1*trQuestVarGet("temph"));
+		if((trGetTerrainType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainType("IceA")) && (trGetTerrainSubType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainSubType("IceA"))){
+			if((trGetTerrainType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainType("OlympusA")) && (trGetTerrainSubType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainSubType("OlympusA"))){
+				if((trGetTerrainType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainType("CliffNorseA")) && (trGetTerrainSubType(1*trQuestVarGet("x"), 1*trQuestVarGet("z")) != getTerrainSubType("CliffNorseA"))){
+					temp = trGetNextUnitScenarioNameNumber();
+					UnitCreate(0, "Cinematic Block", 2*trQuestVarGet("x"),2*trQuestVarGet("z"), 1*trQuestVarGet("temph"));
 					trUnitSelectClear();
 					trUnitSelect(""+currentId);
 					trUnitChangeProtoUnit("Spy Eye");
 					trUnitSelectClear();
 					trUnitSelect(""+currentId);
-					trMutateSelected(kbGetProtoUnitID("Outpost"));
+					trMutateSelected(kbGetProtoUnitID("Milestone"));
 					trUnitSelectClear();
 					trUnitSelect(""+currentId);
-					trSetSelectedScale(1,0.4,1);
+					trUnitSetAnimationPath("2,0,0,0,0,0,0");
 					trUnitSelectClear();
-					trUnitSelect(""+currentId);
-					trUnitSetAnimationPath("0,1,0,0,0");
-					FloatingUnitAnimIdle("Camera", 2*trQuestVarGet("x"), 4, 2*trQuestVarGet("z"), 1*trQuestVarGet("temph"),1,1,1);
-					xAddDatabaseBlock(dInterractables, true);
-					xSetInt(dInterractables, xUnitID, currentId);
-					xSetInt(dInterractables, xType, 5);
-					xSetInt(dInterractables, xSubtype, 0);
-					xSetInt(dInterractables, xSquare1, 1*trQuestVarGet("temph"));
-					xSetInt(dInterractables, xSquare2, 1*trQuestVarGet("QVHero"));
-					camnum = camnum-1;
-				}
-				ABORT = ABORT+1;
-				if(ABORT >500){
-					break;
-					trChatSend(0, "ERROR RUNE");
+					trUnitSelect(""+temp);
+					trUnitChangeProtoUnit("Spy Eye");
+					trUnitSelectClear();
+					trUnitSelect(""+temp);
+					trMutateSelected(kbGetProtoUnitID("Vortex finish linked"));
+					trUnitSelectClear();
+					trUnitSelect(""+temp);
+					trUnitSetAnimationPath("0,1,0,0,0,0,0");
+					xAddDatabaseBlock(dHelp, true);
+					xSetInt(dHelp, xUnitID, temp);
+					xSetInt(dHelp, xSubID, currentId);
+					helpnum = helpnum-1;
 				}
 			}
+		}
+		ABORT = ABORT+1;
+		if(ABORT >500){
+			break;
+			trChatSend(0, "ERROR Mile");
 		}
 	}
 	SpawnShop("Vision", "vision", iModulo(2,trTime())+1);

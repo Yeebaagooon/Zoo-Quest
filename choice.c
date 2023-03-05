@@ -14,6 +14,8 @@ inactive
 		string stringtemp = "";
 		int p = ActionChoice;
 		int temp = 0;
+		vector dir = vector(0,0,0);
+		int closest = 100000;
 		xSetPointer(dPlayerData, p);
 		switch(ChoiceEffect)
 		{
@@ -471,8 +473,6 @@ inactive
 			case 49:
 			{
 				//flare nearest zebra
-				vector dir = vector(0,0,0);
-				int closest = 100000;
 				temp = 0;
 				for(a=xGetDatabaseCount(dEdibles) ; > 0){
 					xDatabaseNext(dEdibles);
@@ -515,6 +515,69 @@ inactive
 			{
 				//4 food
 				xSetFloat(dPlayerData, xCrocFood, xGetFloat(dPlayerData, xCrocFood)+4);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 53:
+			{
+				//flare nearest shrine
+				temp = 0;
+				for(a=xGetDatabaseCount(dInterractables) ; > 0){
+					xDatabaseNext(dInterractables);
+					if(xGetInt(dInterractables, xType) == 2){
+						if(xGetInt(dInterractables, xSubtype) == 0){
+							dir = kbGetBlockPosition(""+xGetInt(dInterractables, xUnitID));
+							if(distanceBetweenVectors(dir, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")), true) < closest){
+								closest = distanceBetweenVectors(dir, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")), true);
+								temp = xGetInt(dInterractables, xUnitID);
+							}
+						}
+					}
+				}
+				dir = kbGetBlockPosition(""+temp);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+					trMinimapFlare(p,10,dir,true);
+				}
+			}
+			case 54:
+			{
+				//flare nearest relic
+				temp = 0;
+				for(a=xGetDatabaseCount(dRelics) ; > 0){
+					xDatabaseNext(dRelics);
+					dir = kbGetBlockPosition(""+xGetInt(dRelics, xUnitID));
+					if(distanceBetweenVectors(dir, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")), true) < closest){
+						closest = distanceBetweenVectors(dir, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")), true);
+						temp = xGetInt(dRelics, xUnitID);
+					}
+				}
+				dir = kbGetBlockPosition(""+temp);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+					trMinimapFlare(p,10,dir,true);
+				}
+			}
+			case 55:
+			{
+				//Goat +10s shrine max
+				ShrineTimeMax = ShrineTimeMax+10;
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 56:
+			{
+				//Goat +15s all shrines
+				for(x = xGetDatabaseCount(dInterractables); > 0){
+					xDatabaseNext(dInterractables);
+					if(xGetInt(dInterractables, xType) == 2){
+						if(xGetInt(dInterractables, xSubtype) == 1){
+							xSetInt(dInterractables, xSquare1, xGetInt(dInterractables, xSquare1)+15);
+						}
+					}
+				}
 				if(trCurrentPlayer() == p){
 					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
 				}

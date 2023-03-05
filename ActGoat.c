@@ -151,7 +151,7 @@ inactive
 							trUnitChangeProtoUnit("Hero Death");
 							UnitCreate(0, "Tartarian Gate Flame", trVectorQuestVarGetX("P"+p+"PosMG"),trVectorQuestVarGetZ("P"+p+"PosMG"), 90);
 							PlayersMinigaming = PlayersMinigaming-1;
-							trChatSend(0, "Players MG" + PlayersMinigaming);
+							//trChatSend(0, "Players MG" + PlayersMinigaming);
 							if(trCurrentPlayer() == p){
 								playSound("xlose.wav");
 								trOverlayText("Minigame Failed!", 3.0,-1,-1,600);

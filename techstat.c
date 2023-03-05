@@ -90,6 +90,7 @@ highFrequency
 	modifyProtounitAbsolute("Peltast", cNumberNonGaiaPlayers, 2, 30);
 	modifyProtounitAbsolute("Peltast", cNumberNonGaiaPlayers, 11, 24);
 	for(p = 1; <= cNumberNonGaiaPlayers){
+		trTechSetStatus(p, 28 ,4);
 		modifyProtounitAbsolute("Rocket", p, 1, 5);
 		modifyProtounitAbsolute("Rocket", p, 8, 10);
 		modifyProtounitAbsolute("Wadjet Spit", p, 1, 9);
@@ -122,12 +123,20 @@ highFrequency
 		modifyProtounitAbsolute("Petsuchos", p, 1, xGetFloat(dPlayerData, xCrocLandSpeed));
 		modifyProtounitAbsolute("Petsuchos", p, 2, 10);
 		modifyProtounitAbsolute("Petsuchos", p, 22, 10000);
+		//armour
 		for(a = 24; <= 29){
 			modifyProtounitAbsolute(""+GazelleProto, p, a, 0);
 			modifyProtounitAbsolute(""+RhinoProto, p, a, 0);
 			modifyProtounitAbsolute(""+GoatProto, p, a, 0);
 			modifyProtounitAbsolute(""+CrocProto, p, a, 0);
+			modifyProtounitAbsolute(""+ChickenProto, p, a, 0);
+			modifyProtounitAbsolute("Tower", p, a, 0);
 			modifyProtounitAbsolute("Hero Greek Bellerophon", p, a, 0);
+		}
+		//attack
+		for(a = 27; <= 32){
+			modifyProtounitAbsolute(""+ChickenProto, p, a, 0);
+			modifyProtounitAbsolute("Tower", p, a, 0);
 		}
 		modifyProtounitAbsolute(""+RhinoProto, p, 27, 15);
 		modifyProtounitAbsolute(""+CrocProto, p, 11, 2);
@@ -176,6 +185,23 @@ highFrequency
 		trModifyProtounit(""+NoChoiceUnitName + " Hero", p, 19, -9999999999999999999.0);
 		trModifyProtounit(""+CrocProto, p, 55, 3);
 		trModifyProtounit("Petsuchos", p, 55, 3);
+		modifyProtounitAbsolute("Tower", p, 16, 0);
+		modifyProtounitAbsolute("Tower", p, 17, 0);
+		modifyProtounitAbsolute("Tower", p, 18, 0);
+		modifyProtounitAbsolute("Tower", p, 19, 0);
+		modifyProtounitAbsolute("Tower", p, 13, 1);
+		modifyProtounitAbsolute("Tower", p, 12, 0);
+		modifyProtounitAbsolute("Tower", p, 11, 20);
+		modifyProtounitAbsolute("Tower", p, 2, 22);
+		modifyProtounitAbsolute("Tower", p, 0, 100);
+		//garrison capacity
+		modifyProtounitAbsolute("Tower", p, 5, 1);
+		//attack
+		modifyProtounitAbsolute("Tower", p, 31, 1);
+		//limit
+		modifyProtounitAbsolute("Tower", p, 10, 10);
+		//build points = how many s to build
+		modifyProtounitAbsolute("Tower", p, 4, 10);
 	}
 	trModifyProtounit("Huskarl", 0, 55, 4);
 	trModifyProtounit("Trident Soldier", 0, 55, 4);
