@@ -2781,6 +2781,7 @@ void createChickenArea(){
 	xResetDatabase(dTowers);
 	xResetDatabase(dEnemies);
 	trBlockAllSounds();
+	
 	DestroyNumber = trGetNextUnitScenarioNameNumber();
 	int currentId = 0;
 	for(n = NewDestroyNumber ; < DestroyNumber){
@@ -2788,24 +2789,47 @@ void createChickenArea(){
 		trUnitSelect(""+n);
 		trUnitDestroy();
 	}
+	vector tileForStart = vector(64,0,64);
+	
+	int StartTileX = xsVectorGetX(tileForStart);
+	int StartTileZ = xsVectorGetZ(tileForStart);
 	string baseTerrain = "GrassB";
 	trSetCivAndCulture(0, 0, 0);
 	clearMap("GrassB", 5.0);
 	int centrePosX = randomInt(toTiles(0.45), toTiles(0.55));
 	int centrePosZ = randomInt(toTiles(0.45), toTiles(0.55));
 	int ABORT = 0;
-	smooth(4);
+	clearMap("SandC", 2.0);
+	for(i = 0; < 100){
+		tempV = xsVectorSet(toTiles(randomFloat(0,1)), 0.0, toTiles(randomFloat(0,1)));
+		tempF = randomInt(1, 3) * 10 - 5;
+		for(j = 0; < 4) {
+			tempV2 = randomCircleLoc(xsVectorGetX(tempV), xsVectorGetZ(tempV), 30.0);
+			changeCircleHeight(xsVectorGetX(tempV2), xsVectorGetZ(tempV2), toTiles(0.05), tempF);
+		}
+	}
+	smooth(3);
+	replaceTerrainAtMaxSteepness("SandC", "CliffEgyptianA", 0.8);
+	trChangeTerrainHeight(0, 0, toTiles(1.0), toTiles(1.0), 0, false);
+	setTerrainHeightForTerrain("CliffEgyptianA", 5.0);
+	smooth(2);
+	setTerrainHeightForTerrain("SandC", 0.0);
+	replaceTerrainAboveHeightMin("CliffEgyptianA", "ForestfloorPalm", 4.0);
+	replaceTerrainBelowHeightMax("CliffEgyptianA", "SandC", 0.0);
+	smooth(1);
+	paintCircleHeight(StartTileX, StartTileZ, 16, "GrassDirt75", 8);
+	paintCircleHeight(StartTileX, StartTileZ, 12, "GrassDirt50", 11);
+	paintCircleHeight(StartTileX, StartTileZ, 8, "GrassDirt25", 14);
+	smooth(2);
+	paintTrees("ForestfloorPalm", "Palm");
+	refreshPassability();
 	
-	vector tileForStart = vector(64,0,64);
 	
-	int StartTileX = xsVectorGetX(tileForStart);
-	int StartTileZ = xsVectorGetZ(tileForStart);
 	float StartHeight = 8;
 	float StartMetreX = StartTileX*2+1;
 	float StartMetreZ = StartTileZ*2+1;
 	trVectorQuestVarSet("dir", xsVectorSet(11, 0, 0));
 	trVectorQuestVarSet("CentreMap", xsVectorSet(StartMetreX, 0, StartMetreZ));
-	paintCircleHeight2(StartTileX, StartTileZ, 8, "GrassDirt25", 5);
 	//SPAWN PLAYERS
 	float baseCos = xsCos(6.283185 / (cNumberNonGaiaPlayers-1));
 	float baseSin = xsSin(6.283185 / (cNumberNonGaiaPlayers-1));

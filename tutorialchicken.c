@@ -291,7 +291,7 @@ inactive
 			trUnitSelectByQV("ArmoryP"+p);
 			trUnitConvert(0);
 			if(TutorialMode == true){
-				ForceRelic(1*trQuestVarGet("ArmoryP"+p),1,1);
+				ForceRelic(1*trQuestVarGet("ArmoryP"+p),RELIC_ATTACK,1);
 				if(trCurrentPlayer() == p){
 					npcDiag(16);
 					trCounterAbort("cdtutorial");

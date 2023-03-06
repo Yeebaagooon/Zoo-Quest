@@ -51,7 +51,7 @@ S4 uber
 //---Controls
 //\Yeebaagooon\Zoo Quest\Test sound.mp3
 int QuickStart = 5;
-bool LOS = false;
+bool LOS = true;
 int Stage = 0;
 //---Strings
 string MapVersion = "Test Version";
