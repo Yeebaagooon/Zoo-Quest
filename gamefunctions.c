@@ -854,9 +854,98 @@ void DoRelicSFX(int id = 0, int type = 0){
 		trUnitSelect(""+id);
 		trSetScale(0);
 	}
+	if(type == RELIC_HP){
+		trUnitChangeProtoUnit("Spy Eye");
+		trUnitSelectClear();
+		trUnitSelect(""+id);
+		trMutateSelected(kbGetProtoUnitID("Tower Mirror"));
+		trUnitSelectClear();
+		trUnitSelect(""+id);
+		trSetScale(0);
+	}
+	if(type == RELIC_PROJ_SPEED){
+		trUnitChangeProtoUnit("Spy Eye");
+		trUnitSelectClear();
+		trUnitSelect(""+id);
+		trMutateSelected(kbGetProtoUnitID("Dust Devil"));
+		trUnitSelectClear();
+		trUnitSelect(""+id);
+		trSetScale(0.5);
+	}
+	if(type == RELIC_CHICKEN_SPEED){
+		trUnitChangeProtoUnit("Spy Eye");
+		trUnitSelectClear();
+		trUnitSelect(""+id);
+		trMutateSelected(kbGetProtoUnitID("Pegasus"));
+		trUnitSelectClear();
+		trUnitSelect(""+id);
+		trSetScale(0.5);
+		trUnitSelectClear();
+		trUnitSelect(""+id);
+		trSetSelectedHeight(1.0);
+	}
+	if(type == RELIC_RANGE){
+		trUnitChangeProtoUnit("Spy Eye");
+		trUnitSelectClear();
+		trUnitSelect(""+id);
+		trMutateSelected(kbGetProtoUnitID("Guardian XP"));
+		trUnitSelectClear();
+		trUnitSelect(""+id);
+		trSetScale(0);
+	}
+	if(type == RELIC_TOWER){
+		trUnitChangeProtoUnit("Spy Eye");
+		trUnitSelectClear();
+		trUnitSelect(""+id);
+		trMutateSelected(kbGetProtoUnitID("undermine ground decal corner"));
+		trUnitSelectClear();
+		trUnitSelect(""+id);
+		trSetScale(0.5);
+	}
 }
 
 void ForceRelic(int id = 0, int type = 0, float stat = 0){
+	xAddDatabaseBlock(dFreeRelics, true);
+	xSetInt(dFreeRelics, xUnitID, id);
+	xSetInt(dFreeRelics, xRelicType, type);
+	xSetFloat(dFreeRelics, xRelicStat, stat);
+	//?pointer
+	xUnitSelect(dFreeRelics, xUnitID);
+	trUnitChangeProtoUnit("Titan Atlantean");
+	xUnitSelect(dFreeRelics, xUnitID);
+	trUnitChangeProtoUnit("Relic");
+	yFindLatestReverse("SFXUnit", "Titan Gate Dead", 0);
+	DoRelicSFX(1*trQuestVarGet("SFXUnit"), type);
+	xSetInt(dFreeRelics, xSFXID, 1*trQuestVarGet("SFXUnit"));
+}
+
+void NewRelic(int id = 0){
+	int type = 0;
+	float stat = 0;
+	trQuestVarSetFromRand("type", 1, RELIC_NUMBER);
+	type = 1*trQuestVarGet("type");
+	if(type == RELIC_ATTACK){
+		trQuestVarSetFromRand("temp", 1, 5, true);
+	}
+	if(type == RELIC_HP){
+		trQuestVarSetFromRand("temp", 3, 10, true);
+		trQuestVarModify("temp", "*", 10);
+	}
+	if(type == RELIC_PROJ_SPEED){
+		trQuestVarSetFromRand("temp", 1, 6, true);
+		trQuestVarModify("temp", "*", 0.5);
+	}
+	if(type == RELIC_CHICKEN_SPEED){
+		trQuestVarSetFromRand("temp", 1, 5, true);
+		trQuestVarModify("temp", "*", 0.5);
+	}
+	if(type == RELIC_RANGE){
+		trQuestVarSetFromRand("temp", 1, 4, true);
+	}
+	if(type == RELIC_TOWER){
+		trQuestVarSetFromRand("temp", 1, 3, true);
+	}
+	stat = trQuestVarGet("temp");
 	xAddDatabaseBlock(dFreeRelics, true);
 	xSetInt(dFreeRelics, xUnitID, id);
 	xSetInt(dFreeRelics, xRelicType, type);
@@ -878,11 +967,45 @@ void FunctionRelic(bool apply = false, int p = 0){
 			trModifyProtounit("Tower", p, 31, 1*xGetFloat(dFreeRelics, xRelicStat));
 			xSetInt(dPlayerData, xTowerDamage, xGetInt(dPlayerData, xTowerDamage)+xGetFloat(dFreeRelics, xRelicStat));
 		}
+		if(xGetInt(dFreeRelics, xRelicType) == RELIC_HP){
+			trModifyProtounit("Tower", p, 0, 1*xGetFloat(dFreeRelics, xRelicStat));
+		}
+		if(xGetInt(dFreeRelics, xRelicType) == RELIC_PROJ_SPEED){
+			trModifyProtounit("Wadjet Spit", p, 1, xGetFloat(dFreeRelics, xRelicStat));
+		}
+		if(xGetInt(dFreeRelics, xRelicType) == RELIC_CHICKEN_SPEED){
+			trModifyProtounit(ChickenProto, p, 1, xGetFloat(dFreeRelics, xRelicStat));
+		}
+		if(xGetInt(dFreeRelics, xRelicType) == RELIC_RANGE){
+			trModifyProtounit("Tower", p, 11, 1*xGetFloat(dFreeRelics, xRelicStat));
+			trModifyProtounit("Tower", p, 2, 1*xGetFloat(dFreeRelics, xRelicStat));
+		}
+		if(xGetInt(dFreeRelics, xRelicType) == RELIC_TOWER){
+			trModifyProtounit("Tower", p, 10, 1*xGetFloat(dFreeRelics, xRelicStat)+1);
+		}
 	}
 	if(apply == false){
+		//HELD RELICS FOR HERE
 		if(xGetInt(dHeldRelics, xRelicType) == RELIC_ATTACK){
 			trModifyProtounit("Tower", p, 31, -1*xGetFloat(dHeldRelics, xRelicStat));
 			xSetInt(dPlayerData, xTowerDamage, xGetInt(dPlayerData, xTowerDamage)-xGetFloat(dFreeRelics, xRelicStat));
+		}
+		if(xGetInt(dHeldRelics, xRelicType) == RELIC_HP){
+			trModifyProtounit("Tower", p, 0, (0-1*xGetFloat(dHeldRelics, xRelicStat)));
+			debugLog("hp down");
+		}
+		if(xGetInt(dHeldRelics, xRelicType) == RELIC_PROJ_SPEED){
+			trModifyProtounit("Wadjet Spit", p, 1, (0-xGetFloat(dHeldRelics, xRelicStat)));
+		}
+		if(xGetInt(dHeldRelics, xRelicType) == RELIC_CHICKEN_SPEED){
+			trModifyProtounit(ChickenProto, p, 1, (0-xGetFloat(dHeldRelics, xRelicStat)));
+		}
+		if(xGetInt(dHeldRelics, xRelicType) == RELIC_RANGE){
+			trModifyProtounit("Tower", p, 11, -1*xGetFloat(dHeldRelics, xRelicStat));
+			trModifyProtounit("Tower", p, 2, -1*xGetFloat(dHeldRelics, xRelicStat));
+		}
+		if(xGetInt(dHeldRelics, xRelicType) == RELIC_TOWER){
+			trModifyProtounit("Tower", p, 10, -1*xGetFloat(dHeldRelics, xRelicStat)-1);
 		}
 	}
 }

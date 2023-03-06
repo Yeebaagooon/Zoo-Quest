@@ -2789,40 +2789,57 @@ void createChickenArea(){
 		trUnitSelect(""+n);
 		trUnitDestroy();
 	}
-	vector tileForStart = vector(64,0,64);
+	vector tileForStart = MapCentre*0.5;
 	
 	int StartTileX = xsVectorGetX(tileForStart);
 	int StartTileZ = xsVectorGetZ(tileForStart);
 	string baseTerrain = "GrassB";
 	trSetCivAndCulture(0, 0, 0);
-	clearMap("GrassB", 5.0);
 	int centrePosX = randomInt(toTiles(0.45), toTiles(0.55));
 	int centrePosZ = randomInt(toTiles(0.45), toTiles(0.55));
 	int ABORT = 0;
-	clearMap("SandC", 2.0);
+	clearMap("GrassB", 2.0);
 	for(i = 0; < 100){
 		tempV = xsVectorSet(toTiles(randomFloat(0,1)), 0.0, toTiles(randomFloat(0,1)));
-		tempF = randomInt(1, 3) * 10 - 5;
-		for(j = 0; < 4) {
-			tempV2 = randomCircleLoc(xsVectorGetX(tempV), xsVectorGetZ(tempV), 30.0);
-			changeCircleHeight(xsVectorGetX(tempV2), xsVectorGetZ(tempV2), toTiles(0.05), tempF);
+		tempF = randomInt(0, 2) * 10 - 5;
+		for(j = 0; < 6) {
+			tempV2 = randomCircleLoc(xsVectorGetX(tempV), xsVectorGetZ(tempV), 10.0);
+			changeCircleHeight(xsVectorGetX(tempV2), xsVectorGetZ(tempV2), toTiles(0.025), tempF);
 		}
 	}
 	smooth(3);
-	replaceTerrainAtMaxSteepness("SandC", "CliffEgyptianA", 0.8);
+	replaceTerrainAtMaxSteepness("GrassB", "CliffA", 0.8);
 	trChangeTerrainHeight(0, 0, toTiles(1.0), toTiles(1.0), 0, false);
-	setTerrainHeightForTerrain("CliffEgyptianA", 5.0);
+	setTerrainHeightForTerrain("CliffA", 5.0);
 	smooth(2);
-	setTerrainHeightForTerrain("SandC", 0.0);
-	replaceTerrainAboveHeightMin("CliffEgyptianA", "ForestfloorPalm", 4.0);
-	replaceTerrainBelowHeightMax("CliffEgyptianA", "SandC", 0.0);
+	setTerrainHeightForTerrain("GrassB", 0.0);
+	replaceTerrainAboveHeightMin("CliffA", "ForestFloorTundra", 4.0);
+	replaceTerrainBelowHeightMax("CliffA", "GrassB", 0.0);
 	smooth(1);
 	paintCircleHeight(StartTileX, StartTileZ, 16, "GrassDirt75", 8);
 	paintCircleHeight(StartTileX, StartTileZ, 12, "GrassDirt50", 11);
 	paintCircleHeight(StartTileX, StartTileZ, 8, "GrassDirt25", 14);
 	smooth(2);
-	paintTrees("ForestfloorPalm", "Palm");
+	replaceCircle(StartTileX,StartTileZ,100,baseTerrain,"RiverGrassyA");
+	replaceCircle(StartTileX,StartTileZ,100,"CliffA","CliffNorseA");
+	replaceCircle(StartTileX,StartTileZ,100,"ForestFloorTundra","ForestFloorJungle");
+	replaceCircle(StartTileX,StartTileZ,50,"RiverGrassyA","RiverGrassyC");
+	replaceCircle(StartTileX,StartTileZ,50,"CliffNorseA","CliffEgyptianA");
+	replaceCircle(StartTileX,StartTileZ,50,"ForestFloorJungle","ForestFloorMarsh");
+	replaceCircle(StartTileX,StartTileZ,30,"RiverGrassyC","GrassB");
+	replaceCircle(StartTileX,StartTileZ,30,"CliffEgyptianA","HadesCliff");
+	replaceCircle(StartTileX,StartTileZ,30,"ForestFloorMarsh","ForestFloorOak");
+	paintTrees("ForestfloorJungle", "Pine Dead Burning");
+	paintTrees("ForestFloorMarsh", "Tundra Tree");
+	paintTrees("ForestFloorOak", "Oak Tree");
 	refreshPassability();
+	replaceCircle(StartTileX,StartTileZ,130,"CliffNorseA","UnderwaterIceC");
+	replaceCircle(StartTileX,StartTileZ,130,"ForestfloorJungle","UnderwaterRockC");
+	replaceCircle(StartTileX,StartTileZ,130,"RiverGrassyA","UnderwaterRockF");
+	
+	replaceCircle(StartTileX,StartTileZ,130,"CliffEgyptianA","IceC");
+	replaceCircle(StartTileX,StartTileZ,130,"RiverGrassyC","TundraRoadA");
+	replaceCircle(StartTileX,StartTileZ,130,"ForestFloorMarsh","GaiaCreepBorderSnow");
 	
 	
 	float StartHeight = 8;
@@ -2852,11 +2869,6 @@ void createChickenArea(){
 		trVectorQuestVarSet("dir", rotationMatrix(trVectorQuestVarGet("dir"), baseCos, baseSin));
 		trUnitSelectClear();
 	}
-	replaceTerrainAtMinSteepness("IceB", "RiverIcyC", 1.5);
-	
-	refreshPassability();
-	paintUnit("SnowGrass25", "Pine Snow", 0, 0.07);
-	paintUnit("SnowGrass50", "Pine Snow", 0, 0.12);
 	LeaveTerrain = "IceA";
 	Stage = 5;
 	StageRequirement = 100;

@@ -298,6 +298,9 @@ inactive
 					trCounterAddTime("cdtutorial", -100, -200, "<color={PlayerColor("+p+")}>Pick up the relic", -1);
 				}
 			}
+			else{
+				NewRelic(1*trQuestVarGet("ArmoryP"+p));
+			}
 			//add to db held relics as will be owned by 0
 		}
 		if((xGetInt(dPlayerData, xTowerDamage) > 1) && (1*trQuestVarGet("P"+p+"FountainMsg") == 1)){
