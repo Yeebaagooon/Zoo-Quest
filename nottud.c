@@ -2780,6 +2780,7 @@ void createChickenArea(){
 	xResetDatabase(dHeldRelics);
 	xResetDatabase(dTowers);
 	xResetDatabase(dEnemies);
+	xResetDatabase(dShore);
 	trBlockAllSounds();
 	
 	DestroyNumber = trGetNextUnitScenarioNameNumber();
@@ -2820,6 +2821,7 @@ void createChickenArea(){
 	paintCircleHeight(StartTileX, StartTileZ, 12, "GrassDirt50", 11);
 	paintCircleHeight(StartTileX, StartTileZ, 8, "GrassDirt25", 14);
 	smooth(2);
+	TerrainTileDBSet(baseTerrain, dShore, xShoreLoc);
 	replaceCircle(StartTileX,StartTileZ,100,baseTerrain,"RiverGrassyA");
 	replaceCircle(StartTileX,StartTileZ,100,"CliffA","CliffNorseA");
 	replaceCircle(StartTileX,StartTileZ,100,"ForestFloorTundra","ForestFloorJungle");
@@ -2846,6 +2848,7 @@ void createChickenArea(){
 	float StartMetreX = StartTileX*2+1;
 	float StartMetreZ = StartTileZ*2+1;
 	trVectorQuestVarSet("dir", xsVectorSet(11, 0, 0));
+	trVectorQuestVarSet("dir2", xsVectorSet(7, 0, 0));
 	trVectorQuestVarSet("CentreMap", xsVectorSet(StartMetreX, 0, StartMetreZ));
 	//SPAWN PLAYERS
 	float baseCos = xsCos(6.283185 / (cNumberNonGaiaPlayers-1));
@@ -2854,6 +2857,7 @@ void createChickenArea(){
 	for(p=1; < cNumberNonGaiaPlayers) {
 		xSetPointer(dPlayerData, p);
 		trVectorQuestVarSet("base", trVectorQuestVarGet("CentreMap") + trVectorQuestVarGet("dir"));
+		trVectorQuestVarSet("relic", trVectorQuestVarGet("CentreMap") + trVectorQuestVarGet("dir2"));
 		heading = heading-(360/(cNumberNonGaiaPlayers-1));
 		if(heading > 360){
 			heading = heading-360;
@@ -2863,10 +2867,14 @@ void createChickenArea(){
 		}
 		if(xGetBool(dPlayerData, xPlayerActive) == true){
 			CreateChicken(p, trVectorQuestVarGetX("base"), trVectorQuestVarGetZ("base"), heading);
+			currentId = trGetNextUnitScenarioNameNumber();
+			UnitCreate(0, "Relic", trVectorQuestVarGetX("relic"), trVectorQuestVarGetZ("relic"), heading);
+			NewRelic(currentId, 6);
 		}
 		//spyEffect(1*trQuestVarGet("P"+p+"Unit"), kbGetProtoUnitID("Gazelle"), vector(1,1,1), vector(1,1,1));
 		trPlayerKillAllGodPowers(p);
 		trVectorQuestVarSet("dir", rotationMatrix(trVectorQuestVarGet("dir"), baseCos, baseSin));
+		trVectorQuestVarSet("dir2", rotationMatrix(trVectorQuestVarGet("dir2"), baseCos, baseSin));
 		trUnitSelectClear();
 	}
 	LeaveTerrain = "IceA";
@@ -2879,4 +2887,21 @@ void createChickenArea(){
 	InMinigame = false;
 	xsEnableRule("Reset Blackmap");
 	trUnblockAllSounds();
+	//3600 ring 1
+	//9900 ring 2
+	int tester = 5;
+	while(tester > 0){
+		trQuestVarSetFromRand("temp", 1, xGetDatabaseCount(dShore));
+		xSetPointer(dShore, 1*trQuestVarGet("temp"));
+		tempV = xGetVector(dShore, xShoreLoc);
+		xSetInt(dShore, xShoreDist, distanceBetweenVectors(xGetVector(dShore, xShoreLoc), MapCentre, true));
+		debugLog(""+xGetInt(dShore, xShoreDist));
+		if(xGetInt(dShore, xShoreDist) < 3600){
+			currentId = trGetNextUnitScenarioNameNumber();
+			UnitCreate(cNumberNonGaiaPlayers, "Hoplite", xsVectorGetX(tempV), xsVectorGetZ(tempV), 0);
+			tester = tester-1;
+			xAddDatabaseBlock(dEnemies, true);
+			xSetInt(dEnemies, xUnitID, currentId);
+		}
+	}
 }

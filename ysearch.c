@@ -416,7 +416,7 @@ highFrequency
 					trUnitMoveToPoint(xsVectorGetX(dest),0,xsVectorGetZ(dest),-1,false);
 					xAddDatabaseBlock(dMissiles, true);
 					xSetInt(dMissiles, xUnitID, xGetInt(dIncomingMissiles, xUnitID));
-					xSetInt(dMissiles, xOwner, cNumberNonGaiaPlayers);
+					xSetInt(dMissiles, xOwner, xGetInt(dIncomingMissiles, xOwner));
 					xSetVector(dMissiles, xMissilePos, xGetVector(dIncomingMissiles, xMissilePos));
 					xSetVector(dMissiles, xMissilePrev, xGetVector(dIncomingMissiles, xMissilePos));
 					xSetVector(dMissiles, xMissileDir, xGetVector(dIncomingMissiles, xMissileDir));

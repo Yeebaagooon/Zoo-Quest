@@ -80,6 +80,7 @@ int xTime2 = 0;
 
 int dShore = 0;
 int xShoreLoc = 0;
+int xShoreDist = 0;
 
 int dDirtA = 0;
 int xDirtLoc = 0;
@@ -212,6 +213,7 @@ highFrequency
 	
 	dShore = xInitDatabase("dShore");
 	xShoreLoc = xInitAddVector(dShore, "loc", vector(0,0,0));
+	xShoreDist = xInitAddInt(dShore, "dist", 0);
 	
 	dDirtA = xInitDatabase("dirta");
 	xDirtLoc = xInitAddVector(dDirtA, "loc", vector(0,0,0));
@@ -430,7 +432,7 @@ void DoMissileStage5(){
 	vector dir = vector(0,0,0);
 	vector prev = vector(0,0,0);
 	prev = xGetVector(dMissiles, xMissilePrev); //when created this is the same as xMissilePos
-	bool hit = false;
+	bool hitenemy = false;
 	int unithit = 0;
 	int boomID = 0;
 	pos = kbGetBlockPosition(""+xGetInt(dMissiles, xUnitID));
@@ -447,12 +449,12 @@ void DoMissileStage5(){
 		xDatabaseNext(dEnemies);
 		//2 is raw dist, 4 is squared
 		if(rayCollision(prev,dir,dist+1,1)){
-			hit = true;
+			hitenemy = true;
 			unithit = xGetPointer(dEnemies);
 			break;
 		}
 	}
-	if(hit){
+	if(hitenemy){
 		//hit effect
 		xUnitSelect(dMissiles, xUnitID);
 		trUnitDestroy();
@@ -465,6 +467,13 @@ void DoMissileStage5(){
 		xSetPointer(dEnemies, unithit);
 		xUnitSelect(dEnemies, xUnitID);
 		trDamageUnit(xGetInt(dMissiles, xMissileDmg));
+		xUnitSelect(dEnemies, xUnitID);
+		if(trUnitDead() == true){
+			xSetPointer(dPlayerData, xGetInt(dMissiles, xOwner));
+			xSetInt(dPlayerData, xS5Kills, xGetInt(dPlayerData, xS5Kills)+1);
+			debugLog("Enemies killed P" + xGetInt(dMissiles, xOwner) + " = " + xGetInt(dPlayerData, xS5Kills));
+			xFreeDatabaseBlock(dEnemies);
+		}
 		//FREE DB LAST
 		xFreeDatabaseBlock(dMissiles);
 		//debugLog("Hits P " + playerhit);

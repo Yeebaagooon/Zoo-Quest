@@ -33,6 +33,7 @@ void ShootProjectile(vector dir = vector(0,0,0), vector startpos = vector(0,0,0)
 	spyEffect(kbGetProtoUnitID("Trident Soldier"), 0, xsVectorSet(dIncomingMissiles, xMissileSpyID, index), vector(0,0,0));
 	//THE SEAT, make 0,0,0
 	xSetInt(dIncomingMissiles,xUnitID, temp);
+	xSetInt(dIncomingMissiles, xOwner, ownerof);
 	xSetVector(dIncomingMissiles, xMissilePos, startpos);
 	xSetVector(dIncomingMissiles, xMissileDir, dir);
 	xSetInt(dIncomingMissiles, xMissileProto, kbGetProtoUnitID(protounit));
@@ -919,10 +920,13 @@ void ForceRelic(int id = 0, int type = 0, float stat = 0){
 	xSetInt(dFreeRelics, xSFXID, 1*trQuestVarGet("SFXUnit"));
 }
 
-void NewRelic(int id = 0){
+void NewRelic(int id = 0, int max = 0){
 	int type = 0;
 	float stat = 0;
-	trQuestVarSetFromRand("type", 1, RELIC_NUMBER);
+	if(max == 0){
+		max = RELIC_NUMBER;
+	}
+	trQuestVarSetFromRand("type", 1, max);
 	type = 1*trQuestVarGet("type");
 	if(type == RELIC_ATTACK){
 		trQuestVarSetFromRand("temp", 1, 5, true);

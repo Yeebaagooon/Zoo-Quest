@@ -278,7 +278,7 @@ inactive
 	ProcessFreeRelics(5);
 	ProcessHeldRelics(5);
 	ProcessTowers(5);
-	ProcessEnemy(10);
+	//ProcessEnemy(10);
 	vector start = vector(0,0,0);
 	vector dest = vector(0,0,0);
 	vector dir = vector(0,0,0);
