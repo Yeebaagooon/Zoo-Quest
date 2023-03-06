@@ -54,7 +54,6 @@ inactive
 		trRateConstruction(20);
 		SpawnCrocPoacher1(xsMax(4, cNumberNonGaiaPlayers+2));
 		SpawnCrocPoacher2(xsMax(3, cNumberNonGaiaPlayers));
-		SpawnCrocPoacher3(xsMax(1, cNumberNonGaiaPlayers/4));
 		modifyProtounitAbsolute("Chu Ko Nu", cNumberNonGaiaPlayers, 0, 5);
 		modifyProtounitAbsolute("Chu Ko Nu", cNumberNonGaiaPlayers, 12, 3);
 		modifyProtounitAbsolute("Chu Ko Nu", cNumberNonGaiaPlayers, 26, 0);
@@ -80,14 +79,16 @@ inactive
 					SpawnCrocPoacher2(xsMax(3, cNumberNonGaiaPlayers));
 				}
 				if(CrocProgress >= 5){
-					SpawnCrocPoacher3(2);
+					SpawnCrocPoacher3(1);
 					SpawnEdible(1);
 				}
 				if(CrocProgress >= 9){
 					SpawnCrocPoacher4(iModulo(2, trTime())+1);
 					trOverlayText("Super Poachers Spawning...", 5.0,-1,-1,600);
-					SpawnCrocPoacher4(xsMax(1,PlayersActive-2));
 					playSound("\cinematics\04_in\armyarrive.wav");
+				}
+				if(CrocProgress >= 13){
+					SpawnCrocPoacher4(xsMax(1,PlayersActive-2));
 				}
 			}
 		}
@@ -170,6 +171,7 @@ inactive
 				PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is dead!");
 				PlayerColouredChatToSelf(p, "You'll be able to join the next act if your team pass this one.");
 				trPlayerKillAllGodPowers(p);
+				xSetVector(dPlayerData, xDeathVector, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
 				trTechGodPower(1, "Rain", 1);
 				if(iModulo(2, trTime()) == 0){
 					playSound("\dialog\ko\skul062.mp3");

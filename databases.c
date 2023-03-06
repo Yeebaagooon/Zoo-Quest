@@ -98,6 +98,17 @@ int xPowerName = 0;
 int xDecorationID = 0;
 int xCost = 0;
 
+int dEnemies = 0;
+
+int dTowers = 0;
+int xConstructed = 0;
+
+int dHeldRelics = 0;
+int dFreeRelics = 0;
+int xRelicType = 0;
+int xRelicStat = 0;
+int xSFXID = 0;
+
 rule initialise_spy_database
 active
 highFrequency
@@ -223,6 +234,25 @@ highFrequency
 	xDecorationID = xInitAddInt(dShop, "shop", 0);
 	xCost = xInitAddInt(dShop, "shop", 0);
 	
+	dEnemies = xInitDatabase("Enemies");
+	xUnitID = xInitAddInt(dEnemies, "id", 0);
+	
+	dTowers = xInitDatabase("Towers");
+	xUnitID = xInitAddInt(dTowers, "id", 0);
+	xOwner = xInitAddInt(dTowers, "owner", 0);
+	xConstructed = xInitAddBool(dTowers, "built", false);
+	
+	dFreeRelics = xInitDatabase("FreeRelics");
+	xUnitID = xInitAddInt(dFreeRelics, "id", -1);
+	xRelicType = xInitAddInt(dFreeRelics, "type", 0);
+	xRelicStat = xInitAddFloat(dFreeRelics, "statvalue", 0);
+	xSFXID = xInitAddInt(dFreeRelics, "sfxid", -1);
+	
+	dHeldRelics = xInitDatabase("FreeRelics");
+	xUnitID = xInitAddInt(dHeldRelics, "id", -1);
+	xRelicType = xInitAddInt(dHeldRelics, "type", 0);
+	xRelicStat = xInitAddFloat(dHeldRelics, "statvalue", 0);
+	xSFXID = xInitAddInt(dHeldRelics, "sfxid", -1);
 }
 
 /*
@@ -241,29 +271,44 @@ void spyEffect(int proto = 0, int anim = 0, vector dest = vector(0,0,0), vector 
 
 bool rayCollision(vector start = vector(0,0,0), vector dir = vector(1,0,0),
 	float dist = 0, float width = 0) {
-	if(xGetBool (dPlayerData, xPlayerActive)){
-		vector pos = kbGetBlockPosition(""+xGetInt(dPlayerData,xPlayerUnitID),true);
-		float current = distanceBetweenVectors(pos, start, false);
-		if (current < dist) {
-			vector hitbox = start + dir * current;
-			if(xGetBool(dPlayerData, xStopDeath) == false){
-				if (distanceBetweenVectors(pos, hitbox, true) <= width) {
-					if(trPlayerUnitCountSpecific(xGetPointer(dPlayerData), ""+GazelleProto) == 1){
-						return(true);
-					}
-					if((trPlayerUnitCountSpecific(xGetPointer(dPlayerData), ""+RhinoProto) == 1) || (trPlayerUnitCountSpecific(xGetPointer(dPlayerData), ""+RhinoDrinkProto) == 1)){
-						return(true);
-					}
-					if(trPlayerUnitCountSpecific(xGetPointer(dPlayerData), ""+GoatProto) == 1){
-						return(true);
-					}
-					if(trPlayerUnitCountSpecific(xGetPointer(dPlayerData), ""+CrocProto) == 1){
-						return(true);
-					}
-					if(trPlayerUnitCountSpecific(xGetPointer(dPlayerData), "Petsuchos") == 1){
-						return(true);
+	vector pos = vector(0,0,0);
+	vector hitbox = vector(0,0,0);
+	float current = 0;
+	if(Stage != 5){
+		if(xGetBool (dPlayerData, xPlayerActive)){
+			pos = kbGetBlockPosition(""+xGetInt(dPlayerData,xPlayerUnitID),true);
+			current = distanceBetweenVectors(pos, start, false);
+			if (current < dist) {
+				hitbox = start + dir * current;
+				if(xGetBool(dPlayerData, xStopDeath) == false){
+					if (distanceBetweenVectors(pos, hitbox, true) <= width) {
+						if(trPlayerUnitCountSpecific(xGetPointer(dPlayerData), ""+GazelleProto) == 1){
+							return(true);
+						}
+						if((trPlayerUnitCountSpecific(xGetPointer(dPlayerData), ""+RhinoProto) == 1) || (trPlayerUnitCountSpecific(xGetPointer(dPlayerData), ""+RhinoDrinkProto) == 1)){
+							return(true);
+						}
+						if(trPlayerUnitCountSpecific(xGetPointer(dPlayerData), ""+GoatProto) == 1){
+							return(true);
+						}
+						if(trPlayerUnitCountSpecific(xGetPointer(dPlayerData), ""+CrocProto) == 1){
+							return(true);
+						}
+						if(trPlayerUnitCountSpecific(xGetPointer(dPlayerData), "Petsuchos") == 1){
+							return(true);
+						}
 					}
 				}
+			}
+		}
+	}
+	else{
+		pos = kbGetBlockPosition(""+xGetInt(dEnemies,xUnitID),true);
+		current = distanceBetweenVectors(pos, start, false);
+		if (current < dist) {
+			hitbox = start + dir * current;
+			if (distanceBetweenVectors(pos, hitbox, true) <= width) {
+				return(true);
 			}
 		}
 	}
@@ -364,6 +409,56 @@ void DoMissile(){
 			xUnitSelect(dPlayerData, xPlayerUnitID);
 			trDamageUnit(xGetInt(dMissiles, xMissileDmg));
 		}
+		//FREE DB LAST
+		xFreeDatabaseBlock(dMissiles);
+		//debugLog("Hits P " + playerhit);
+	}
+	else{
+		xSetVector(dMissiles, xMissilePrev, pos);
+		if((xsVectorGetX(pos) < 0) || (xsVectorGetX(pos) > 252) || (xsVectorGetZ(pos) < 0) || (xsVectorGetZ(pos) > 252)){
+			//remove map outside
+			xUnitSelect(dMissiles, xUnitID);
+			trUnitDestroy();
+			xFreeDatabaseBlock(dMissiles);
+		}
+	}
+}
+
+void DoMissileStage5(){
+	xDatabaseNext(dMissiles);
+	vector pos = vector(0,0,0);
+	vector dir = vector(0,0,0);
+	vector prev = vector(0,0,0);
+	prev = xGetVector(dMissiles, xMissilePrev); //when created this is the same as xMissilePos
+	bool hit = false;
+	int unithit = 0;
+	int boomID = 0;
+	pos = kbGetBlockPosition(""+xGetInt(dMissiles, xUnitID));
+	dir = xGetVector(dMissiles, xMissileDir); //Normalized direction when missile created and target locked
+	xSetVector(dMissiles, xMissilePos, pos);
+	float dist = distanceBetweenVectors(pos, prev, false);
+	for(x = xGetDatabaseCount(dEnemies); > 0) {
+		xDatabaseNext(dEnemies);
+		//2 is raw dist, 4 is squared
+		if(rayCollision(prev,dir,dist+1,1)){
+			hit = true;
+			unithit = xGetPointer(dEnemies);
+			break;
+		}
+	}
+	if(hit){
+		//hit effect
+		xUnitSelect(dMissiles, xUnitID);
+		trUnitDestroy();
+		boomID = trGetNextUnitScenarioNameNumber();
+		UnitCreate(0, "Cinematic Block", xsVectorGetX(pos), xsVectorGetZ(pos), 0);
+		trUnitSelectClear();
+		trUnitSelect(""+boomID);
+		trUnitChangeProtoUnit("Blood Cinematic");
+		trUnitSelectClear();
+		xSetPointer(dEnemies, unithit);
+		xUnitSelect(dEnemies, xUnitID);
+		trDamageUnit(xGetInt(dMissiles, xMissileDmg));
 		//FREE DB LAST
 		xFreeDatabaseBlock(dMissiles);
 		//debugLog("Hits P " + playerhit);

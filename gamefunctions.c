@@ -1,8 +1,11 @@
-void ShootProjectile(vector dir = vector(0,0,0), vector startpos = vector(0,0,0), string protounit = "", string car = "", int anim = 0, int dmg = 1, int time = 10000){
+void ShootProjectile(vector dir = vector(0,0,0), vector startpos = vector(0,0,0), string protounit = "", string car = "", int anim = 0, int dmg = 1, int time = 10000, int ownerof = 0){
 	int temp = 0;
+	if(ownerof == 0){
+		ownerof = cNumberNonGaiaPlayers;
+	}
 	vector orient = xsVectorSet(xsVectorGetX(dir),0,xsVectorGetZ(dir));
 	temp = trGetNextUnitScenarioNameNumber();
-	UnitCreate(cNumberNonGaiaPlayers, "Dwarf", xsVectorGetX(startpos),xsVectorGetZ(startpos),0);
+	UnitCreate(ownerof, "Dwarf", xsVectorGetX(startpos),xsVectorGetZ(startpos),0);
 	if(IGUnit == true){
 		IGUnit = false;
 		trUnitSelectClear();
@@ -154,6 +157,18 @@ string CurrentProto(int num = 0){
 		{
 			thename = RhinoProto;
 		}
+		case 3:
+		{
+			thename = GoatProto;
+		}
+		case 4:
+		{
+			thename = CrocProto;
+		}
+		case 5:
+		{
+			thename = ChickenProto;
+		}
 	}
 	return(thename);
 }
@@ -250,7 +265,7 @@ void SpawnRhinoPoacher(int num = 0){
 			}
 			for(p = 1; < cNumberNonGaiaPlayers){
 				xSetPointer(dPlayerData, p);
-				if((distanceBetweenVectors(spawn, kbGetBlockPosition(""+xGetInt(dPlayerData, xPlayerUnitID)),true) < 900) && (xGetBool(dPlayerData, xPlayerActive) == true)){
+				if((distanceBetweenVectors(spawn, kbGetBlockPosition(""+xGetInt(dPlayerData, xPlayerUnitID)),true) < 1000) && (xGetBool(dPlayerData, xPlayerActive) == true)){
 					allow = 1;
 				}
 			}
@@ -458,7 +473,7 @@ void hotkeyAbility(int ability = 0) {
 				}
 				case EVENT_BUILD_GRANARY:
 				{
-					uiSetProtoCursor("Granary", true);
+					uiSetProtoCursor("Armory", true);
 				}
 				case EVENT_BUILD_STOREHOUSE:
 				{
@@ -788,21 +803,24 @@ active
 				if(xGetBool(dPlayerData, xPlayerDead) == true){
 					xSetBool(dPlayerData, xPlayerDead, false);
 					PlayersDead = PlayersDead-1;
+					UnitCreateV(0, "Revealer To Player", xGetVector(dPlayerData, xDeathVector));
 					if(Stage == 1){
-						CreateGazelle(p, xsVectorGetX(StageVector)*2, xsVectorGetZ(StageVector)*2, 0);
+						CreateGazelle(p, xsVectorGetX(xGetVector(dPlayerData, xDeathVector)), xsVectorGetZ(xGetVector(dPlayerData, xDeathVector)), 0);
 					}
 					if(Stage == 2){
-						CreateRhino(p, xsVectorGetX(StageVector)*2, xsVectorGetZ(StageVector)*2, 0);
+						CreateRhino(p, xsVectorGetX(xGetVector(dPlayerData, xDeathVector)), xsVectorGetZ(xGetVector(dPlayerData, xDeathVector)), 0);
 					}
 					if(Stage == 3){
-						CreateGoat(p, xsVectorGetX(StageVector)*2, xsVectorGetZ(StageVector)*2, 0);
+						CreateGoat(p, xsVectorGetX(xGetVector(dPlayerData, xDeathVector)), xsVectorGetZ(xGetVector(dPlayerData, xDeathVector)), 0);
 					}
 					if(Stage == 4){
-						CreateCroc(p, xsVectorGetX(StageVector)*2, xsVectorGetZ(StageVector)*2, 0);
+						CreateCroc(p, xsVectorGetX(xGetVector(dPlayerData, xDeathVector)), xsVectorGetZ(xGetVector(dPlayerData, xDeathVector)), 0);
 					}
 					if(Stage == 5){
-						CreateChicken(p, xsVectorGetX(StageVector)*2, xsVectorGetZ(StageVector)*2, 0);
+						CreateChicken(p, xsVectorGetX(xGetVector(dPlayerData, xDeathVector)), xsVectorGetZ(xGetVector(dPlayerData, xDeathVector)), 0);
 					}
+					uiZoomToProto(CurrentProto());
+					uiLookAtProto(CurrentProto());
 				}
 			}
 		}
@@ -820,5 +838,50 @@ inactive
 	if (trTime() > cActivationTime + 1) {
 		xsDisableSelf();
 		xsEnableRule("DebugRevive");
+	}
+}
+
+void DoRelicSFX(int id = 0, int type = 0){
+	trUnitSelectClear();
+	trUnitSelect(""+id);
+	if(type == RELIC_ATTACK){
+		trUnitChangeProtoUnit("Spy Eye");
+		trUnitSelectClear();
+		trUnitSelect(""+id);
+		trMutateSelected(kbGetProtoUnitID("Theris"));
+		trUnitSelectClear();
+		trUnitSelect(""+id);
+		trSetScale(0);
+	}
+}
+
+void ForceRelic(int id = 0, int type = 0, float stat = 0){
+	xAddDatabaseBlock(dFreeRelics, true);
+	xSetInt(dFreeRelics, xUnitID, id);
+	xSetInt(dFreeRelics, xRelicType, type);
+	xSetFloat(dFreeRelics, xRelicStat, stat);
+	//?pointer
+	xUnitSelect(dFreeRelics, xUnitID);
+	trUnitChangeProtoUnit("Titan Atlantean");
+	xUnitSelect(dFreeRelics, xUnitID);
+	trUnitChangeProtoUnit("Relic");
+	yFindLatestReverse("SFXUnit", "Titan Gate Dead", 0);
+	DoRelicSFX(1*trQuestVarGet("SFXUnit"), type);
+	xSetInt(dFreeRelics, xSFXID, 1*trQuestVarGet("SFXUnit"));
+}
+
+void FunctionRelic(bool apply = false, int p = 0){
+	xSetPointer(dPlayerData, p);
+	if(apply == true){
+		if(xGetInt(dFreeRelics, xRelicType) == RELIC_ATTACK){
+			trModifyProtounit("Tower", p, 31, 1*xGetFloat(dFreeRelics, xRelicStat));
+			xSetInt(dPlayerData, xTowerDamage, xGetInt(dPlayerData, xTowerDamage)+xGetFloat(dFreeRelics, xRelicStat));
+		}
+	}
+	if(apply == false){
+		if(xGetInt(dHeldRelics, xRelicType) == RELIC_ATTACK){
+			trModifyProtounit("Tower", p, 31, -1*xGetFloat(dHeldRelics, xRelicStat));
+			xSetInt(dPlayerData, xTowerDamage, xGetInt(dPlayerData, xTowerDamage)-xGetFloat(dFreeRelics, xRelicStat));
+		}
 	}
 }

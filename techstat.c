@@ -90,6 +90,7 @@ highFrequency
 	modifyProtounitAbsolute("Peltast", cNumberNonGaiaPlayers, 2, 30);
 	modifyProtounitAbsolute("Peltast", cNumberNonGaiaPlayers, 11, 24);
 	for(p = 1; <= cNumberNonGaiaPlayers){
+		trTechSetStatus(p, 27 ,4);
 		trTechSetStatus(p, 28 ,4);
 		modifyProtounitAbsolute("Rocket", p, 1, 5);
 		modifyProtounitAbsolute("Rocket", p, 8, 10);
@@ -202,6 +203,10 @@ highFrequency
 		modifyProtounitAbsolute("Tower", p, 10, 10);
 		//build points = how many s to build
 		modifyProtounitAbsolute("Tower", p, 4, 10);
+		//limit
+		modifyProtounitAbsolute("Armory", p, 10, 1);
+		//build points = how many s to build
+		modifyProtounitAbsolute("Armory", p, 4, 1);
 	}
 	trModifyProtounit("Huskarl", 0, 55, 4);
 	trModifyProtounit("Trident Soldier", 0, 55, 4);

@@ -303,6 +303,14 @@ inactive
 			StageScore = 100;
 		}*/
 		//This make score 100 even if player fails
+		
+		for(p = 1 ; < cNumberNonGaiaPlayers){
+			xSetPointer(dPlayerData, p);
+			if(xGetInt(dPlayerData, xCrocSize) > 6){
+				Extras = Extras+2;
+				ExtrasGot = ExtrasGot+2;
+			}
+		}
 		if(StageScore < 0){
 			StageScore = 2;
 		}

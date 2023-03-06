@@ -234,6 +234,44 @@ int npcDiag(int npc = 0, int dialog = 0) {
 				}
 			}
 		}
+		case 14:
+		{
+			switch(dialog)
+			{
+				case 1:
+				{
+					uiMessageBox("For the final act - it's chicken time.");
+				}
+				case 2:
+				{
+					uiMessageBox("These devious creatures can build!");
+				}
+				case 3:
+				{
+					uiMessageBox("Use 'Q' to build a tower at your pointer.");
+					dialog = 0;
+				}
+			}
+		}
+		case 15:
+		{
+			switch(dialog)
+			{
+				case 1:
+				{
+					uiMessageBox("Your towers will fire missiles at the enemy!");
+				}
+				case 2:
+				{
+					uiMessageBox("Use 'W' to craft an upgrade at the cursor.");
+				}
+				case 3:
+				{
+					uiMessageBox("This usually takes a lot longer, but is shorter in tutorial mode.");
+					dialog = 0;
+				}
+			}
+		}
 	}
 	return(dialog);
 }

@@ -237,6 +237,7 @@ inactive
 				PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is dead!");
 				PlayerColouredChatToSelf(p, "You'll be able to join the next act if your team pass this one.");
 				trPlayerKillAllGodPowers(p);
+				xSetVector(dPlayerData, xDeathVector, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
 				trTechGodPower(1, "Rain", 1);
 				if(iModulo(2, trTime()) == 0){
 					playSound("\dialog\fr\skul062.mp3");
@@ -557,6 +558,7 @@ highFrequency
 		for(p=1 ; < cNumberNonGaiaPlayers){
 			xSetPointer(dPlayerData, p);
 			if((xGetInt(dPlayerData, xTeleportDue) == 1) && (xGetBool(dPlayerData, xPlayerActive) == true)){
+				debugLog("Path 1 - P" + p);
 				temp = xGetVector(dPlayerData, xVectorHold);
 				trQuestVarSet("P"+p+"IG", trGetNextUnitScenarioNameNumber());
 				UnitCreateV(p, "Roc", temp, 0);
@@ -568,6 +570,7 @@ highFrequency
 				xSetInt(dPlayerData, xTeleportDue, 0);
 			}
 			else if((xGetInt(dPlayerData, xTeleportDue) == 0) && (xGetBool(dPlayerData, xPlayerActive) == true)){
+				debugLog("Path 2 - P" + p);
 				if(trPlayerUnitCountSpecific(p, ""+GazelleProto) == 0){
 					temp = xGetVector(dPlayerData, xVectorHold);
 					trQuestVarSet("P"+p+"IG", trGetNextUnitScenarioNameNumber());
@@ -580,6 +583,7 @@ highFrequency
 				}
 			}
 			if((trPlayerUnitCountSpecific(p, GazelleProto) == 0) && (xGetBool(dPlayerData, xPlayerDead) == false)){
+				debugLog("Path 3 - P" + p);
 				CreateGazelle(p, trVectorQuestVarGetX("P"+p+"PosMG"),trVectorQuestVarGetZ("P"+p+"PosMG"));
 			}
 		}

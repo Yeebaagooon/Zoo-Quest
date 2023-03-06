@@ -167,52 +167,90 @@ highFrequency
 			}
 			case kbGetProtoUnitID("Arrow"):
 			{
-				slingvector = kbGetBlockPosition(""+i);
-				trUnitSelectClear();
-				trUnitSelectByID(id);
-				trUnitDestroy();
-				dir = vector(0,0,0);
-				closevector = vector(0,0,0);
-				target = vector(0,0,0);
-				closest = 10000;
-				closestid = 0;
-				//cycle through all poachers to find the closest
-				for(a=0 ; < xGetDatabaseCount(dPoachers)){
-					xDatabaseNext(dPoachers);
-					dir = kbGetBlockPosition(""+xGetInt(dPoachers, xUnitID));
-					xUnitSelect(dPoachers, xUnitID);
-					if(trUnitDead() == false){
-						if(distanceBetweenVectors(dir, slingvector, true) < closest){
-							closest = distanceBetweenVectors(dir, slingvector, true);
-							closestid = xGetInt(dPoachers, xUnitID);
+				if(Stage != 5){
+					slingvector = kbGetBlockPosition(""+i);
+					trUnitSelectClear();
+					trUnitSelectByID(id);
+					trUnitDestroy();
+					dir = vector(0,0,0);
+					closevector = vector(0,0,0);
+					target = vector(0,0,0);
+					closest = 10000;
+					closestid = 0;
+					//cycle through all poachers to find the closest
+					for(a=0 ; < xGetDatabaseCount(dPoachers)){
+						xDatabaseNext(dPoachers);
+						dir = kbGetBlockPosition(""+xGetInt(dPoachers, xUnitID));
+						xUnitSelect(dPoachers, xUnitID);
+						if(trUnitDead() == false){
+							if(distanceBetweenVectors(dir, slingvector, true) < closest){
+								closest = distanceBetweenVectors(dir, slingvector, true);
+								closestid = xGetInt(dPoachers, xUnitID);
+							}
 						}
+					}
+					closevector = kbGetBlockPosition(""+closestid);
+					xsSetContextPlayer(cNumberNonGaiaPlayers);
+					dest = kbGetBlockPosition(""+trGetUnitScenarioNameNumber(kbUnitGetTargetUnitID(kbGetBlockID(""+closestid))));
+					xsSetContextPlayer(0);
+					dir = xsVectorNormalize(dest-closevector);
+					//rotate to L, for loop shoot
+					baseCos = 0.996195; //cos5
+					baseSin = 0.087156; //sin5
+					//calculator for sin and cos(angle) required
+					//so for 15 degrees and 5 projs our angles are 30,15,0,-15-,-30, so set to cos/sin -30 then loop for +15
+					dir = rotationMatrix(dir, 0.965926, -0.258819); //dir, -15cos, -15sin
+					for(a = 1; < 6){
+						for(b = xGetDatabaseCount(dPoachers); > 0){
+							xDatabaseNext(dPoachers);
+							if(xGetInt(dPoachers, xUnitID) == closestid){
+								unitcheck = xGetString(dPoachers, xPoacherType);
+								continue;
+							}
+						}
+						if(unitcheck == "Sentinel Main"){
+							IGUnit = true;
+							IGName = closestid;
+						}
+						ShootProjectile(dir, closevector, "Lampades Bolt", "Wadjet Spit", 0, 2, 7000);
+						dir = rotationMatrix(dir, baseCos, baseSin);
 					}
 				}
-				closevector = kbGetBlockPosition(""+closestid);
-				xsSetContextPlayer(cNumberNonGaiaPlayers);
-				dest = kbGetBlockPosition(""+trGetUnitScenarioNameNumber(kbUnitGetTargetUnitID(kbGetBlockID(""+closestid))));
-				xsSetContextPlayer(0);
-				dir = xsVectorNormalize(dest-closevector);
-				//rotate to L, for loop shoot
-				baseCos = 0.996195; //cos5
-				baseSin = 0.087156; //sin5
-				//calculator for sin and cos(angle) required
-				//so for 15 degrees and 5 projs our angles are 30,15,0,-15-,-30, so set to cos/sin -30 then loop for +15
-				dir = rotationMatrix(dir, 0.965926, -0.258819); //dir, -15cos, -15sin
-				for(a = 1; < 6){
-					for(b = xGetDatabaseCount(dPoachers); > 0){
-						xDatabaseNext(dPoachers);
-						if(xGetInt(dPoachers, xUnitID) == closestid){
-							unitcheck = xGetString(dPoachers, xPoacherType);
-							continue;
+				if(Stage == 5){
+					slingvector = kbGetBlockPosition(""+i);
+					trUnitSelectClear();
+					trUnitSelectByID(id);
+					trUnitDestroy();
+					dir = vector(0,0,0);
+					closevector = vector(0,0,0);
+					target = vector(0,0,0);
+					closest = 10000;
+					closestid = 0;
+					//cycle through all poachers to find the closest
+					for(a=0 ; < xGetDatabaseCount(dTowers)){
+						xDatabaseNext(dTowers);
+						dir = kbGetBlockPosition(""+xGetInt(dTowers, xUnitID));
+						xUnitSelect(dTowers, xUnitID);
+						if(trUnitDead() == false){
+							if(distanceBetweenVectors(dir, slingvector, true) < closest){
+								closest = distanceBetweenVectors(dir, slingvector, true);
+								closestid = xGetInt(dTowers, xUnitID);
+							}
 						}
 					}
-					if(unitcheck == "Sentinel Main"){
-						IGUnit = true;
-						IGName = closestid;
-					}
-					ShootProjectile(dir, closevector, "Lampades Bolt", "Wadjet Spit", 0, 2, 7000);
-					dir = rotationMatrix(dir, baseCos, baseSin);
+					closevector = kbGetBlockPosition(""+closestid);
+					xsSetContextPlayer(xGetInt(dTowers, xOwner));
+					dest = kbGetBlockPosition(""+trGetUnitScenarioNameNumber(kbUnitGetTargetUnitID(kbGetBlockID(""+closestid))));
+					xsSetContextPlayer(0);
+					dir = xsVectorNormalize(dest-closevector);
+					IGUnit = true;
+					IGName = closestid;
+					unitcheck = "Tower";
+					xSetPointer(dPlayerData, xGetInt(dTowers, xOwner));
+					trBlockAllAmbientSounds();
+					trBlockAllSounds();
+					ShootProjectile(dir, closevector, "Lampades Bolt", "Wadjet Spit", 0, xGetInt(dPlayerData, xTowerDamage), 5000, 1*xGetInt(dTowers, xOwner));
+					trDelayedRuleActivation("UnblockSound");
 				}
 			}
 			case kbGetProtoUnitID("Spear Flaming"):
@@ -311,6 +349,31 @@ highFrequency
 					ShootProjectile(dir, closevector, "Lampades Bolt", "Wadjet Spit");
 				}
 			}
+			case kbGetProtoUnitID("Tower"):
+			{
+				trUnitSelectClear();
+				trUnitSelectByID(id);
+				trSetSelectedScale(1,0.3,1);
+				trUnitSelectClear();
+				dest = kbGetBlockPosition(""+i);
+				if(TutorialMode == true){
+					int owner = kbUnitGetOwner(id);
+					owner = owner*16;
+					if((xsVectorGetZ(dest) > owner+8 ) || (xsVectorGetZ(dest) < owner-8 )){
+						trUnitSelectByID(id);
+						trUnitDestroy();
+						owner = owner/16;
+						if(trCurrentPlayer() == owner){
+							playSound("cantdothat.wav");
+						}
+						ColouredChatToPlayer(owner, "1,0,0", "Build in your own section!");
+					}
+				}
+				xAddDatabaseBlock(dTowers, true);
+				xSetInt(dTowers, xUnitID, i);
+				xSetInt(dTowers, xOwner, kbUnitGetOwner(id));
+				xSetBool(dTowers, xConstructed, false);
+			}
 		}
 	}
 	if (xGetDatabaseCount(dSpyRequests) > 0) {
@@ -370,4 +433,13 @@ highFrequency
 			}
 		}
 	}
+}
+
+rule UnblockSound
+inactive
+highFrequency
+{
+	trUnBlockAllAmbientSounds();
+	trUnblockAllSounds();
+	xsDisableSelf();
 }

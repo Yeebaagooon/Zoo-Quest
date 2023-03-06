@@ -37,9 +37,9 @@ tile for minigame is *2 for vector
 *MG1 dead
 *rhino chest start zone
 *mg2 end msg
-a3 score???
+*a3 score???
 *croc mg qs
-
+deer tp vector*2 end mg
 
 S3 super
 S4 uber
@@ -50,9 +50,10 @@ S4 uber
 
 //---Controls
 //\Yeebaagooon\Zoo Quest\Test sound.mp3
-int QuickStart = 4;
-bool LOS = true;
+int QuickStart = 5;
+bool LOS = false;
 int Stage = 0;
+//---Strings
 string MapVersion = "Test Version";
 string MapName = "Zoo Quest.xs";
 string GazelleProto = "Hero Greek Jason";
@@ -167,6 +168,10 @@ int xQuestionAnswer = 0;
 int xRelics = 0;
 int xCrocProto = 0;
 int xCrocRangedTime = 0;
+int xDeathVector = 0;
+//---S5
+int xTowerDamage = 0;
+int xTowerSpeed = 0;
 
 int dDestroyMe = 0;
 int xDestroyName = 0;
@@ -225,6 +230,9 @@ highFrequency
 	xRelics = xInitAddInt(dPlayerData, "relics", 0);
 	xCrocProto = xInitAddString(dPlayerData, "croc proto", CrocProto);
 	xCrocRangedTime = xInitAddInt(dPlayerData, "rangetime", 0);
+	xDeathVector = xInitAddVector(dPlayerData, "deathv", vector(0,0,0));
+	xTowerDamage = xInitAddInt(dPlayerData, "towerdmg", 1);
+	xTowerSpeed = xInitAddFloat(dPlayerData, "towerspeed", 10);
 	for(p=1; <= cNumberNonGaiaPlayers) {
 		xAddDatabaseBlock(dPlayerData, true);
 	}

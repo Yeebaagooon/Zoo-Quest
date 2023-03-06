@@ -308,6 +308,10 @@ inactive
 				trUnitSelectByQV("P"+p+"Unit");
 				trUnitTeleport(trVectorQuestVarGetX("P"+p+"Pos"),3,p*16);
 			}
+			if((trVectorQuestVarGetZ("P"+p+"Pos") < (p*16-8)) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0)){
+				trUnitSelectByQV("P"+p+"Unit");
+				trUnitTeleport(trVectorQuestVarGetX("P"+p+"Pos"),3,p*16);
+			}
 		}
 	}
 }
