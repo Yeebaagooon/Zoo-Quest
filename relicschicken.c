@@ -38,7 +38,7 @@ int relicProto(int relic = 0) {
 	{
 		case RELIC_ATTACK:
 		{
-			proto = kbGetProtoUnitID("Thor Hammer Head");
+			proto = kbGetProtoUnitID("Ballista");
 		}
 	}
 	return(proto);

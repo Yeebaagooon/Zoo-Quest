@@ -63,6 +63,7 @@ inactive
 			trPlayerKillAllGodPowers(p);
 			trForbidProtounit(p, "Armory");
 			trUnforbidProtounit(p, "Tower");
+			modifyProtounitAbsolute("Armory", p, 4, 3);
 			//limit
 			modifyProtounitAbsolute("Tower", p, 10, 1);
 			//build points = how many s to build
@@ -124,7 +125,7 @@ inactive
 		//	xsEnableRule("Charge");
 		//	xsDisableRule("VectorFirst");
 		//	xsDisableRule("VectorSecond");
-		//xsEnableRule("CrocTutorialDone");
+		xsEnableRule("ChickenTutorialDone");
 		trDelayedRuleActivation("ChickenMechanicLoops");
 		trDelayedRuleActivation("ChickenTutorialLoops");
 		if(QuickStart == 0){
@@ -193,7 +194,7 @@ void ProcessFreeRelics(int count = 0){
 					FunctionRelic(true, p);
 					trUnitSelectClear();
 					xUnitSelect(dFreeRelics, xSFXID);
-					trUnitChangeProtoUnit("Rocket");
+					trUnitChangeProtoUnit("Cinematic Block");
 					xAddDatabaseBlock(dHeldRelics, true);
 					xSetInt(dHeldRelics, xUnitID, 1*xGetInt(dFreeRelics, xUnitID));
 					xSetInt(dHeldRelics, xRelicType, 1*xGetInt(dFreeRelics, xRelicType));
@@ -224,7 +225,7 @@ void ProcessHeldRelics(int count = 1) {
 		}
 		if (trUnitGetIsContained("Unit") == false) {
 			FunctionRelic(false, dropper);
-			ColouredChatToPlayer(dropper, "1,0.2,0", relicName(xGetInt(dFreeRelics, xUnitID)) + " dropped");
+			ColouredChatToPlayer(dropper, "1,0.2,0", relicName(xGetInt(dHeldRelics, xUnitID)) + " dropped");
 			trUnitChangeProtoUnit("Relic");
 			xUnitSelect(dHeldRelics, xUnitID);
 			xAddDatabaseBlock(dFreeRelics, true);
@@ -244,13 +245,45 @@ void ProcessHeldRelics(int count = 1) {
 	}
 }
 
+void ProcessTowers(int count = 1) {
+	for (x=xsMin(count, xGetDatabaseCount(dTowers)); > 0) {
+		xDatabaseNext(dTowers);
+		if(xGetBool(dTowers, xConstructed) == false){
+			xUnitSelect(dTowers, xUnitID);
+			if(trUnitPercentComplete() == 100){
+				xSetBool(dTowers, xConstructed, true);
+			}
+		}
+		xUnitSelect(dTowers, xUnitID);
+		if(trUnitDead() == true){
+			xFreeDatabaseBlock(dTowers);
+		}
+	}
+}
+
+void ProcessEnemy(int count = 1) {
+	for (x=xsMin(count, xGetDatabaseCount(dEnemies)); > 0) {
+		xDatabaseNext(dEnemies);
+		xUnitSelect(dEnemies, xUnitID);
+		if(trUnitDead() == true){
+			xFreeDatabaseBlock(dEnemies);
+		}
+	}
+}
+
 rule ChickenMechanicLoops
 highFrequency
 inactive
 {
-	ProcessFreeRelics(1);
-	ProcessHeldRelics(1);
+	ProcessFreeRelics(5);
+	ProcessHeldRelics(5);
+	ProcessTowers(5);
+	ProcessEnemy(10);
+	vector start = vector(0,0,0);
+	vector dest = vector(0,0,0);
+	vector dir = vector(0,0,0);
 	for(p = 1; < cNumberNonGaiaPlayers){
+		xSetPointer(dPlayerData, p);
 		if(trPlayerUnitCountSpecific(p, "Armory") > 0){
 			yFindLatestReverse("ArmoryP"+p, "Armory", p);
 			trUnitSelectByQV("ArmoryP"+p);
@@ -259,8 +292,46 @@ inactive
 			trUnitConvert(0);
 			if(TutorialMode == true){
 				ForceRelic(1*trQuestVarGet("ArmoryP"+p),1,1);
+				if(trCurrentPlayer() == p){
+					npcDiag(16);
+					trCounterAbort("cdtutorial");
+					trCounterAddTime("cdtutorial", -100, -200, "<color={PlayerColor("+p+")}>Pick up the relic", -1);
+				}
 			}
 			//add to db held relics as will be owned by 0
+		}
+		if((xGetInt(dPlayerData, xTowerDamage) > 1) && (1*trQuestVarGet("P"+p+"FountainMsg") == 1)){
+			trQuestVarSet("P"+p+"FountainMsg", 2);
+			if(trCurrentPlayer() == p){
+				npcDiag(17);
+				trCounterAbort("cdtutorial");
+				trCounterAddTime("cdtutorial", -100, -200, "<color={PlayerColor("+p+")}>Press 'E' for all towers to fire", -1);
+			}
+		}
+		if(trPlayerResourceCount(p, "Food") > 0){
+			trPlayerGrantResources(p, "Food", -100000);
+			//E
+			trBlockAllAmbientSounds();
+			trBlockAllSounds();
+			for(a = xGetDatabaseCount(dTowers); > 0){
+				xDatabaseNext(dTowers);
+				if(xGetInt(dTowers, xOwner) == p){
+					if(xGetBool(dTowers, xConstructed) == true){
+						start = kbGetBlockPosition(""+xGetInt(dTowers, xUnitID));
+						dest = xGetVector(dPlayerData, xSpecialVector);
+						dir = xsVectorNormalize(dest-start);
+						IGUnit = true;
+						IGName = xGetInt(dTowers, xUnitID);
+						unitcheck = "Tower";
+						xSetPointer(dPlayerData, xGetInt(dTowers, xOwner));
+						ShootProjectile(dir, start, "Lampades Bolt", "Wadjet Spit", 0, xGetInt(dPlayerData, xTowerDamage), 5000, p);
+					}
+				}
+			}
+			trDelayedRuleActivation("UnblockSound");
+			if(TutorialMode){
+				trQuestVarSet("P"+p+"FountainMsg", 3);
+			}
 		}
 	}
 	
@@ -296,7 +367,7 @@ inactive
 					}
 				}
 			}
-			//through wall
+			//done
 			if((1*trQuestVarGet("P"+p+"FountainMsg") == 3) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0)){
 				trUnitSelectByQV("P"+p+"Unit");
 				trUnitChangeProtoUnit("Ragnorok SFX");
@@ -309,7 +380,6 @@ inactive
 				trQuestVarModify("PlayersDoneTutorial", "+", 1);
 				temp = 1*trQuestVarGet("PlayersDoneTutorial");
 				trPaintTerrain(5,((p*8)-2),40,((p*8+4)-2),CliffType,CliffSubType);
-				trPaintWaterColor(vector(0,1,0), 0,((p*8)-2),40,((p*8+4)-2));
 				trUnitSelectClear();
 				for(a = xGetDatabaseCount(dTemp) ; > 0){
 					xDatabaseNext(dTemp);
@@ -352,6 +422,37 @@ inactive
 				trUnitChangeProtoUnit("Hero Death");
 				CreateChicken(p, 14, p*16, 90);
 			}
+		}
+	}
+}
+
+rule ChickenTutorialDone
+highFrequency
+inactive
+{
+	if(PlayersActive == 1*trQuestVarGet("PlayersDoneTutorial")){
+		xsDisableSelf();
+		xsDisableRule("ChickenTutorialLoops");
+		xsDisableRule("FirstTower");
+		xsEnableRule("BuildChickenArea");
+		trClearCounterDisplay();
+		trCounterAbort("cdtutorial");
+		trCounterAbort("cdtutoriala");
+		trCounterAbort("cdtutorialtimeout");
+		trQuestVarSet("PlayersDoneTutorial", 0);
+		trLetterBox(true);
+		trUIFadeToColor(0,0,0,1,1,true);
+		Stage = 5;
+		characterDialog(ActName(Stage), " ", ActIcon(Stage));
+		trSetFogAndBlackmap(true,true);
+		trDelayedRuleActivation("ResetBlackmap");
+		trFadeOutAllSounds(3);
+		trFadeOutMusic(3);
+		xResetDatabase(dTemp);
+		TutorialMode = false;
+		for(p=1 ; < cNumberNonGaiaPlayers){
+			xSetPointer(dPlayerData, p);
+			//stats
 		}
 	}
 }

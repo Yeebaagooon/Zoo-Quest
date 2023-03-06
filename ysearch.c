@@ -74,6 +74,10 @@ highFrequency
 			case kbGetProtoUnitID("Storehouse"):
 			{
 				trPlayerGrantResources(kbUnitGetOwner(id), "Food", 1);
+				if(Stage == 5){
+					xSetPointer(dPlayerData, kbUnitGetOwner(id));
+					xSetVector(dPlayerData, xSpecialVector, kbGetBlockPosition(""+trGetUnitScenarioNameNumber(id)));
+				}
 				trUnitSelectClear();
 				trUnitSelectByID(id);
 				trUnitDestroy();

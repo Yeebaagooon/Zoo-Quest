@@ -172,6 +172,7 @@ int xDeathVector = 0;
 //---S5
 int xTowerDamage = 0;
 int xTowerSpeed = 0;
+int xSpecialVector = 0;
 
 int dDestroyMe = 0;
 int xDestroyName = 0;
@@ -233,6 +234,7 @@ highFrequency
 	xDeathVector = xInitAddVector(dPlayerData, "deathv", vector(0,0,0));
 	xTowerDamage = xInitAddInt(dPlayerData, "towerdmg", 1);
 	xTowerSpeed = xInitAddFloat(dPlayerData, "towerspeed", 10);
+	xSpecialVector = xInitAddVector(dPlayerData, "sv", vector(0,0,0));
 	for(p=1; <= cNumberNonGaiaPlayers) {
 		xAddDatabaseBlock(dPlayerData, true);
 	}

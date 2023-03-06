@@ -272,6 +272,40 @@ int npcDiag(int npc = 0, int dialog = 0) {
 				}
 			}
 		}
+		case 16:
+		{
+			switch(dialog)
+			{
+				case 1:
+				{
+					uiMessageBox("Click on a relic to find out what it does.");
+				}
+				case 2:
+				{
+					uiMessageBox("Garrison it in your Chicken to gain its benefit.");
+					dialog = 0;
+				}
+			}
+		}
+		case 17:
+		{
+			switch(dialog)
+			{
+				case 1:
+				{
+					uiMessageBox("Press 'E' for all towers to fire at the cursor.");
+				}
+				case 2:
+				{
+					uiMessageBox("This ability ignores range and happens instantly.");
+				}
+				case 3:
+				{
+					uiMessageBox("Obviously, it comes with a rehcrage time.");
+					dialog = 0;
+				}
+			}
+		}
 	}
 	return(dialog);
 }

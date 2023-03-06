@@ -32,7 +32,7 @@ rmsFunc = ''
 rmsMain = 'main.c'
 files = ['zshared.c', 'voids.c', 'globals.c', 'intsstrings.c', 'databases.c', 'relicschicken.c', 'gamefunctions.c', 'ysearch.c', 'nottud.c', 'choice.c', 'text.c', 'setup.c',
  'techstat.c', 'tutorialdeer.c', 'ActDeer.c', 'scorescreen.c', 'tutorialrhino.c', 'actrhino.c', 'tutorialgoat.c', 'ActGoat.c', 'tutorialcrocodile.c', 'ActCrocodile.c',
- 'tutorialchicken.c']
+ 'tutorialchicken.c', 'ActChicken.c']
 
 #########################################
 ####### CODE BELOW (DO NOT TOUCH) #######

@@ -376,9 +376,9 @@ void hotkeyAbility(int ability = 0) {
 		trackPlay(1,EVENT_BUILD_AT_CURSOR);
 		trBlockAllSounds(false);
 		xUnitSelectByID(dPlayerData, xPlayerUnitID);
-		//if (trUnitIsSelected() == false) {
-		//	uiFindType(""+GazelleProto);
-		//}
+		if (trUnitIsSelected() == false) {
+			uiFindType(CurrentProto());
+		}
 		if(trPlayerUnitCountSpecific(xGetPointer(dPlayerData), ""+GazelleProto) > 0){
 			switch(ability)
 			{

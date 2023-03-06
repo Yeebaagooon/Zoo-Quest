@@ -434,6 +434,12 @@ void DoMissileStage5(){
 	int unithit = 0;
 	int boomID = 0;
 	pos = kbGetBlockPosition(""+xGetInt(dMissiles, xUnitID));
+	//kill on invalid terrain, currently 0,1 grassb
+	if((trGetTerrainType(xsVectorGetX(pos)/2, xsVectorGetZ(pos)/2) == 0) && (trGetTerrainSubType(xsVectorGetX(pos)/2, xsVectorGetZ(pos)/2) == 1)){
+		xUnitSelect(dMissiles, xUnitID);
+		trUnitDestroy();
+		xFreeDatabaseBlock(dMissiles);
+	}
 	dir = xGetVector(dMissiles, xMissileDir); //Normalized direction when missile created and target locked
 	xSetVector(dMissiles, xMissilePos, pos);
 	float dist = distanceBetweenVectors(pos, prev, false);

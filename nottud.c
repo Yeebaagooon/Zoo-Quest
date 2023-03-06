@@ -2774,3 +2774,73 @@ void SpawnCrocPoacher4(int num = 0){
 		}
 	}
 }
+
+void createChickenArea(){
+	xResetDatabase(dFreeRelics);
+	xResetDatabase(dHeldRelics);
+	xResetDatabase(dTowers);
+	xResetDatabase(dEnemies);
+	trBlockAllSounds();
+	DestroyNumber = trGetNextUnitScenarioNameNumber();
+	int currentId = 0;
+	for(n = NewDestroyNumber ; < DestroyNumber){
+		trUnitSelectClear();
+		trUnitSelect(""+n);
+		trUnitDestroy();
+	}
+	string baseTerrain = "GrassB";
+	trSetCivAndCulture(0, 0, 0);
+	clearMap("GrassB", 5.0);
+	int centrePosX = randomInt(toTiles(0.45), toTiles(0.55));
+	int centrePosZ = randomInt(toTiles(0.45), toTiles(0.55));
+	int ABORT = 0;
+	smooth(4);
+	
+	vector tileForStart = vector(64,0,64);
+	
+	int StartTileX = xsVectorGetX(tileForStart);
+	int StartTileZ = xsVectorGetZ(tileForStart);
+	float StartHeight = 8;
+	float StartMetreX = StartTileX*2+1;
+	float StartMetreZ = StartTileZ*2+1;
+	trVectorQuestVarSet("dir", xsVectorSet(11, 0, 0));
+	trVectorQuestVarSet("CentreMap", xsVectorSet(StartMetreX, 0, StartMetreZ));
+	paintCircleHeight2(StartTileX, StartTileZ, 8, "GrassDirt25", 5);
+	//SPAWN PLAYERS
+	float baseCos = xsCos(6.283185 / (cNumberNonGaiaPlayers-1));
+	float baseSin = xsSin(6.283185 / (cNumberNonGaiaPlayers-1));
+	int heading = 90;
+	for(p=1; < cNumberNonGaiaPlayers) {
+		xSetPointer(dPlayerData, p);
+		trVectorQuestVarSet("base", trVectorQuestVarGet("CentreMap") + trVectorQuestVarGet("dir"));
+		heading = heading-(360/(cNumberNonGaiaPlayers-1));
+		if(heading > 360){
+			heading = heading-360;
+		}
+		if(heading < 0){
+			heading = heading+360;
+		}
+		if(xGetBool(dPlayerData, xPlayerActive) == true){
+			CreateChicken(p, trVectorQuestVarGetX("base"), trVectorQuestVarGetZ("base"), heading);
+		}
+		//spyEffect(1*trQuestVarGet("P"+p+"Unit"), kbGetProtoUnitID("Gazelle"), vector(1,1,1), vector(1,1,1));
+		trPlayerKillAllGodPowers(p);
+		trVectorQuestVarSet("dir", rotationMatrix(trVectorQuestVarGet("dir"), baseCos, baseSin));
+		trUnitSelectClear();
+	}
+	replaceTerrainAtMinSteepness("IceB", "RiverIcyC", 1.5);
+	
+	refreshPassability();
+	paintUnit("SnowGrass25", "Pine Snow", 0, 0.07);
+	paintUnit("SnowGrass50", "Pine Snow", 0, 0.12);
+	LeaveTerrain = "IceA";
+	Stage = 5;
+	StageRequirement = 100;
+	StageScore = 0;
+	PlayersDead = 0;
+	//EndPoint = tileForEnd;
+	MinigameFound = false;
+	InMinigame = false;
+	xsEnableRule("Reset Blackmap");
+	trUnblockAllSounds();
+}

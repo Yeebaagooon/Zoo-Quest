@@ -206,7 +206,7 @@ highFrequency
 		//limit
 		modifyProtounitAbsolute("Armory", p, 10, 1);
 		//build points = how many s to build
-		modifyProtounitAbsolute("Armory", p, 4, 1);
+		modifyProtounitAbsolute("Armory", p, 4, 100);
 	}
 	trModifyProtounit("Huskarl", 0, 55, 4);
 	trModifyProtounit("Trident Soldier", 0, 55, 4);
