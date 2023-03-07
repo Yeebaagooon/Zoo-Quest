@@ -676,6 +676,26 @@ void paintCircle(int posX = 0, int posZ = 0, int radius = 0, string terrain = ""
 		}
 	}
 }
+void paintCircleOutline(int posX = 0, int posZ = 0, int radius = 0, string terrain = "", int ignore = 0){
+	ignore = radius-2;
+	int terrainType = getTerrainType(terrain);
+	int terrainSubType = getTerrainSubType(terrain);
+	int tempMinX = xsMax(0.0 - posX, 0.0 - radius);
+	int tempMinZ = xsMax(0.0 - posZ, 0.0 - radius);
+	int tempMaxX = xsMin(getMapSize() / 2 - posX, radius);
+	int tempMaxZ = xsMin(getMapSize() / 2 - posZ, radius);
+	int tempRadiusCheck = radius * radius + radius;
+	int tempRadiusCheck2 = ignore * ignore + ignore;
+	for(tempZ = tempMaxZ; >= tempMinZ){
+		for(tempX = tempMaxX; >= tempMinX){
+			if(tempRadiusCheck >= (tempX*tempX + tempZ*tempZ)){
+				if(tempRadiusCheck2 < (tempX*tempX + tempZ*tempZ)){
+					trPaintTerrain(tempX + posX, tempZ + posZ, tempX + posX, tempZ + posZ, terrainType, terrainSubType, false);
+				}
+			}
+		}
+	}
+}
 void replaceCircleAllBut(int posX = 0, int posZ = 0, int radius = 0, string oldTerrain = "", string newTerrain = ""){
 	int oldTerrainType = getTerrainType(oldTerrain);
 	int oldTerrainSubType = getTerrainSubType(oldTerrain);
@@ -2825,15 +2845,17 @@ void createChickenArea(){
 	replaceCircle(StartTileX,StartTileZ,100,baseTerrain,"RiverGrassyA");
 	replaceCircle(StartTileX,StartTileZ,100,"CliffA","CliffNorseA");
 	replaceCircle(StartTileX,StartTileZ,100,"ForestFloorTundra","ForestFloorJungle");
+	paintCircleOutline(StartTileX,StartTileZ,52, "BlackRock");
 	replaceCircle(StartTileX,StartTileZ,50,"RiverGrassyA","RiverGrassyC");
 	replaceCircle(StartTileX,StartTileZ,50,"CliffNorseA","CliffEgyptianA");
 	replaceCircle(StartTileX,StartTileZ,50,"ForestFloorJungle","ForestFloorMarsh");
+	paintCircleOutline(StartTileX,StartTileZ,32, "BlackRock");
 	replaceCircle(StartTileX,StartTileZ,30,"RiverGrassyC","GrassB");
 	replaceCircle(StartTileX,StartTileZ,30,"CliffEgyptianA","HadesCliff");
 	replaceCircle(StartTileX,StartTileZ,30,"ForestFloorMarsh","ForestFloorOak");
-	paintTrees("ForestfloorJungle", "Pine Dead Burning");
-	paintTrees("ForestFloorMarsh", "Tundra Tree");
-	paintTrees("ForestFloorOak", "Oak Tree");
+	paintTrees2("ForestfloorJungle", "Pine Dead Burning");
+	paintTrees2("ForestFloorMarsh", "Tundra Tree");
+	paintTrees2("ForestFloorOak", "Oak Tree");
 	refreshPassability();
 	replaceCircle(StartTileX,StartTileZ,130,"CliffNorseA","UnderwaterIceC");
 	replaceCircle(StartTileX,StartTileZ,130,"ForestfloorJungle","UnderwaterRockC");
@@ -2889,19 +2911,21 @@ void createChickenArea(){
 	trUnblockAllSounds();
 	//3600 ring 1
 	//9900 ring 2
-	int tester = 5;
-	while(tester > 0){
+	//---ENEMY
+	/*int deploy = 15;
+	while(deploy > 0){
 		trQuestVarSetFromRand("temp", 1, xGetDatabaseCount(dShore));
 		xSetPointer(dShore, 1*trQuestVarGet("temp"));
 		tempV = xGetVector(dShore, xShoreLoc);
 		xSetInt(dShore, xShoreDist, distanceBetweenVectors(xGetVector(dShore, xShoreLoc), MapCentre, true));
-		debugLog(""+xGetInt(dShore, xShoreDist));
-		if(xGetInt(dShore, xShoreDist) < 3600){
+		if((xGetInt(dShore, xShoreDist) < 1800) && (xGetInt(dShore, xShoreDist) > 1600)){
 			currentId = trGetNextUnitScenarioNameNumber();
 			UnitCreate(cNumberNonGaiaPlayers, "Hoplite", xsVectorGetX(tempV), xsVectorGetZ(tempV), 0);
-			tester = tester-1;
+			trUnitSelectClear();
+			trUnitSelect(""+currentId);
+			deploy = deploy-1;
 			xAddDatabaseBlock(dEnemies, true);
 			xSetInt(dEnemies, xUnitID, currentId);
 		}
-	}
+	}*/
 }

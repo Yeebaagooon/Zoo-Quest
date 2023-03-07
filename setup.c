@@ -22,6 +22,7 @@ highFrequency
 	trEventSetHandler(37, "GoatMGTimeout");
 	trEventSetHandler(38, "CrocMinigameGo");
 	trEventSetHandler(39, "CrocMGTimeout");
+	trEventSetHandler(40, "ChickenWave1");
 	xsDisableSelf();
 }
 

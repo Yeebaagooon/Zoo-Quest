@@ -100,6 +100,7 @@ int xDecorationID = 0;
 int xCost = 0;
 
 int dEnemies = 0;
+int xMoved = 0;
 
 int dTowers = 0;
 int xConstructed = 0;
@@ -238,6 +239,7 @@ highFrequency
 	
 	dEnemies = xInitDatabase("Enemies");
 	xUnitID = xInitAddInt(dEnemies, "id", 0);
+	xMoved = xInitAddBool(dEnemies, "moved", false);
 	
 	dTowers = xInitDatabase("Towers");
 	xUnitID = xInitAddInt(dTowers, "id", 0);
@@ -437,11 +439,11 @@ void DoMissileStage5(){
 	int boomID = 0;
 	pos = kbGetBlockPosition(""+xGetInt(dMissiles, xUnitID));
 	//kill on invalid terrain, currently 0,1 grassb
-	if((trGetTerrainType(xsVectorGetX(pos)/2, xsVectorGetZ(pos)/2) == 0) && (trGetTerrainSubType(xsVectorGetX(pos)/2, xsVectorGetZ(pos)/2) == 1)){
+	/*if((trGetTerrainType(xsVectorGetX(pos)/2, xsVectorGetZ(pos)/2) == 0) && (trGetTerrainSubType(xsVectorGetX(pos)/2, xsVectorGetZ(pos)/2) == 1)){
 		xUnitSelect(dMissiles, xUnitID);
 		trUnitDestroy();
 		xFreeDatabaseBlock(dMissiles);
-	}
+	}*/
 	dir = xGetVector(dMissiles, xMissileDir); //Normalized direction when missile created and target locked
 	xSetVector(dMissiles, xMissilePos, pos);
 	float dist = distanceBetweenVectors(pos, prev, false);
@@ -472,6 +474,19 @@ void DoMissileStage5(){
 			xSetPointer(dPlayerData, xGetInt(dMissiles, xOwner));
 			xSetInt(dPlayerData, xS5Kills, xGetInt(dPlayerData, xS5Kills)+1);
 			debugLog("Enemies killed P" + xGetInt(dMissiles, xOwner) + " = " + xGetInt(dPlayerData, xS5Kills));
+			if(1 == xGetInt(dPlayerData, xS5Kills)){
+				//ALWAYS MAKE RELIC ON FIRST KILL
+				boomID = trGetNextUnitScenarioNameNumber();
+				UnitCreate(xGetPointer(dPlayerData), "Cinematic Block", xsVectorGetX(pos), xsVectorGetZ(pos), 0);
+				trUnitSelectClear();
+				trUnitSelect(""+boomID);
+				trUnitChangeProtoUnit("Medusa");
+				trModifyProtounit(ChickenProto, xGetPointer(dPlayerData), 5, 1);
+				if(trCurrentPlayer() == xGetPointer(dPlayerData)){
+					playSound("ageadvance.wav");
+					ColouredChatToPlayer(xGetPointer(dPlayerData), "1,0.5,0", "<u>Relic hold capacity increased!</u>");
+				}
+			}
 			xFreeDatabaseBlock(dEnemies);
 		}
 		//FREE DB LAST

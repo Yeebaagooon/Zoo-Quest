@@ -1,3 +1,7 @@
+void ChickenWave1(int unused = 0){
+	ActPart = 2;
+}
+
 rule BuildChickenArea
 highFrequency
 inactive
@@ -22,8 +26,7 @@ inactive
 		ColouredIconChat("1,0.5,0", ActIcon(Stage), "<u>" + ActName(Stage) + "</u>");
 		//ColouredIconChat("0.0,0.8,0.2", "icons\building norse shrine icon 64", "Interract with shrines using W.");
 		ColouredChat("0.0,0.8,0.2", "Chickens are tasty and made out of food.");
-		ColouredChat("0.0,0.8,0.2", "You will be hunted down shortly.");
-		ColouredChat("0.0,0.8,0.2", "Defend yourselves!");
+		ColouredChat("0.0,0.8,0.2", "This probably needs a short cinematic.");
 		xsEnableRule("PlayMusic");
 		PlayersDead = 0;
 		timediff = trTimeMS();
@@ -46,6 +49,39 @@ inactive
 		//trQuestVarSet("NextPoacherSpawn", trTime()+220);
 		//trQuestVarSet("NextFoodSpawn", trTime()+90);
 		trRateConstruction(1);
+		if(QuickStart == 5){
+			trRateConstruction(10);
+		}
 		ActPart = 1;
+		trCounterAddTime("ChickenInfo", 7, 0, "<color={PlayerColor(2)}>Attacks begin</color>", 40);
+		xsEnableRule("ChickenWave1Go");
+	}
+}
+
+rule ChickenWave1Go
+inactive
+highFrequency
+{
+	int temp = 0;
+	if(ActPart == 2){
+		int deploy = 15;
+		while(deploy > 0){
+			trQuestVarSetFromRand("temp", 1, xGetDatabaseCount(dShore));
+			xSetPointer(dShore, 1*trQuestVarGet("temp"));
+			tempV = xGetVector(dShore, xShoreLoc);
+			xSetInt(dShore, xShoreDist, distanceBetweenVectors(xGetVector(dShore, xShoreLoc), MapCentre, true));
+			if((xGetInt(dShore, xShoreDist) < 1800) && (xGetInt(dShore, xShoreDist) > 1600)){
+				temp = trGetNextUnitScenarioNameNumber();
+				UnitCreate(cNumberNonGaiaPlayers, "Hoplite", xsVectorGetX(tempV), xsVectorGetZ(tempV), 0);
+				trUnitSelectClear();
+				trUnitSelect(""+temp);
+				deploy = deploy-1;
+				xAddDatabaseBlock(dEnemies, true);
+				xSetInt(dEnemies, xUnitID, temp);
+				trUnitMoveToPoint(xsVectorGetX(MapCentre),1,xsVectorGetZ(MapCentre),-1,true);
+			}
+		}
+		playSound("\cinematics\04_in\armyarrive.wav");
+		xsDisableSelf();
 	}
 }

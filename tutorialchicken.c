@@ -265,9 +265,15 @@ void ProcessEnemy(int count = 1) {
 	for (x=xsMin(count, xGetDatabaseCount(dEnemies)); > 0) {
 		xDatabaseNext(dEnemies);
 		xUnitSelect(dEnemies, xUnitID);
+		if((trUnitPercentDamaged() > 0) && (xGetBool(dEnemies, xMoved) == false)){
+			xSetBool(dEnemies, xMoved, true);
+			trUnitMoveToPoint(xsVectorGetX(MapCentre),1,xsVectorGetZ(MapCentre),-1,true);
+		}
+		/*xUnitSelect(dEnemies, xUnitID);
 		if(trUnitDead() == true){
 			xFreeDatabaseBlock(dEnemies);
-		}
+		}*/
+		trUnitSelectClear();
 	}
 }
 
@@ -278,7 +284,7 @@ inactive
 	ProcessFreeRelics(5);
 	ProcessHeldRelics(5);
 	ProcessTowers(5);
-	//ProcessEnemy(10);
+	ProcessEnemy(10);
 	vector start = vector(0,0,0);
 	vector dest = vector(0,0,0);
 	vector dir = vector(0,0,0);
@@ -302,6 +308,14 @@ inactive
 				NewRelic(1*trQuestVarGet("ArmoryP"+p));
 			}
 			//add to db held relics as will be owned by 0
+		}
+		if(trPlayerUnitCountSpecific(p, "Medusa") > 0){
+			yFindLatestReverse("MedusaP"+p, "Medusa", p);
+			trUnitSelectByQV("MedusaP"+p);
+			trUnitChangeProtoUnit("Relic");
+			trUnitSelectByQV("MedusaP"+p);
+			trUnitConvert(0);
+			NewRelic(1*trQuestVarGet("MedusaP"+p));
 		}
 		if((xGetInt(dPlayerData, xTowerDamage) > 1) && (1*trQuestVarGet("P"+p+"FountainMsg") == 1)){
 			trQuestVarSet("P"+p+"FountainMsg", 2);
@@ -336,6 +350,15 @@ inactive
 				trQuestVarSet("P"+p+"FountainMsg", 3);
 			}
 		}
+		if(trPlayerUnitCountSpecific(p, ChickenProto) == 1){
+			trUnitSelectByQV("P"+p+"Unit");
+			if (trUnitIsSelected()) {
+				gadgetReal("unitStatPanel-stat-Capacity");
+				gadgetReal("CapacityTextDisplay");
+			}
+			trUnitSelectClear();
+		}
+		
 	}
 	
 }
