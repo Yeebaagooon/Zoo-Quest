@@ -903,6 +903,15 @@ void DoRelicSFX(int id = 0, int type = 0){
 		trUnitSelect(""+id);
 		trSetScale(0.5);
 	}
+	if(type == RELIC_CHICKEN_HP){
+		trUnitChangeProtoUnit("Spy Eye");
+		trUnitSelectClear();
+		trUnitSelect(""+id);
+		trMutateSelected(kbGetProtoUnitID("Chicken Exploding"));
+		trUnitSelectClear();
+		trUnitSelect(""+id);
+		trSetScale(2);
+	}
 }
 
 void ForceRelic(int id = 0, int type = 0, float stat = 0){
@@ -949,6 +958,10 @@ void NewRelic(int id = 0, int max = 0){
 	if(type == RELIC_TOWER){
 		trQuestVarSetFromRand("temp", 1, 3, true);
 	}
+	if(type == RELIC_CHICKEN_HP){
+		trQuestVarSetFromRand("temp", 1, 7, true);
+		trQuestVarModify("temp", "*", 15);
+	}
 	stat = trQuestVarGet("temp");
 	xAddDatabaseBlock(dFreeRelics, true);
 	xSetInt(dFreeRelics, xUnitID, id);
@@ -987,6 +1000,9 @@ void FunctionRelic(bool apply = false, int p = 0){
 		if(xGetInt(dFreeRelics, xRelicType) == RELIC_TOWER){
 			trModifyProtounit("Tower", p, 10, 1*xGetFloat(dFreeRelics, xRelicStat)+1);
 		}
+		if(xGetInt(dFreeRelics, xRelicType) == RELIC_CHICKEN_HP){
+			trModifyProtounit(ChickenProto, p, 0, 1*xGetFloat(dFreeRelics, xRelicStat));
+		}
 	}
 	if(apply == false){
 		//HELD RELICS FOR HERE
@@ -1010,6 +1026,31 @@ void FunctionRelic(bool apply = false, int p = 0){
 		}
 		if(xGetInt(dHeldRelics, xRelicType) == RELIC_TOWER){
 			trModifyProtounit("Tower", p, 10, -1*xGetFloat(dHeldRelics, xRelicStat)-1);
+		}
+		if(xGetInt(dHeldRelics, xRelicType) == RELIC_CHICKEN_HP){
+			trModifyProtounit(ChickenProto, p, 0, -1*xGetFloat(dHeldRelics, xRelicStat));
+		}
+		
+	}
+}
+
+void R5Wave(int deploy = 1, string proto = "", int distancemmax = 1800, int distancemin = 1600){
+	vector tempV = vector(0,0,0);
+	int temp = 0;
+	while(deploy > 0){
+		trQuestVarSetFromRand("temp", 1, xGetDatabaseCount(dShore));
+		xSetPointer(dShore, 1*trQuestVarGet("temp"));
+		tempV = xGetVector(dShore, xShoreLoc);
+		xSetInt(dShore, xShoreDist, distanceBetweenVectors(xGetVector(dShore, xShoreLoc), MapCentre, true));
+		if((xGetInt(dShore, xShoreDist) < distancemmax) && (xGetInt(dShore, xShoreDist) > distancemin)){
+			temp = trGetNextUnitScenarioNameNumber();
+			UnitCreate(cNumberNonGaiaPlayers, proto, xsVectorGetX(tempV), xsVectorGetZ(tempV), 0);
+			trUnitSelectClear();
+			trUnitSelect(""+temp);
+			deploy = deploy-1;
+			xAddDatabaseBlock(dEnemies, true);
+			xSetInt(dEnemies, xUnitID, temp);
+			trUnitMoveToPoint(xsVectorGetX(MapCentre),1,xsVectorGetZ(MapCentre),-1,true);
 		}
 	}
 }

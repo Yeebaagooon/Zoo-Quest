@@ -1,4 +1,4 @@
-const int RELIC_NUMBER = 6;
+const int RELIC_NUMBER = 7;
 
 const int RELIC_ATTACK = 1;
 const int RELIC_HP = 2;
@@ -6,6 +6,7 @@ const int RELIC_PROJ_SPEED = 3;
 const int RELIC_CHICKEN_SPEED = 4;
 const int RELIC_RANGE = 5;
 const int RELIC_TOWER = 6;
+const int RELIC_CHICKEN_HP = 7;
 
 
 //cone proj, armoury, allow cliff
@@ -56,6 +57,10 @@ string relicName(int relicid = 0) {
 		{
 			msg = "+ " + 1*stat + " tower limit";
 		}
+		case RELIC_CHICKEN_HP:
+		{
+			msg = "+ " + 1*stat + " chicken HP";
+		}
 	}
 	return(msg);
 }
@@ -87,6 +92,10 @@ int relicProto(int relic = 0) {
 		case RELIC_TOWER:
 		{
 			proto = kbGetProtoUnitID("Tower");
+		}
+		case RELIC_CHICKEN_HP:
+		{
+			proto = kbGetProtoUnitID("Chicken Exploding");
 		}
 	}
 	return(proto);

@@ -18,6 +18,8 @@ highFrequency
 		trTechSetStatus(p, 30, 4);
 		trTechSetStatus(p, 350, 4);
 		trTechSetStatus(p, 27, 4);
+		trTechSetStatus(p, 126, 0);
+		trTechSetStatus(p, 350, 0);
 		for(n=930; > 0) {
 			trForbidProtounit(p,kbGetProtoUnitName(n));
 		}
@@ -195,6 +197,7 @@ highFrequency
 		modifyProtounitAbsolute("Tower", p, 11, 20);
 		modifyProtounitAbsolute("Tower", p, 2, 22);
 		modifyProtounitAbsolute("Tower", p, 0, 100);
+		modifyProtounitAbsolute(""+ChickenProto, p, 0, 100);
 		//garrison capacity
 		modifyProtounitAbsolute("Tower", p, 5, 1);
 		//attack

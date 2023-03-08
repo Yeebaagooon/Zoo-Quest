@@ -447,14 +447,21 @@ void DoMissileStage5(){
 	dir = xGetVector(dMissiles, xMissileDir); //Normalized direction when missile created and target locked
 	xSetVector(dMissiles, xMissilePos, pos);
 	float dist = distanceBetweenVectors(pos, prev, false);
-	for(x = xGetDatabaseCount(dEnemies); > 0) {
-		xDatabaseNext(dEnemies);
-		//2 is raw dist, 4 is squared
-		if(rayCollision(prev,dir,dist+1,1)){
-			hitenemy = true;
-			unithit = xGetPointer(dEnemies);
-			break;
+	if(xGetInt(dMissiles, xOwner) != cNumberNonGaiaPlayers){
+		for(x = xGetDatabaseCount(dEnemies); > 0) {
+			xDatabaseNext(dEnemies);
+			//2 is raw dist, 4 is squared
+			if(rayCollision(prev,dir,dist+1,1)){
+				hitenemy = true;
+				unithit = xGetPointer(dEnemies);
+				break;
+			}
 		}
+	}
+	else{
+		//enemy projectiles
+		//dtower
+		//dplayerdata
 	}
 	if(hitenemy){
 		//hit effect

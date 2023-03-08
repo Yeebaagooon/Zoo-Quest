@@ -58,6 +58,8 @@ inactive
 		trQuestVarSet("PlayersDoneTutorial", 0);
 		for(p=1 ; < cNumberNonGaiaPlayers){
 			//projectile speed
+			trTechSetStatus(p, 126, 0);
+			trTechSetStatus(p, 350, 0);
 			modifyProtounitAbsolute("Wadjet Spit", p, 1, 10);
 			trTechSetStatus(p, 108, 4);
 			trPlayerKillAllGodPowers(p);

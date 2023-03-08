@@ -62,26 +62,31 @@ rule ChickenWave1Go
 inactive
 highFrequency
 {
-	int temp = 0;
 	if(ActPart == 2){
-		int deploy = 15;
-		while(deploy > 0){
-			trQuestVarSetFromRand("temp", 1, xGetDatabaseCount(dShore));
-			xSetPointer(dShore, 1*trQuestVarGet("temp"));
-			tempV = xGetVector(dShore, xShoreLoc);
-			xSetInt(dShore, xShoreDist, distanceBetweenVectors(xGetVector(dShore, xShoreLoc), MapCentre, true));
-			if((xGetInt(dShore, xShoreDist) < 1800) && (xGetInt(dShore, xShoreDist) > 1600)){
-				temp = trGetNextUnitScenarioNameNumber();
-				UnitCreate(cNumberNonGaiaPlayers, "Hoplite", xsVectorGetX(tempV), xsVectorGetZ(tempV), 0);
-				trUnitSelectClear();
-				trUnitSelect(""+temp);
-				deploy = deploy-1;
-				xAddDatabaseBlock(dEnemies, true);
-				xSetInt(dEnemies, xUnitID, temp);
-				trUnitMoveToPoint(xsVectorGetX(MapCentre),1,xsVectorGetZ(MapCentre),-1,true);
-			}
-		}
+		R5Wave(5*PlayersActive, "Hoplite", 1800, 1600);
+		xsEnableRule("ChickenWave1A");
 		playSound("\cinematics\04_in\armyarrive.wav");
+		xsDisableSelf();
+	}
+}
+
+rule ChickenWave1A
+inactive
+highFrequency
+{
+	if (trTime() > cActivationTime + 30) {
+		R5Wave(5*PlayersActive, "Hoplite", 1800, 1600);
+		xsEnableRule("ChickenWave1B");
+		xsDisableSelf();
+	}
+}
+
+rule ChickenWave1B
+inactive
+highFrequency
+{
+	if (trTime() > cActivationTime + 30) {
+		R5Wave(5*PlayersActive, "Hoplite", 1900, 1700);
 		xsDisableSelf();
 	}
 }
