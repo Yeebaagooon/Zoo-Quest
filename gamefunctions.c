@@ -901,7 +901,7 @@ void DoRelicSFX(int id = 0, int type = 0){
 		trMutateSelected(kbGetProtoUnitID("undermine ground decal corner"));
 		trUnitSelectClear();
 		trUnitSelect(""+id);
-		trSetScale(0.5);
+		trSetScale(0.8);
 	}
 	if(type == RELIC_CHICKEN_HP){
 		trUnitChangeProtoUnit("Spy Eye");
@@ -929,37 +929,63 @@ void ForceRelic(int id = 0, int type = 0, float stat = 0){
 	xSetInt(dFreeRelics, xSFXID, 1*trQuestVarGet("SFXUnit"));
 }
 
-void NewRelic(int id = 0, int max = 0){
+void NewRelic(int id = 0, int max = 0, int forcelevel = 0){
 	int type = 0;
 	float stat = 0;
+	float level = 0;
 	if(max == 0){
 		max = RELIC_NUMBER;
+	}
+	if(forcelevel == 0){
+		trQuestVarSetFromRand("temp", 1, ChickenLevel);
+		level = 1*trQuestVarGet("temp");
 	}
 	trQuestVarSetFromRand("type", 1, max);
 	type = 1*trQuestVarGet("type");
 	if(type == RELIC_ATTACK){
 		trQuestVarSetFromRand("temp", 1, 5, true);
+		if(level == 2){
+			trQuestVarSetFromRand("temp", 6, 10, true);
+		}
 	}
 	if(type == RELIC_HP){
 		trQuestVarSetFromRand("temp", 3, 10, true);
+		if(level == 2){
+			trQuestVarSetFromRand("temp", 11, 20, true);
+		}
 		trQuestVarModify("temp", "*", 10);
 	}
 	if(type == RELIC_PROJ_SPEED){
 		trQuestVarSetFromRand("temp", 1, 6, true);
+		if(level == 2){
+			trQuestVarSetFromRand("temp", 7, 10, true);
+		}
 		trQuestVarModify("temp", "*", 0.5);
 	}
 	if(type == RELIC_CHICKEN_SPEED){
 		trQuestVarSetFromRand("temp", 1, 5, true);
+		if(level == 2){
+			trQuestVarSetFromRand("temp", 6, 8, true);
+		}
 		trQuestVarModify("temp", "*", 0.5);
 	}
 	if(type == RELIC_RANGE){
 		trQuestVarSetFromRand("temp", 1, 4, true);
+		if(level == 2){
+			trQuestVarSetFromRand("temp", 5, 7, true);
+		}
 	}
 	if(type == RELIC_TOWER){
 		trQuestVarSetFromRand("temp", 1, 3, true);
+		if(level == 2){
+			trQuestVarSetFromRand("temp", 4, 5, true);
+		}
 	}
 	if(type == RELIC_CHICKEN_HP){
 		trQuestVarSetFromRand("temp", 1, 7, true);
+		if(level == 2){
+			trQuestVarSetFromRand("temp", 8, 11, true);
+		}
 		trQuestVarModify("temp", "*", 15);
 	}
 	stat = trQuestVarGet("temp");
@@ -972,9 +998,12 @@ void NewRelic(int id = 0, int max = 0){
 	trUnitChangeProtoUnit("Titan Atlantean");
 	xUnitSelect(dFreeRelics, xUnitID);
 	trUnitChangeProtoUnit("Relic");
+	//xUnitSelect(dFreeRelics, xUnitID);
+	//trSetScale(0.25*level+0.75);
 	yFindLatestReverse("SFXUnit", "Titan Gate Dead", 0);
 	DoRelicSFX(1*trQuestVarGet("SFXUnit"), type);
 	xSetInt(dFreeRelics, xSFXID, 1*trQuestVarGet("SFXUnit"));
+	//xSetInt(dFreeRelics, xRelicLevel, level);
 }
 
 void FunctionRelic(bool apply = false, int p = 0){

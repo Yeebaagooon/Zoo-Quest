@@ -55,6 +55,8 @@ inactive
 		ActPart = 1;
 		trCounterAddTime("ChickenInfo", 7, 0, "<color={PlayerColor(2)}>Attacks begin</color>", 40);
 		xsEnableRule("ChickenWave1Go");
+		modifyProtounitAbsolute("Toxotes", cNumberNonGaiaPlayers, 0, 10);
+		modifyProtounitAbsolute("Toxotes", cNumberNonGaiaPlayers, 31, 5);
 	}
 }
 
@@ -86,7 +88,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(5*PlayersActive, "Hoplite", 1900, 1700);
+		R5Wave(5*PlayersActive, "Toxotes", 1900, 1700);
 		xsDisableSelf();
 	}
 }

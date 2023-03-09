@@ -310,14 +310,29 @@ highFrequency
 				closest = 10000;
 				closestid = 0;
 				//cycle through all poachers to find the closest
-				for(a=0 ; < xGetDatabaseCount(dPoachers)){
-					xDatabaseNext(dPoachers);
-					dir = kbGetBlockPosition(""+xGetInt(dPoachers, xUnitID));
-					xUnitSelect(dPoachers, xUnitID);
-					if(trUnitDead() == false){
-						if(distanceBetweenVectors(dir, slingvector, true) < closest){
-							closest = distanceBetweenVectors(dir, slingvector, true);
-							closestid = xGetInt(dPoachers, xUnitID);
+				if(Stage != 5){
+					for(a=0 ; < xGetDatabaseCount(dPoachers)){
+						xDatabaseNext(dPoachers);
+						dir = kbGetBlockPosition(""+xGetInt(dPoachers, xUnitID));
+						xUnitSelect(dPoachers, xUnitID);
+						if(trUnitDead() == false){
+							if(distanceBetweenVectors(dir, slingvector, true) < closest){
+								closest = distanceBetweenVectors(dir, slingvector, true);
+								closestid = xGetInt(dPoachers, xUnitID);
+							}
+						}
+					}
+				}
+				else{
+					for(a=0 ; < xGetDatabaseCount(dEnemies)){
+						xDatabaseNext(dEnemies);
+						dir = kbGetBlockPosition(""+xGetInt(dEnemies, xUnitID));
+						xUnitSelect(dEnemies, xUnitID);
+						if(trUnitDead() == false){
+							if(distanceBetweenVectors(dir, slingvector, true) < closest){
+								closest = distanceBetweenVectors(dir, slingvector, true);
+								closestid = xGetInt(dEnemies, xUnitID);
+							}
 						}
 					}
 				}
@@ -351,6 +366,9 @@ highFrequency
 						IGName = closestid;
 					}
 					ShootProjectile(dir, closevector, "Lampades Bolt", "Wadjet Spit");
+				}
+				if(Stage == 5){
+					ShootProjectile(dir, closevector, "Ball of Fire", "Wadjet Spit", 0, 5, 8000);
 				}
 			}
 			case kbGetProtoUnitID("Tower"):

@@ -110,6 +110,7 @@ int dFreeRelics = 0;
 int xRelicType = 0;
 int xRelicStat = 0;
 int xSFXID = 0;
+int xRelicLevel = 0;
 
 rule initialise_spy_database
 active
@@ -251,12 +252,14 @@ highFrequency
 	xRelicType = xInitAddInt(dFreeRelics, "type", 0);
 	xRelicStat = xInitAddFloat(dFreeRelics, "statvalue", 0);
 	xSFXID = xInitAddInt(dFreeRelics, "sfxid", -1);
+	xRelicLevel = xInitAddInt(dFreeRelics, "level", 1);
 	
 	dHeldRelics = xInitDatabase("FreeRelics");
 	xUnitID = xInitAddInt(dHeldRelics, "id", -1);
 	xRelicType = xInitAddInt(dHeldRelics, "type", 0);
 	xRelicStat = xInitAddFloat(dHeldRelics, "statvalue", 0);
 	xSFXID = xInitAddInt(dHeldRelics, "sfxid", -1);
+	xRelicLevel = xInitAddInt(dHeldRelics, "level", 1);
 }
 
 /*
@@ -307,12 +310,24 @@ bool rayCollision(vector start = vector(0,0,0), vector dir = vector(1,0,0),
 		}
 	}
 	else{
-		pos = kbGetBlockPosition(""+xGetInt(dEnemies,xUnitID),true);
-		current = distanceBetweenVectors(pos, start, false);
-		if (current < dist) {
-			hitbox = start + dir * current;
-			if (distanceBetweenVectors(pos, hitbox, true) <= width) {
-				return(true);
+		if(xGetInt(dMissiles, xOwner) != cNumberNonGaiaPlayers){
+			pos = kbGetBlockPosition(""+xGetInt(dEnemies,xUnitID),true);
+			current = distanceBetweenVectors(pos, start, false);
+			if (current < dist) {
+				hitbox = start + dir * current;
+				if (distanceBetweenVectors(pos, hitbox, true) <= width) {
+					return(true);
+				}
+			}
+		}
+		else{
+			pos = kbGetBlockPosition(""+xGetInt(dTowers,xUnitID),true);
+			current = distanceBetweenVectors(pos, start, false);
+			if (current < dist) {
+				hitbox = start + dir * current;
+				if (distanceBetweenVectors(pos, hitbox, true) <= width) {
+					return(true);
+				}
 			}
 		}
 	}
@@ -435,6 +450,8 @@ void DoMissileStage5(){
 	vector prev = vector(0,0,0);
 	prev = xGetVector(dMissiles, xMissilePrev); //when created this is the same as xMissilePos
 	bool hitenemy = false;
+	bool hittower = false;
+	bool hitplayer = false;
 	int unithit = 0;
 	int boomID = 0;
 	pos = kbGetBlockPosition(""+xGetInt(dMissiles, xUnitID));
@@ -459,9 +476,15 @@ void DoMissileStage5(){
 		}
 	}
 	else{
-		//enemy projectiles
-		//dtower
-		//dplayerdata
+		for(x = xGetDatabaseCount(dTowers); > 0) {
+			xDatabaseNext(dTowers);
+			//2 is raw dist, 4 is squared
+			if(rayCollision(prev,dir,dist+2,4)){
+				hittower = true;
+				unithit = xGetPointer(dTowers);
+				break;
+			}
+		}
 	}
 	if(hitenemy){
 		//hit effect
@@ -489,6 +512,7 @@ void DoMissileStage5(){
 				trUnitSelect(""+boomID);
 				trUnitChangeProtoUnit("Medusa");
 				trModifyProtounit(ChickenProto, xGetPointer(dPlayerData), 5, 1);
+				ChickenLevel = 2;
 				if(trCurrentPlayer() == xGetPointer(dPlayerData)){
 					playSound("ageadvance.wav");
 					ColouredChatToPlayer(xGetPointer(dPlayerData), "1,0.5,0", "<u>Relic hold capacity increased!</u>");
@@ -499,6 +523,15 @@ void DoMissileStage5(){
 		//FREE DB LAST
 		xFreeDatabaseBlock(dMissiles);
 		//debugLog("Hits P " + playerhit);
+	}
+	else if(hittower){
+		xUnitSelect(dMissiles, xUnitID);
+		trUnitDestroy();
+		trUnitSelectClear();
+		xSetPointer(dTowers, unithit);
+		xUnitSelect(dTowers, xUnitID);
+		trDamageUnit(xGetInt(dMissiles, xMissileDmg));
+		xFreeDatabaseBlock(dMissiles);
 	}
 	else{
 		xSetVector(dMissiles, xMissilePrev, pos);

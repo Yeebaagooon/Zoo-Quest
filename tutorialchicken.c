@@ -201,7 +201,10 @@ void ProcessFreeRelics(int count = 0){
 					xSetInt(dHeldRelics, xUnitID, 1*xGetInt(dFreeRelics, xUnitID));
 					xSetInt(dHeldRelics, xRelicType, 1*xGetInt(dFreeRelics, xRelicType));
 					xSetFloat(dHeldRelics, xRelicStat, xGetFloat(dFreeRelics, xRelicStat));
+					xSetInt(dHeldRelics, xRelicLevel, xGetInt(dFreeRelics, xRelicLevel));
 					xFreeDatabaseBlock(dFreeRelics);
+					trUnitSelectByQV("P"+p+"Unit");
+					trMutateSelected(kbGetProtoUnitID(""+ChickenProto));
 					break;
 				}
 			}
@@ -230,17 +233,19 @@ void ProcessHeldRelics(int count = 1) {
 			ColouredChatToPlayer(dropper, "1,0.2,0", relicName(xGetInt(dHeldRelics, xUnitID)) + " dropped");
 			trUnitChangeProtoUnit("Relic");
 			xUnitSelect(dHeldRelics, xUnitID);
-			xAddDatabaseBlock(dFreeRelics, true);
-			xUnitSelect(dHeldRelics, xUnitID);
 			trUnitChangeProtoUnit("Titan Atlantean");
 			yFindLatestReverse("SFXUnit", "Titan Gate Dead", 0);
 			DoRelicSFX(1*trQuestVarGet("SFXUnit"), xGetInt(dHeldRelics, xRelicType));
 			xUnitSelect(dHeldRelics, xUnitID);
 			trUnitChangeProtoUnit("Relic");
+			xUnitSelect(dHeldRelics, xUnitID);
+			trSetScale(0.25*xGetInt(dHeldRelics, xRelicLevel)+0.75);
+			xAddDatabaseBlock(dFreeRelics, true);
 			xSetInt(dFreeRelics, xUnitID, 1*xGetInt(dHeldRelics, xUnitID));
 			xSetInt(dFreeRelics, xRelicType, 1*xGetInt(dHeldRelics, xRelicType));
 			xSetFloat(dFreeRelics, xRelicStat, xGetFloat(dHeldRelics, xRelicStat));
 			xSetInt(dFreeRelics, xSFXID, 1*trQuestVarGet("SFXUnit"));
+			xSetInt(dFreeRelics, xRelicLevel, 1*xGetInt(dHeldRelics, xRelicLevel));
 			xFreeDatabaseBlock(dHeldRelics);
 			break;
 		}
@@ -271,10 +276,10 @@ void ProcessEnemy(int count = 1) {
 			xSetBool(dEnemies, xMoved, true);
 			trUnitMoveToPoint(xsVectorGetX(MapCentre),1,xsVectorGetZ(MapCentre),-1,true);
 		}
-		/*xUnitSelect(dEnemies, xUnitID);
+		xUnitSelect(dEnemies, xUnitID);
 		if(trUnitDead() == true){
 			xFreeDatabaseBlock(dEnemies);
-		}*/
+		}
 		trUnitSelectClear();
 	}
 }
