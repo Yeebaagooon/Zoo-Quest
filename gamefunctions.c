@@ -616,6 +616,9 @@ void CreateChicken(int p = 1, int x = 1, int z = 1, int heading = 0){
 	xSetPointer(dPlayerData, p);
 	xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
 	xSetBool(dPlayerData, xStopDeath, false);
+	
+	xAddDatabaseBlock(dEnemyCollision, true);
+	xSetInt(dEnemyCollision, xUnitID, 1*trQuestVarGet("P"+p+"Unit"));
 	/*
 	vector test = kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit"));
 	test = test + HeadingToVector(heading);
@@ -912,6 +915,21 @@ void DoRelicSFX(int id = 0, int type = 0){
 		trUnitSelect(""+id);
 		trSetScale(2);
 	}
+	if(type == RELIC_CHICKEN_HEAL){
+		trUnitChangeProtoUnit("Spy Eye");
+		trUnitSelectClear();
+		trUnitSelect(""+id);
+		trMutateSelected(kbGetProtoUnitID("Healing SFX"));
+	}
+	if(type == RELIC_TOWER_HEAL){
+		trUnitChangeProtoUnit("Spy Eye");
+		trUnitSelectClear();
+		trUnitSelect(""+id);
+		trMutateSelected(kbGetProtoUnitID("Poison SFX"));
+		trUnitSelectClear();
+		trUnitSelect(""+id);
+		trSetScale(0.2);
+	}
 }
 
 void ForceRelic(int id = 0, int type = 0, float stat = 0){
@@ -943,9 +961,12 @@ void NewRelic(int id = 0, int max = 0, int forcelevel = 0){
 	trQuestVarSetFromRand("type", 1, max);
 	type = 1*trQuestVarGet("type");
 	if(type == RELIC_ATTACK){
-		trQuestVarSetFromRand("temp", 1, 5, true);
+		trQuestVarSetFromRand("temp", 1, 3, true);
 		if(level == 2){
-			trQuestVarSetFromRand("temp", 6, 10, true);
+			trQuestVarSetFromRand("temp", 4, 6, true);
+		}
+		if(level == 3){
+			trQuestVarSetFromRand("temp", 7, 9, true);
 		}
 	}
 	if(type == RELIC_HP){
@@ -953,38 +974,55 @@ void NewRelic(int id = 0, int max = 0, int forcelevel = 0){
 		if(level == 2){
 			trQuestVarSetFromRand("temp", 11, 20, true);
 		}
+		if(level == 3){
+			trQuestVarSetFromRand("temp", 21, 30, true);
+		}
 		trQuestVarModify("temp", "*", 10);
 	}
 	if(type == RELIC_PROJ_SPEED){
-		trQuestVarSetFromRand("temp", 1, 6, true);
+		trQuestVarSetFromRand("temp", 1, 2, true);
 		if(level == 2){
-			trQuestVarSetFromRand("temp", 7, 10, true);
+			trQuestVarSet("temp", 3);
 		}
-		trQuestVarModify("temp", "*", 0.5);
+		if(level == 3){
+			trQuestVarSet("temp", 4);
+		}
+		trQuestVarModify("temp", "*", 1);
 	}
 	if(type == RELIC_CHICKEN_SPEED){
-		trQuestVarSetFromRand("temp", 1, 5, true);
+		trQuestVarSet("temp", 1);
 		if(level == 2){
-			trQuestVarSetFromRand("temp", 6, 8, true);
+			trQuestVarSet("temp", 2);
 		}
-		trQuestVarModify("temp", "*", 0.5);
+		if(level == 3){
+			trQuestVarSet("temp", 3);
+		}
 	}
 	if(type == RELIC_RANGE){
-		trQuestVarSetFromRand("temp", 1, 4, true);
+		trQuestVarSetFromRand("temp", 1, 2, true);
 		if(level == 2){
-			trQuestVarSetFromRand("temp", 5, 7, true);
+			trQuestVarSetFromRand("temp", 3, 4, true);
+		}
+		if(level == 3){
+			trQuestVarSetFromRand("temp", 5, 6, true);
 		}
 	}
 	if(type == RELIC_TOWER){
-		trQuestVarSetFromRand("temp", 1, 3, true);
+		trQuestVarSetFromRand("temp", 1, 2, true);
 		if(level == 2){
-			trQuestVarSetFromRand("temp", 4, 5, true);
+			trQuestVarSetFromRand("temp", 3, 5, true);
+		}
+		if(level == 3){
+			trQuestVarSetFromRand("temp", 6, 8, true);
 		}
 	}
 	if(type == RELIC_CHICKEN_HP){
 		trQuestVarSetFromRand("temp", 1, 7, true);
 		if(level == 2){
 			trQuestVarSetFromRand("temp", 8, 11, true);
+		}
+		if(level == 3){
+			trQuestVarSetFromRand("temp", 12, 15, true);
 		}
 		trQuestVarModify("temp", "*", 15);
 	}
@@ -998,12 +1036,12 @@ void NewRelic(int id = 0, int max = 0, int forcelevel = 0){
 	trUnitChangeProtoUnit("Titan Atlantean");
 	xUnitSelect(dFreeRelics, xUnitID);
 	trUnitChangeProtoUnit("Relic");
-	//xUnitSelect(dFreeRelics, xUnitID);
-	//trSetScale(0.25*level+0.75);
+	xUnitSelect(dFreeRelics, xUnitID);
+	trSetScale(0.25*level+0.75);
 	yFindLatestReverse("SFXUnit", "Titan Gate Dead", 0);
 	DoRelicSFX(1*trQuestVarGet("SFXUnit"), type);
 	xSetInt(dFreeRelics, xSFXID, 1*trQuestVarGet("SFXUnit"));
-	//xSetInt(dFreeRelics, xRelicLevel, level);
+	xSetInt(dFreeRelics, xRelicLevel, level);
 }
 
 void FunctionRelic(bool apply = false, int p = 0){
@@ -1032,6 +1070,12 @@ void FunctionRelic(bool apply = false, int p = 0){
 		if(xGetInt(dFreeRelics, xRelicType) == RELIC_CHICKEN_HP){
 			trModifyProtounit(ChickenProto, p, 0, 1*xGetFloat(dFreeRelics, xRelicStat));
 		}
+		if(xGetInt(dFreeRelics, xRelicType) == RELIC_CHICKEN_HEAL){
+			trQuestVarModify("P"+p+"ChickenRegen", "+", 1*xGetFloat(dFreeRelics, xRelicStat));
+		}
+		if(xGetInt(dFreeRelics, xRelicType) == RELIC_TOWER_HEAL){
+			trQuestVarModify("P"+p+"TowerRegen", "+", 1*xGetFloat(dFreeRelics, xRelicStat));
+		}
 	}
 	if(apply == false){
 		//HELD RELICS FOR HERE
@@ -1058,6 +1102,12 @@ void FunctionRelic(bool apply = false, int p = 0){
 		}
 		if(xGetInt(dHeldRelics, xRelicType) == RELIC_CHICKEN_HP){
 			trModifyProtounit(ChickenProto, p, 0, -1*xGetFloat(dHeldRelics, xRelicStat));
+		}
+		if(xGetInt(dHeldRelics, xRelicType) == RELIC_CHICKEN_HEAL){
+			trQuestVarModify("P"+p+"ChickenRegen", "-", 1*xGetFloat(dHeldRelics, xRelicStat));
+		}
+		if(xGetInt(dHeldRelics, xRelicType) == RELIC_TOWER_HEAL){
+			trQuestVarModify("P"+p+"TowerRegen", "-", 1*xGetFloat(dHeldRelics, xRelicStat));
 		}
 		
 	}

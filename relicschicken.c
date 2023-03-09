@@ -1,4 +1,4 @@
-const int RELIC_NUMBER = 7;
+const int RELIC_NUMBER = 9;
 
 const int RELIC_ATTACK = 1;
 const int RELIC_HP = 2;
@@ -7,6 +7,10 @@ const int RELIC_CHICKEN_SPEED = 4;
 const int RELIC_RANGE = 5;
 const int RELIC_TOWER = 6;
 const int RELIC_CHICKEN_HP = 7;
+const int RELIC_CHICKEN_HEAL = 8;
+const int RELIC_TOWER_HEAL = 9;
+
+const int RELIC_TERRAIN = 10;
 
 
 //cone proj, armoury, allow cliff
@@ -43,11 +47,11 @@ string relicName(int relicid = 0) {
 		}
 		case RELIC_PROJ_SPEED:
 		{
-			msg = "+ " + stat + " projectile speed";
+			msg = "+ " + 1*stat + " projectile speed";
 		}
 		case RELIC_CHICKEN_SPEED:
 		{
-			msg = "+ " + stat + " chicken speed";
+			msg = "+ " + 1*stat + " chicken speed";
 		}
 		case RELIC_RANGE:
 		{
@@ -60,6 +64,18 @@ string relicName(int relicid = 0) {
 		case RELIC_CHICKEN_HP:
 		{
 			msg = "+ " + 1*stat + " chicken HP";
+		}
+		case RELIC_CHICKEN_HEAL:
+		{
+			msg = "+ " + 1*stat + " chicken heal per second";
+		}
+		case RELIC_TOWER_HEAL:
+		{
+			msg = "+ " + 1*stat + " tower heal per second";
+		}
+		case RELIC_TERRAIN:
+		{
+			msg = "Projectiles travel over cliff";
 		}
 	}
 	return(msg);
@@ -96,6 +112,18 @@ int relicProto(int relic = 0) {
 		case RELIC_CHICKEN_HP:
 		{
 			proto = kbGetProtoUnitID("Chicken Exploding");
+		}
+		case RELIC_CHICKEN_HEAL:
+		{
+			proto = kbGetProtoUnitID("Valkyrie");
+		}
+		case RELIC_TOWER_HEAL:
+		{
+			proto = kbGetProtoUnitID("Physician");
+		}
+		case RELIC_TERRAIN:
+		{
+			proto = kbGetProtoUnitID("Roc");
 		}
 	}
 	return(proto);

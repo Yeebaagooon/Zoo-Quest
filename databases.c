@@ -112,6 +112,8 @@ int xRelicStat = 0;
 int xSFXID = 0;
 int xRelicLevel = 0;
 
+int dEnemyCollision = 0;
+
 rule initialise_spy_database
 active
 highFrequency
@@ -260,6 +262,9 @@ highFrequency
 	xRelicStat = xInitAddFloat(dHeldRelics, "statvalue", 0);
 	xSFXID = xInitAddInt(dHeldRelics, "sfxid", -1);
 	xRelicLevel = xInitAddInt(dHeldRelics, "level", 1);
+	
+	dEnemyCollision = xInitDatabase("collision");
+	xUnitID = xInitAddInt(dEnemyCollision, "id", -1);
 }
 
 /*
@@ -321,7 +326,7 @@ bool rayCollision(vector start = vector(0,0,0), vector dir = vector(1,0,0),
 			}
 		}
 		else{
-			pos = kbGetBlockPosition(""+xGetInt(dTowers,xUnitID),true);
+			pos = kbGetBlockPosition(""+xGetInt(dEnemyCollision,xUnitID),true);
 			current = distanceBetweenVectors(pos, start, false);
 			if (current < dist) {
 				hitbox = start + dir * current;
@@ -476,12 +481,12 @@ void DoMissileStage5(){
 		}
 	}
 	else{
-		for(x = xGetDatabaseCount(dTowers); > 0) {
-			xDatabaseNext(dTowers);
+		for(x = xGetDatabaseCount(dEnemyCollision); > 0) {
+			xDatabaseNext(dEnemyCollision);
 			//2 is raw dist, 4 is squared
 			if(rayCollision(prev,dir,dist+2,4)){
 				hittower = true;
-				unithit = xGetPointer(dTowers);
+				unithit = xGetPointer(dEnemyCollision);
 				break;
 			}
 		}
@@ -489,12 +494,14 @@ void DoMissileStage5(){
 	if(hitenemy){
 		//hit effect
 		xUnitSelect(dMissiles, xUnitID);
+		trDamageUnitsInArea(cNumberNonGaiaPlayers, "All", 2, xGetInt(dMissiles, xMissileDmg));
+		xUnitSelect(dMissiles, xUnitID);
 		trUnitDestroy();
-		boomID = trGetNextUnitScenarioNameNumber();
+		/*boomID = trGetNextUnitScenarioNameNumber();
 		UnitCreate(0, "Cinematic Block", xsVectorGetX(pos), xsVectorGetZ(pos), 0);
 		trUnitSelectClear();
 		trUnitSelect(""+boomID);
-		trUnitChangeProtoUnit("Blood Cinematic");
+		trUnitChangeProtoUnit("Blood Cinematic");*/
 		trUnitSelectClear();
 		xSetPointer(dEnemies, unithit);
 		xUnitSelect(dEnemies, xUnitID);
@@ -518,6 +525,13 @@ void DoMissileStage5(){
 					ColouredChatToPlayer(xGetPointer(dPlayerData), "1,0.5,0", "<u>Relic hold capacity increased!</u>");
 				}
 			}
+			else if(iModulo(10, trTimeMS()) == 0){
+				boomID = trGetNextUnitScenarioNameNumber();
+				UnitCreate(xGetPointer(dPlayerData), "Cinematic Block", xsVectorGetX(pos), xsVectorGetZ(pos), 0);
+				trUnitSelectClear();
+				trUnitSelect(""+boomID);
+				trUnitChangeProtoUnit("Medusa");
+			}
 			xFreeDatabaseBlock(dEnemies);
 		}
 		//FREE DB LAST
@@ -528,8 +542,8 @@ void DoMissileStage5(){
 		xUnitSelect(dMissiles, xUnitID);
 		trUnitDestroy();
 		trUnitSelectClear();
-		xSetPointer(dTowers, unithit);
-		xUnitSelect(dTowers, xUnitID);
+		xSetPointer(dEnemyCollision, unithit);
+		xUnitSelect(dEnemyCollision, xUnitID);
 		trDamageUnit(xGetInt(dMissiles, xMissileDmg));
 		xFreeDatabaseBlock(dMissiles);
 	}

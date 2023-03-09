@@ -231,15 +231,17 @@ highFrequency
 					closest = 10000;
 					closestid = 0;
 					//cycle through all poachers to find the closest
-					for(a=0 ; < xGetDatabaseCount(dTowers)){
+					for(a=xGetDatabaseCount(dTowers) ; > 0 ){
 						xDatabaseNext(dTowers);
 						dir = kbGetBlockPosition(""+xGetInt(dTowers, xUnitID));
 						xUnitSelect(dTowers, xUnitID);
 						if(trUnitDead() == false){
+							
 							if(distanceBetweenVectors(dir, slingvector, true) < closest){
 								closest = distanceBetweenVectors(dir, slingvector, true);
 								closestid = xGetInt(dTowers, xUnitID);
 							}
+							
 						}
 					}
 					closevector = kbGetBlockPosition(""+closestid);
@@ -395,6 +397,8 @@ highFrequency
 				xSetInt(dTowers, xUnitID, i);
 				xSetInt(dTowers, xOwner, kbUnitGetOwner(id));
 				xSetBool(dTowers, xConstructed, false);
+				xAddDatabaseBlock(dEnemyCollision, true);
+				xSetInt(dEnemyCollision, xUnitID, i);
 			}
 		}
 	}

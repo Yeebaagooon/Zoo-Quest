@@ -482,6 +482,7 @@ inactive
 		trFadeOutAllSounds(3);
 		trFadeOutMusic(3);
 		xResetDatabase(dTemp);
+		xResetDatabase(dMissiles);
 		TutorialMode = false;
 		for(p=1 ; < cNumberNonGaiaPlayers){
 			xSetPointer(dPlayerData, p);

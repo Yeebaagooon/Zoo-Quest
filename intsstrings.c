@@ -43,6 +43,7 @@ deer tp vector*2 end mg
 
 S3 super
 S4 uber
+S4 poachers dead just on eat?
 
 
 //DELETE
