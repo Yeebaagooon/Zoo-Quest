@@ -449,107 +449,94 @@ void DoMissile(){
 }
 
 void DoMissileStage5(){
-	xDatabaseNext(dMissiles);
-	vector pos = vector(0,0,0);
-	vector dir = vector(0,0,0);
-	vector prev = vector(0,0,0);
-	prev = xGetVector(dMissiles, xMissilePrev); //when created this is the same as xMissilePos
-	bool hitenemy = false;
-	bool hittower = false;
-	bool hitplayer = false;
-	int unithit = 0;
-	int boomID = 0;
-	pos = kbGetBlockPosition(""+xGetInt(dMissiles, xUnitID));
-	dir = xGetVector(dMissiles, xMissileDir); //Normalized direction when missile created and target locked
-	xSetVector(dMissiles, xMissilePos, pos);
-	float dist = distanceBetweenVectors(pos, prev, false);
-	if(xGetInt(dMissiles, xOwner) != cNumberNonGaiaPlayers){
-		for(x = xGetDatabaseCount(dEnemies); > 0) {
-			xDatabaseNext(dEnemies);
-			//2 is raw dist, 4 is squared
-			if(rayCollision(prev,dir,dist+1,1)){
-				hitenemy = true;
-				unithit = xGetPointer(dEnemies);
-				break;
-			}
-		}
-	}
-	else{
-		for(x = xGetDatabaseCount(dEnemyCollision); > 0) {
-			xDatabaseNext(dEnemyCollision);
-			//2 is raw dist, 4 is squared
-			if(rayCollision(prev,dir,dist+2,4)){
-				hittower = true;
-				unithit = xGetPointer(dEnemyCollision);
-				break;
-			}
-		}
-	}
-	if(hitenemy){
-		//hit effect
-		xUnitSelect(dMissiles, xUnitID);
-		//trDamageUnitsInArea(cNumberNonGaiaPlayers, "All", 2, xGetInt(dMissiles, xMissileDmg));
-		//xUnitSelect(dMissiles, xUnitID);
-		trUnitDestroy();
-		/*boomID = trGetNextUnitScenarioNameNumber();
-		UnitCreate(0, "Cinematic Block", xsVectorGetX(pos), xsVectorGetZ(pos), 0);
-		trUnitSelectClear();
-		trUnitSelect(""+boomID);
-		trUnitChangeProtoUnit("Blood Cinematic");*/
-		trUnitSelectClear();
-		xSetPointer(dEnemies, unithit);
-		xUnitSelect(dEnemies, xUnitID);
-		trDamageUnit(xGetInt(dMissiles, xMissileDmg));
-		xUnitSelect(dEnemies, xUnitID);
-		trUnitHighlight(1, false);
-		debugLog("Hit unit " + xGetInt(dEnemies, xUnitID) + " for " + xGetInt(dMissiles, xMissileDmg));
-		/*if(trUnitDead() == true){
-			xSetPointer(dPlayerData, xGetInt(dMissiles, xOwner));
-			xSetInt(dPlayerData, xS5Kills, xGetInt(dPlayerData, xS5Kills)+1);
-			debugLog("Enemies killed P" + xGetInt(dMissiles, xOwner) + " = " + xGetInt(dPlayerData, xS5Kills));
-			if(1 == xGetInt(dPlayerData, xS5Kills)){
-				//ALWAYS MAKE RELIC ON FIRST KILL
-				boomID = trGetNextUnitScenarioNameNumber();
-				UnitCreate(xGetPointer(dPlayerData), "Cinematic Block", xsVectorGetX(pos), xsVectorGetZ(pos), 0);
-				trUnitSelectClear();
-				trUnitSelect(""+boomID);
-				trUnitChangeProtoUnit("Medusa");
-				trModifyProtounit(ChickenProto, xGetPointer(dPlayerData), 5, 1);
-				ChickenLevel = 2;
-				if(trCurrentPlayer() == xGetPointer(dPlayerData)){
-					playSound("ageadvance.wav");
-					ColouredChatToPlayer(xGetPointer(dPlayerData), "1,0.5,0", "<u>Relic hold capacity increased!</u>");
+	int check = 0;
+	check = xsMin(5, xGetDatabaseCount(dMissiles));
+	for(p = check; > 0){
+		xDatabaseNext(dMissiles);
+		vector pos = vector(0,0,0);
+		vector dir = vector(0,0,0);
+		vector prev = vector(0,0,0);
+		prev = xGetVector(dMissiles, xMissilePrev); //when created this is the same as xMissilePos
+		bool hitenemy = false;
+		bool hittower = false;
+		bool hitplayer = false;
+		int unithit = 0;
+		int boomID = 0;
+		pos = kbGetBlockPosition(""+xGetInt(dMissiles, xUnitID));
+		dir = xGetVector(dMissiles, xMissileDir); //Normalized direction when missile created and target locked
+		xSetVector(dMissiles, xMissilePos, pos);
+		float dist = distanceBetweenVectors(pos, prev, false);
+		if(xGetInt(dMissiles, xOwner) != cNumberNonGaiaPlayers){
+			for(x = xGetDatabaseCount(dEnemies); > 0) {
+				xDatabaseNext(dEnemies);
+				//2 is raw dist, 4 is squared
+				if(rayCollision(prev,dir,dist+1,1)){
+					hitenemy = true;
+					unithit = xGetPointer(dEnemies);
+					break;
 				}
 			}
-			else if(iModulo(10, trTimeMS()) == 0){
-				boomID = trGetNextUnitScenarioNameNumber();
-				UnitCreate(xGetPointer(dPlayerData), "Cinematic Block", xsVectorGetX(pos), xsVectorGetZ(pos), 0);
-				trUnitSelectClear();
-				trUnitSelect(""+boomID);
-				trUnitChangeProtoUnit("Medusa");
+		}
+		else{
+			for(x = xGetDatabaseCount(dEnemyCollision); > 0) {
+				xDatabaseNext(dEnemyCollision);
+				//2 is raw dist, 4 is squared
+				if(rayCollision(prev,dir,dist+2,4)){
+					hittower = true;
+					unithit = xGetPointer(dEnemyCollision);
+					break;
+				}
 			}
-			xFreeDatabaseBlock(dEnemies);
-		}*/
-		//FREE DB LAST
-		xFreeDatabaseBlock(dMissiles);
-		//debugLog("Hits P " + playerhit);
-	}
-	else if(hittower){
-		xUnitSelect(dMissiles, xUnitID);
-		trUnitDestroy();
-		trUnitSelectClear();
-		xSetPointer(dEnemyCollision, unithit);
-		xUnitSelect(dEnemyCollision, xUnitID);
-		trDamageUnit(xGetInt(dMissiles, xMissileDmg));
-		xFreeDatabaseBlock(dMissiles);
-	}
-	else{
-		xSetVector(dMissiles, xMissilePrev, pos);
-		if((xsVectorGetX(pos) < 0) || (xsVectorGetX(pos) > 252) || (xsVectorGetZ(pos) < 0) || (xsVectorGetZ(pos) > 252)){
-			//remove map outside
+		}
+		if(hitenemy){
+			//hit effect
+			xUnitSelect(dMissiles, xUnitID);
+			//trDamageUnitsInArea(cNumberNonGaiaPlayers, "All", 2, xGetInt(dMissiles, xMissileDmg));
+			//xUnitSelect(dMissiles, xUnitID);
+			trUnitDestroy();
+			/*boomID = trGetNextUnitScenarioNameNumber();
+			UnitCreate(0, "Cinematic Block", xsVectorGetX(pos), xsVectorGetZ(pos), 0);
+			trUnitSelectClear();
+			trUnitSelect(""+boomID);
+			trUnitChangeProtoUnit("Blood Cinematic");*/
+			trUnitSelectClear();
+			xSetPointer(dEnemies, unithit);
+			xUnitSelect(dEnemies, xUnitID);
+			trDamageUnit(xGetInt(dMissiles, xMissileDmg));
+			xUnitSelect(dEnemies, xUnitID);
+			//trUnitHighlight(1, false);
+			//debugLog("Hit unit " + xGetInt(dEnemies, xUnitID) + " for " + xGetInt(dMissiles, xMissileDmg));
+			if(trUnitDead() == true){
+				if(iModulo(10, trTimeMS()) == 0){
+					boomID = trGetNextUnitScenarioNameNumber();
+					UnitCreate(xGetPointer(dPlayerData), "Cinematic Block", xsVectorGetX(pos), xsVectorGetZ(pos), 0);
+					trUnitSelectClear();
+					trUnitSelect(""+boomID);
+					trUnitChangeProtoUnit("Medusa");
+				}
+				xFreeDatabaseBlock(dEnemies);
+			}
+			//FREE DB LAST
+			xFreeDatabaseBlock(dMissiles);
+			//debugLog("Hits P " + playerhit);
+		}
+		else if(hittower){
 			xUnitSelect(dMissiles, xUnitID);
 			trUnitDestroy();
+			trUnitSelectClear();
+			xSetPointer(dEnemyCollision, unithit);
+			xUnitSelect(dEnemyCollision, xUnitID);
+			trDamageUnit(xGetInt(dMissiles, xMissileDmg));
 			xFreeDatabaseBlock(dMissiles);
+		}
+		else{
+			xSetVector(dMissiles, xMissilePrev, pos);
+			if((xsVectorGetX(pos) < 0) || (xsVectorGetX(pos) > 252) || (xsVectorGetZ(pos) < 0) || (xsVectorGetZ(pos) > 252)){
+				//remove map outside
+				xUnitSelect(dMissiles, xUnitID);
+				trUnitDestroy();
+				xFreeDatabaseBlock(dMissiles);
+			}
 		}
 	}
 }

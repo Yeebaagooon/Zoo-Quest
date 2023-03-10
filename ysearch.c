@@ -9,6 +9,7 @@ highFrequency
 	int closestid = 0;
 	float baseCos = 0;
 	float baseSin = 0;
+	int index = 0;
 	vector scale = vector(0,0,0);
 	vector dest = vector(0,0,0);
 	vector dir = vector(0,0,0);
@@ -236,16 +237,17 @@ highFrequency
 						dir = kbGetBlockPosition(""+xGetInt(dTowers, xUnitID));
 						xUnitSelect(dTowers, xUnitID);
 						if(trUnitDead() == false){
-							
-							if(distanceBetweenVectors(dir, slingvector, true) < closest){
-								closest = distanceBetweenVectors(dir, slingvector, true);
-								closestid = xGetInt(dTowers, xUnitID);
+							if(xGetBool(dTowers, xConstructed) == true){
+								if(distanceBetweenVectors(dir, slingvector, true) < closest){
+									closest = distanceBetweenVectors(dir, slingvector, true);
+									closestid = xGetInt(dTowers, xUnitID);
+									index = xGetPointer(dTowers);
+								}
 							}
-							
 						}
 					}
 					closevector = kbGetBlockPosition(""+closestid);
-					xsSetContextPlayer(xGetInt(dTowers, xOwner));
+					xsSetContextPlayer(xGetInt(dTowers, xOwner, index));
 					dest = kbGetBlockPosition(""+trGetUnitScenarioNameNumber(kbUnitGetTargetUnitID(kbGetBlockID(""+closestid))));
 					xsSetContextPlayer(0);
 					dir = xsVectorNormalize(dest-closevector);

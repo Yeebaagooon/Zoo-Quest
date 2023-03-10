@@ -8,9 +8,11 @@ void ShootProjectile(vector dir = vector(0,0,0), vector startpos = vector(0,0,0)
 	UnitCreate(ownerof, "Dwarf", xsVectorGetX(startpos),xsVectorGetZ(startpos),0);
 	if(IGUnit == true){
 		IGUnit = false;
-		trUnitSelectClear();
-		trUnitSelect(""+IGName);
-		trMutateSelected(kbGetProtoUnitID("Roc"));
+		if(unitcheck != "Tower"){
+			trUnitSelectClear();
+			trUnitSelect(""+IGName);
+			trMutateSelected(kbGetProtoUnitID("Roc"));
+		}
 		trUnitSelectClear();
 		trUnitSelect(""+temp);
 		trImmediateUnitGarrison(""+IGName);
@@ -18,8 +20,10 @@ void ShootProjectile(vector dir = vector(0,0,0), vector startpos = vector(0,0,0)
 		trUnitSelect(""+temp);
 		trUnitChangeProtoUnit("Dwarf");
 		trUnitSelectClear();
-		trUnitSelect(""+IGName);
-		trMutateSelected(kbGetProtoUnitID(unitcheck));
+		if(unitcheck != "Tower"){
+			trUnitSelect(""+IGName);
+			trMutateSelected(kbGetProtoUnitID(unitcheck));
+		}
 	}
 	trUnitSelectClear();
 	trUnitSelect(""+temp);

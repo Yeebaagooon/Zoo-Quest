@@ -137,7 +137,7 @@ inactive
 		uiZoomToProto(""+ChickenProto);
 		uiLookAtProto(""+ChickenProto);
 		xsDisableSelf();
-		xsEnableRule("Testing");
+		xsEnableRule("MissileCheckS5");
 	}
 }
 
@@ -170,7 +170,7 @@ highFrequency
 	}
 }
 
-rule Testing
+rule MissileCheckS5
 inactive
 highFrequency
 {
