@@ -34,6 +34,8 @@ inactive
 		timelast = trTimeMS();
 		trDelayedRuleActivation("ChickenActLoops");
 		for(p = 1 ; < cNumberNonGaiaPlayers){
+			trUnforbidProtounit(p, "Armory");
+			trUnforbidProtounit(p, "Tower");
 			xSetPointer(dPlayerData, p);
 			//xSetInt(dPlayerData, xCrocSize, 1);
 			//xSetFloat(dPlayerData, xCrocNext, 5*xGetInt(dPlayerData, xCrocSize));
@@ -59,7 +61,7 @@ inactive
 		modifyProtounitAbsolute("Toxotes", cNumberNonGaiaPlayers, 0, 10);
 		modifyProtounitAbsolute("Toxotes", cNumberNonGaiaPlayers, 31, 5);
 		modifyProtounitAbsolute("Huskarl", cNumberNonGaiaPlayers, 0, 20);
-		modifyProtounitAbsolute("Huskarl", cNumberNonGaiaPlayers, 27, 5);
+		modifyProtounitAbsolute("Huskarl", cNumberNonGaiaPlayers, 27, 10);
 	}
 }
 
@@ -132,7 +134,7 @@ highFrequency
 			trModifyProtounit(ChickenProto, p, 5, 1);
 			ColouredChatToPlayer(p, "1,0.5,0", "<u>Relic hold capacity increased!</u>");
 		}
-		ChickenLevel = 3;
+		ChickenLevel = 2;
 		playSound("ageadvance.wav");
 	}
 }
@@ -155,7 +157,18 @@ highFrequency
 	if (trTime() > cActivationTime + 30) {
 		R5Wave(5*PlayersActive, "Toxotes", 1900, 1600);
 		R5Wave(5*PlayersActive, "Huskarl", 2100, 1800);
-		//xsEnableRule("ChickenWave1E");
+		xsEnableRule("ChickenWave1H");
+		xsDisableSelf();
+	}
+}
+
+rule ChickenWave1H
+inactive
+highFrequency
+{
+	if (trTime() > cActivationTime + 30) {
+		R5Wave(8*PlayersActive, "Huskarl", 2500, 2000);
+		//xsEnableRule("ChickenWave1G");
 		xsDisableSelf();
 	}
 }

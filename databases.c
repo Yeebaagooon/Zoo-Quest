@@ -460,12 +460,6 @@ void DoMissileStage5(){
 	int unithit = 0;
 	int boomID = 0;
 	pos = kbGetBlockPosition(""+xGetInt(dMissiles, xUnitID));
-	//kill on invalid terrain, currently 0,1 grassb
-	/*if((trGetTerrainType(xsVectorGetX(pos)/2, xsVectorGetZ(pos)/2) == 0) && (trGetTerrainSubType(xsVectorGetX(pos)/2, xsVectorGetZ(pos)/2) == 1)){
-		xUnitSelect(dMissiles, xUnitID);
-		trUnitDestroy();
-		xFreeDatabaseBlock(dMissiles);
-	}*/
 	dir = xGetVector(dMissiles, xMissileDir); //Normalized direction when missile created and target locked
 	xSetVector(dMissiles, xMissilePos, pos);
 	float dist = distanceBetweenVectors(pos, prev, false);
@@ -494,8 +488,8 @@ void DoMissileStage5(){
 	if(hitenemy){
 		//hit effect
 		xUnitSelect(dMissiles, xUnitID);
-		trDamageUnitsInArea(cNumberNonGaiaPlayers, "All", 2, xGetInt(dMissiles, xMissileDmg));
-		xUnitSelect(dMissiles, xUnitID);
+		//trDamageUnitsInArea(cNumberNonGaiaPlayers, "All", 2, xGetInt(dMissiles, xMissileDmg));
+		//xUnitSelect(dMissiles, xUnitID);
 		trUnitDestroy();
 		/*boomID = trGetNextUnitScenarioNameNumber();
 		UnitCreate(0, "Cinematic Block", xsVectorGetX(pos), xsVectorGetZ(pos), 0);
@@ -507,7 +501,9 @@ void DoMissileStage5(){
 		xUnitSelect(dEnemies, xUnitID);
 		trDamageUnit(xGetInt(dMissiles, xMissileDmg));
 		xUnitSelect(dEnemies, xUnitID);
-		if(trUnitDead() == true){
+		trUnitHighlight(1, false);
+		debugLog("Hit unit " + xGetInt(dEnemies, xUnitID) + " for " + xGetInt(dMissiles, xMissileDmg));
+		/*if(trUnitDead() == true){
 			xSetPointer(dPlayerData, xGetInt(dMissiles, xOwner));
 			xSetInt(dPlayerData, xS5Kills, xGetInt(dPlayerData, xS5Kills)+1);
 			debugLog("Enemies killed P" + xGetInt(dMissiles, xOwner) + " = " + xGetInt(dPlayerData, xS5Kills));
@@ -533,7 +529,7 @@ void DoMissileStage5(){
 				trUnitChangeProtoUnit("Medusa");
 			}
 			xFreeDatabaseBlock(dEnemies);
-		}
+		}*/
 		//FREE DB LAST
 		xFreeDatabaseBlock(dMissiles);
 		//debugLog("Hits P " + playerhit);

@@ -1049,7 +1049,8 @@ void FunctionRelic(bool apply = false, int p = 0){
 	if(apply == true){
 		if(xGetInt(dFreeRelics, xRelicType) == RELIC_ATTACK){
 			trModifyProtounit("Tower", p, 31, 1*xGetFloat(dFreeRelics, xRelicStat));
-			xSetInt(dPlayerData, xTowerDamage, xGetInt(dPlayerData, xTowerDamage)+xGetFloat(dFreeRelics, xRelicStat));
+			xSetInt(dPlayerData, xTowerDamage, xGetInt(dPlayerData, xTowerDamage)+1*xGetFloat(dFreeRelics, xRelicStat));
+			debugLog("Tower dmg = " + xGetInt(dPlayerData, xTowerDamage));
 		}
 		if(xGetInt(dFreeRelics, xRelicType) == RELIC_HP){
 			trModifyProtounit("Tower", p, 0, 1*xGetFloat(dFreeRelics, xRelicStat));
@@ -1081,7 +1082,8 @@ void FunctionRelic(bool apply = false, int p = 0){
 		//HELD RELICS FOR HERE
 		if(xGetInt(dHeldRelics, xRelicType) == RELIC_ATTACK){
 			trModifyProtounit("Tower", p, 31, -1*xGetFloat(dHeldRelics, xRelicStat));
-			xSetInt(dPlayerData, xTowerDamage, xGetInt(dPlayerData, xTowerDamage)-xGetFloat(dFreeRelics, xRelicStat));
+			xSetInt(dPlayerData, xTowerDamage, xGetInt(dPlayerData, xTowerDamage)-1*xGetFloat(dHeldRelics, xRelicStat));
+			debugLog("Tower dmg = " + xGetInt(dPlayerData, xTowerDamage));
 		}
 		if(xGetInt(dHeldRelics, xRelicType) == RELIC_HP){
 			trModifyProtounit("Tower", p, 0, (0-1*xGetFloat(dHeldRelics, xRelicStat)));

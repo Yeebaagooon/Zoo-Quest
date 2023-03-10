@@ -200,7 +200,7 @@ void ProcessFreeRelics(int count = 0){
 					xAddDatabaseBlock(dHeldRelics, true);
 					xSetInt(dHeldRelics, xUnitID, 1*xGetInt(dFreeRelics, xUnitID));
 					xSetInt(dHeldRelics, xRelicType, 1*xGetInt(dFreeRelics, xRelicType));
-					xSetFloat(dHeldRelics, xRelicStat, xGetFloat(dFreeRelics, xRelicStat));
+					xSetFloat(dHeldRelics, xRelicStat, 1*xGetFloat(dFreeRelics, xRelicStat));
 					xSetInt(dHeldRelics, xRelicLevel, xGetInt(dFreeRelics, xRelicLevel));
 					xFreeDatabaseBlock(dFreeRelics);
 					trUnitSelectByQV("P"+p+"Unit");
@@ -243,7 +243,7 @@ void ProcessHeldRelics(int count = 1) {
 			xAddDatabaseBlock(dFreeRelics, true);
 			xSetInt(dFreeRelics, xUnitID, 1*xGetInt(dHeldRelics, xUnitID));
 			xSetInt(dFreeRelics, xRelicType, 1*xGetInt(dHeldRelics, xRelicType));
-			xSetFloat(dFreeRelics, xRelicStat, xGetFloat(dHeldRelics, xRelicStat));
+			xSetFloat(dFreeRelics, xRelicStat, 1*xGetFloat(dHeldRelics, xRelicStat));
 			xSetInt(dFreeRelics, xSFXID, 1*trQuestVarGet("SFXUnit"));
 			xSetInt(dFreeRelics, xRelicLevel, 1*xGetInt(dHeldRelics, xRelicLevel));
 			xFreeDatabaseBlock(dHeldRelics);
@@ -269,6 +269,8 @@ void ProcessTowers(int count = 1) {
 }
 
 void ProcessEnemy(int count = 1) {
+	int temp = 0;
+	vector pos = vector(0,0,0);
 	for (x=xsMin(count, xGetDatabaseCount(dEnemies)); > 0) {
 		xDatabaseNext(dEnemies);
 		xUnitSelect(dEnemies, xUnitID);
@@ -278,6 +280,14 @@ void ProcessEnemy(int count = 1) {
 		}
 		xUnitSelect(dEnemies, xUnitID);
 		if(trUnitDead() == true){
+			pos = kbGetBlockPosition(""+xGetInt(dEnemies, xUnitID));
+			if(iModulo(10, trTimeMS()) == 0){
+				temp = trGetNextUnitScenarioNameNumber();
+				UnitCreate(1, "Cinematic Block", xsVectorGetX(pos), xsVectorGetZ(pos), 0);
+				trUnitSelectClear();
+				trUnitSelect(""+temp);
+				trUnitChangeProtoUnit("Medusa");
+			}
 			xFreeDatabaseBlock(dEnemies);
 		}
 		trUnitSelectClear();
@@ -326,6 +336,7 @@ inactive
 		}
 		if((xGetInt(dPlayerData, xTowerDamage) > 1) && (1*trQuestVarGet("P"+p+"FountainMsg") == 1)){
 			trQuestVarSet("P"+p+"FountainMsg", 2);
+			trUnforbidProtounit(p, "Storehouse");
 			if(trCurrentPlayer() == p){
 				npcDiag(17);
 				trCounterAbort("cdtutorial");
