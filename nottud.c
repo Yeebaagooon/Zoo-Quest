@@ -1282,7 +1282,7 @@ void createStartTown(){
 	paintUnit("GrassDirt50", "Fence Stone", 0, 0.004);
 	paintUnit("GrassDirt50", "Grass", 0, 0.01);
 	paintUnit("GrassDirt50", "Seagull", 0, 0.001);
-	paintUnit("GrassDirt50", "Hoplite", 0, 0.005);
+	paintUnit("GrassDirt50", "Militia", 0, 0.005);
 	paintUnit("GrassDirt50", "Toxotes", 0, 0.005);
 	paintUnit("GrassDirt50", "Hippikon", 0, 0.005);
 	paintUnit("GrassB", "Storehouse", 0, 0.01);
@@ -2920,7 +2920,7 @@ void createChickenArea(){
 		xSetInt(dShore, xShoreDist, distanceBetweenVectors(xGetVector(dShore, xShoreLoc), MapCentre, true));
 		if((xGetInt(dShore, xShoreDist) < 1800) && (xGetInt(dShore, xShoreDist) > 1600)){
 			currentId = trGetNextUnitScenarioNameNumber();
-			UnitCreate(cNumberNonGaiaPlayers, "Hoplite", xsVectorGetX(tempV), xsVectorGetZ(tempV), 0);
+			UnitCreate(cNumberNonGaiaPlayers, "Militia", xsVectorGetX(tempV), xsVectorGetZ(tempV), 0);
 			trUnitSelectClear();
 			trUnitSelect(""+currentId);
 			deploy = deploy-1;

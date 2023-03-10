@@ -23,6 +23,7 @@ highFrequency
 	trEventSetHandler(38, "CrocMinigameGo");
 	trEventSetHandler(39, "CrocMGTimeout");
 	trEventSetHandler(40, "ChickenWave1");
+	trEventSetHandler(41, "ChickenWave1End");
 	xsDisableSelf();
 }
 
@@ -82,6 +83,7 @@ highFrequency
 	map("q", "game", "trackInsert(); trackAddWaypoint();trackPlay(-1,28);");
 	map("w", "game", "trackInsert(); trackAddWaypoint();trackPlay(-1,29);");
 	map("e", "game", "trackInsert(); trackAddWaypoint();trackPlay(-1,30);");
+	map("r", "game", "uiSetSpecialPower(227) uiSpecialPowerAtPointer");
 	%
 	for(p=1; < cNumberNonGaiaPlayers) {
 		code("trStringQuestVarSet(\"p"+p+"name\", \""+rmGetPlayerName(p)+"\");");

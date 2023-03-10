@@ -222,8 +222,8 @@ highFrequency
 	trModifyProtounit("Maceman", 0, 55, 4);
 	trModifyProtounit("Maceman", cNumberNonGaiaPlayers, 55, 4);
 	//ENEMIES STAGE 5
-	modifyProtounitAbsolute("Hoplite", cNumberNonGaiaPlayers, 0, 10);
-	modifyProtounitAbsolute("Hoplite", cNumberNonGaiaPlayers, 27, 2);
+	modifyProtounitAbsolute("Militia", cNumberNonGaiaPlayers, 0, 10);
+	modifyProtounitAbsolute("Militia", cNumberNonGaiaPlayers, 27, 2);
 	xsDisableSelf();
 }
 

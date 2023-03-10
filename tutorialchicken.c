@@ -111,6 +111,8 @@ inactive
 			CreateChicken(p,14,16*p,90);
 			xSetPointer(dPlayerData, p);
 			xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
+			xSetInt(dPlayerData, xS5E, 1);
+			modifyProtounitAbsolute(""+ChickenProto, p, 0, 100);
 			if(trCurrentPlayer() == p){
 				trCounterAddTime("cdtutorial", -100, -200, "<color={PlayerColor("+p+")}>Use 'Q' to build a tower at the cursor", -1);
 			}
@@ -154,7 +156,7 @@ highFrequency
 			UnitCreate(cNumberNonGaiaPlayers, "Cinematic Block", 34*2, p*16, 270);
 			trUnitSelectClear();
 			trUnitSelect(""+temp);
-			trUnitChangeProtoUnit("Hoplite");
+			trUnitChangeProtoUnit("Militia");
 			trUnitSelectClear();
 			trUnitSelect(""+temp);
 			trUnitMoveToPoint(2,2,p*16,-1,true);
@@ -268,9 +270,39 @@ void ProcessTowers(int count = 1) {
 	}
 }
 
+void ProcessMine(int count = 1) {
+	vector pos = vector(0,0,0);
+	vector minepos = vector(0,0,0);
+	int p = 0;
+	if(xGetDatabaseCount(dMines) > 0){
+		pos = kbGetBlockPosition(""+xGetInt(dEnemies, xUnitID));
+		for(a = xGetDatabaseCount(dMines); > 0){
+			xDatabaseNext(dMines);
+			p = xGetInt(dMines, xOwner);
+			xSetPointer(dPlayerData, p);
+			if(trCountUnitsInArea(""+xGetInt(dMines, xUnitID), cNumberNonGaiaPlayers, "Unit", xGetInt(dPlayerData, xLandmineRange)) > 0){
+				xUnitSelect(dMines, xUnitID);
+				trDamageUnitsInArea(cNumberNonGaiaPlayers, "All", xGetInt(dPlayerData, xLandmineRange), xGetInt(dPlayerData, xLandmineDamage));
+				xUnitSelect(dMines, xUnitID);
+				trUnitChangeProtoUnit("Meteor Impact Ground");
+				xUnitSelect(dMines, xSubID);
+				trUnitChangeProtoUnit("Fire Giant");
+				xUnitSelect(dMines, xSubID);
+				trSetScale(0.00001);
+				xUnitSelect(dMines, xSubID);
+				trDamageUnitPercent(100);
+				xFreeDatabaseBlock(dMines);
+				playSound("meteorsmallhit.wav");
+			}
+		}
+	}
+}
+
+
 void ProcessEnemy(int count = 1) {
 	int temp = 0;
 	vector pos = vector(0,0,0);
+	vector minepos = vector(0,0,0);
 	for (x=xsMin(count, xGetDatabaseCount(dEnemies)); > 0) {
 		xDatabaseNext(dEnemies);
 		xUnitSelect(dEnemies, xUnitID);
@@ -287,6 +319,9 @@ void ProcessEnemy(int count = 1) {
 				trUnitSelectClear();
 				trUnitSelect(""+temp);
 				trUnitChangeProtoUnit("Medusa");
+				xFreeDatabaseBlock(dEnemies);
+				//[THIS MAY CAUSE A BUG]
+				break;
 			}
 			xFreeDatabaseBlock(dEnemies);
 		}
@@ -302,6 +337,7 @@ inactive
 	ProcessHeldRelics(5);
 	ProcessTowers(5);
 	ProcessEnemy(10);
+	ProcessMine(5);
 	vector start = vector(0,0,0);
 	vector dest = vector(0,0,0);
 	vector dir = vector(0,0,0);
@@ -326,7 +362,7 @@ inactive
 			}
 			//add to db held relics as will be owned by 0
 		}
-		if(trPlayerUnitCountSpecific(p, "Medusa") > 0){
+		if(trPlayerUnitCountSpecific(p, "Medusa") != 0){
 			yFindLatestReverse("MedusaP"+p, "Medusa", p);
 			trUnitSelectByQV("MedusaP"+p);
 			trUnitChangeProtoUnit("Relic");
@@ -348,22 +384,31 @@ inactive
 			//E
 			trBlockAllAmbientSounds();
 			trBlockAllSounds();
-			for(a = xGetDatabaseCount(dTowers); > 0){
-				xDatabaseNext(dTowers);
-				if(xGetInt(dTowers, xOwner) == p){
-					if(xGetBool(dTowers, xConstructed) == true){
-						start = kbGetBlockPosition(""+xGetInt(dTowers, xUnitID));
-						dest = xGetVector(dPlayerData, xSpecialVector);
-						dir = xsVectorNormalize(dest-start);
-						IGUnit = true;
-						IGName = xGetInt(dTowers, xUnitID);
-						unitcheck = "Tower";
-						xSetPointer(dPlayerData, xGetInt(dTowers, xOwner));
-						ShootProjectile(dir, start, "Lampades Bolt", "Wadjet Spit", 0, xGetInt(dPlayerData, xTowerDamage), 5000, p);
+			if(xGetInt(dPlayerData, xS5E) > 0){
+				for(a = xGetDatabaseCount(dTowers); > 0){
+					xDatabaseNext(dTowers);
+					if(xGetInt(dTowers, xOwner) == p){
+						if(xGetBool(dTowers, xConstructed) == true){
+							start = kbGetBlockPosition(""+xGetInt(dTowers, xUnitID));
+							dest = xGetVector(dPlayerData, xSpecialVector);
+							dir = xsVectorNormalize(dest-start);
+							IGUnit = true;
+							IGName = xGetInt(dTowers, xUnitID);
+							unitcheck = "Tower";
+							xSetPointer(dPlayerData, xGetInt(dTowers, xOwner));
+							ShootProjectile(dir, start, "Lampades Bolt", "Wadjet Spit", 0, xGetInt(dPlayerData, xTowerDamage), 5000, p);
+						}
 					}
 				}
+				trDelayedRuleActivation("UnblockSound");
+				xSetInt(dPlayerData, xS5E, xGetInt(dPlayerData, xS5E)-1);
 			}
-			trDelayedRuleActivation("UnblockSound");
+			else{
+				if(trCurrentPlayer() == p){
+					playSound("cantdothat.wav");
+					ColouredChatToPlayer(p, "1,0,0", "This ability has not yet recharged!");
+				}
+			}
 			if(TutorialMode){
 				trQuestVarSet("P"+p+"FountainMsg", 3);
 			}

@@ -152,14 +152,29 @@ highFrequency
 				closest = 10000;
 				closestid = 0;
 				//cycle through all poachers to find the closest
-				for(a=0 ; < xGetDatabaseCount(dPoachers)){
-					xDatabaseNext(dPoachers);
-					dir = kbGetBlockPosition(""+xGetInt(dPoachers, xUnitID));
-					xUnitSelect(dPoachers, xUnitID);
-					if(trUnitDead() == false){
-						if(distanceBetweenVectors(dir, slingvector, true) < closest){
-							closest = distanceBetweenVectors(dir, slingvector, true);
-							closestid = xGetInt(dPoachers, xUnitID);
+				if(Stage != 5){
+					for(a=0 ; < xGetDatabaseCount(dPoachers)){
+						xDatabaseNext(dPoachers);
+						dir = kbGetBlockPosition(""+xGetInt(dPoachers, xUnitID));
+						xUnitSelect(dPoachers, xUnitID);
+						if(trUnitDead() == false){
+							if(distanceBetweenVectors(dir, slingvector, true) < closest){
+								closest = distanceBetweenVectors(dir, slingvector, true);
+								closestid = xGetInt(dPoachers, xUnitID);
+							}
+						}
+					}
+				}
+				else{
+					for(a=0 ; < xGetDatabaseCount(dEnemies)){
+						xDatabaseNext(dEnemies);
+						dir = kbGetBlockPosition(""+xGetInt(dEnemies, xUnitID));
+						xUnitSelect(dEnemies, xUnitID);
+						if(trUnitDead() == false){
+							if(distanceBetweenVectors(dir, slingvector, true) < closest){
+								closest = distanceBetweenVectors(dir, slingvector, true);
+								closestid = xGetInt(dEnemies, xUnitID);
+							}
 						}
 					}
 				}
@@ -168,7 +183,14 @@ highFrequency
 				dest = kbGetBlockPosition(""+trGetUnitScenarioNameNumber(kbUnitGetTargetUnitID(kbGetBlockID(""+closestid))));
 				xsSetContextPlayer(0);
 				dir = xsVectorNormalize(dest-closevector);
-				ShootProjectile(dir, closevector, "Lampades Bolt", "Rocket");
+				if(Stage != 5){
+					ShootProjectile(dir, closevector, "Lampades Bolt", "Rocket");
+				}
+				else{
+					if(Stage == 5){
+						ShootProjectile(dir, closevector, "Ball of Fire", "Wadjet Spit", 0, 10, 8000);
+					}
+				}
 			}
 			case kbGetProtoUnitID("Arrow"):
 			{
@@ -273,14 +295,29 @@ highFrequency
 				closest = 10000;
 				closestid = 0;
 				//cycle through all poachers to find the closest
-				for(a=0 ; < xGetDatabaseCount(dPoachers)){
-					xDatabaseNext(dPoachers);
-					dir = kbGetBlockPosition(""+xGetInt(dPoachers, xUnitID));
-					xUnitSelect(dPoachers, xUnitID);
-					if(trUnitDead() == false){
-						if(distanceBetweenVectors(dir, slingvector, true) < closest){
-							closest = distanceBetweenVectors(dir, slingvector, true);
-							closestid = xGetInt(dPoachers, xUnitID);
+				if(Stage != 5){
+					for(a=0 ; < xGetDatabaseCount(dPoachers)){
+						xDatabaseNext(dPoachers);
+						dir = kbGetBlockPosition(""+xGetInt(dPoachers, xUnitID));
+						xUnitSelect(dPoachers, xUnitID);
+						if(trUnitDead() == false){
+							if(distanceBetweenVectors(dir, slingvector, true) < closest){
+								closest = distanceBetweenVectors(dir, slingvector, true);
+								closestid = xGetInt(dPoachers, xUnitID);
+							}
+						}
+					}
+				}
+				else{
+					for(a=0 ; < xGetDatabaseCount(dEnemies)){
+						xDatabaseNext(dEnemies);
+						dir = kbGetBlockPosition(""+xGetInt(dEnemies, xUnitID));
+						xUnitSelect(dEnemies, xUnitID);
+						if(trUnitDead() == false){
+							if(distanceBetweenVectors(dir, slingvector, true) < closest){
+								closest = distanceBetweenVectors(dir, slingvector, true);
+								closestid = xGetInt(dEnemies, xUnitID);
+							}
 						}
 					}
 				}
@@ -298,6 +335,18 @@ highFrequency
 					dir = rotationMatrix(dir, 0.866025, -0.5); //dir, -30cos, -30sin
 					for(a = 1; < 6){
 						ShootProjectile(dir, closevector, "Ball of Fire", "Maceman", 0, 5, 4000);
+						dir = rotationMatrix(dir, baseCos, baseSin);
+					}
+				}
+				if(Stage == 5){
+					//rotate to L, for loop shoot
+					baseCos = 0.965926; //cos15
+					baseSin = 0.258819; //sin15
+					//calculator for sin and cos(angle) required
+					//so for 15 degrees and 5 projs our angles are 30,15,0,-15-,-30, so set to cos/sin -30 then loop for +15
+					dir = rotationMatrix(dir, 0.866025, -0.5); //dir, -30cos, -30sin
+					for(a = 1; < 6){
+						ShootProjectile(dir, closevector, "Ball of Fire", "Wadjet Spit", 0, 20, 6000);
 						dir = rotationMatrix(dir, baseCos, baseSin);
 					}
 				}
@@ -401,6 +450,40 @@ highFrequency
 				xSetBool(dTowers, xConstructed, false);
 				xAddDatabaseBlock(dEnemyCollision, true);
 				xSetInt(dEnemyCollision, xUnitID, i);
+			}
+			case kbGetProtoUnitID("Animal Attractor"):
+			{
+				trTechGodPower(kbUnitGetOwner(id), "Animal Magnetism", 1);
+				dest = kbGetBlockPosition(""+i);
+				scale = kbGetBlockPosition(""+1*trQuestVarGet("P"+kbUnitGetOwner(id)+"Unit"));
+				if(distanceBetweenVectors(dest,scale) < 144){
+					for(a = xGetDatabaseCount(dFreeRelics); > 0){
+						xDatabaseNext(dFreeRelics);
+						dir = kbGetBlockPosition(""+xGetInt(dFreeRelics, xUnitID));
+						if(distanceBetweenVectors(dest,dir) < 36){
+							xUnitSelect(dFreeRelics, xUnitID);
+							trUnitChangeProtoUnit("Dwarf");
+							xUnitSelect(dFreeRelics, xUnitID);
+							trUnitChangeProtoUnit("UI Range Indicator Norse SFX");
+							xUnitSelect(dFreeRelics, xSFXID);
+							trUnitChangeProtoUnit("Osiris SFX");
+							xAddDatabaseBlock(dMines, true);
+							xSetInt(dMines, xUnitID, xGetInt(dFreeRelics, xUnitID));
+							xSetInt(dMines, xOwner, kbUnitGetOwner(id));
+							xSetInt(dMines, xSubID, xGetInt(dFreeRelics, xSFXID));
+							xFreeDatabaseBlock(dFreeRelics);
+						}
+					}
+				}
+				else{
+					if(trCurrentPlayer() == kbUnitGetOwner(id)){
+						playSound("cantdothat.wav");
+						ColouredChatToPlayer(kbUnitGetOwner(id), "1,0,0", "You can't convert mines from this far away.");
+					}
+				}
+				trUnitSelectClear();
+				trUnitSelectByID(id);
+				trUnitDestroy();
 			}
 		}
 	}

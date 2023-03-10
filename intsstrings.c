@@ -45,6 +45,19 @@ S3 super
 S4 uber
 S4 poachers dead just on eat?
 
+S5 R for lure to conv relics to mines
+30s recharge for 5x E
+
+
+
+Difficulty
+Data
+Persistent bonus
+Start Cine
+Skip
+S5 Cine
+End Cine
+
 
 //DELETE
 */
@@ -176,10 +189,14 @@ int xTowerDamage = 0;
 int xTowerSpeed = 0;
 int xSpecialVector = 0;
 int xS5Kills = 0;
+int xS5E = 0;
+int xS5ERecharge = 0;
 
 int dDestroyMe = 0;
 int xDestroyName = 0;
 int xDestroyTime = 0;
+int xLandmineDamage = 0;
+int xLandmineRange = 0;
 
 
 rule setup_first_databases
@@ -239,6 +256,10 @@ highFrequency
 	xTowerSpeed = xInitAddFloat(dPlayerData, "towerspeed", 10);
 	xSpecialVector = xInitAddVector(dPlayerData, "sv", vector(0,0,0));
 	xS5Kills = xInitAddInt(dPlayerData, "stage 5 kills", 0);
+	xLandmineDamage = xInitAddInt(dPlayerData, "mine dmg", 25);
+	xLandmineRange = xInitAddInt(dPlayerData, "mine dmg", 4);
+	xS5E = xInitAddInt(dPlayerData, "specialshots", 0);
+	xS5ERecharge = xInitAddInt(dPlayerData, "specialshotsrecharge", 30);
 	for(p=1; <= cNumberNonGaiaPlayers) {
 		xAddDatabaseBlock(dPlayerData, true);
 	}
