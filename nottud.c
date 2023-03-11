@@ -1160,8 +1160,9 @@ void paintTrees(string terrain = "", string tree = ""){
 		}
 		//k = 1 - k;
 	}
+	int temp = trGetNextUnitScenarioNameNumber()-10;
 	trUnitSelectClear();
-	trUnitSelect("0");
+	trUnitSelect(""+temp);
 	trUnitChangeInArea(0, 0, "Victory Marker", tree, 999.0);
 }
 
@@ -1178,8 +1179,9 @@ void paintTrees2(string terrain = "", string tree = ""){
 		}
 		k = 1 - k;
 	}
+	int temp = trGetNextUnitScenarioNameNumber()-10;
 	trUnitSelectClear();
-	trUnitSelect("0");
+	trUnitSelect(""+temp);
 	trUnitChangeInArea(0, 0, "Victory Marker", tree, 999.0);
 }
 

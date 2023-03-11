@@ -173,6 +173,7 @@ inactive
 		trSetFogAndBlackmap(false,false);
 	}
 	else{
+		trPlayerResetBlackMapForAllPlayers();
 		trSetFogAndBlackmap(true,true);
 	}
 	//false = revealed

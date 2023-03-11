@@ -153,7 +153,7 @@ highFrequency
 				closestid = 0;
 				//cycle through all poachers to find the closest
 				if(Stage != 5){
-					for(a=0 ; < xGetDatabaseCount(dPoachers)){
+					for(a=xGetDatabaseCount(dPoachers) ; > 0){
 						xDatabaseNext(dPoachers);
 						dir = kbGetBlockPosition(""+xGetInt(dPoachers, xUnitID));
 						xUnitSelect(dPoachers, xUnitID);
@@ -166,7 +166,7 @@ highFrequency
 					}
 				}
 				else{
-					for(a=0 ; < xGetDatabaseCount(dEnemies)){
+					for(a=xGetDatabaseCount(dEnemies) ; > 0){
 						xDatabaseNext(dEnemies);
 						dir = kbGetBlockPosition(""+xGetInt(dEnemies, xUnitID));
 						xUnitSelect(dEnemies, xUnitID);
@@ -296,7 +296,7 @@ highFrequency
 				closestid = 0;
 				//cycle through all poachers to find the closest
 				if(Stage != 5){
-					for(a=0 ; < xGetDatabaseCount(dPoachers)){
+					for(a=xGetDatabaseCount(dPoachers) ; > 0){
 						xDatabaseNext(dPoachers);
 						dir = kbGetBlockPosition(""+xGetInt(dPoachers, xUnitID));
 						xUnitSelect(dPoachers, xUnitID);
@@ -309,7 +309,7 @@ highFrequency
 					}
 				}
 				else{
-					for(a=0 ; < xGetDatabaseCount(dEnemies)){
+					for(a=xGetDatabaseCount(dEnemies) ; > 0){
 						xDatabaseNext(dEnemies);
 						dir = kbGetBlockPosition(""+xGetInt(dEnemies, xUnitID));
 						xUnitSelect(dEnemies, xUnitID);
@@ -364,7 +364,7 @@ highFrequency
 				closestid = 0;
 				//cycle through all poachers to find the closest
 				if(Stage != 5){
-					for(a=0 ; < xGetDatabaseCount(dPoachers)){
+					for(a=xGetDatabaseCount(dPoachers) ; > 0){
 						xDatabaseNext(dPoachers);
 						dir = kbGetBlockPosition(""+xGetInt(dPoachers, xUnitID));
 						xUnitSelect(dPoachers, xUnitID);
@@ -377,7 +377,7 @@ highFrequency
 					}
 				}
 				else{
-					for(a=0 ; < xGetDatabaseCount(dEnemies)){
+					for(a=xGetDatabaseCount(dEnemies) ; > 0){
 						xDatabaseNext(dEnemies);
 						dir = kbGetBlockPosition(""+xGetInt(dEnemies, xUnitID));
 						xUnitSelect(dEnemies, xUnitID);

@@ -1,6 +1,6 @@
 //---Controls
 //\Yeebaagooon\Zoo Quest\Test sound.mp3
-int QuickStart = 5;
+int QuickStart = 3;
 bool LOS = false;
 bool AlwaysWin = true;
 
@@ -40,11 +40,6 @@ Messages in stage 1 before poachers after chest for objectives
 skul062
 tile for minigame is *2 for vector
 
-*MG1 dead
-*rhino chest start zone
-*mg2 end msg
-*a3 score???
-*croc mg qs
 deer tp vector*2 end mg
 
 S3 super
