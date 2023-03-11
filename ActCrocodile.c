@@ -75,19 +75,19 @@ inactive
 				SpawnEdible(cNumberNonGaiaPlayers+1);
 				trQuestVarSet("NextPoacherSpawn", trTime()+40+iModulo(90, trTimeMS()));
 				SpawnCrocPoacher1(xsMin(4, cNumberNonGaiaPlayers+2));
-				if(CrocProgress < 7){
+				if(CrocProgress < 2*PlayersActive){
 					SpawnCrocPoacher2(xsMax(3, cNumberNonGaiaPlayers));
 				}
-				if(CrocProgress >= 5){
+				if(CrocProgress >= 2*PlayersActive){
 					SpawnCrocPoacher3(1);
 					SpawnEdible(1);
 				}
-				if(CrocProgress >= 9){
+				if(CrocProgress >= 3*PlayersActive){
 					SpawnCrocPoacher4(iModulo(2, trTime())+1);
 					trOverlayText("Super Poachers Spawning...", 5.0,-1,-1,600);
 					playSound("\cinematics\04_in\armyarrive.wav");
 				}
-				if(CrocProgress >= 13){
+				if(CrocProgress >= 4*PlayersActive){
 					SpawnCrocPoacher4(xsMax(1,PlayersActive-2));
 				}
 			}

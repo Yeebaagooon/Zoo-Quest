@@ -24,6 +24,8 @@ highFrequency
 	trEventSetHandler(39, "CrocMGTimeout");
 	trEventSetHandler(40, "ChickenWave1");
 	trEventSetHandler(41, "ChickenWave1End");
+	trEventSetHandler(42, "ChickenWave2");
+	trEventSetHandler(43, "ChickenWave2End");
 	xsDisableSelf();
 }
 
@@ -174,7 +176,11 @@ highFrequency
 		gadgetReal("ShowImageBox-BordersRightBottom");
 		gadgetReal("ShowImageBox-BordersRightTop");
 		gadgetReal("ShowImageBox-CloseButton");
+		trDelayedRuleActivation("Help_Chat");
 		//startNPCDialog(1);
+		if(QuickStart == 6){
+			xsEnableRule("BuildCineScene");
+		}
 		if(QuickStart == 5){
 			xsEnableRule("TutorialTerrainChicken");
 		}

@@ -47,6 +47,7 @@ inactive
 			xSetFloat(dPlayerData, xRhinoChargeTime, xGetInt(dPlayerData, xRhinoChargeTimeMax));
 		}
 		trDelayedRuleActivation("RhinoActLoops");
+		ActPart = 1;
 	}
 }
 

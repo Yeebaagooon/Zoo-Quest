@@ -1,8 +1,9 @@
 //---Controls
 //\Yeebaagooon\Zoo Quest\Test sound.mp3
-int QuickStart = 3;
-bool LOS = false;
+int QuickStart = 0;
+bool LOS = true;
 bool AlwaysWin = true;
+bool PlayCine = true;
 
 /*
 it uses build at pointer instead

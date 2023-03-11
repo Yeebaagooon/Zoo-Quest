@@ -710,6 +710,10 @@ inactive
 	xResetDatabase(dTemp);
 	xResetDatabase(dLogs);
 	xResetDatabase(dDots);
+	xResetDatabase(dChests);
+	xResetDatabase(dMissiles);
+	xResetDatabase(dPoachers);
+	xResetDatabase(dInterractables);
 	for(x=NewDestroyNumber ; < trGetNextUnitScenarioNameNumber()){
 		trUnitSelectClear();
 		trUnitSelect(""+x);

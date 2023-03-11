@@ -6,6 +6,14 @@ void ChickenWave1End(int unused = 0){
 	ActPart = 3;
 }
 
+void ChickenWave2(int unused = 0){
+	ActPart = 4;
+}
+
+void ChickenWave2End(int unused = 0){
+	ActPart = 5;
+}
+
 rule BuildChickenArea
 highFrequency
 inactive
@@ -71,6 +79,10 @@ inactive
 		modifyProtounitAbsolute("Toxotes", cNumberNonGaiaPlayers, 31, 5);
 		modifyProtounitAbsolute("Huskarl", cNumberNonGaiaPlayers, 0, 100);
 		modifyProtounitAbsolute("Huskarl", cNumberNonGaiaPlayers, 27, 10);
+		modifyProtounitAbsolute("Huskarl", cNumberNonGaiaPlayers, 34, 0);
+		modifyProtounitAbsolute("Huskarl", cNumberNonGaiaPlayers, 39, 0);
+		modifyProtounitAbsolute("Militia", cNumberNonGaiaPlayers, 34, 0);
+		modifyProtounitAbsolute("Militia", cNumberNonGaiaPlayers, 39, 0);
 		modifyProtounitAbsolute("Slinger", cNumberNonGaiaPlayers, 0, 5);
 		modifyProtounitAbsolute("Slinger", cNumberNonGaiaPlayers, 11, 18);
 		modifyProtounitAbsolute("Slinger", cNumberNonGaiaPlayers, 2, 20);
@@ -79,6 +91,22 @@ inactive
 		modifyProtounitAbsolute("Peltast", cNumberNonGaiaPlayers, 11, 20);
 		modifyProtounitAbsolute("Peltast", cNumberNonGaiaPlayers, 2, 250);
 		modifyProtounitAbsolute("Peltast", cNumberNonGaiaPlayers, 31, 20);
+		modifyProtounitAbsolute("Bella", cNumberNonGaiaPlayers, 0, 500);
+		modifyProtounitAbsolute("Bella", cNumberNonGaiaPlayers, 27, 10);
+		modifyProtounitAbsolute("Bella", cNumberNonGaiaPlayers, 28, 0);
+		modifyProtounitAbsolute("Bella", cNumberNonGaiaPlayers, 29, 0);
+		for(q = 33; < 55){
+			modifyProtounitAbsolute("Bella", cNumberNonGaiaPlayers, q, 0);
+			modifyProtounitAbsolute("Monkey King", cNumberNonGaiaPlayers, q, 0);
+		}
+		modifyProtounitAbsolute("Monkey King", cNumberNonGaiaPlayers, 0, 1000);
+		modifyProtounitAbsolute("Monkey King", cNumberNonGaiaPlayers, 27, 70);
+		modifyProtounitAbsolute("Monkey King", cNumberNonGaiaPlayers, 28, 10);
+		modifyProtounitAbsolute("Monkey King", cNumberNonGaiaPlayers, 29, 10);
+		modifyProtounitAbsolute("Bogsveigir", cNumberNonGaiaPlayers, 0, 350);
+		modifyProtounitAbsolute("Bogsveigir", cNumberNonGaiaPlayers, 31, 25);
+		
+		
 		if(QuickStart == 0){
 			gadgetUnreal("GodPowers");
 		}
@@ -235,9 +263,11 @@ inactive
 highFrequency
 {
 	if(trPlayerUnitCountSpecific(cNumberNonGaiaPlayers, "Peltast") == 0){
+		modifyProtounitAbsolute("Wadjet Spit", cNumberNonGaiaPlayers, 1, 6);
 		vector tileForStart = MapCentre*0.5;
 		int StartTileX = xsVectorGetX(tileForStart);
 		int StartTileZ = xsVectorGetZ(tileForStart);
+		int currentId = 0;
 		playSound("xwin.wav");
 		trOverlayText("Ring 1 cleared!", 5.0,-1,-1,600);
 		ChickenLevel = 3;
@@ -252,7 +282,175 @@ highFrequency
 		replaceCircle(StartTileX,StartTileZ,130,"IceC","CliffGreekA");
 		refreshPassability();
 		replaceCircle(StartTileX,StartTileZ,130,"CliffGreekA","IceC");
+		
+		
+		
+		trVectorQuestVarSet("dir", xsVectorSet(11, 0, 0));
+		trVectorQuestVarSet("CentreMap", xsVectorSet(StartTileX*2, 0, StartTileZ*2));
+		//SPAWN PLAYERS
+		float baseCos = xsCos(6.283185 / (cNumberNonGaiaPlayers-1));
+		float baseSin = xsSin(6.283185 / (cNumberNonGaiaPlayers-1));
+		int heading = 90;
+		for(p=1; < cNumberNonGaiaPlayers) {
+			xSetPointer(dPlayerData, p);
+			trVectorQuestVarSet("base", trVectorQuestVarGet("CentreMap") + trVectorQuestVarGet("dir"));
+			heading = heading-(360/(cNumberNonGaiaPlayers-1));
+			if(heading > 360){
+				heading = heading-360;
+			}
+			if(heading < 0){
+				heading = heading+360;
+			}
+			if(xGetBool(dPlayerData, xPlayerActive) == true){
+				currentId = trGetNextUnitScenarioNameNumber();
+				UnitCreate(0, "Relic", trVectorQuestVarGetX("base"), trVectorQuestVarGetZ("base"), heading);
+				NewRelic(currentId, RELIC_NUMBER, 3);
+			}
+			//spyEffect(1*trQuestVarGet("P"+p+"Unit"), kbGetProtoUnitID("Gazelle"), vector(1,1,1), vector(1,1,1));
+			trVectorQuestVarSet("dir", rotationMatrix(trVectorQuestVarGet("dir"), baseCos, baseSin));
+			trUnitSelectClear();
+		}
+		trCounterAddTime("ChickenInfo", 65-(QuickStart*9), 0, "<color={PlayerColor(2)}>Ring 2 attacks begin</color>", 42);
+		xsEnableRule("ChickenWave2Go");
 		xsDisableSelf();
+		
+	}
+}
+
+rule ChickenWave2Go
+inactive
+highFrequency
+{
+	if(ActPart == 4){
+		R5Wave(4*(PlayersActive-PlayersDead), "Bella", 3900, 3600);
+		xsEnableRule("ChickenWave2A");
+		playSound("\cinematics\04_in\armyarrive.wav");
+		trCounterAddTime("ChickenInfo", 330, 0, "<color={PlayerColor(2)}>Ring 2 super poacher</color>", 43);
+		trClearCounterDisplay();
+		xsDisableSelf();
+	}
+}
+
+rule ChickenWave2A
+inactive
+highFrequency
+{
+	if (trTime() > cActivationTime + 30) {
+		R5Wave(5*(PlayersActive-PlayersDead), "Bella", 4000, 3600);
+		xsEnableRule("ChickenWave2B");
+		xsDisableSelf();
+	}
+}
+
+rule ChickenWave2B
+inactive
+highFrequency
+{
+	if (trTime() > cActivationTime + 30) {
+		R5Wave(5*(PlayersActive-PlayersDead), "Bogsveigir", 4300, 3900);
+		xsEnableRule("ChickenWave2C");
+		xsDisableSelf();
+	}
+}
+
+rule ChickenWave2C
+inactive
+highFrequency
+{
+	if (trTime() > cActivationTime + 30) {
+		R5Wave(6*(PlayersActive-PlayersDead), "Bogsveigir", 5000, 4400);
+		R5Wave(6*(PlayersActive-PlayersDead), "Bella", 4400, 3600);
+		xsEnableRule("ChickenWave2D");
+		xsDisableSelf();
+	}
+}
+
+rule ChickenWave2D
+inactive
+highFrequency
+{
+	if (trTime() > cActivationTime + 30) {
+		R5Wave(8*(PlayersActive-PlayersDead), "Bella", 6000, 5000);
+		R5Wave(3*(PlayersActive-PlayersDead), "Monkey King", 7000, 6000);
+		xsEnableRule("ChickenWave2E");
+		xsDisableSelf();
+	}
+}
+
+rule ChickenWave2E
+inactive
+highFrequency
+{
+	if (trTime() > cActivationTime + 30) {
+		R5Wave(8*(PlayersActive-PlayersDead), "Bogsveigir", 7500, 6000);
+		xsEnableRule("ChickenWave2F");
+		xsDisableSelf();
+		for(p = 1; < cNumberNonGaiaPlayers){
+			trModifyProtounit(ChickenProto, p, 5, 1);
+			ColouredChatToPlayer(p, "1,0.5,0", "<u>Relic hold capacity increased!</u>");
+		}
+		ChickenLevel = 4;
+		playSound("ageadvance.wav");
+	}
+}
+
+rule ChickenWave2F
+inactive
+highFrequency
+{
+	if (trTime() > cActivationTime + 30) {
+		R5Wave(5*(PlayersActive-PlayersDead), "Monkey King", 8000, 6600);
+		xsEnableRule("ChickenWave2G");
+		xsDisableSelf();
+	}
+}
+
+rule ChickenWave2G
+inactive
+highFrequency
+{
+	if (trTime() > cActivationTime + 30) {
+		R5Wave(5*(PlayersActive-PlayersDead), "Slinger", 8500, 7000);
+		R5Wave(8*(PlayersActive-PlayersDead), "Monkey King", 8700, 7200);
+		xsEnableRule("ChickenWave2H");
+		trClearCounterDisplay();
+		xsDisableSelf();
+	}
+}
+
+rule ChickenWave2H
+inactive
+highFrequency
+{
+	if (trTime() > cActivationTime + 30) {
+		R5Wave(12*(PlayersActive-PlayersDead), "Bella", 9000, 7000);
+		xsEnableRule("ChickenWave2I");
+		xsDisableSelf();
+	}
+}
+
+rule ChickenWave2I
+inactive
+highFrequency
+{
+	if (trTime() > cActivationTime + 30) {
+		R5Wave(12*(PlayersActive-PlayersDead), "Slinger", 9900, 7000);
+		xsEnableRule("ChickenWave2Super");
+		xsDisableSelf();
+	}
+}
+
+rule ChickenWave2Super
+inactive
+highFrequency
+{
+	if (ActPart == 5) {
+		R5Wave(1, "Peltast", 3500, 2500);
+		R5Wave(12*(PlayersActive-PlayersDead), "Monkey King", 9800, 8000);
+		modifyProtounitAbsolute("Wadjet Spit", cNumberNonGaiaPlayers, 1, 10);
+		xsDisableSelf();
+		playSound("\cinematics\04_in\armyarrive.wav");
+		xsEnableRule("ChickenWave2Finish");
 	}
 }
 

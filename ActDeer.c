@@ -11,6 +11,7 @@ inactive
 		replaceTerrainAboveHeightMax("CoralA", "GrassB", 0.0);
 		trLetterBox(false);
 		trUIFadeToColor(0,0,0,100,800,false);
+		trCameraCut(vector(-36.525265,123.743729,-36.525265), vector(0.500000,-0.707107,0.500000), vector(0.500000,0.707107,0.500000), vector(0.707107,0.000000,-0.707107));
 		uiZoomToProto(""+GazelleProto);
 		uiLookAtProto(""+GazelleProto);
 		trDelayedRuleActivation("ResetBlackmap");

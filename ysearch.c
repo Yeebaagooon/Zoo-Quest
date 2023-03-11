@@ -421,7 +421,12 @@ highFrequency
 					ShootProjectile(dir, closevector, "Lampades Bolt", "Wadjet Spit");
 				}
 				if(Stage == 5){
-					ShootProjectile(dir, closevector, "Ball of Fire", "Wadjet Spit", 0, 5, 8000);
+					if(ChickenLevel < 3){
+						ShootProjectile(dir, closevector, "Ball of Fire", "Wadjet Spit", 0, 5, 8000);
+					}
+					else{
+						ShootProjectile(dir, closevector, "Ball of Fire", "Wadjet Spit", 0, 25, 8000);
+					}
 				}
 			}
 			case kbGetProtoUnitID("Tower"):

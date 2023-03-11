@@ -289,8 +289,7 @@ void spyEffect(int proto = 0, int anim = 0, vector dest = vector(0,0,0), vector 
 	trTechInvokeGodPower(0, "spy", vector(0,0,0), vector(0,0,0));
 }
 
-bool rayCollision(vector start = vector(0,0,0), vector dir = vector(1,0,0),
-	float dist = 0, float width = 0) {
+bool rayCollision(vector start = vector(0,0,0), vector dir = vector(1,0,0), float dist = 0, float width = 0) {
 	vector pos = vector(0,0,0);
 	vector hitbox = vector(0,0,0);
 	float current = 0;

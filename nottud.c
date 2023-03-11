@@ -102,8 +102,7 @@ float circleX(float centre = 0.0, int i = 0, int total = 0, float radius = 0.0, 
 float circleZ(float centre = 0.0, int i = 0, int total = 0, float radius = 0.0, float disp = 0){
 	return(centre + radius * xsCos((6.283185 * i) / total + (45.0 - disp) * 0.017453));
 }
-void cameraLookAt(vector dest = vector(0.0, 0.0, 0.0), float distance = 0.0, float heading = 0.0,
-	float tilt = 0.0, float verticalOffset = 0.0){
+void cameraLookAt(vector dest = vector(0.0, 0.0, 0.0), float distance = 0.0, float heading = 0.0, float tilt = 0.0, float verticalOffset = 0.0){
 	tempH = PI * heading / 180.0;
 	tempT = PI * tilt / 180.0;
 	tempSinH = xsSin(tempH);
@@ -1114,8 +1113,7 @@ int deployLocUsingCineBlock(float posX = 0.0, float posZ = 0.0, string unit = ""
 	trUnitChangeProtoUnit(unit);
 	return (cineBlockId);
 }
-void deployCluster(float posX = 0.0, float posZ = 0.0, string unit = "", int p = 0, int count = 0,
-	float radius = 0.0, bool forceOnMap = false){
+void deployCluster(float posX = 0.0, float posZ = 0.0, string unit = "", int p = 0, int count = 0, float radius = 0.0, bool forceOnMap = false){
 	for(i = 0; < count){
 		vector loc = randomCircleLoc(posX, posZ, radius);
 		float finalPosX = xsVectorGetX(loc);
@@ -1128,8 +1126,7 @@ void deployCluster(float posX = 0.0, float posZ = 0.0, string unit = "", int p =
 	}
 }
 
-void dC(float pX = 0.0, float pZ = 0.0, string u = "", int p = 0, int c = 0, float r = 0.0, int c2 = 0,
-	float r2 = 0.0, bool forceOnMap = false){
+void dC(float pX = 0.0, float pZ = 0.0, string u = "", int p = 0, int c = 0, float r = 0.0, int c2 = 0, float r2 = 0.0, bool forceOnMap = false){
 	for(i = 0; < c2){
 		vector loc = randomCircleLoc(pX, pZ, r2);
 		float finalPosX = xsVectorGetX(loc);
@@ -2935,4 +2932,144 @@ void createChickenArea(){
 			xSetInt(dEnemies, xUnitID, currentId);
 		}
 	}*/
+}
+
+void createCinematicMap(){
+	DestroyNumber = trGetNextUnitScenarioNameNumber();
+	for(n = DontDestroyBelow ; < DestroyNumber){
+		trUnitSelectClear();
+		trUnitSelect(""+n);
+		trUnitDestroy();
+	}
+	string baseTerrain = "GaiaCreepA";
+	int ABORT = 0;
+	int centrePosX = 0;
+	int centrePosZ= 0;
+	int currentId = trGetNextUnitScenarioNameNumber();
+	clearMap("ForestFloorPine", 5.0);
+	for(i = 0; < 10) {
+		centrePosX = randomInt(toTiles(0), toTiles(1.0));
+		centrePosZ = randomInt(toTiles(0), toTiles(1.0));
+		for(j = 0; < 10) {
+			tempV = randomCircleLoc(centrePosX, centrePosZ, 20.0);
+			for(k = 0; < 10) {
+				tempV2 = randomCircleLoc(xsVectorGetX(tempV), xsVectorGetZ(tempV), 40.0);
+				paintCircleHeight(xsVectorGetX(tempV2), xsVectorGetZ(tempV2), toTiles(randomFloat(0.0, 0.03)), "GaiaCreepA", 5.0);
+			}
+		}
+	}
+	vector tileForEnd = vector(110,0,110);
+	int EndTileX = xsVectorGetX(tileForEnd);
+	int EndTileZ = xsVectorGetZ(tileForEnd);
+	float EndHeight = trGetTerrainHeight(EndTileX, EndTileZ);
+	
+	float EndMetreX = EndTileX*2+1;
+	float EndMetreZ = EndTileZ*2+1;
+	
+	vector tileForStart = vector(12,0,12);
+	currentId = trGetNextUnitScenarioNameNumber();
+	UnitCreate(0, "Cinematic Block", 2*xsVectorGetX(tileForEnd),2*xsVectorGetZ(tileForEnd),0);
+	trUnitSelectClear();
+	trUnitSelect(""+currentId);
+	trUnitChangeProtoUnit("Spy Eye");
+	trUnitSelectClear();
+	trUnitSelect(""+currentId);
+	trMutateSelected(kbGetProtoUnitID("Osiris Box Glow"));
+	trUnitSelectClear();
+	trUnitSelect(""+currentId);
+	trUnitSetAnimationPath("0,0,1,0,0,0");
+	currentId = trGetNextUnitScenarioNameNumber();
+	UnitCreate(0, "Cinematic Block", 2*xsVectorGetX(tileForEnd),2*xsVectorGetZ(tileForEnd),315);
+	trUnitSelectClear();
+	trUnitSelect(""+currentId);
+	trUnitChangeProtoUnit("Flag");
+	trUnitSelectClear();
+	trUnitSelect(""+currentId);
+	trUnitSetAnimationPath("0,0,0,0,0,0");
+	FlagUnitID = currentId;
+	int StartTileX = xsVectorGetX(tileForStart);
+	int StartTileZ = xsVectorGetZ(tileForStart);
+	float StartHeight = trGetTerrainHeight(StartTileX, StartTileZ);
+	float StartMetreX = StartTileX*2+1;
+	float StartMetreZ = StartTileZ*2+1;
+	ABORT = 0;
+	vector tileForTrack = vector(30,0,30);
+	PaintAtlantisArea(xsVectorGetX(tileForTrack),xsVectorGetZ(tileForTrack)+4,xsVectorGetX(tileForTrack)+2,xsVectorGetZ(tileForTrack)+6,0,71);
+	currentId = trGetNextUnitScenarioNameNumber();
+	UnitCreate(0, "Cinematic Block", 2*xsVectorGetX(tileForTrack)+2,2*xsVectorGetZ(tileForTrack)+11,0);
+	trQuestVarSet("MinigameStartID", currentId);
+	currentId = trGetNextUnitScenarioNameNumber();
+	UnitCreate(0, "Cinematic Block", 2*xsVectorGetX(tileForTrack)+2,2*xsVectorGetZ(tileForTrack)+11,0);
+	trUnitSelectClear();
+	trUnitSelect(""+currentId);
+	trUnitChangeProtoUnit("Healing SFX");
+	trQuestVarSet("MinigameStartSFX", currentId);
+	trUnitSelectByQV("MinigameStartID");
+	trUnitChangeProtoUnit("Torch");
+	trUnitSelectByQV("MinigameStartID");
+	trUnitSetAnimationPath("0,1,0,0,1,1,1");
+	paintCircleHeight2(StartTileX, StartTileZ, 8, "GrassDirt25", StartHeight);
+	paintCircleHeight2(EndTileX, EndTileZ, 8, "IceA", EndHeight);
+	currentId = trGetNextUnitScenarioNameNumber();
+	paintTrees("ForestFloorPine", "Pine");
+	paintUnit("GaiaCreepA", "Blowing Leaves", 0, 0.01);
+	paintUnit("GaiaCreepA", "Mist", 0, 0.004);
+	paintUnit("GaiaCreepA", "Tamarisk Tree Dead", 0, 0.004);
+	paintUnit("GaiaCreepA", "Tamarisk Tree", 0, 0.004);
+	currentId = trGetNextUnitScenarioNameNumber();
+	paintUnit("GaiaCreepA", "Berry Bush", 0, 0.004);
+	for(i = currentId; < trGetNextUnitScenarioNameNumber()){
+		trUnitSelectClear();
+		trUnitSelect(""+i);
+		trSetSelectedScale(2,4,2);
+	}
+	//debugLoBerry count = " + (trGetNextUnitScenarioNameNumber()-currentId
+	paintUnit("GaiaCreepA", "GaiaCreepFlowers", 0, 0.1);
+	paintUnit("GaiaCreepA", "Bush", 0, 0.12);
+	paintUnit("GaiaCreepA", "Grass", 0, 0.12);
+	paintUnit("GaiaCreepA", "Rock Limestone Small", 0, 0.02);
+	paintUnit("GaiaCreepA", "Rock Granite Small", 0, 0.02);
+	trVectorQuestVarSet("dir", xsVectorSet(11, 0, 0));
+	trVectorQuestVarSet("CentreMap", xsVectorSet(StartMetreX, 0, StartMetreZ));
+	//SPAWN PLAYERS
+	float baseCos = xsCos(6.283185 / (cNumberNonGaiaPlayers-1));
+	float baseSin = xsSin(6.283185 / (cNumberNonGaiaPlayers-1));
+	int heading = 90;
+	for(p=1; < cNumberNonGaiaPlayers) {
+		trVectorQuestVarSet("base", trVectorQuestVarGet("CentreMap") + trVectorQuestVarGet("dir"));
+		heading = heading-(360/(cNumberNonGaiaPlayers-1));
+		if(heading > 360){
+			heading = heading-360;
+		}
+		if(heading < 0){
+			heading = heading+360;
+		}
+		UnitCreate(p, "Gazelle", trVectorQuestVarGetX("base"), trVectorQuestVarGetZ("base"), heading);
+		trVectorQuestVarSet("dir", rotationMatrix(trVectorQuestVarGet("dir"), baseCos, baseSin));
+		trUnitSelectClear();
+	}
+	currentId  = trGetNextUnitScenarioNameNumber();
+	UnitCreate(0, "Cinematic Block", xsVectorGetX(tileForTrack),xsVectorGetZ(tileForTrack),0);
+	trUnitSelectClear();
+	trUnitSelect(""+currentId );
+	trUnitChangeInArea(0,0,"Tamarisk Tree Dead","Cinematic Block", 15);
+	trUnitChangeInArea(0,0,"Tamarisk Tree","Cinematic Block", 15);
+	trUnitSelectClear();
+	trUnitSelect(""+currentId );
+	trUnitChangeInArea(0,0,"Pine","Cinematic Block", 15);
+	currentId  = trGetNextUnitScenarioNameNumber();
+	UnitCreate(0, "Cinematic Block", 90,90 ,0);
+	trUnitSelectClear();
+	trUnitSelect(""+currentId );
+	trUnitChangeInArea(0,0,"Tamarisk Tree Dead","Cinematic Block", 6);
+	trUnitChangeInArea(0,0,"Tamarisk Tree","Cinematic Block", 6);
+	trUnitChangeInArea(0,0,"Pine","Cinematic Block", 6);
+	CreateChest(90,90);
+	currentId  = trGetNextUnitScenarioNameNumber();
+	UnitCreate(0, "Throwing Axeman",50,150,180);
+	trUnitSelect(""+currentId );
+	trUnitChangeInArea(0,0,"Tamarisk Tree Dead","Cinematic Block", 6);
+	trUnitChangeInArea(0,0,"Tamarisk Tree","Cinematic Block", 6);
+	trUnitChangeInArea(0,0,"Pine","Cinematic Block", 6);
+	refreshPassability();
 }

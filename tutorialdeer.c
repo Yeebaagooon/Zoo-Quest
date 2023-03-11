@@ -290,34 +290,40 @@ inactive
 	if((PlayersActive == 1*trQuestVarGet("PlayersDoneTutorial")) && (PlayersActive > 0)){
 		xsDisableSelf();
 		xsDisableRule("TutorialLoops");
-		xsEnableRule("BuildDeerArea");
 		trClearCounterDisplay();
 		trCounterAbort("cdtutorial");
 		trCounterAbort("cdtutorialtimeout");
 		trQuestVarSet("PlayersDoneTutorial", 0);
-		trLetterBox(true);
-		trUIFadeToColor(0,0,0,1,1,true);
-		Stage = 1;
-		characterDialog(ActName(Stage), " ", ActIcon(Stage));
-		trSetFogAndBlackmap(true,true);
-		trDelayedRuleActivation("ResetBlackmap");
-		trFadeOutAllSounds(3);
-		trFadeOutMusic(3);
 		xResetDatabase(dTemp);
-		/*
-		trShowImageDialog("icons\icon class harmless animal", "Entering Bullshit Forest");
-		gadgetUnreal("ShowImageBox-BordersTop");
-		gadgetUnreal("ShowImageBox-BordersBottom");
-		gadgetUnreal("ShowImageBox-BordersLeft");
-		gadgetUnreal("ShowImageBox-BordersRight");
-		gadgetUnreal("ShowImageBox-BordersLeftTop");
-		gadgetUnreal("ShowImageBox-BordersLeftBottom");
-		gadgetUnreal("ShowImageBox-BordersRightBottom");
-		gadgetUnreal("ShowImageBox-BordersRightTop");
-		gadgetUnreal("ShowImageBox-CloseButton");
-		pause(0);
-		*/
+		if(PlayCine){
+			xsEnableRule("BuildCineScene");
+		}
+		else{
+			xsEnableRule("CineStartSkip");
+		}
 	}
+}
+
+rule CineStartSkip
+highFrequency
+inactive
+{
+	xsDisableSelf();
+	xsDisableRule("TutorialLoops");
+	xsEnableRule("BuildDeerArea");
+	trClearCounterDisplay();
+	trCounterAbort("cdtutorial");
+	trCounterAbort("cdtutorialtimeout");
+	trQuestVarSet("PlayersDoneTutorial", 0);
+	trLetterBox(true);
+	trUIFadeToColor(0,0,0,1,1,true);
+	Stage = 1;
+	characterDialog(ActName(Stage), " ", ActIcon(Stage));
+	trSetFogAndBlackmap(true,true);
+	trDelayedRuleActivation("ResetBlackmap");
+	trFadeOutAllSounds(3);
+	trFadeOutMusic(3);
+	xResetDatabase(dTemp);
 }
 
 rule TutorialMsg1

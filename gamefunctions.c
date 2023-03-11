@@ -970,6 +970,9 @@ void NewRelic(int id = 0, int max = 0, int forcelevel = 0){
 		trQuestVarSetFromRand("temp", 1, ChickenLevel);
 		level = 1*trQuestVarGet("temp");
 	}
+	else{
+		level = forcelevel;
+	}
 	trQuestVarSetFromRand("type", 1, max);
 	type = 1*trQuestVarGet("type");
 	if(type == RELIC_ATTACK){
@@ -980,6 +983,9 @@ void NewRelic(int id = 0, int max = 0, int forcelevel = 0){
 		if(level == 3){
 			trQuestVarSetFromRand("temp", 7, 9, true);
 		}
+		if(level == 4){
+			trQuestVarSetFromRand("temp", 10, 15, true);
+		}
 	}
 	if(type == RELIC_HP){
 		trQuestVarSetFromRand("temp", 3, 10, true);
@@ -988,6 +994,9 @@ void NewRelic(int id = 0, int max = 0, int forcelevel = 0){
 		}
 		if(level == 3){
 			trQuestVarSetFromRand("temp", 21, 30, true);
+		}
+		if(level == 3){
+			trQuestVarSetFromRand("temp", 31, 50, true);
 		}
 		trQuestVarModify("temp", "*", 10);
 	}
@@ -999,6 +1008,9 @@ void NewRelic(int id = 0, int max = 0, int forcelevel = 0){
 		if(level == 3){
 			trQuestVarSet("temp", 4);
 		}
+		if(level == 4){
+			trQuestVarSet("temp", 5);
+		}
 		trQuestVarModify("temp", "*", 1);
 	}
 	if(type == RELIC_CHICKEN_SPEED){
@@ -1009,6 +1021,9 @@ void NewRelic(int id = 0, int max = 0, int forcelevel = 0){
 		if(level == 3){
 			trQuestVarSet("temp", 3);
 		}
+		if(level == 4){
+			trQuestVarSet("temp", 4);
+		}
 	}
 	if(type == RELIC_RANGE){
 		trQuestVarSetFromRand("temp", 1, 2, true);
@@ -1017,6 +1032,9 @@ void NewRelic(int id = 0, int max = 0, int forcelevel = 0){
 		}
 		if(level == 3){
 			trQuestVarSetFromRand("temp", 5, 6, true);
+		}
+		if(level == 4){
+			trQuestVarSetFromRand("temp", 7, 8, true);
 		}
 	}
 	if(type == RELIC_TOWER){
@@ -1027,6 +1045,9 @@ void NewRelic(int id = 0, int max = 0, int forcelevel = 0){
 		if(level == 3){
 			trQuestVarSetFromRand("temp", 6, 8, true);
 		}
+		if(level == 4){
+			trQuestVarSetFromRand("temp", 9, 14, true);
+		}
 	}
 	if(type == RELIC_CHICKEN_HP){
 		trQuestVarSetFromRand("temp", 1, 7, true);
@@ -1036,7 +1057,34 @@ void NewRelic(int id = 0, int max = 0, int forcelevel = 0){
 		if(level == 3){
 			trQuestVarSetFromRand("temp", 12, 15, true);
 		}
+		if(level == 4){
+			trQuestVarSetFromRand("temp", 20, 30, true);
+		}
 		trQuestVarModify("temp", "*", 15);
+	}
+	if(type == RELIC_CHICKEN_HEAL){
+		trQuestVarSetFromRand("temp", 1, 2, true);
+		if(level == 2){
+			trQuestVarSetFromRand("temp", 3, 4, true);
+		}
+		if(level == 3){
+			trQuestVarSetFromRand("temp", 5, 7, true);
+		}
+		if(level == 4){
+			trQuestVarSetFromRand("temp", 8, 10, true);
+		}
+	}
+	if(type == RELIC_TOWER_HEAL){
+		trQuestVarSetFromRand("temp", 1, 2, true);
+		if(level == 2){
+			trQuestVarSetFromRand("temp", 3, 4, true);
+		}
+		if(level == 3){
+			trQuestVarSetFromRand("temp", 5, 7, true);
+		}
+		if(level == 4){
+			trQuestVarSetFromRand("temp", 8, 10, true);
+		}
 	}
 	stat = trQuestVarGet("temp");
 	xAddDatabaseBlock(dFreeRelics, true);
@@ -1062,7 +1110,6 @@ void FunctionRelic(bool apply = false, int p = 0){
 		if(xGetInt(dFreeRelics, xRelicType) == RELIC_ATTACK){
 			trModifyProtounit("Tower", p, 31, 1*xGetFloat(dFreeRelics, xRelicStat));
 			xSetInt(dPlayerData, xTowerDamage, xGetInt(dPlayerData, xTowerDamage)+1*xGetFloat(dFreeRelics, xRelicStat));
-			debugLog("Tower dmg = " + xGetInt(dPlayerData, xTowerDamage));
 		}
 		if(xGetInt(dFreeRelics, xRelicType) == RELIC_HP){
 			trModifyProtounit("Tower", p, 0, 1*xGetFloat(dFreeRelics, xRelicStat));
@@ -1095,7 +1142,6 @@ void FunctionRelic(bool apply = false, int p = 0){
 		if(xGetInt(dHeldRelics, xRelicType) == RELIC_ATTACK){
 			trModifyProtounit("Tower", p, 31, -1*xGetFloat(dHeldRelics, xRelicStat));
 			xSetInt(dPlayerData, xTowerDamage, xGetInt(dPlayerData, xTowerDamage)-1*xGetFloat(dHeldRelics, xRelicStat));
-			debugLog("Tower dmg = " + xGetInt(dPlayerData, xTowerDamage));
 		}
 		if(xGetInt(dHeldRelics, xRelicType) == RELIC_HP){
 			trModifyProtounit("Tower", p, 0, (0-1*xGetFloat(dHeldRelics, xRelicStat)));

@@ -687,8 +687,7 @@ void ColouredTimer(int c = 0, string text = "", int time = 0, string name = "cou
 	trCounterAddTime(name, time, 0, colourString + text, eventID);
 }
 
-void ColouredIconTimer(int c = 0, string icon ="", string text = "", int time = 0,
-	string name = "countdown", int eventID = -1){
+void ColouredIconTimer(int c = 0, string icon ="", string text = "", int time = 0, string name = "countdown", int eventID = -1){
 	string colourString = "<color={PlayerColor("+c+")}>";
 	string iconString = "<icon=(20)("+icon+")>";
 	trCounterAddTime(name, time, 0, colourString + iconString + text, eventID);
@@ -726,8 +725,7 @@ void UnitCreateV(int xplayerx = 0, string protounitname = "", vector pos = vecto
 	trUnitChangeProtoUnit(protounitname);
 }
 
-void FloatingUnit(string protounitname="", int xx = 0, int yy = 0, int zz = 0, int xheadingx = 0,
-	float scalex = 1, float scaley = 1, float scalez = 1){
+void FloatingUnit(string protounitname="", int xx = 0, int yy = 0, int zz = 0, int xheadingx = 0, float scalex = 1, float scaley = 1, float scalez = 1){
 	//trArmyDispatch("0,0", "Revealer", 1, xx, yy, zz, xheadingx, true);
 	trQuestVarSet("BuildID", trQuestVarGet("BuildID") + 1);
 	trQuestVarSet("QVHero"+(1*trQuestVarGet("BuildID"))+"", trGetNextUnitScenarioNameNumber());
@@ -759,8 +757,7 @@ void FloatingUnit(string protounitname="", int xx = 0, int yy = 0, int zz = 0, i
 	trUnitSetAnimationPath("1,0,0,0,0");
 }
 
-void FloatingUnitAnim(string protounitname="", int xx = 0, int yy = 0, int zz = 0, int xheadingx = 0,
-	float scalex = 1, float scaley = 1, float scalez = 1, string anim="0,0,0,0,0"){
+void FloatingUnitAnim(string protounitname="", int xx = 0, int yy = 0, int zz = 0, int xheadingx = 0, float scalex = 1, float scaley = 1, float scalez = 1, string anim="0,0,0,0,0"){
 	trArmyDispatch("0,0", "Revealer", 1, xx, yy, zz, xheadingx, true);
 	trQuestVarSet("BuildID", trQuestVarGet("BuildID") + 1);
 	trQuestVarSet("QVHero"+(1*trQuestVarGet("BuildID"))+"", trGetNextUnitScenarioNameNumber());
@@ -791,8 +788,7 @@ void FloatingUnitAnim(string protounitname="", int xx = 0, int yy = 0, int zz = 
 	trUnitSetAnimationPath(""+anim+"");
 }
 
-void FloatingUnitAnimNoLOS(string protounitname="", int xx = 0, int yy = 0, int zz = 0, int xheadingx = 0,
-	float scalex = 1, float scaley = 1, float scalez = 1, string anim="0,0,0,0,0"){
+void FloatingUnitAnimNoLOS(string protounitname="", int xx = 0, int yy = 0, int zz = 0, int xheadingx = 0, float scalex = 1, float scaley = 1, float scalez = 1, string anim="0,0,0,0,0"){
 	trQuestVarSet("BuildID", trQuestVarGet("BuildID") + 1);
 	trQuestVarSet("QVHero"+(1*trQuestVarGet("BuildID"))+"", trGetNextUnitScenarioNameNumber());
 	trQuestVarSet("QVHero", trGetNextUnitScenarioNameNumber());
@@ -822,8 +818,7 @@ void FloatingUnitAnimNoLOS(string protounitname="", int xx = 0, int yy = 0, int 
 	trUnitSetAnimationPath(""+anim+"");
 }
 
-void FloatingUnitAnimCiv(string protounitname="", int xx = 0, int yy = 0, int zz = 0, int xheadingx = 0,
-	float scalex = 1, float scaley = 1, float scalez = 1, string anim="0,0,0,0,0"){
+void FloatingUnitAnimCiv(string protounitname="", int xx = 0, int yy = 0, int zz = 0, int xheadingx = 0, float scalex = 1, float scaley = 1, float scalez = 1, string anim="0,0,0,0,0"){
 	trArmyDispatch("0,0", "Revealer", 1, xx, yy, zz, xheadingx, true);
 	trQuestVarSet("BuildID", trQuestVarGet("BuildID") + 1);
 	trQuestVarSet("QVHero"+(1*trQuestVarGet("BuildID"))+"", trGetNextUnitScenarioNameNumber());
@@ -853,8 +848,7 @@ void FloatingUnitAnimCiv(string protounitname="", int xx = 0, int yy = 0, int zz
 	trSetSelectedScale(scalex, scaley, scalez);
 }
 
-void FloatingUnitAnim4(string protounitname="", int xx = 0, int yy = 0, int zz = 0, int xheadingx = 0,
-	float scalex = 1, float scaley = 1, float scalez = 1, string anim="0,0,0,0,0", int p = 0){
+void FloatingUnitAnim4(string protounitname="", int xx = 0, int yy = 0, int zz = 0, int xheadingx = 0,float scalex = 1, float scaley = 1, float scalez = 1, string anim="0,0,0,0,0", int p = 0){
 	trArmyDispatch(""+p+",0", "Revealer", 1, xx, yy, zz, xheadingx, true);
 	trQuestVarSet("BuildID", trQuestVarGet("BuildID") + 1);
 	trQuestVarSet("QVHero"+(1*trQuestVarGet("BuildID"))+"", trGetNextUnitScenarioNameNumber());
@@ -887,8 +881,7 @@ void FloatingUnitAnim4(string protounitname="", int xx = 0, int yy = 0, int zz =
 	trUnitTeleport(trVectorQuestVarGetX("V1"),yy,trVectorQuestVarGetZ("V1"));
 }
 
-void FloatingUnitAnim5(string protounitname="", int xx = 0, int yy = 0, int zz = 0, int xheadingx = 0,
-	float scalex = 1, float scaley = 1, float scalez = 1, string anim="0,0,0,0,0", int p = 0){
+void FloatingUnitAnim5(string protounitname="", int xx = 0, int yy = 0, int zz = 0, int xheadingx = 0, float scalex = 1, float scaley = 1, float scalez = 1, string anim="0,0,0,0,0", int p = 0){
 	trArmyDispatch(""+p+",0", "Revealer", 1, xx, yy, zz, xheadingx, true);
 	trQuestVarSet("BuildID", trQuestVarGet("BuildID") + 1);
 	trQuestVarSet("QVHero"+(1*trQuestVarGet("BuildID"))+"", trGetNextUnitScenarioNameNumber());
@@ -919,8 +912,7 @@ void FloatingUnitAnim5(string protounitname="", int xx = 0, int yy = 0, int zz =
 	trUnitTeleport(trVectorQuestVarGetX("V1"),trVectorQuestVarGetY("V1"),trVectorQuestVarGetZ("V1"));
 }
 
-void FloatingUnitAnim2(string protounitname="", int xx = 0, int yy = 0, int zz = 0, int xheadingx = 0,
-	float scalex = 1, float scaley = 1, float scalez = 1, string anim="0,0,0,0,0"){
+void FloatingUnitAnim2(string protounitname="", int xx = 0, int yy = 0, int zz = 0, int xheadingx = 0, float scalex = 1, float scaley = 1, float scalez = 1, string anim="0,0,0,0,0"){
 	trArmyDispatch("0,0", "Revealer", 1, xx, yy, zz, xheadingx, true);
 	trQuestVarSet("BuildID", trQuestVarGet("BuildID") + 1);
 	trQuestVarSet("QVHero"+(1*trQuestVarGet("BuildID"))+"", trGetNextUnitScenarioNameNumber());
@@ -953,8 +945,7 @@ void FloatingUnitAnim2(string protounitname="", int xx = 0, int yy = 0, int zz =
 	trUnitTeleport(trVectorQuestVarGetX("V1"),trVectorQuestVarGetY("V1"),trVectorQuestVarGetZ("V1"));
 }
 
-void FloatingUnitAnimIdle(string protounitname="", int xx = 0, int yy = 0, int zz = 0, int xheadingx = 0,
-	float scalex = 1, float scaley = 1, float scalez = 1, string anim="0,0,0,0,0", int animtype = 2){
+void FloatingUnitAnimIdle(string protounitname="", int xx = 0, int yy = 0, int zz = 0, int xheadingx = 0, float scalex = 1, float scaley = 1, float scalez = 1, string anim="0,0,0,0,0", int animtype = 2){
 	//trArmyDispatch("0,0", "Revealer", 1, xx, yy, zz, xheadingx, true);
 	float currentheight = 0.0;
 	trQuestVarSet("BuildID", trQuestVarGet("BuildID") + 1);
@@ -1322,25 +1313,6 @@ void CTFBuildBase(int p = 1, float PosX = 0, float PosZ = 0){
 		trVectorQuestVarGetY("P"+p+"Base"),trVectorQuestVarGetZ("P"+p+"Base"));
 	trUnitChangeProtoUnit("Storage Pit");
 	
-}
-
-void setupUnitShop(int slot = 0, string displayname = "", string protoname = "",
-	string description = "", int cost = 0, int limit = 0) {
-	trStringQuestVarSet("unit"+slot+"displayname", displayname);
-	trStringQuestVarSet("unit"+slot+"protoname", protoname);
-	trStringQuestVarSet("unit"+slot+"description", description);
-	trQuestVarSet("unit"+slot+"cost", cost);
-	trQuestVarSet("unit"+slot+"limit", limit);
-}
-
-void setupPowerShop(int slot = 0, string displayname = "", string powername = "",
-	string protoname = "", string description = "", int cost = 0, int idneeded = 0) {
-	trStringQuestVarSet("power"+slot+"displayname", displayname);
-	trStringQuestVarSet("power"+slot+"powername", powername);
-	trStringQuestVarSet("power"+slot+"protoname", protoname);
-	trStringQuestVarSet("power"+slot+"description", description);
-	trQuestVarSet("power"+slot+"cost", cost);
-	trQuestVarSet("power"+slot+"id", idneeded);
 }
 
 void playSoundCustom(string BasesoundName = "", string CustomsoundName = ""){
