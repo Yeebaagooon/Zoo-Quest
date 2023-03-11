@@ -1,9 +1,9 @@
 //---Controls
 //\Yeebaagooon\Zoo Quest\Test sound.mp3
-int QuickStart = 0;
-bool LOS = true;
+int QuickStart = 6;
+bool LOS = false;
 bool AlwaysWin = true;
-bool PlayCine = true;
+bool PlayCine = false;
 
 /*
 it uses build at pointer instead
@@ -90,6 +90,7 @@ string unitcheck = "";
 float timediff = 0.0;
 int timelast = 0;
 int Stage = 0;
+int SkipRequired = 0;
 
 float timediff2 = 0.0;
 float timelast2 = 0.0;

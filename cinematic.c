@@ -1,32 +1,39 @@
+void CineGo(int unused = 0){
+	xsEnableRule("RemoveCineTimers");
+	xsEnableRule("Cine_START");
+}
+
 rule BuildCineScene
 inactive
 highFrequency
 {
-	trRenderSky(true, "SkyBlue");
+	trRenderSky(true, "SkySunset");
 	clearMap("black", 0);
-	trPaintTerrain(70,40,110,110,0,1);
+	trPaintTerrain(100,59,104,63,2,11);
+	trPaintTerrain(90,40,110,86,0,1);
+	trPaintTerrain(102,40,110,86,0,0);
 	PaintAtlantisArea(101,60,103,62,0,53);
 	trQuestVarSet("Yeeb", trGetNextUnitScenarioNameNumber());
 	UnitCreate(0, "Cinematic Block", 101*2+2, 60*2+2, 270);
 	trQuestVarSet("YeebEgg", trGetNextUnitScenarioNameNumber());
-	UnitCreate(0, "Cinematic Block", 101*2+2, 60*2+2, 270);
+	UnitCreate(0, "Cinematic Block", 101*2+2, 60*2+2, 292);
 	trQuestVarSet("YeebSFX1", trGetNextUnitScenarioNameNumber());
 	UnitCreate(0, "Cinematic Block", 101*2+2, 60*2+2, 315);
 	trQuestVarSet("YeebSFX2", trGetNextUnitScenarioNameNumber());
 	UnitCreate(0, "Cinematic Block", 101*2+2, 60*2+2, 315);
-	trChangeTerrainHeight(101,60,104,63, 10);
+	trChangeTerrainHeight(101,60,104,63, 14);
 	trUnitSelectByQV("Yeeb");
 	trUnitChangeProtoUnit("Pharaoh of Osiris XP");
 	trUnitSelectByQV("YeebEgg");
 	trUnitChangeProtoUnit("Phoenix Egg");
 	trUnitSelectByQV("YeebEgg");
-	trSetScale(2);
+	trSetScale(2.5);
 	trUnitSelectByQV("YeebSFX1");
 	trUnitChangeProtoUnit("Imperial Examination");
 	
 	PaintAtlantisArea(95,60,97,62,0,53);
 	UnitCreate(0, "Chicken", 95*2+2, 60*2+2, 270);
-	trChangeTerrainHeight(95,60,98,63, 7);
+	trChangeTerrainHeight(95,60,98,63, 3);
 	PaintAtlantisArea(97,53,99,55,0,53);
 	UnitCreate(0, "Rhinocerous", 97*2+2, 53*2+2, 270);
 	trChangeTerrainHeight(97,53,100,56, 6);
@@ -35,10 +42,10 @@ highFrequency
 	trChangeTerrainHeight(97,67,100,70, 6);
 	
 	PaintAtlantisArea(92,48,94,50,0,53);
-	UnitCreate(0, "Gazelle", 92*2+2, 48*2+2, 270);
+	UnitCreate(0, "Goat", 92*2+2, 48*2+2, 270);
 	trChangeTerrainHeight(92,48,95,51, 5);
 	PaintAtlantisArea(92,72,94,74,0,53);
-	UnitCreate(0, "Goat", 92*2+2, 72*2+2, 270);
+	UnitCreate(0, "Gazelle", 92*2+2, 72*2+2, 270);
 	trChangeTerrainHeight(92,72,95,75, 5);
 	
 	modifyProtounitAbsolute("Chicken", 0, 1,0);
@@ -47,24 +54,55 @@ highFrequency
 	modifyProtounitAbsolute("Rhinocerous", 0, 1,0);
 	modifyProtounitAbsolute("Gazelle", 0, 1,0);
 	
-	replaceTerrainAtMinSteepness("GrassA", "CliffGreekA", 2);
+	replaceTerrainAtMinSteepness("GrassB", "CliffGreekA", 2);
+	trCameraCut(vector(109.101425,39.023849,122.402161), vector(0.932531,-0.361055,0.005034), vector(0.361050,0.932545,0.001949), vector(0.005398,0.000000,-0.999985));
+	paintTrees2("GrassA", "Pine");
+	paintTrees2("GrassB", "Bush");
+	SkipRequired = PlayersActive*0.8+1;
+	if(SkipRequired > PlayersActive){
+		SkipRequired = PlayersActive-1;
+	}
+	trSetCounterDisplay("</color>Votes to skip: " + 1*trQuestVarGet("SkipVotes") +"/" + SkipRequired);
+	trCounterAddTime("cdcine", 13, 0, "<color={PlayerColor("+ cNumberNonGaiaPlayers +")}>Cinematic begins", 46);
+	PlayerChoice(1, "Skip Cinematic?", "Yes", 3, "No", 0, 12900);
+	xsEnableRule("SkipCine");
 	xsDisableSelf();
-	//xsEnableRule("Cine_START");
+}
+
+rule SkipCine
+inactive
+highFrequency
+{
+	if(1*trQuestVarGet("SkipVotes") >= SkipRequired){
+		xsEnableRule("RemoveCineTimers");
+		xsDisableSelf();
+		xsDisableRule("Cine_START");
+		xsEnableRule("CineStartSkip");
+		SkipRequired = 100;
+	}
+}
+
+rule RemoveCineTimers
+inactive
+highFrequency
+{
+	trCounterAbort("cdcine");
+	trClearCounterDisplay();
+	xsDisableSelf();
 }
 
 rule Cine_START
 inactive
 highFrequency
 {
+	xsEnableRule("RemoveCineTimers");
 	trLetterBox(true);
 	trSetFogAndBlackmap(false,false);
 	trRenderSky(true, "SkyBlue");
 	trSetObscuredUnits(false);
-	/*
 	createCinematicMap();
 	replaceTerrainAboveHeightMax("GaiaCreepA", "GrassB", 0.0);
 	replaceTerrainAboveHeightMax("CoralA", "GrassB", 0.0);
-	*/
 	createCameraTrack(5000);
 	trCameraCut(vector(-4.191484,31.823811,-23.344259), vector(0.512498,-0.420865,0.748477), vector(0.237777,0.907123,0.347260), vector(0.825111,-0.000000,-0.564971));
 	addCameraTrackWaypoint();

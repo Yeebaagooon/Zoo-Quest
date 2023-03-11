@@ -41,7 +41,7 @@ inactive
 			{
 				trQuestVarSet("SkipVotes", 1*trQuestVarGet("SkipVotes")+1);
 				trClearCounterDisplay();
-				trSetCounterDisplay("<color={PlayerColor(0)}>Votes to skip: " + 1*trQuestVarGet("SkipVotes"));
+				trSetCounterDisplay("</color>Votes to skip: " + 1*trQuestVarGet("SkipVotes") +"/" + SkipRequired);
 			}
 			case 4:
 			{
