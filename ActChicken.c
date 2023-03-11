@@ -91,7 +91,7 @@ inactive
 		modifyProtounitAbsolute("Peltast", cNumberNonGaiaPlayers, 11, 20);
 		modifyProtounitAbsolute("Peltast", cNumberNonGaiaPlayers, 2, 250);
 		modifyProtounitAbsolute("Peltast", cNumberNonGaiaPlayers, 31, 20);
-		modifyProtounitAbsolute("Bella", cNumberNonGaiaPlayers, 0, 500);
+		modifyProtounitAbsolute("Bella", cNumberNonGaiaPlayers, 0, 300);
 		modifyProtounitAbsolute("Bella", cNumberNonGaiaPlayers, 27, 10);
 		modifyProtounitAbsolute("Bella", cNumberNonGaiaPlayers, 28, 0);
 		modifyProtounitAbsolute("Bella", cNumberNonGaiaPlayers, 29, 0);
@@ -99,7 +99,7 @@ inactive
 			modifyProtounitAbsolute("Bella", cNumberNonGaiaPlayers, q, 0);
 			modifyProtounitAbsolute("Monkey King", cNumberNonGaiaPlayers, q, 0);
 		}
-		modifyProtounitAbsolute("Monkey King", cNumberNonGaiaPlayers, 0, 1000);
+		modifyProtounitAbsolute("Monkey King", cNumberNonGaiaPlayers, 0, 400);
 		modifyProtounitAbsolute("Monkey King", cNumberNonGaiaPlayers, 27, 70);
 		modifyProtounitAbsolute("Monkey King", cNumberNonGaiaPlayers, 28, 10);
 		modifyProtounitAbsolute("Monkey King", cNumberNonGaiaPlayers, 29, 10);
@@ -119,15 +119,10 @@ inactive
 highFrequency
 {
 	if(ActPart == 2){
-		if(QuickStart == 0){
-			R5Wave(5*(PlayersActive-PlayersDead), "Militia", 3000, 2000);
-			xsEnableRule("ChickenWave1A");
-			playSound("\cinematics\04_in\armyarrive.wav");
-			trCounterAddTime("ChickenInfo", 320, 0, "<color={PlayerColor(2)}>Ring 1 super poacher</color>", 41);
-		}
-		else{
-			xsEnableRule("ChickenWave1Finish");
-		}
+		R5Wave(5*(PlayersActive-PlayersDead), "Militia", 3000, 2000);
+		xsEnableRule("ChickenWave1A");
+		playSound("\cinematics\04_in\armyarrive.wav");
+		trCounterAddTime("ChickenInfo", 320, 0, "<color={PlayerColor(2)}>Ring 1 super poacher</color>", 41);
 		trClearCounterDisplay();
 		xsDisableSelf();
 	}

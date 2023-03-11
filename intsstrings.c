@@ -55,8 +55,7 @@ S5 R for lure to conv relics to mines
 Difficulty
 Data
 Persistent bonus
-Start Cine
-Skip
+Act Skip
 S5 Cine
 End Cine
 

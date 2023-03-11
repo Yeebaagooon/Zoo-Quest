@@ -530,13 +530,13 @@ int RedText(int a = 2){
 
 
 void CreateGazelle(int p = 1, int x = 1, int z = 1, int heading = 0){
+	xSetPointer(dPlayerData, p);
 	trQuestVarSet("P"+p+"Unit", trGetNextUnitScenarioNameNumber());
 	UnitCreate(p, ""+GazelleProto, x, z, heading);
 	trUnitSelectByQV("P"+p+"Unit");
 	trSetSelectedScale(0,1,0);
 	trUnitSelectByQV("P"+p+"Unit");
 	spyEffect(kbGetProtoUnitID("Gazelle"), 0, xsVectorSet(dPlayerData,xSpyID,p), vector(1,1,1));
-	xSetPointer(dPlayerData, p);
 	xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
 	xSetBool(dPlayerData, xStopDeath, false);
 	/*
@@ -548,6 +548,7 @@ void CreateGazelle(int p = 1, int x = 1, int z = 1, int heading = 0){
 }
 
 void CreateRhino(int p = 1, int x = 1, int z = 1, int heading = 0){
+	xSetPointer(dPlayerData, p);
 	trQuestVarSet("P"+p+"Unit", trGetNextUnitScenarioNameNumber());
 	UnitCreate(p, ""+RhinoProto, x, z, heading);
 	trUnitSelectByQV("P"+p+"Unit");
@@ -555,7 +556,6 @@ void CreateRhino(int p = 1, int x = 1, int z = 1, int heading = 0){
 	trUnitSelectByQV("P"+p+"Unit");
 	spyEffect(kbGetProtoUnitID("Rhinocerous"), 0, xsVectorSet(dPlayerData,xSpyID,p), vector(1,1,1));
 	//spyEffect(kbGetProtoUnitID("Cinematic Block"), 0, xsVectorSet(dPlayerData,xSecondSpy,p), vector(1,1,1));
-	xSetPointer(dPlayerData, p);
 	xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
 	xSetBool(dPlayerData, xStopDeath, false);
 	/*
@@ -567,6 +567,7 @@ void CreateRhino(int p = 1, int x = 1, int z = 1, int heading = 0){
 }
 
 void CreateGoat(int p = 1, int x = 1, int z = 1, int heading = 0){
+	xSetPointer(dPlayerData, p);
 	trQuestVarSet("P"+p+"Unit", trGetNextUnitScenarioNameNumber());
 	UnitCreate(p, ""+GoatProto, x, z, heading);
 	trUnitSelectByQV("P"+p+"Unit");
@@ -574,7 +575,6 @@ void CreateGoat(int p = 1, int x = 1, int z = 1, int heading = 0){
 	trUnitSelectByQV("P"+p+"Unit");
 	spyEffect(kbGetProtoUnitID("Goat"), 0, xsVectorSet(dPlayerData,xSpyID,p), vector(1,1,1));
 	//spyEffect(kbGetProtoUnitID("Cinematic Block"), 0, xsVectorSet(dPlayerData,xSecondSpy,p), vector(1,1,1));
-	xSetPointer(dPlayerData, p);
 	xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
 	xSetBool(dPlayerData, xStopDeath, false);
 	/*
@@ -586,6 +586,7 @@ void CreateGoat(int p = 1, int x = 1, int z = 1, int heading = 0){
 }
 
 void CreateCroc(int p = 1, int x = 1, int z = 1, int heading = 0){
+	xSetPointer(dPlayerData, p);
 	trQuestVarSet("P"+p+"Unit", trGetNextUnitScenarioNameNumber());
 	UnitCreate(p, ""+CrocProto, x, z, heading);
 	trUnitSelectByQV("P"+p+"Unit");
@@ -593,7 +594,6 @@ void CreateCroc(int p = 1, int x = 1, int z = 1, int heading = 0){
 	trUnitSelectByQV("P"+p+"Unit");
 	spyEffect(kbGetProtoUnitID("Crocodile"), 0, xsVectorSet(dPlayerData,xSpyID,p), vector(1,1,1));
 	//spyEffect(kbGetProtoUnitID("Cinematic Block"), 0, xsVectorSet(dPlayerData,xSecondSpy,p), vector(1,1,1));
-	xSetPointer(dPlayerData, p);
 	xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
 	xSetBool(dPlayerData, xStopDeath, false);
 	trUnitSelectClear();
@@ -609,6 +609,7 @@ void CreateCroc(int p = 1, int x = 1, int z = 1, int heading = 0){
 }
 
 void CreateChicken(int p = 1, int x = 1, int z = 1, int heading = 0){
+	xSetPointer(dPlayerData, p);
 	trQuestVarSet("P"+p+"Unit", trGetNextUnitScenarioNameNumber());
 	UnitCreate(p, ""+ChickenProto, x, z, heading);
 	trUnitSelectByQV("P"+p+"Unit");
@@ -617,7 +618,6 @@ void CreateChicken(int p = 1, int x = 1, int z = 1, int heading = 0){
 	trUnitSelectByQV("P"+p+"Unit");
 	spyEffect(kbGetProtoUnitID("Chicken"), 0, xsVectorSet(dPlayerData,xSpyID,p), vector(2,2,2));
 	//spyEffect(kbGetProtoUnitID("Cinematic Block"), 0, xsVectorSet(dPlayerData,xSecondSpy,p), vector(1,1,1));
-	xSetPointer(dPlayerData, p);
 	xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
 	xSetBool(dPlayerData, xStopDeath, false);
 	
@@ -832,6 +832,8 @@ active
 					if(Stage == 5){
 						CreateChicken(p, xsVectorGetX(xGetVector(dPlayerData, xDeathVector)), xsVectorGetZ(xGetVector(dPlayerData, xDeathVector)), 0);
 					}
+					trUnitSelectByQV("P"+p+"Unit");
+					trSetScale(1);
 					uiZoomToProto(CurrentProto());
 					uiLookAtProto(CurrentProto());
 				}

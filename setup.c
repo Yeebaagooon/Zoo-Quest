@@ -176,7 +176,6 @@ highFrequency
 		gadgetReal("ShowImageBox-BordersRightBottom");
 		gadgetReal("ShowImageBox-BordersRightTop");
 		gadgetReal("ShowImageBox-CloseButton");
-		trDelayedRuleActivation("Help_Chat");
 		//startNPCDialog(1);
 		if(QuickStart == 6){
 			xsEnableRule("BuildCineScene");
@@ -206,6 +205,8 @@ highFrequency
 		xsEnableRule("CustomContentChat");
 		xsEnableRule("ysearch");
 		xsEnableRule("DestroyConstant");
+		xsEnableRule("Animations");
+		trDelayedRuleActivation("Help_Chat");
 	}
 }
 

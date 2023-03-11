@@ -185,7 +185,7 @@ inactive
 							PlayerChoice(p, "Choose your reward:", "+1.5 speed", 32, "+60s all shrine current activation time", 30, 10000);
 						}
 						PlayersMinigaming = PlayersMinigaming-1;
-						trChatSend(0, "Players MG" + PlayersMinigaming);
+						//	trChatSend(0, "Players MG" + PlayersMinigaming);
 						xSetBool(dPlayerData, xStopDeath, false);
 					}
 				}
@@ -556,9 +556,12 @@ highFrequency
 				if(xGetInt(dPlayerData, xTeleportDue) == 0){
 					xSetVector(dPlayerData, xVectorHold, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
 				}
+				if(trCurrentPlayer() == p){
+					trLetterBox(true);
+					characterDialog("Goat Minigame", "Interract (W) with columns", "icons\world column icon 64");
+				}
 			}
 		}
-		//-spawn guys
 	}
 	refreshPassability();
 	if(PlayersMinigaming == 0){
@@ -593,14 +596,10 @@ highFrequency
 		}
 	}
 	else{
-		trMessageSetText("Sink 6 tiles into lava while remaining alive yourself!", 8000);
-		trCounterAddTime("cdgoatminigame", 120,0,"<color={PlayerColor(2)}>Minigame time remaining", 37);
+		xsEnableRule("GoatMG_C01");
+		trCounterAddTime("cdgoatminigame", 140,0,"<color={PlayerColor(2)}>Minigame time remaining", 37);
 		playSoundCustom("\xpack\xcinematics\7_in\music.mp3", "\Yeebaagooon\Zoo Quest\Minigame3.mp3");
 		xsEnableRule("GoatMinigameEnd");
-		ColouredIconChat("0.0,0.8,0.2", "icons\world column icon 64", "Lower tiles by interracting with columns.");
-		ColouredChat("0.0,0.8,0.2", "They will lower two squares.");
-		ColouredChat("0.0,0.8,0.2", "You get a warning before the tile becomes lava.");
-		ColouredChat("0.0,0.8,0.2", "When this happens, you won't be able to use the column!");
 	}
 	for(x = xGetDatabaseCount(dInterractables); > 0){
 		xDatabaseNext(dInterractables);
@@ -615,6 +614,59 @@ highFrequency
 
 void GoatMGTimeout(int eventID = 0){
 	PlayersMinigaming = 0;
+}
+
+rule GoatMG_C01
+inactive
+highFrequency
+{
+	if (trTime() > cActivationTime + 4) {
+		for(p=1 ; < cNumberNonGaiaPlayers){
+			xSetPointer(dPlayerData, p);
+			if(xGetBool(dPlayerData, xStopDeath)){
+				if(trCurrentPlayer() == p){
+					characterDialog("Goat Minigame", "This will cause 2 squares to sink", "icons\world column icon 64");
+				}
+			}
+		}
+		xsEnableRule("GoatMG_C02");
+		xsDisableSelf();
+	}
+}
+
+rule GoatMG_C02
+inactive
+highFrequency
+{
+	if (trTime() > cActivationTime + 4) {
+		for(p=1 ; < cNumberNonGaiaPlayers){
+			xSetPointer(dPlayerData, p);
+			if(xGetBool(dPlayerData, xStopDeath)){
+				if(trCurrentPlayer() == p){
+					characterDialog("Goat Minigame", "Sink a total of 6 squares to win", "icons\world column icon 64");
+				}
+			}
+		}
+		xsEnableRule("GoatMG_C03");
+		xsDisableSelf();
+	}
+}
+
+rule GoatMG_C03
+inactive
+highFrequency
+{
+	if (trTime() > cActivationTime + 4) {
+		for(p=1 ; < cNumberNonGaiaPlayers){
+			xSetPointer(dPlayerData, p);
+			if(xGetBool(dPlayerData, xStopDeath)){
+				if(trCurrentPlayer() == p){
+					trLetterBox(false);
+				}
+			}
+		}
+		xsDisableSelf();
+	}
 }
 
 /*rule GoatDebug
@@ -789,6 +841,7 @@ highFrequency
 	xsDisableRule("GoatLeave");
 	xsDisableRule("GoatTutorialLoops");
 	xsDisableRule("GoatMinigameDetect");
+	xsDisableRule("GoatMinigameEnd");
 	xsDisableRule("GoatBonus");
 	xsDisableRule("MGGOGoat");
 	xsDisableRule("GoatPoacherTimer");

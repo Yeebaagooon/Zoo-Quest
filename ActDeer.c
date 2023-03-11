@@ -654,7 +654,7 @@ highFrequency
 	}
 }
 
-rule DeerAllDead
+/*rule DeerAllDead
 inactive
 minInterval 5
 {
@@ -666,7 +666,7 @@ minInterval 5
 		xsDisableSelf();
 		trEndGame();
 	}
-}
+}*/
 
 rule DeerPoacherMovement
 inactive
@@ -722,6 +722,9 @@ highFrequency
 	xsDisableRule("PoacherTimer");
 	xsDisableRule("DeerEndZoneSee");
 	xsDisableRule("ChestTimer");
+	xsDisableRule("PlayMusic");
+	xsDisableRule("PlayMusicDelay");
+	xsDisableRule("MGGODeer");
 	for(p=1 ; < cNumberNonGaiaPlayers){
 		trUnitSelectByQV("P"+p+"Unit");
 		trUnitChangeProtoUnit("Ragnorok SFX");

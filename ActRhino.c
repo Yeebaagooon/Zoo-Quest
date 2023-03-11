@@ -719,6 +719,7 @@ highFrequency
 	xsDisableRule("RhinoTutorialLoops");
 	xsDisableRule("RhinoMinigameDetect");
 	xsDisableRule("MGGORhino");
+	xsDisableRule("RhinoMinigameEnd");
 	for(p=1 ; < cNumberNonGaiaPlayers){
 		trUnitSelectByQV("P"+p+"Unit");
 		trUnitChangeProtoUnit("Ragnorok SFX");

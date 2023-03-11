@@ -6,6 +6,7 @@ inactive
 {
 	//if (trTime() > cActivationTime + 1) {
 	xsDisableSelf();
+	TutorialMode = true;
 	//trLetterBox(false);
 	clearMap("black", 5.0);
 	trPaintTerrain(0,0,35,cNumberNonGaiaPlayers*8,2,4);
@@ -40,59 +41,6 @@ inactive
 		//trPaintTerrain(7,p*8,7,p*8,0,73); //start sq
 		PaintAtlantisArea(6,p*8-1,8,p*8+1,0,8);  //start sq
 		trPaintTerrain(28,p*8+2,28,p*8-2,0,74); //end line
-		//[EYECANDY BUT INEXPCLICABLE BS LOS]
-		/*
-		temp = trGetNextUnitScenarioNameNumber();
-		UnitCreate(p, "Cinematic Block", 56, p*16-4, 90);
-		trUnitSelectClear();
-		trUnitSelect(""+temp);
-		trUnitChangeProtoUnit("Flag");
-		trUnitSelectClear();
-		trUnitSelect(""+temp);
-		trUnitSetAnimationPath("0,2,0,0,0,0");
-		xAddDatabaseBlock(dTemp, true);
-		xSetInt(dTemp, xUnitID, temp);
-		xSetInt(dTemp, xExtra, p);
-		temp = trGetNextUnitScenarioNameNumber();
-		UnitCreate(p, "Cinematic Block", 56, p*16+4, 90);
-		trUnitSelectClear();
-		trUnitSelect(""+temp);
-		trUnitChangeProtoUnit("Flag");
-		trUnitSelectClear();
-		trUnitSelect(""+temp);
-		trUnitSetAnimationPath("0,2,0,0,0,0");
-		xAddDatabaseBlock(dTemp, true);
-		xSetInt(dTemp, xUnitID, temp);
-		xSetInt(dTemp, xExtra, p);
-		temp = trGetNextUnitScenarioNameNumber();
-		UnitCreate(0, "Cinematic Block", 60, p*16, 00);
-		trUnitSelectClear();
-		trUnitSelect(""+temp);
-		trUnitChangeProtoUnit("Spy Eye");
-		trUnitSelectClear();
-		trUnitSelect(""+temp);
-		trMutateSelected(kbGetProtoUnitID("Osiris Box Glow"));
-		trUnitSelectClear();
-		trUnitSelect(""+temp);
-		trUnitSetAnimationPath("0,0,1,0,0,0");
-		xAddDatabaseBlock(dTemp, true);
-		xSetInt(dTemp, xUnitID, temp);
-		xSetInt(dTemp, xExtra, p);
-		temp = trGetNextUnitScenarioNameNumber();
-		UnitCreate(p, "Cinematic Block", 60, p*16, 00);
-		trUnitSelectClear();
-		trUnitSelect(""+temp);
-		trUnitChangeProtoUnit("Spy Eye");
-		trUnitSelectClear();
-		trUnitSelect(""+temp);
-		trMutateSelected(kbGetProtoUnitID("Flag"));
-		trUnitSelectClear();
-		trUnitSelect(""+temp);
-		trUnitSetAnimationPath("0,0,0,0,0,0");
-		xAddDatabaseBlock(dTemp, true);
-		xSetInt(dTemp, xUnitID, temp);
-		xSetInt(dTemp, xExtra, p);
-		*/
 		//start log
 		temp = trGetNextUnitScenarioNameNumber();
 		UnitCreate(0, "Cinematic Block", 20, p*16, 90);
@@ -147,7 +95,6 @@ inactive
 		}
 	}
 	trPaintTerrain(0,0,0,0,2,4,true);
-	xsEnableRule("Animations");
 	xsEnableRule("Jump");
 	xsEnableRule("JumpEnd");
 	trDelayedRuleActivation("VectorSecond");
@@ -295,6 +242,7 @@ inactive
 		trCounterAbort("cdtutorialtimeout");
 		trQuestVarSet("PlayersDoneTutorial", 0);
 		xResetDatabase(dTemp);
+		TutorialMode = false;
 		if(PlayCine){
 			xsEnableRule("BuildCineScene");
 		}

@@ -21,7 +21,7 @@ inactive
 		{
 			case 0:
 			{
-				debugLog("NO CONSEQUENCE SET");
+				trChatSend(0,"<color=1,0,1>Debug TP player " + xGetPointer(dPlayerData) + " said no</color>");
 			}
 			case 1:
 			{
@@ -590,8 +590,8 @@ inactive
 		trQuestVarSet("P"+ActionChoice+"ChoiceDialog", 0);
 		ActionChoice = 0;
 		//[Safety]
-		unitTransform(""+YesChoiceUnitName + " Hero", "Cinematic Block");
-		unitTransform(""+NoChoiceUnitName + " Hero", "Cinematic Block");
+		//unitTransform(""+YesChoiceUnitName + " Hero", "Cinematic Block");
+		//unitTransform(""+NoChoiceUnitName + " Hero", "Cinematic Block");
 		if(trCurrentPlayer() == p){
 			if(Stage == 1){
 				uiZoomToProto(""+GazelleProto);
@@ -604,6 +604,9 @@ inactive
 			}
 			if(Stage == 4){
 				uiZoomToProto(xGetString(dPlayerData, xCrocProto));
+			}
+			if(Stage == 5){
+				uiZoomToProto(""+ChickenProto);
 			}
 		}
 		
@@ -683,31 +686,33 @@ highFrequency
 active
 {
 	//Process saving, one player each trigger loop detected
-	PlayerCycle = PlayerCycle+1;
+	/*PlayerCycle = PlayerCycle+1;
 	if(PlayerCycle > cNumberNonGaiaPlayers){
 		PlayerCycle = 1;
 	}
-	int p = PlayerCycle;
+	int p = PlayerCycle;*/
 	//xsSetContextPlayer(-1);
-	if(trPlayerUnitCountSpecific(p, ""+YesChoiceUnitName + " Hero") != 0){
-		//trChatSend(0, "Yes registered");
-		ChoiceEffect = 1*trQuestVarGet("P"+p+"YesAction");
-		ActionChoice = p;
-		xsEnableRule("AnswerConsequences");
-		trUnitSelectByQV("P"+p+"No");
-		trUnitChangeProtoUnit("Cinematic Block");
-		trUnitSelectByQV("P"+p+"Yes");
-		trUnitChangeProtoUnit("Cinematic Block");
-	}
-	if(trPlayerUnitCountSpecific(p, ""+NoChoiceUnitName + " Hero") != 0){
-		//trChatSend(0, "No registered");
-		ChoiceEffect = 1*trQuestVarGet("P"+p+"NoAction");
-		ActionChoice = p;
-		xsEnableRule("AnswerConsequences");
-		trUnitSelectByQV("P"+p+"No");
-		trUnitChangeProtoUnit("Cinematic Block");
-		trUnitSelectByQV("P"+p+"Yes");
-		trUnitChangeProtoUnit("Cinematic Block");
+	for(p = 1; <cNumberNonGaiaPlayers){
+		if(trPlayerUnitCountSpecific(p, ""+YesChoiceUnitName + " Hero") != 0){
+			trChatSend(0, "Yes registered");
+			ChoiceEffect = 1*trQuestVarGet("P"+p+"YesAction");
+			ActionChoice = p;
+			xsEnableRule("AnswerConsequences");
+			trUnitSelectByQV("P"+p+"No");
+			trUnitChangeProtoUnit("Cinematic Block");
+			trUnitSelectByQV("P"+p+"Yes");
+			trUnitChangeProtoUnit("Cinematic Block");
+		}
+		if(trPlayerUnitCountSpecific(p, ""+NoChoiceUnitName + " Hero") != 0){
+			trChatSend(0, "No registered");
+			ChoiceEffect = 1*trQuestVarGet("P"+p+"NoAction");
+			ActionChoice = p;
+			xsEnableRule("AnswerConsequences");
+			trUnitSelectByQV("P"+p+"No");
+			trUnitChangeProtoUnit("Cinematic Block");
+			trUnitSelectByQV("P"+p+"Yes");
+			trUnitChangeProtoUnit("Cinematic Block");
+		}
 	}
 }
 

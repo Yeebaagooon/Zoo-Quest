@@ -58,6 +58,43 @@ highFrequency
 							}
 						}
 					}
+					case 3:
+					{
+						ColouredChat("1,1,0", "<u>Q:</u> Jump");
+						ColouredChat("0.8,0.8,0", "Jump towards the cursor");
+						ColouredChat("1,1,0", "<u>W:</u> Interract");
+						ColouredChat("0.8,0.8,0", "Interract with a world object, try it!");
+						trChatSend(0, "Collect relics (W) to buy god powers");
+						if(InMinigame == false){
+							trMessageSetText("OBJECTIVE: Activate shrines (W) and then make your way to the zone.", 10000);
+						}
+						else{
+							if(xGetBool(dPlayerData, xStopDeath) == true){
+								trMessageSetText("MINIGAME: Sink 6 squares. Interract (W) with columns to do this.", 10000);
+							}
+							else{
+								trMessageSetText("You were not on the white tile when the minigame started, so are not counted as playing.", 10000);
+							}
+						}
+					}
+					case 4:
+					{
+						ColouredChat("1,1,0", "<u>Q:</u> Sprint");
+						ColouredChat("0.8,0.8,0", "Gain a temporary speed boost");
+						ColouredChat("1,1,0", "<u>W:</u> Eat");
+						ColouredChat("0.8,0.8,0", "Eat a Zebra if close enough");
+						ColouredChat("0.8,0.8,0", "You can also eat other world objects");
+						ColouredChat("1,1,0", "<u>E:</u> Ranged attack");
+						ColouredChat("0.8,0.8,0", "Temporary ranged attack (requires relics)");
+						if(InMinigame == false){
+							trMessageSetText("OBJECTIVE: Eat zebras to grow in size. Grow to level 7.", 10000);
+						}
+						else{
+							if(xGetBool(dPlayerData, xStopDeath) == false){
+								trMessageSetText("You were not on the white tile when the minigame started, so are not counted as playing.", 10000);
+							}
+						}
+					}
 				}
 			}
 		}

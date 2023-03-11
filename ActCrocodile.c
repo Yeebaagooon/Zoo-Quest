@@ -467,6 +467,8 @@ highFrequency
 	xsDisableRule("MGGOCroc");
 	xsDisableRule("CrocPoacherTimer");
 	xsDisableRule("CrocMechanicLoops");
+	xsDisableRule("CrocFoodTimer");
+	xsDisableRule("CrocMinigameEnd");
 	for(p=1 ; < cNumberNonGaiaPlayers){
 		xSetPointer(dPlayerData, p);
 		trUnitSelectByQV("P"+p+"Unit");

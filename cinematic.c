@@ -2,11 +2,54 @@ rule BuildCineScene
 inactive
 highFrequency
 {
+	trRenderSky(true, "SkyBlue");
+	clearMap("black", 0);
+	trPaintTerrain(70,40,110,110,0,1);
+	PaintAtlantisArea(101,60,103,62,0,53);
+	trQuestVarSet("Yeeb", trGetNextUnitScenarioNameNumber());
+	UnitCreate(0, "Cinematic Block", 101*2+2, 60*2+2, 270);
+	trQuestVarSet("YeebEgg", trGetNextUnitScenarioNameNumber());
+	UnitCreate(0, "Cinematic Block", 101*2+2, 60*2+2, 270);
+	trQuestVarSet("YeebSFX1", trGetNextUnitScenarioNameNumber());
+	UnitCreate(0, "Cinematic Block", 101*2+2, 60*2+2, 315);
+	trQuestVarSet("YeebSFX2", trGetNextUnitScenarioNameNumber());
+	UnitCreate(0, "Cinematic Block", 101*2+2, 60*2+2, 315);
+	trChangeTerrainHeight(101,60,104,63, 10);
+	trUnitSelectByQV("Yeeb");
+	trUnitChangeProtoUnit("Pharaoh of Osiris XP");
+	trUnitSelectByQV("YeebEgg");
+	trUnitChangeProtoUnit("Phoenix Egg");
+	trUnitSelectByQV("YeebEgg");
+	trSetScale(2);
+	trUnitSelectByQV("YeebSFX1");
+	trUnitChangeProtoUnit("Imperial Examination");
+	
+	PaintAtlantisArea(95,60,97,62,0,53);
+	UnitCreate(0, "Chicken", 95*2+2, 60*2+2, 270);
+	trChangeTerrainHeight(95,60,98,63, 7);
+	PaintAtlantisArea(97,53,99,55,0,53);
+	UnitCreate(0, "Rhinocerous", 97*2+2, 53*2+2, 270);
+	trChangeTerrainHeight(97,53,100,56, 6);
+	PaintAtlantisArea(97,67,99,69,0,53);
+	UnitCreate(0, "Crocodile", 97*2+2, 67*2+2, 270);
+	trChangeTerrainHeight(97,67,100,70, 6);
+	
+	PaintAtlantisArea(92,48,94,50,0,53);
+	UnitCreate(0, "Gazelle", 92*2+2, 48*2+2, 270);
+	trChangeTerrainHeight(92,48,95,51, 5);
+	PaintAtlantisArea(92,72,94,74,0,53);
+	UnitCreate(0, "Goat", 92*2+2, 72*2+2, 270);
+	trChangeTerrainHeight(92,72,95,75, 5);
+	
+	modifyProtounitAbsolute("Chicken", 0, 1,0);
+	modifyProtounitAbsolute("Goat", 0, 1,0);
+	modifyProtounitAbsolute("Crocodile", 0, 1,0);
+	modifyProtounitAbsolute("Rhinocerous", 0, 1,0);
+	modifyProtounitAbsolute("Gazelle", 0, 1,0);
+	
+	replaceTerrainAtMinSteepness("GrassA", "CliffGreekA", 2);
 	xsDisableSelf();
-	createCinematicMap();
-	replaceTerrainAboveHeightMax("GaiaCreepA", "GrassB", 0.0);
-	replaceTerrainAboveHeightMax("CoralA", "GrassB", 0.0);
-	xsEnableRule("Cine_START");
+	//xsEnableRule("Cine_START");
 }
 
 rule Cine_START
@@ -17,6 +60,11 @@ highFrequency
 	trSetFogAndBlackmap(false,false);
 	trRenderSky(true, "SkyBlue");
 	trSetObscuredUnits(false);
+	/*
+	createCinematicMap();
+	replaceTerrainAboveHeightMax("GaiaCreepA", "GrassB", 0.0);
+	replaceTerrainAboveHeightMax("CoralA", "GrassB", 0.0);
+	*/
 	createCameraTrack(5000);
 	trCameraCut(vector(-4.191484,31.823811,-23.344259), vector(0.512498,-0.420865,0.748477), vector(0.237777,0.907123,0.347260), vector(0.825111,-0.000000,-0.564971));
 	addCameraTrackWaypoint();
