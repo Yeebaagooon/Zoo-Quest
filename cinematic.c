@@ -1,12 +1,14 @@
 void CineGo(int unused = 0){
 	xsEnableRule("RemoveCineTimers");
 	xsEnableRule("Cine_START");
+	xsDisableRule("SkipCine");
 }
 
 rule BuildCineScene
 inactive
 highFrequency
 {
+	int temp = 0;
 	trRenderSky(true, "SkySunset");
 	clearMap("black", 0);
 	trPaintTerrain(100,59,104,63,2,11);
@@ -57,14 +59,53 @@ highFrequency
 	replaceTerrainAtMinSteepness("GrassB", "CliffGreekA", 2);
 	trCameraCut(vector(109.101425,39.023849,122.402161), vector(0.932531,-0.361055,0.005034), vector(0.361050,0.932545,0.001949), vector(0.005398,0.000000,-0.999985));
 	paintTrees2("GrassA", "Pine");
-	paintTrees2("GrassB", "Bush");
-	SkipRequired = PlayersActive*0.8+1;
-	if(SkipRequired > PlayersActive){
-		SkipRequired = PlayersActive-1;
+	paintTrees2("GrassB", "Bush Short");
+	int b = 0;
+	for(a = 0; < 20){
+		b = b+1;
+		if(b > cNumberNonGaiaPlayers){
+			b = 0;
+		}
+		temp = trGetNextUnitScenarioNameNumber();
+		UnitCreate(b, "Dwarf", 230, 70+a*5, 0);
+		trUnitSelectClear();
+		trUnitSelect(""+temp);
+		trUnitChangeProtoUnit("Hesperides Tree");
+		trUnitSelectClear();
+		trUnitSelect(""+temp);
+		trSetSelectedScale(1,1.4,1);
+	}
+	for(a = 0; < 20){
+		temp = trGetNextUnitScenarioNameNumber();
+		UnitCreate(0, "Dwarf", 220, 70+a*5, 90);
+		trUnitSelectClear();
+		trUnitSelect(""+temp);
+		trUnitChangeProtoUnit("Tamarisk Tree");
+		trUnitSelectClear();
+		trUnitSelect(""+temp);
+		trSetSelectedScale(1.4,1,1.4);
+	}
+	temp = trGetNextUnitScenarioNameNumber();
+	UnitCreate(0, "Dwarf", 240, 80, 90);
+	trUnitSelectClear();
+	trUnitSelect(""+temp);
+	trUnitChangeProtoUnit("Elephant");
+	trUnitSelectClear();
+	trUnitSelect(""+temp);
+	trSetSelectedScale(2,2,2);
+	trUnitSelectClear();
+	trUnitSelect(""+temp);
+	trUnitMoveToPoint(230,1,180,-1,false);
+	trSetObscuredUnits(false);
+	SkipRequired = PlayersActive-1;
+	if(PlayersActive == 1){
+		SkipRequired = PlayersActive;
 	}
 	trSetCounterDisplay("</color>Votes to skip: " + 1*trQuestVarGet("SkipVotes") +"/" + SkipRequired);
 	trCounterAddTime("cdcine", 13, 0, "<color={PlayerColor("+ cNumberNonGaiaPlayers +")}>Cinematic begins", 46);
-	PlayerChoice(1, "Skip Cinematic?", "Yes", 3, "No", 0, 12900);
+	for(p=1 ; < cNumberNonGaiaPlayers){
+		PlayerChoice(p, "Skip Cinematic?", "Yes", 3, "No", 0, 12900);
+	}
 	xsEnableRule("SkipCine");
 	xsDisableSelf();
 }
@@ -78,7 +119,8 @@ highFrequency
 		xsDisableSelf();
 		xsDisableRule("Cine_START");
 		xsEnableRule("CineStartSkip");
-		SkipRequired = 100;
+		SkipRequired = 47;
+		trSetObscuredUnits(true);
 	}
 }
 
@@ -89,6 +131,7 @@ highFrequency
 	trCounterAbort("cdcine");
 	trClearCounterDisplay();
 	xsDisableSelf();
+	xsDisableRule("SkipCine");
 }
 
 rule Cine_START

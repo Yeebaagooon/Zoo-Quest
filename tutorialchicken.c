@@ -10,7 +10,7 @@ inactive
 		xsDisableRule("CrocodileTutorialDone");
 		xsDisableRule("Jump");
 		xsDisableRule("JumpEnd");
-		//QuickStart = 0;
+		QuickStart = 0;
 		NewDestroyNumber = trGetNextUnitScenarioNameNumber()-1;
 		TutorialMode = true;
 		Stage = 5;
@@ -280,18 +280,22 @@ void ProcessMine(int count = 1) {
 			p = xGetInt(dMines, xOwner);
 			xSetPointer(dPlayerData, p);
 			if(trCountUnitsInArea(""+xGetInt(dMines, xUnitID), cNumberNonGaiaPlayers, "Unit", xGetInt(dPlayerData, xLandmineRange)) > 0){
-				xUnitSelect(dMines, xUnitID);
-				trDamageUnitsInArea(cNumberNonGaiaPlayers, "All", xGetInt(dPlayerData, xLandmineRange), xGetInt(dPlayerData, xLandmineDamage));
-				xUnitSelect(dMines, xUnitID);
-				trUnitChangeProtoUnit("Meteor Impact Ground");
-				xUnitSelect(dMines, xMineSFX);
-				trUnitChangeProtoUnit("Fire Giant");
-				xUnitSelect(dMines, xMineSFX);
-				trSetScale(0.00001);
-				xUnitSelect(dMines, xMineSFX);
-				trDamageUnitPercent(100);
-				xFreeDatabaseBlock(dMines);
-				playSound("meteorsmallhit.wav");
+				if(trCountUnitsInArea(""+xGetInt(dMines, xUnitID), cNumberNonGaiaPlayers, "Dwarf", xGetInt(dPlayerData, xLandmineRange)) == 0){
+					if(trCountUnitsInArea(""+xGetInt(dMines, xUnitID), p, "Dwarf", xGetInt(dPlayerData, xLandmineRange)) == 0){
+						xUnitSelect(dMines, xUnitID);
+						trDamageUnitsInArea(cNumberNonGaiaPlayers, "All", xGetInt(dPlayerData, xLandmineRange)+1, xGetInt(dPlayerData, xLandmineDamage));
+						xUnitSelect(dMines, xUnitID);
+						trUnitChangeProtoUnit("Meteor Impact Ground");
+						xUnitSelect(dMines, xMineSFX);
+						trUnitChangeProtoUnit("Fire Giant");
+						xUnitSelect(dMines, xMineSFX);
+						trSetScale(0.00001);
+						xUnitSelect(dMines, xMineSFX);
+						trDamageUnitPercent(100);
+						xFreeDatabaseBlock(dMines);
+						playSound("meteorsmallhit.wav");
+					}
+				}
 			}
 		}
 	}

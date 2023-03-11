@@ -334,7 +334,7 @@ inactive
 				xDatabaseNext(dTemp);
 				vector yeetpos = kbGetBlockPosition(""+xGetInt(dTemp, xUnitID));
 				yeetpos = yeetpos/2;
-				if((xsVectorGetX(yeetpos) > xsVectorGetX(StageVector)-2) && (xsVectorGetX(yeetpos) < xsVectorGetX(StageVector)+2) && (xsVectorGetZ(yeetpos) > xsVectorGetZ(StageVector)-2) && (xsVectorGetZ(yeetpos) < xsVectorGetZ(StageVector)+2)){
+				if((xsVectorGetX(yeetpos) >= xsVectorGetX(StageVector)-2) && (xsVectorGetX(yeetpos) <= xsVectorGetX(StageVector)+2) && (xsVectorGetZ(yeetpos) >= xsVectorGetZ(StageVector)-2) && (xsVectorGetZ(yeetpos) <= xsVectorGetZ(StageVector)+2)){
 					int anim = kbUnitGetAnimationActionType(kbGetBlockID(""+xGetInt(dTemp, xUnitID)+""));
 					if(anim != 29){
 						//if unit in pit and not flailing

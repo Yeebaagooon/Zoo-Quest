@@ -55,7 +55,7 @@ inactive
 			//xSetFloat(dPlayerData, xCrocNext, 5*xGetInt(dPlayerData, xCrocSize));
 			trQuestVarSet("P"+p+"FountainMsg", 0);
 			//limit
-			modifyProtounitAbsolute("Tower", p, 10, 10);
+			modifyProtounitAbsolute("Tower", p, 10, xGetInt(dPlayerData, xTowerLimit));
 			//build points = how many s to build
 			modifyProtounitAbsolute("Tower", p, 4, 6);
 			//limit
@@ -77,10 +77,10 @@ inactive
 		modifyProtounitAbsolute("Toxotes", cNumberNonGaiaPlayers, 0, 50);
 		modifyProtounitAbsolute("Militia", cNumberNonGaiaPlayers, 0, 50);
 		modifyProtounitAbsolute("Toxotes", cNumberNonGaiaPlayers, 31, 5);
-		modifyProtounitAbsolute("Huskarl", cNumberNonGaiaPlayers, 0, 100);
-		modifyProtounitAbsolute("Huskarl", cNumberNonGaiaPlayers, 27, 10);
-		modifyProtounitAbsolute("Huskarl", cNumberNonGaiaPlayers, 34, 0);
-		modifyProtounitAbsolute("Huskarl", cNumberNonGaiaPlayers, 39, 0);
+		modifyProtounitAbsolute("Spearman", cNumberNonGaiaPlayers, 0, 100);
+		modifyProtounitAbsolute("Spearman", cNumberNonGaiaPlayers, 27, 10);
+		modifyProtounitAbsolute("Spearman", cNumberNonGaiaPlayers, 34, 0);
+		modifyProtounitAbsolute("Spearman", cNumberNonGaiaPlayers, 39, 0);
 		modifyProtounitAbsolute("Militia", cNumberNonGaiaPlayers, 34, 0);
 		modifyProtounitAbsolute("Militia", cNumberNonGaiaPlayers, 39, 0);
 		modifyProtounitAbsolute("Slinger", cNumberNonGaiaPlayers, 0, 5);
@@ -119,7 +119,7 @@ inactive
 highFrequency
 {
 	if(ActPart == 2){
-		R5Wave(5*(PlayersActive-PlayersDead), "Militia", 3000, 2000);
+		R5Wave(2*(PlayersActive-PlayersDead), "Militia", 3000, 2000);
 		xsEnableRule("ChickenWave1A");
 		playSound("\cinematics\04_in\armyarrive.wav");
 		trCounterAddTime("ChickenInfo", 320, 0, "<color={PlayerColor(2)}>Ring 1 super poacher</color>", 41);
@@ -133,7 +133,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(5*(PlayersActive-PlayersDead), "Militia", 1800, 1600);
+		R5Wave(3*(PlayersActive-PlayersDead), "Militia", 1800, 1600);
 		xsEnableRule("ChickenWave1B");
 		xsDisableSelf();
 	}
@@ -144,7 +144,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(5*(PlayersActive-PlayersDead), "Toxotes", 1900, 1700);
+		R5Wave(3*(PlayersActive-PlayersDead), "Toxotes", 1900, 1700);
 		xsEnableRule("ChickenWave1C");
 		xsDisableSelf();
 	}
@@ -155,8 +155,8 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(5*(PlayersActive-PlayersDead), "Toxotes", 1900, 1700);
-		R5Wave(5*(PlayersActive-PlayersDead), "Militia", 1800, 1600);
+		R5Wave(4*(PlayersActive-PlayersDead), "Toxotes", 1900, 1700);
+		R5Wave(4*(PlayersActive-PlayersDead), "Militia", 1800, 1600);
 		xsEnableRule("ChickenWave1D");
 		xsDisableSelf();
 	}
@@ -167,7 +167,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(8*(PlayersActive-PlayersDead), "Militia", 1900, 1600);
+		R5Wave(6*(PlayersActive-PlayersDead), "Militia", 1900, 1600);
 		R5Wave(1*(PlayersActive-PlayersDead), "Slinger", 2800, 2400);
 		xsEnableRule("ChickenWave1E");
 		xsDisableSelf();
@@ -179,7 +179,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(8*(PlayersActive-PlayersDead), "Toxotes", 1900, 1600);
+		R5Wave(6*(PlayersActive-PlayersDead), "Toxotes", 1900, 1600);
 		xsEnableRule("ChickenWave1F");
 		xsDisableSelf();
 		for(p = 1; < cNumberNonGaiaPlayers){
@@ -198,7 +198,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(5*(PlayersActive-PlayersDead), "Huskarl", 2000, 1700);
+		R5Wave(5*(PlayersActive-PlayersDead), "Spearman", 2000, 1700);
 		xsEnableRule("ChickenWave1G");
 		xsDisableSelf();
 	}
@@ -210,7 +210,7 @@ highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
 		R5Wave(5*(PlayersActive-PlayersDead), "Slinger", 2800, 1600);
-		R5Wave(5*(PlayersActive-PlayersDead), "Huskarl", 2100, 1800);
+		R5Wave(5*(PlayersActive-PlayersDead), "Spearman", 2100, 1800);
 		xsEnableRule("ChickenWave1H");
 		trClearCounterDisplay();
 		xsDisableSelf();
@@ -222,7 +222,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(8*(PlayersActive-PlayersDead), "Huskarl", 2500, 2000);
+		R5Wave(8*(PlayersActive-PlayersDead), "Spearman", 2500, 2000);
 		xsEnableRule("ChickenWave1I");
 		xsDisableSelf();
 	}
@@ -245,7 +245,7 @@ highFrequency
 {
 	if (ActPart == 3) {
 		R5Wave(1, "Peltast", 3500, 2500);
-		R5Wave(5*(PlayersActive-PlayersDead), "Huskarl", 3000, 2000);
+		R5Wave(5*(PlayersActive-PlayersDead), "Spearman", 3000, 2000);
 		modifyProtounitAbsolute("Wadjet Spit", cNumberNonGaiaPlayers, 1, 10);
 		xsDisableSelf();
 		playSound("\cinematics\04_in\armyarrive.wav");
@@ -271,6 +271,13 @@ highFrequency
 			trModifyProtounit(ChickenProto, p, 25, 0.25);
 			trModifyProtounit(ChickenProto, p, 26, 0.25);
 			trModifyProtounit(ChickenProto, p, 5, 1);
+			xSetPointer(dPlayerData, p);
+			if((xGetBool(dPlayerData, xPlayerDead) == true) && (xGetBool(dPlayerData, xPlayerActive) == true)){
+				CreateChicken(p, StartTileX*2, StartTileZ*2, 0);
+				xSetBool(dPlayerData, xPlayerDead, false);
+				PlayersDead = PlayersDead-1;
+				trTechGodPower(p, "Animal Magnetism", 1);
+			}
 		}
 		ColouredChat("1,0.5,0", "<u>Relic hold capacity increased!</u>");
 		replaceCircle(StartTileX,StartTileZ,32, "BlackRock", "TundraRoadA");
@@ -317,7 +324,7 @@ inactive
 highFrequency
 {
 	if(ActPart == 4){
-		R5Wave(4*(PlayersActive-PlayersDead), "Bella", 3900, 3600);
+		R5Wave(2*(PlayersActive-PlayersDead), "Bella", 3900, 3600);
 		xsEnableRule("ChickenWave2A");
 		playSound("\cinematics\04_in\armyarrive.wav");
 		trCounterAddTime("ChickenInfo", 330, 0, "<color={PlayerColor(2)}>Ring 2 super poacher</color>", 43);
@@ -331,7 +338,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(5*(PlayersActive-PlayersDead), "Bella", 4000, 3600);
+		R5Wave(2*(PlayersActive-PlayersDead), "Bella", 4000, 3600);
 		xsEnableRule("ChickenWave2B");
 		xsDisableSelf();
 	}
@@ -342,7 +349,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(5*(PlayersActive-PlayersDead), "Bogsveigir", 4300, 3900);
+		R5Wave(3*(PlayersActive-PlayersDead), "Bogsveigir", 4300, 3900);
 		xsEnableRule("ChickenWave2C");
 		xsDisableSelf();
 	}
@@ -353,8 +360,8 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(6*(PlayersActive-PlayersDead), "Bogsveigir", 5000, 4400);
-		R5Wave(6*(PlayersActive-PlayersDead), "Bella", 4400, 3600);
+		R5Wave(3*(PlayersActive-PlayersDead), "Bogsveigir", 5000, 4400);
+		R5Wave(2*(PlayersActive-PlayersDead), "Bella", 4400, 3600);
 		xsEnableRule("ChickenWave2D");
 		xsDisableSelf();
 	}
@@ -365,8 +372,8 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(8*(PlayersActive-PlayersDead), "Bella", 6000, 5000);
-		R5Wave(3*(PlayersActive-PlayersDead), "Monkey King", 7000, 6000);
+		R5Wave(3*(PlayersActive-PlayersDead), "Bella", 6000, 5000);
+		R5Wave(1*(PlayersActive-PlayersDead), "Monkey King", 7000, 6000);
 		xsEnableRule("ChickenWave2E");
 		xsDisableSelf();
 	}
@@ -377,7 +384,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(8*(PlayersActive-PlayersDead), "Bogsveigir", 7500, 6000);
+		R5Wave(6*(PlayersActive-PlayersDead), "Bogsveigir", 7500, 6000);
 		xsEnableRule("ChickenWave2F");
 		xsDisableSelf();
 		for(p = 1; < cNumberNonGaiaPlayers){
@@ -405,7 +412,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(5*(PlayersActive-PlayersDead), "Slinger", 8500, 7000);
+		R5Wave(5*(PlayersActive-PlayersDead), "Bogsveigir", 8500, 7000);
 		R5Wave(8*(PlayersActive-PlayersDead), "Monkey King", 8700, 7200);
 		xsEnableRule("ChickenWave2H");
 		trClearCounterDisplay();
@@ -429,7 +436,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(12*(PlayersActive-PlayersDead), "Slinger", 9900, 7000);
+		R5Wave(12*(PlayersActive-PlayersDead), "Bogsveigir", 9900, 7000);
 		xsEnableRule("ChickenWave2Super");
 		xsDisableSelf();
 	}
@@ -440,8 +447,8 @@ inactive
 highFrequency
 {
 	if (ActPart == 5) {
-		R5Wave(1, "Peltast", 3500, 2500);
-		R5Wave(12*(PlayersActive-PlayersDead), "Monkey King", 9800, 8000);
+		R5Wave(1, "Satyr", 3500, 2500);
+		R5Wave(8*(PlayersActive-PlayersDead), "Monkey King", 9800, 8000);
 		modifyProtounitAbsolute("Wadjet Spit", cNumberNonGaiaPlayers, 1, 10);
 		xsDisableSelf();
 		playSound("\cinematics\04_in\armyarrive.wav");
@@ -481,6 +488,7 @@ inactive
 				trPlayerKillAllGodPowers(p);
 				trPlayerKillAllBuildings(p);
 				trPlayerKillAllUnits(p);
+				gadgetReal("GodPowers");
 				trTechGodPower(1, "Rain", 1);
 				if(iModulo(2, trTime()) == 0){
 					playSound("\dialog\es\skul062.mp3");

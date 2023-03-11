@@ -587,6 +587,13 @@ inactive
 				trModifyProtounit(""+CrocProto, p, 2, 4);
 			}
 		}
+		if(Stage == 4){
+			characterDialog("Bonus unlocked!", "+4 tower count next stage", ActIcon(Stage));
+			for(p = 1 ; < cNumberNonGaiaPlayers){
+				xSetPointer(dPlayerData, p);
+				xSetInt(dPlayerData, xTowerLimit, xGetInt(dPlayerData, xTowerLimit)+4);
+			}
+		}
 	}
 	else{
 		xsEnableRule("StopBonusCheck");
@@ -627,6 +634,12 @@ inactive
 					xSetFloat(dPlayerData, xCrocSprintSpeed, xGetFloat(dPlayerData, xCrocSprintSpeed)+0.5);
 				}
 			}
+			if(Stage == 4){
+				characterDialog("Bonus unlocked!", "+1 starting relic slot next stage", ActIcon(Stage));
+				for(p = 1 ; < cNumberNonGaiaPlayers){
+					trModifyProtounit(ChickenProto, p, 5, 1);
+				}
+			}
 		}
 		else{
 			xsEnableRule("StopBonusCheck");
@@ -657,6 +670,9 @@ inactive
 			}
 			if(Stage == 3){
 				characterDialog("Bonus unlocked!", "goat max bonus", ActIcon(Stage));
+			}
+			if(Stage == 4){
+				characterDialog("Bonus unlocked!", "croc max bonus", ActIcon(Stage));
 			}
 			playSound("plentybirth.wav");
 		}

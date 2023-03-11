@@ -556,10 +556,6 @@ highFrequency
 				if(xGetInt(dPlayerData, xTeleportDue) == 0){
 					xSetVector(dPlayerData, xVectorHold, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
 				}
-				if(trCurrentPlayer() == p){
-					trLetterBox(true);
-					characterDialog("Goat Minigame", "Interract (W) with columns", "icons\world column icon 64");
-				}
 			}
 		}
 	}
@@ -596,6 +592,8 @@ highFrequency
 		}
 	}
 	else{
+		trLetterBox(true);
+		characterDialog("Goat Minigame", "Interract (W) with columns", "icons\world column icon 64");
 		xsEnableRule("GoatMG_C01");
 		trCounterAddTime("cdgoatminigame", 140,0,"<color={PlayerColor(2)}>Minigame time remaining", 37);
 		playSoundCustom("\xpack\xcinematics\7_in\music.mp3", "\Yeebaagooon\Zoo Quest\Minigame3.mp3");
@@ -621,14 +619,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 4) {
-		for(p=1 ; < cNumberNonGaiaPlayers){
-			xSetPointer(dPlayerData, p);
-			if(xGetBool(dPlayerData, xStopDeath)){
-				if(trCurrentPlayer() == p){
-					characterDialog("Goat Minigame", "This will cause 2 squares to sink", "icons\world column icon 64");
-				}
-			}
-		}
+		characterDialog("Goat Minigame", "This will cause 2 squares to sink", "icons\world column icon 64");
 		xsEnableRule("GoatMG_C02");
 		xsDisableSelf();
 	}
@@ -639,14 +630,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 4) {
-		for(p=1 ; < cNumberNonGaiaPlayers){
-			xSetPointer(dPlayerData, p);
-			if(xGetBool(dPlayerData, xStopDeath)){
-				if(trCurrentPlayer() == p){
-					characterDialog("Goat Minigame", "Sink a total of 6 squares to win", "icons\world column icon 64");
-				}
-			}
-		}
+		characterDialog("Goat Minigame", "Sink a total of 6 squares to win", "icons\world column icon 64");
 		xsEnableRule("GoatMG_C03");
 		xsDisableSelf();
 	}
@@ -657,14 +641,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 4) {
-		for(p=1 ; < cNumberNonGaiaPlayers){
-			xSetPointer(dPlayerData, p);
-			if(xGetBool(dPlayerData, xStopDeath)){
-				if(trCurrentPlayer() == p){
-					trLetterBox(false);
-				}
-			}
-		}
+		trLetterBox(false);
 		xsDisableSelf();
 	}
 }

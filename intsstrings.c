@@ -1,9 +1,9 @@
 //---Controls
 //\Yeebaagooon\Zoo Quest\Test sound.mp3
-int QuickStart = 6;
+int QuickStart = 3;
 bool LOS = false;
 bool AlwaysWin = true;
-bool PlayCine = false;
+bool PlayCine = true;
 
 /*
 it uses build at pointer instead
@@ -32,13 +32,8 @@ and of course the cost needs to be set to 0
 since kbGetBlockPosition requires the unit name
 instead of the id
 
-[COMMENT]
-Cinematic
-Messages in stage 1 before poachers after chest for objectives
-
 
 [BUG LIST]
-skul062
 tile for minigame is *2 for vector
 
 deer tp vector*2 end mg
@@ -189,6 +184,7 @@ int xSpecialVector = 0;
 int xS5Kills = 0;
 int xS5E = 0;
 int xS5ERecharge = 0;
+int xTowerLimit = 0;
 
 int dDestroyMe = 0;
 int xDestroyName = 0;
@@ -258,6 +254,7 @@ highFrequency
 	xLandmineRange = xInitAddInt(dPlayerData, "mine dmg", 4);
 	xS5E = xInitAddInt(dPlayerData, "specialshots", 0);
 	xS5ERecharge = xInitAddInt(dPlayerData, "specialshotsrecharge", 30);
+	xTowerLimit = xInitAddInt(dPlayerData, "tower build lim", 10);
 	for(p=1; <= cNumberNonGaiaPlayers) {
 		xAddDatabaseBlock(dPlayerData, true);
 	}

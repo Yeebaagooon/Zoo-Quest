@@ -333,12 +333,15 @@ bool rayCollision(vector start = vector(0,0,0), vector dir = vector(1,0,0), floa
 			}
 		}
 		else{
-			pos = kbGetBlockPosition(""+xGetInt(dEnemyCollision,xUnitID),true);
-			current = distanceBetweenVectors(pos, start, false);
-			if (current < dist) {
-				hitbox = start + dir * current;
-				if (distanceBetweenVectors(pos, hitbox, true) <= width) {
-					return(true);
+			xUnitSelect(dEnemyCollision, xUnitID);
+			if(trUnitGetIsContained("Tower") == false){
+				pos = kbGetBlockPosition(""+xGetInt(dEnemyCollision,xUnitID),true);
+				current = distanceBetweenVectors(pos, start, false);
+				if (current < dist) {
+					hitbox = start + dir * current;
+					if (distanceBetweenVectors(pos, hitbox, true) <= width) {
+						return(true);
+					}
 				}
 			}
 		}

@@ -1575,7 +1575,7 @@ void createGoatArea(){
 		trUnitDestroy();
 	}
 	string baseTerrain = "SnowA";
-	trSetCivAndCulture(0, 0, 0);
+	trSetCivAndCulture(0, 7, 2);
 	clearMap("Black", -5.0);
 	int centrePosX = randomInt(toTiles(0.45), toTiles(0.55));
 	int centrePosZ = randomInt(toTiles(0.45), toTiles(0.55));
@@ -2276,6 +2276,7 @@ void createDeepForestArea(){
 
 void createCrocArea(){
 	trBlockAllSounds();
+	trSetCivAndCulture(0, 0, 0);
 	DestroyNumber = trGetNextUnitScenarioNameNumber();
 	int currentId = 0;
 	for(n = NewDestroyNumber ; < DestroyNumber){
