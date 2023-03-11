@@ -812,6 +812,10 @@ active
 				if(xGetBool(dPlayerData, xPlayerDead) == true){
 					xSetBool(dPlayerData, xPlayerDead, false);
 					PlayersDead = PlayersDead-1;
+					trUnitSelectByQV("P"+p+"Unit");
+					trUnitDestroy();
+					xUnitSelect(dPlayerData, xSpyID);
+					trUnitDestroy();
 					UnitCreateV(0, "Revealer To Player", xGetVector(dPlayerData, xDeathVector));
 					if(Stage == 1){
 						CreateGazelle(p, xsVectorGetX(xGetVector(dPlayerData, xDeathVector)), xsVectorGetZ(xGetVector(dPlayerData, xDeathVector)), 0);
@@ -845,8 +849,12 @@ highFrequency
 inactive
 {
 	if (trTime() > cActivationTime + 1) {
+		for(p = 1; < cNumberNonGaiaPlayers){
+		}
 		xsDisableSelf();
 		xsEnableRule("DebugRevive");
+		debugLog("PlayersActive = " + PlayersActive);
+		debugLog("PlayersDead = " + PlayersDead);
 	}
 }
 

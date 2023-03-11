@@ -56,9 +56,11 @@ highFrequency
 inactive
 {
 	xsDisableSelf();
+	UnitCreate(1, "Osiris", 0,0,0);
 	trLetterBox(true);
 	trUIFadeToColor(0,0,0,1000,1,true);
 	trFadeOutAllSounds(3);
+	trSetLighting("default", 0);
 	trFadeOutMusic(3);
 	xsEnableRule("DestroyStuff");
 	characterDialog(ActName(Stage) + " - " + StageRequirement + " percent required to advance", "", ActIcon(Stage));
@@ -323,6 +325,12 @@ inactive
 		debugLog("Poachers total = " + PoachersTarget);
 		debugLog("Poachers killed = " + PoachersDead);
 		//debugLog("SCORE = " + StageScore);
+	}
+	if(AlwaysWin == true){
+		if(StageScore < StageRequirement){
+			trOverlayText("You only got " + StageScore, 5.0,50,50,600);
+			StageScore = StageRequirement;
+		}
 	}
 }
 

@@ -55,6 +55,7 @@ inactive
 			//build points = how many s to build
 			modifyProtounitAbsolute("Armory", p, 4, 40);
 			trTechGodPower(p, "Animal Magnetism", 1);
+			trPlayerSetDiplomacy(p, 0, "Neutral");
 		}
 		//trQuestVarSet("NextPoacherSpawn", trTime()+220);
 		//trQuestVarSet("NextFoodSpawn", trTime()+90);
@@ -63,21 +64,24 @@ inactive
 			trRateConstruction(10);
 		}
 		ActPart = 1;
-		trCounterAddTime("ChickenInfo", 7, 0, "<color={PlayerColor(2)}>Attacks begin</color>", 40);
+		trCounterAddTime("ChickenInfo", 65-(QuickStart*9), 0, "<color={PlayerColor(2)}>Attacks begin</color>", 40);
 		xsEnableRule("ChickenWave1Go");
-		modifyProtounitAbsolute("Toxotes", cNumberNonGaiaPlayers, 0, 10);
+		modifyProtounitAbsolute("Toxotes", cNumberNonGaiaPlayers, 0, 50);
+		modifyProtounitAbsolute("Militia", cNumberNonGaiaPlayers, 0, 50);
 		modifyProtounitAbsolute("Toxotes", cNumberNonGaiaPlayers, 31, 5);
-		modifyProtounitAbsolute("Huskarl", cNumberNonGaiaPlayers, 0, 20);
+		modifyProtounitAbsolute("Huskarl", cNumberNonGaiaPlayers, 0, 100);
 		modifyProtounitAbsolute("Huskarl", cNumberNonGaiaPlayers, 27, 10);
 		modifyProtounitAbsolute("Slinger", cNumberNonGaiaPlayers, 0, 5);
 		modifyProtounitAbsolute("Slinger", cNumberNonGaiaPlayers, 11, 18);
 		modifyProtounitAbsolute("Slinger", cNumberNonGaiaPlayers, 2, 20);
 		modifyProtounitAbsolute("Slinger", cNumberNonGaiaPlayers, 31, 10);
-		modifyProtounitAbsolute("Peltast", cNumberNonGaiaPlayers, 0, 250);
+		modifyProtounitAbsolute("Peltast", cNumberNonGaiaPlayers, 0, 1000);
 		modifyProtounitAbsolute("Peltast", cNumberNonGaiaPlayers, 11, 20);
-		modifyProtounitAbsolute("Peltast", cNumberNonGaiaPlayers, 2, 25);
+		modifyProtounitAbsolute("Peltast", cNumberNonGaiaPlayers, 2, 250);
 		modifyProtounitAbsolute("Peltast", cNumberNonGaiaPlayers, 31, 20);
-		gadgetUnreal("GodPowers");
+		if(QuickStart == 0){
+			gadgetUnreal("GodPowers");
+		}
 		trSetCounterDisplay("You will be able to hold more relics as the act progresses");
 	}
 }
@@ -87,10 +91,16 @@ inactive
 highFrequency
 {
 	if(ActPart == 2){
-		R5Wave(5*PlayersActive, "Militia", 3000, 2000);
-		xsEnableRule("ChickenWave1A");
-		playSound("\cinematics\04_in\armyarrive.wav");
-		trCounterAddTime("ChickenInfo", 320, 0, "<color={PlayerColor(2)}>Ring 1 super poacher</color>", 41);
+		if(QuickStart == 0){
+			R5Wave(5*(PlayersActive-PlayersDead), "Militia", 3000, 2000);
+			xsEnableRule("ChickenWave1A");
+			playSound("\cinematics\04_in\armyarrive.wav");
+			trCounterAddTime("ChickenInfo", 320, 0, "<color={PlayerColor(2)}>Ring 1 super poacher</color>", 41);
+		}
+		else{
+			xsEnableRule("ChickenWave1Finish");
+		}
+		trClearCounterDisplay();
 		xsDisableSelf();
 	}
 }
@@ -100,7 +110,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(5*PlayersActive, "Militia", 1800, 1600);
+		R5Wave(5*(PlayersActive-PlayersDead), "Militia", 1800, 1600);
 		xsEnableRule("ChickenWave1B");
 		xsDisableSelf();
 	}
@@ -111,7 +121,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(5*PlayersActive, "Toxotes", 1900, 1700);
+		R5Wave(5*(PlayersActive-PlayersDead), "Toxotes", 1900, 1700);
 		xsEnableRule("ChickenWave1C");
 		xsDisableSelf();
 	}
@@ -122,8 +132,8 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(5*PlayersActive, "Toxotes", 1900, 1700);
-		R5Wave(5*PlayersActive, "Militia", 1800, 1600);
+		R5Wave(5*(PlayersActive-PlayersDead), "Toxotes", 1900, 1700);
+		R5Wave(5*(PlayersActive-PlayersDead), "Militia", 1800, 1600);
 		xsEnableRule("ChickenWave1D");
 		xsDisableSelf();
 	}
@@ -134,8 +144,8 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(8*PlayersActive, "Militia", 1900, 1600);
-		R5Wave(1*PlayersActive, "Slinger", 2800, 2400);
+		R5Wave(8*(PlayersActive-PlayersDead), "Militia", 1900, 1600);
+		R5Wave(1*(PlayersActive-PlayersDead), "Slinger", 2800, 2400);
 		xsEnableRule("ChickenWave1E");
 		xsDisableSelf();
 	}
@@ -146,7 +156,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(8*PlayersActive, "Toxotes", 1900, 1600);
+		R5Wave(8*(PlayersActive-PlayersDead), "Toxotes", 1900, 1600);
 		xsEnableRule("ChickenWave1F");
 		xsDisableSelf();
 		for(p = 1; < cNumberNonGaiaPlayers){
@@ -165,7 +175,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(5*PlayersActive, "Huskarl", 2000, 1700);
+		R5Wave(5*(PlayersActive-PlayersDead), "Huskarl", 2000, 1700);
 		xsEnableRule("ChickenWave1G");
 		xsDisableSelf();
 	}
@@ -176,8 +186,8 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(5*PlayersActive, "Slinger", 2800, 1600);
-		R5Wave(5*PlayersActive, "Huskarl", 2100, 1800);
+		R5Wave(5*(PlayersActive-PlayersDead), "Slinger", 2800, 1600);
+		R5Wave(5*(PlayersActive-PlayersDead), "Huskarl", 2100, 1800);
 		xsEnableRule("ChickenWave1H");
 		trClearCounterDisplay();
 		xsDisableSelf();
@@ -189,7 +199,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(8*PlayersActive, "Huskarl", 2500, 2000);
+		R5Wave(8*(PlayersActive-PlayersDead), "Huskarl", 2500, 2000);
 		xsEnableRule("ChickenWave1I");
 		xsDisableSelf();
 	}
@@ -200,7 +210,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(8*PlayersActive, "Slinger", 3500, 2000);
+		R5Wave(8*(PlayersActive-PlayersDead), "Slinger", 3500, 2000);
 		xsEnableRule("ChickenWave1Super");
 		xsDisableSelf();
 	}
@@ -212,7 +222,7 @@ highFrequency
 {
 	if (ActPart == 3) {
 		R5Wave(1, "Peltast", 3500, 2500);
-		R5Wave(5*PlayersActive, "Huskarl", 3000, 2000);
+		R5Wave(5*(PlayersActive-PlayersDead), "Huskarl", 3000, 2000);
 		modifyProtounitAbsolute("Wadjet Spit", cNumberNonGaiaPlayers, 1, 10);
 		xsDisableSelf();
 		playSound("\cinematics\04_in\armyarrive.wav");
@@ -225,6 +235,9 @@ inactive
 highFrequency
 {
 	if(trPlayerUnitCountSpecific(cNumberNonGaiaPlayers, "Peltast") == 0){
+		vector tileForStart = MapCentre*0.5;
+		int StartTileX = xsVectorGetX(tileForStart);
+		int StartTileZ = xsVectorGetZ(tileForStart);
 		playSound("xwin.wav");
 		trOverlayText("Ring 1 cleared!", 5.0,-1,-1,600);
 		ChickenLevel = 3;
@@ -235,6 +248,10 @@ highFrequency
 			trModifyProtounit(ChickenProto, p, 5, 1);
 		}
 		ColouredChat("1,0.5,0", "<u>Relic hold capacity increased!</u>");
+		replaceCircle(StartTileX,StartTileZ,32, "BlackRock", "TundraRoadA");
+		replaceCircle(StartTileX,StartTileZ,130,"IceC","CliffGreekA");
+		refreshPassability();
+		replaceCircle(StartTileX,StartTileZ,130,"CliffGreekA","IceC");
 		xsDisableSelf();
 	}
 }
@@ -279,20 +296,27 @@ inactive
 					playSound("\xpack\xdialog\es\xkri075.mp3");
 				}
 			}
-			if(trCurrentPlayer() == p){
-				if(xGetInt(dPlayerData, xS5E) > 0){
+			if((trTime() > 1*trQuestVarGet("P"+p+"ERecharge")) && (xGetInt(dPlayerData, xS5E) == 0)){
+				trQuestVarSet("P"+p+"ERecharge", trTime()+xGetInt(dPlayerData, xS5ERecharge));
+				xSetInt(dPlayerData, xS5E, -1);
+			}
+			if((trTime() >= 1*trQuestVarGet("P"+p+"ERecharge")) && (xGetInt(dPlayerData, xS5E) < 0)){
+				xSetInt(dPlayerData, xS5E, 5);
+			}
+			
+			if(xGetInt(dPlayerData, xS5E) > 0){
+				if(trCurrentPlayer() == p){
 					trCounterAbort("cdtutorial");
 					trCounterAddTime("cdtutorial", -100, -200, "</color>E - All towers fire at cursor | " + xGetInt(dPlayerData, xS5E), -1);
 				}
-				else if(1*trQuestVarGet("P"+p+"ERecharge") < trTime()){
-					trCounterAbort("cdtutorial");
-					trQuestVarSet("P"+p+"ERecharge", trTime()+xGetInt(dPlayerData, xS5ERecharge));
-					trCounterAddTime("cdtutorial", xGetInt(dPlayerData, xS5ERecharge), 0, "</color>E recharging", -1);
-					//E recharge
-				}
 			}
-			if((trTime() >= 1*trQuestVarGet("P"+p+"ERecharge")) && (xGetInt(dPlayerData, xS5E) == 0)){
-				xSetInt(dPlayerData, xS5E, 5);
+			else if((1*trQuestVarGet("P"+p+"ERecharge") > trTime()) && (xGetInt(dPlayerData, xS5E) == -1)){
+				if(trCurrentPlayer() == p){
+					trCounterAbort("cdtutorial");
+					trCounterAddTime("cdtutorial", xGetInt(dPlayerData, xS5ERecharge), 0, "</color>E recharging", -1);
+				}
+				xSetInt(dPlayerData, xS5E, -2);
+				//E recharge
 			}
 		}
 	}

@@ -1112,6 +1112,33 @@ void replaceCircle(int posX = 0, int PosZ = 0, int radius = 0, string oldTerrain
 	}
 }
 
+void replaceCircleOutline(int posX = 0, int PosZ = 0, int radius = 0, string newTerrain = "", string oldTerrain = "", int ignore = 0){
+	ignore = radius-2;
+	int oldTerrainType = getTerrainType(oldTerrain);
+	int oldTerrainSubType = getTerrainSubType(oldTerrain);
+	int newTerrainType = getTerrainType(newTerrain);
+	int newTerrainSubType = getTerrainSubType(newTerrain);
+	int tempMinX = xsMax(0.0 - posX, 0.0 - radius);
+	int tempMinZ = xsMax(0.0 - PosZ, 0.0 - radius);
+	int tempMaxX = xsMin(200 - posX, radius);
+	int tempMaxZ = xsMin(200 - PosZ, radius);
+	int tempRadiusCheck = radius * radius + radius;
+	int tempRadiusCheck2 = ignore * ignore + ignore;
+	for(tempZ = tempMaxZ; >= tempMinZ){
+		for(tempX = tempMaxX; >= tempMinX){
+			if(tempRadiusCheck >= (tempX*tempX + tempZ*tempZ)){
+				if(tempRadiusCheck2 < (tempX*tempX + tempZ*tempZ)){
+					int terrainType = trGetTerrainType(tempX + posX, tempZ + PosZ);
+					int terrainSubType = trGetTerrainSubType(tempX + posX, tempZ + PosZ);
+					if(terrainType == oldTerrainType && terrainSubType == oldTerrainSubType){
+						trPaintTerrain(tempX + posX, tempZ + PosZ, tempX + posX, tempZ + PosZ, newTerrainType, newTerrainSubType, false);
+					}
+				}
+			}
+		}
+	}
+}
+
 void trPaintElevationCircle(int PosX = 0, int PosZ = 0, int Rad = 0, int Height = 0){
 for(tempMinX = 0; > 1){}
 for(tempMinZ = 0; > 1){}

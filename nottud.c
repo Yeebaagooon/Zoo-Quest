@@ -1554,6 +1554,7 @@ void createMarsh(){
 			break;
 		}
 	}
+	paintCircleHeight2(StartTileX, StartTileZ, 8, "GrassDirt75", StartHeight+1);
 	LeaveTerrain = "IceA";
 	Stage = 2;
 	StageRequirement = 50;
@@ -2837,25 +2838,27 @@ void createChickenArea(){
 	replaceTerrainAboveHeightMin("CliffA", "ForestFloorTundra", 4.0);
 	replaceTerrainBelowHeightMax("CliffA", "GrassB", 0.0);
 	smooth(1);
-	paintCircleHeight(StartTileX, StartTileZ, 16, "GrassDirt75", 8);
-	paintCircleHeight(StartTileX, StartTileZ, 12, "GrassDirt50", 11);
-	paintCircleHeight(StartTileX, StartTileZ, 8, "GrassDirt25", 14);
+	paintCircleHeight(StartTileX, StartTileZ, 16, "GrassDirt75", 6);
+	paintCircleHeight(StartTileX, StartTileZ, 12, "GrassDirt50", 6.5);
+	paintCircleHeight(StartTileX, StartTileZ, 8, "GrassDirt25", 7);
 	smooth(2);
 	TerrainTileDBSet(baseTerrain, dShore, xShoreLoc);
 	replaceCircle(StartTileX,StartTileZ,100,baseTerrain,"RiverGrassyA");
 	replaceCircle(StartTileX,StartTileZ,100,"CliffA","CliffNorseA");
 	replaceCircle(StartTileX,StartTileZ,100,"ForestFloorTundra","ForestFloorJungle");
-	paintCircleOutline(StartTileX,StartTileZ,52, "BlackRock");
+	
 	replaceCircle(StartTileX,StartTileZ,50,"RiverGrassyA","RiverGrassyC");
 	replaceCircle(StartTileX,StartTileZ,50,"CliffNorseA","CliffEgyptianA");
 	replaceCircle(StartTileX,StartTileZ,50,"ForestFloorJungle","ForestFloorMarsh");
-	paintCircleOutline(StartTileX,StartTileZ,32, "BlackRock");
+	
 	replaceCircle(StartTileX,StartTileZ,30,"RiverGrassyC","GrassB");
 	replaceCircle(StartTileX,StartTileZ,30,"CliffEgyptianA","HadesCliff");
 	replaceCircle(StartTileX,StartTileZ,30,"ForestFloorMarsh","ForestFloorOak");
 	paintTrees2("ForestfloorJungle", "Pine Dead Burning");
 	paintTrees2("ForestFloorMarsh", "Tundra Tree");
 	paintTrees2("ForestFloorOak", "Oak Tree");
+	replaceCircleOutline(StartTileX,StartTileZ,52, "BlackRock", "RiverGrassyA");
+	replaceCircleOutline(StartTileX,StartTileZ,32, "BlackRock", "RiverGrassyC");
 	refreshPassability();
 	replaceCircle(StartTileX,StartTileZ,130,"CliffNorseA","UnderwaterIceC");
 	replaceCircle(StartTileX,StartTileZ,130,"ForestfloorJungle","UnderwaterRockC");
@@ -2864,6 +2867,8 @@ void createChickenArea(){
 	replaceCircle(StartTileX,StartTileZ,130,"CliffEgyptianA","IceC");
 	replaceCircle(StartTileX,StartTileZ,130,"RiverGrassyC","TundraRoadA");
 	replaceCircle(StartTileX,StartTileZ,130,"ForestFloorMarsh","GaiaCreepBorderSnow");
+	
+	
 	
 	
 	float StartHeight = 8;

@@ -115,6 +115,7 @@ int xRelicLevel = 0;
 int dEnemyCollision = 0;
 
 int dMines = 0;
+int xMineSFX = 0;
 
 rule initialise_spy_database
 active
@@ -271,7 +272,7 @@ highFrequency
 	dMines = xInitDatabase("mines");
 	xUnitID = xInitAddInt(dMines, "id", -1);
 	xOwner = xInitAddInt(dMines, "owner", 0);
-	xSubID = xInitAddInt(dMines, "sfxid", -1);
+	xMineSFX = xInitAddInt(dMines, "sfxid", -1);
 }
 
 /*

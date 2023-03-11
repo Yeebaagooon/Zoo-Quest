@@ -353,7 +353,7 @@ inactive
 			xUnitSelect(dShop,xUnitID);
 			if (trUnitIsSelected()) {
 				uiClearSelection();
-				trMessageSetText("Purchase " + xGetString(dShop, xPower) + " - Cost: " + xGetInt(dShop, xCost), 6000);
+				trMessageSetText("Purchase " + xGetString(dShop, xPower) + " - Cost: " + xGetInt(dShop, xCost) + " relics", 6000);
 			}
 			trUnitSelectClear();
 		}
@@ -811,5 +811,11 @@ highFrequency
 	trClearCounterDisplay();
 	xsEnableRule("ScoreScreenStart");
 	modifyProtounitAbsolute("Throwing Axeman", cNumberNonGaiaPlayers, 55, 1);
+	for(a = xGetDatabaseCount(dInterractables); > 0){
+		xDatabaseNext(dInterractables);
+		xUnitSelect(dInterractables, xUnitID);
+		trUnitChangeProtoUnit("Lightning Sparks Ground");
+		xFreeDatabaseBlock(dInterractables);
+	}
 	xsDisableSelf();
 }

@@ -47,6 +47,7 @@ highFrequency
 	trModifyProtounit("Dwarf", 0, 55, 4);
 	trModifyProtounit("Kronny Birth", 0, 8, 0.3);
 	trModifyProtounit("Palm", 0, 0, 9999999999999999999.0);
+	trModifyProtounit("Osiris", 1, 2, 9000);
 	modifyProtounitAbsolute("Throwing Axeman", cNumberNonGaiaPlayers, 2, 36);
 	modifyProtounitAbsolute("Throwing Axeman", cNumberNonGaiaPlayers, 0, 100);
 	modifyProtounitAbsolute("Throwing Axeman", cNumberNonGaiaPlayers, 30, 1);
@@ -201,7 +202,7 @@ highFrequency
 		//garrison capacity
 		modifyProtounitAbsolute("Tower", p, 5, 1);
 		//attack
-		modifyProtounitAbsolute("Tower", p, 31, 1);
+		modifyProtounitAbsolute("Tower", p, 31, xGetInt(dPlayerData, xTowerDamage));
 		//limit
 		modifyProtounitAbsolute("Tower", p, 10, 10);
 		//build points = how many s to build

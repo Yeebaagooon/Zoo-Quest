@@ -63,18 +63,16 @@ void ProcessRhinoFence(int count = 5){
 		}
 	}
 	//trClearCounterDisplay();
-	if(InMinigame == false){
-		if(FencesDone < 8){
-			trSetCounterDisplay("<color={PlayerColor(2)}>Fencing destroyed: "+FencesDone+"/8");
+	if(FencesDone < 8){
+		trSetCounterDisplay("<color={PlayerColor(2)}>Fencing destroyed: "+FencesDone+"/8");
+	}
+	else{
+		trSetCounterDisplay("<color={PlayerColor(3)}>Fencing destroyed: "+FencesDone+"/8");
+		playSoundCustom("xnew_objective.wav", "\Yeebaagooon\Zoo Quest\Skillpoint.mp3");
+		if(xGetDatabaseCount(dPoachers) == 0){
+			trQuestVarModify("RhinoBonuses", "+", 2);
 		}
-		else{
-			trSetCounterDisplay("<color={PlayerColor(3)}>Fencing destroyed: "+FencesDone+"/8");
-			playSoundCustom("xnew_objective.wav", "\Yeebaagooon\Zoo Quest\Skillpoint.mp3");
-			if(xGetDatabaseCount(dPoachers) == 0){
-				trQuestVarModify("RhinoBonuses", "+", 2);
-			}
-			xsEnableRule("RhinoPartTwo");
-		}
+		xsEnableRule("RhinoPartTwo");
 	}
 }
 
@@ -189,7 +187,9 @@ inactive
 			DoMissile();
 		}
 		if(FencesDone < 8){
-			ProcessRhinoFence(10);
+			if(InMinigame == false){
+				ProcessRhinoFence(10);
+			}
 		}
 		else{
 			if(ActPart < 2){

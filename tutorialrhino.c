@@ -216,7 +216,7 @@ rule RhinoTutorialDone
 highFrequency
 inactive
 {
-	if(PlayersActive == 1*trQuestVarGet("PlayersDoneTutorial")){
+	if((PlayersActive == 1*trQuestVarGet("PlayersDoneTutorial")) && (PlayersActive > 0)){
 		xsDisableSelf();
 		xsDisableRule("RhinoTutorialLoops");
 		xsEnableRule("BuildRhinoArea");

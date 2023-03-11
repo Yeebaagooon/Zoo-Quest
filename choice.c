@@ -48,7 +48,7 @@ inactive
 				xSetPointer(dPlayerData, p);
 				xSetVector(dPlayerData, xVectorHold, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
 				xSetInt(dPlayerData, xTeleportDue, 1);
-				trChatSendToPlayer(0, p, "Debug TP you should be player " + xGetPointer(dPlayerData));
+				trChatSend(0,"<color=1,0,1>Debug TP player " + xGetPointer(dPlayerData) + "</color>");
 				if(Stage == 1){
 					trQuestVarSet("P"+p+"IG", trGetNextUnitScenarioNameNumber());
 					UnitCreate(p, "Roc", 2*xsVectorGetX(StageVector)+7,2*xsVectorGetZ(StageVector)+10, 0);

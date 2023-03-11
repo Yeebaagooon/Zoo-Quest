@@ -10,6 +10,7 @@ inactive
 		xsDisableRule("CrocodileTutorialDone");
 		xsDisableRule("Jump");
 		xsDisableRule("JumpEnd");
+		QuickStart = 0;
 		NewDestroyNumber = trGetNextUnitScenarioNameNumber()-1;
 		TutorialMode = true;
 		Stage = 5;
@@ -58,6 +59,7 @@ inactive
 		trQuestVarSet("PlayersDoneTutorial", 0);
 		for(p=1 ; < cNumberNonGaiaPlayers){
 			//projectile speed
+			trUnforbidProtounit(p, "Storehouse");
 			trTechSetStatus(p, 126, 0);
 			trTechSetStatus(p, 350, 0);
 			modifyProtounitAbsolute("Wadjet Spit", p, 1, 10);
@@ -271,11 +273,8 @@ void ProcessTowers(int count = 1) {
 }
 
 void ProcessMine(int count = 1) {
-	vector pos = vector(0,0,0);
-	vector minepos = vector(0,0,0);
 	int p = 0;
 	if(xGetDatabaseCount(dMines) > 0){
-		pos = kbGetBlockPosition(""+xGetInt(dEnemies, xUnitID));
 		for(a = xGetDatabaseCount(dMines); > 0){
 			xDatabaseNext(dMines);
 			p = xGetInt(dMines, xOwner);
@@ -285,11 +284,11 @@ void ProcessMine(int count = 1) {
 				trDamageUnitsInArea(cNumberNonGaiaPlayers, "All", xGetInt(dPlayerData, xLandmineRange), xGetInt(dPlayerData, xLandmineDamage));
 				xUnitSelect(dMines, xUnitID);
 				trUnitChangeProtoUnit("Meteor Impact Ground");
-				xUnitSelect(dMines, xSubID);
+				xUnitSelect(dMines, xMineSFX);
 				trUnitChangeProtoUnit("Fire Giant");
-				xUnitSelect(dMines, xSubID);
+				xUnitSelect(dMines, xMineSFX);
 				trSetScale(0.00001);
-				xUnitSelect(dMines, xSubID);
+				xUnitSelect(dMines, xMineSFX);
 				trDamageUnitPercent(100);
 				xFreeDatabaseBlock(dMines);
 				playSound("meteorsmallhit.wav");
@@ -302,7 +301,6 @@ void ProcessMine(int count = 1) {
 void ProcessEnemy(int count = 1) {
 	int temp = 0;
 	vector pos = vector(0,0,0);
-	vector minepos = vector(0,0,0);
 	for (x=xsMin(count, xGetDatabaseCount(dEnemies)); > 0) {
 		xDatabaseNext(dEnemies);
 		xUnitSelect(dEnemies, xUnitID);
@@ -370,7 +368,7 @@ inactive
 			trUnitConvert(0);
 			NewRelic(1*trQuestVarGet("MedusaP"+p));
 		}
-		if((xGetInt(dPlayerData, xTowerDamage) > 1) && (1*trQuestVarGet("P"+p+"FountainMsg") == 1)){
+		if((xGetInt(dPlayerData, xTowerDamage) > 5) && (1*trQuestVarGet("P"+p+"FountainMsg") == 1)){
 			trQuestVarSet("P"+p+"FountainMsg", 2);
 			trUnforbidProtounit(p, "Storehouse");
 			if(trCurrentPlayer() == p){
@@ -519,7 +517,7 @@ rule ChickenTutorialDone
 highFrequency
 inactive
 {
-	if(PlayersActive == 1*trQuestVarGet("PlayersDoneTutorial")){
+	if((PlayersActive == 1*trQuestVarGet("PlayersDoneTutorial")) && (PlayersActive > 0)){
 		xsDisableSelf();
 		xsDisableRule("ChickenTutorialLoops");
 		xsDisableRule("FirstTower");

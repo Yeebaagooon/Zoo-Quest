@@ -205,7 +205,7 @@ highFrequency
 					closest = 10000;
 					closestid = 0;
 					//cycle through all poachers to find the closest
-					for(a=0 ; < xGetDatabaseCount(dPoachers)){
+					for(a=xGetDatabaseCount(dPoachers) ; > 0){
 						xDatabaseNext(dPoachers);
 						dir = kbGetBlockPosition(""+xGetInt(dPoachers, xUnitID));
 						xUnitSelect(dPoachers, xUnitID);
@@ -470,7 +470,7 @@ highFrequency
 							xAddDatabaseBlock(dMines, true);
 							xSetInt(dMines, xUnitID, xGetInt(dFreeRelics, xUnitID));
 							xSetInt(dMines, xOwner, kbUnitGetOwner(id));
-							xSetInt(dMines, xSubID, xGetInt(dFreeRelics, xSFXID));
+							xSetInt(dMines, xMineSFX, xGetInt(dFreeRelics, xSFXID));
 							xFreeDatabaseBlock(dFreeRelics);
 						}
 					}
@@ -505,7 +505,7 @@ highFrequency
 				if(xGetInt(dIncomingMissiles, xMissileSpyOfSpyID) > -1){
 					//passenger here
 					xUnitSelect(dIncomingMissiles, xMissileSpyID);
-					trUnitChangeProtoUnit("Invisible Target");
+					trUnitChangeProtoUnit("Victory Marker");
 					xUnitSelect(dIncomingMissiles, xMissileSpyID);
 					trSetScale(2);
 					xUnitSelect(dIncomingMissiles, xMissileSpyOfSpyID);

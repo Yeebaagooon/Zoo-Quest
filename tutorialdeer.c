@@ -271,7 +271,9 @@ highFrequency
 inactive
 {
 	if (trTime() > cActivationTime + 5) {
-		trCounterAddTime("cdtutorialtimeout", 9+Stage*2, 0, "<color={PlayerColor(0)}>Tutorial timeout", 33);
+		if(TutorialMode){
+			trCounterAddTime("cdtutorialtimeout", 9+Stage*2, 0, "<color={PlayerColor(0)}>Tutorial timeout", 33);
+		}
 		xsDisableSelf();
 	}
 }
@@ -284,7 +286,7 @@ rule DeerTutorialDone
 highFrequency
 inactive
 {
-	if(PlayersActive == 1*trQuestVarGet("PlayersDoneTutorial")){
+	if((PlayersActive == 1*trQuestVarGet("PlayersDoneTutorial")) && (PlayersActive > 0)){
 		xsDisableSelf();
 		xsDisableRule("TutorialLoops");
 		xsEnableRule("BuildDeerArea");

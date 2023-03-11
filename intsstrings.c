@@ -1,3 +1,9 @@
+//---Controls
+//\Yeebaagooon\Zoo Quest\Test sound.mp3
+int QuickStart = 5;
+bool LOS = false;
+bool AlwaysWin = true;
+
 /*
 it uses build at pointer instead
 
@@ -62,11 +68,6 @@ End Cine
 //DELETE
 */
 
-//---Controls
-//\Yeebaagooon\Zoo Quest\Test sound.mp3
-int QuickStart = 5;
-bool LOS = true;
-int Stage = 0;
 //---Strings
 string MapVersion = "Test Version";
 string MapName = "Zoo Quest.xs";
@@ -93,6 +94,7 @@ string unitcheck = "";
 //MAP STUFF
 float timediff = 0.0;
 int timelast = 0;
+int Stage = 0;
 
 float timediff2 = 0.0;
 float timelast2 = 0.0;
@@ -252,11 +254,11 @@ highFrequency
 	xCrocProto = xInitAddString(dPlayerData, "croc proto", CrocProto);
 	xCrocRangedTime = xInitAddInt(dPlayerData, "rangetime", 0);
 	xDeathVector = xInitAddVector(dPlayerData, "deathv", vector(0,0,0));
-	xTowerDamage = xInitAddInt(dPlayerData, "towerdmg", 1);
+	xTowerDamage = xInitAddInt(dPlayerData, "towerdmg", 5);
 	xTowerSpeed = xInitAddFloat(dPlayerData, "towerspeed", 10);
 	xSpecialVector = xInitAddVector(dPlayerData, "sv", vector(0,0,0));
 	xS5Kills = xInitAddInt(dPlayerData, "stage 5 kills", 0);
-	xLandmineDamage = xInitAddInt(dPlayerData, "mine dmg", 25);
+	xLandmineDamage = xInitAddInt(dPlayerData, "mine dmg", 250);
 	xLandmineRange = xInitAddInt(dPlayerData, "mine dmg", 4);
 	xS5E = xInitAddInt(dPlayerData, "specialshots", 0);
 	xS5ERecharge = xInitAddInt(dPlayerData, "specialshotsrecharge", 30);
