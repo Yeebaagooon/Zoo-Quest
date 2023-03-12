@@ -583,7 +583,7 @@ highFrequency
 					CreateGazelle(p, xsVectorGetX(temp), xsVectorGetZ(temp), 0);
 				}
 			}
-			if((trPlayerUnitCountSpecific(p, GazelleProto) == 0) && (xGetBool(dPlayerData, xPlayerDead) == false)){
+			if((trPlayerUnitCountSpecific(p, GazelleProto) == 0) && (xGetBool(dPlayerData, xPlayerDead) == false) && (trPlayerUnitCountSpecific(p, "Hero Greek Bellerophon") == 0)){
 				debugLog("Path 3 - P" + p);
 				CreateGazelle(p, trVectorQuestVarGetX("P"+p+"PosMG"),trVectorQuestVarGetZ("P"+p+"PosMG"));
 			}

@@ -90,6 +90,15 @@ inactive
 				if(CrocProgress >= 4*PlayersActive){
 					SpawnCrocPoacher4(xsMax(1,PlayersActive-2));
 				}
+				if(CrocProgress >= 5*PlayersActive){
+					SpawnCrocPoacher4(xsMax(1,PlayersActive-2));
+					SpawnCrocPoacher3(1);
+				}
+				if(1*trQuestVarGet("AllowS4Uber") > 0){
+					trOverlayText("Uber Poachers Spawning... run!", 5.0,-1,-1,600);
+					playSound("\cinematics\04_in\armyarrive.wav");
+					//Uber poacher
+				}
 			}
 		}
 	}

@@ -514,7 +514,7 @@ highFrequency
 		if(xGetBool(dPlayerData, xPlayerActive)){
 			trVectorQuestVarSet("P"+p+"PosMG", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
 			trVectorQuestVarSet("P"+p+"PosMG", trVectorQuestVarGet("P"+p+"PosMG")/2);
-			if((trVectorQuestVarGetX("P"+p+"PosMG") > xsVectorGetX(StageVector)-2) && (trVectorQuestVarGetX("P"+p+"PosMG") < xsVectorGetX(StageVector)+2) && (trVectorQuestVarGetZ("P"+p+"PosMG") > xsVectorGetZ(StageVector)-2) && (trVectorQuestVarGetZ("P"+p+"PosMG") < xsVectorGetZ(StageVector)+2)){
+			if((trVectorQuestVarGetX("P"+p+"PosMG") >= xsVectorGetX(StageVector)-2) && (trVectorQuestVarGetX("P"+p+"PosMG") <= xsVectorGetX(StageVector)+2) && (trVectorQuestVarGetZ("P"+p+"PosMG") >= xsVectorGetZ(StageVector)-2) && (trVectorQuestVarGetZ("P"+p+"PosMG") <= xsVectorGetZ(StageVector)+2)){
 				xSetFloat(dPlayerData, xRhinoChargeTime, 30);
 				modifyProtounitAbsolute(""+RhinoProto, p, 9, 1);
 				PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is playing");

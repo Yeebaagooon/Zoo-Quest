@@ -1,6 +1,6 @@
 //---Controls
 //\Yeebaagooon\Zoo Quest\Test sound.mp3
-int QuickStart = 3;
+int QuickStart = 4;
 bool LOS = true;
 bool AlwaysWin = true;
 bool PlayCine = true;
@@ -35,7 +35,7 @@ instead of the id
 
 [BUG LIST]
 tile for minigame is *2 for vector
-
+S4 civ name level
 deer tp vector*2 end mg
 
 S3 super

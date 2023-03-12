@@ -796,7 +796,9 @@ void CrocGrow(int p = 0){
 	if(xGetInt(dPlayerData, xCrocSize) == 12){
 		ColouredIconChatToPlayer(p, "1,0,0", "icons\animal crocodile icon 64", "You have become an infamous man eater!");
 		ColouredIconChatToPlayer(p, "1,0,0", "icons\animal crocodile icon 64", "The world's top poachers are coming for you.");
+		trQuestVarSet("AllowS4Uber", 1);
 	}
+	trSetCivilizationNameOverride(p, "Level " + xGetInt(dPlayerData, xCrocSize));
 }
 
 

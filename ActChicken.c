@@ -27,6 +27,7 @@ inactive
 		uiZoomToProto(""+ChickenProto);
 		uiLookAtProto(""+ChickenProto);
 		//replaceTerrainAboveHeightMax("ForestFloorPine", "GrassB", 0.0);
+		xsEnableRule("PlayMusic");
 	}
 }
 
@@ -50,7 +51,6 @@ inactive
 		//ColouredIconChat("0.0,0.8,0.2", "icons\building norse shrine icon 64", "Interract with shrines using W.");
 		ColouredChat("0.0,0.8,0.2", "Chickens are tasty and made out of food.");
 		ColouredChat("0.0,0.8,0.2", "The hordes are coming.");
-		xsEnableRule("PlayMusic");
 		trQuestVarSet("Time", trTime());
 		PlayersDead = 0;
 		timediff = trTimeMS();
@@ -111,10 +111,10 @@ inactive
 			modifyProtounitAbsolute("Monkey King", cNumberNonGaiaPlayers, q, 0);
 		}
 		modifyProtounitAbsolute("Monkey King", cNumberNonGaiaPlayers, 0, 400);
-		modifyProtounitAbsolute("Monkey King", cNumberNonGaiaPlayers, 27, 70);
+		modifyProtounitAbsolute("Monkey King", cNumberNonGaiaPlayers, 27, 30);
 		modifyProtounitAbsolute("Monkey King", cNumberNonGaiaPlayers, 28, 10);
 		modifyProtounitAbsolute("Monkey King", cNumberNonGaiaPlayers, 29, 10);
-		modifyProtounitAbsolute("Bogsveigir", cNumberNonGaiaPlayers, 0, 350);
+		modifyProtounitAbsolute("Bogsveigir", cNumberNonGaiaPlayers, 0, 150);
 		modifyProtounitAbsolute("Bogsveigir", cNumberNonGaiaPlayers, 31, 25);
 		
 		
@@ -167,8 +167,8 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(3*(PlayersActive-PlayersDead), "Toxotes", 1900, 1700);
-		R5Wave(4*(PlayersActive-PlayersDead), "Militia", 1800, 1600);
+		R5Wave(2*(PlayersActive-PlayersDead), "Toxotes", 1900, 1700);
+		R5Wave(3*(PlayersActive-PlayersDead), "Militia", 1800, 1600);
 		xsEnableRule("ChickenWave1D");
 		xsDisableSelf();
 	}
@@ -179,7 +179,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(6*(PlayersActive-PlayersDead), "Militia", 1900, 1600);
+		R5Wave(4*(PlayersActive-PlayersDead), "Militia", 1900, 1600);
 		R5Wave(1*(PlayersActive-PlayersDead), "Slinger", 2800, 2400);
 		xsEnableRule("ChickenWave1E");
 		xsDisableSelf();
@@ -191,7 +191,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(4*(PlayersActive-PlayersDead), "Toxotes", 1900, 1600);
+		R5Wave(3*(PlayersActive-PlayersDead), "Toxotes", 1900, 1600);
 		xsEnableRule("ChickenWave1F");
 		xsDisableSelf();
 		for(p = 1; < cNumberNonGaiaPlayers){
@@ -210,7 +210,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(3*(PlayersActive-PlayersDead), "Spearman", 2000, 1700);
+		R5Wave(2*(PlayersActive-PlayersDead), "Spearman", 2000, 1700);
 		xsEnableRule("ChickenWave1G");
 		xsDisableSelf();
 	}
@@ -257,7 +257,7 @@ highFrequency
 {
 	if (ActPart == 3) {
 		R5Wave(1, "Peltast", 3500, 2500);
-		R5Wave(5*(PlayersActive-PlayersDead), "Spearman", 3000, 2000);
+		R5Wave(2*(PlayersActive-PlayersDead), "Spearman", 3000, 2000);
 		modifyProtounitAbsolute("Wadjet Spit", cNumberNonGaiaPlayers, 1, 10);
 		xsDisableSelf();
 		playSound("\cinematics\04_in\armyarrive.wav");
@@ -496,6 +496,7 @@ inactive
 				PlayersDead = PlayersDead+1;
 				xSetBool(dPlayerData, xPlayerDead, true);
 				PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is dead!");
+				PlayerColouredChat(p, "They will respawn once the super poacher is dead!");
 				xSetVector(dPlayerData, xDeathVector, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
 				trPlayerKillAllGodPowers(p);
 				trPlayerKillAllBuildings(p);
