@@ -372,3 +372,75 @@ highFrequency
 		trFadeOutMusic(3);
 	}
 }
+
+
+//===========================================
+//=============chicken cine==================
+//===========================================
+
+
+rule C_Cine_000
+inactive
+highFrequency
+{
+	if (trTime() > cActivationTime + 1) {
+		characterDialog("Chicken Gameplay", "Build towers to defend yourselves against the hordes.", "icons\animal chicken icon 64");
+		xsDisableSelf();
+		xsEnableRule("C_Cine_001");
+	}
+}
+
+rule C_Cine_001
+inactive
+highFrequency
+{
+	if (trTime() > cActivationTime + 4) {
+		characterDialog("Chicken Gameplay", "You can only build 10, this may increase later.", "icons\animal chicken icon 64");
+		xsDisableSelf();
+		xsEnableRule("C_Cine_002");
+	}
+}
+
+rule C_Cine_002
+inactive
+highFrequency
+{
+	if (trTime() > cActivationTime + 4) {
+		characterDialog("Chicken Gameplay", "Relics give stat bonuses, you can only hold one at the start.", "icons\animal chicken icon 64");
+		xsDisableSelf();
+		xsEnableRule("C_Cine_003");
+	}
+}
+
+rule C_Cine_003
+inactive
+highFrequency
+{
+	if (trTime() > cActivationTime + 4) {
+		characterDialog("Chicken Powers", "Unwanted relics can be turned into landmines with 'R'", "icons\animal chicken icon 64");
+		xsDisableSelf();
+		xsEnableRule("C_Cine_004");
+	}
+}
+
+rule C_Cine_004
+inactive
+highFrequency
+{
+	if (trTime() > cActivationTime + 4) {
+		characterDialog("Chicken Powers", "Use 'E' to command every tower to fire at the cursor (chicken must be selected)", "icons\animal chicken icon 64");
+		xsDisableSelf();
+		xsEnableRule("C_Cine_005");
+	}
+}
+
+rule C_Cine_005
+inactive
+highFrequency
+{
+	if (trTime() > cActivationTime + 4) {
+		characterDialog("Chicken Powers", "E will recharge after all charges are spent.", "icons\animal chicken icon 64");
+		xsDisableSelf();
+		xsEnableRule("ChickenLanding");
+	}
+}

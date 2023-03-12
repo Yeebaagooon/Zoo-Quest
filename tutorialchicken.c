@@ -114,7 +114,7 @@ inactive
 			xSetPointer(dPlayerData, p);
 			xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
 			xSetInt(dPlayerData, xS5E, 1);
-			modifyProtounitAbsolute(""+ChickenProto, p, 0, 100);
+			modifyProtounitAbsolute(""+ChickenProto, p, 0, 150);
 			if(trCurrentPlayer() == p){
 				trCounterAddTime("cdtutorial", -100, -200, "<color={PlayerColor("+p+")}>Use 'Q' to build a tower at the cursor", -1);
 			}
@@ -267,6 +267,14 @@ void ProcessTowers(int count = 1) {
 		}
 		xUnitSelect(dTowers, xUnitID);
 		if(trUnitDead() == true){
+			for(a = xGetDatabaseCount(dEnemyCollision); > 0){
+				xDatabaseNext(dEnemyCollision);
+				if(xGetInt(dEnemyCollision, xUnitID) == xGetInt(dTowers, xUnitID)){
+					xFreeDatabaseBlock(dTowers);
+					xFreeDatabaseBlock(dEnemyCollision);
+					break;
+				}
+			}
 			xFreeDatabaseBlock(dTowers);
 		}
 	}
@@ -339,7 +347,7 @@ inactive
 	ProcessHeldRelics(5);
 	ProcessTowers(5);
 	ProcessEnemy(10);
-	ProcessMine(5);
+	ProcessMine(1);
 	vector start = vector(0,0,0);
 	vector dest = vector(0,0,0);
 	vector dir = vector(0,0,0);
@@ -361,6 +369,13 @@ inactive
 			}
 			else{
 				NewRelic(1*trQuestVarGet("ArmoryP"+p));
+			}
+			for(a = xGetDatabaseCount(dEnemyCollision); > 0){
+				xDatabaseNext(dEnemyCollision);
+				if(xGetInt(dEnemyCollision, xUnitID) == 1*trQuestVarGet("ArmoryP"+p)){
+					xFreeDatabaseBlock(dEnemyCollision);
+					//continue;
+				}
 			}
 			//add to db held relics as will be owned by 0
 		}

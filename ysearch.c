@@ -490,6 +490,11 @@ highFrequency
 				trUnitSelectByID(id);
 				trUnitDestroy();
 			}
+			case kbGetProtoUnitID("Armory"):
+			{
+				xAddDatabaseBlock(dEnemyCollision, true);
+				xSetInt(dEnemyCollision, xUnitID, i);
+			}
 		}
 	}
 	if (xGetDatabaseCount(dSpyRequests) > 0) {

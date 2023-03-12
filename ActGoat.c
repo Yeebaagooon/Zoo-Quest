@@ -457,9 +457,6 @@ void GoatStatueMake(int x = 0, int z = 0){
 	//trChatSend(0, "<color=0,0.5,0>Sq2 " + 1*trQuestVarGet("temp"));
 	trUnitSelectClear();
 	xFreeDatabaseBlock(dTemp);
-	/*vector check = vector(x*2+4,10,z*2+4);
-	vector test = kbGetBlockPosition(temp);
-	*/
 	trUnitSelectClear();
 	trUnitSelect(""+temp);
 	trUnitTeleport(x*2+4,z*2+4);

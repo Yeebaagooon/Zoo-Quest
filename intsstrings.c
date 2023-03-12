@@ -1,7 +1,7 @@
 //---Controls
 //\Yeebaagooon\Zoo Quest\Test sound.mp3
 int QuickStart = 3;
-bool LOS = false;
+bool LOS = true;
 bool AlwaysWin = true;
 bool PlayCine = true;
 

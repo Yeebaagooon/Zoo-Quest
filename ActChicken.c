@@ -22,9 +22,20 @@ inactive
 		TutorialMode = false;
 		createChickenArea();
 		xsDisableSelf();
-		//replaceTerrainAboveHeightMax("ForestFloorPine", "GrassB", 0.0);
-		trLetterBox(false);
 		trUIFadeToColor(0,0,0,100,800,false);
+		xsEnableRule("C_Cine_000");
+		uiZoomToProto(""+ChickenProto);
+		uiLookAtProto(""+ChickenProto);
+		//replaceTerrainAboveHeightMax("ForestFloorPine", "GrassB", 0.0);
+	}
+}
+
+rule ChickenLanding
+highFrequency
+inactive
+{
+	if (trTime() > cActivationTime + 4) {
+		trLetterBox(false);
 		uiZoomToProto(""+ChickenProto);
 		uiLookAtProto(""+ChickenProto);
 		trDelayedRuleActivation("ResetBlackmap");
@@ -38,7 +49,7 @@ inactive
 		ColouredIconChat("1,0.5,0", ActIcon(Stage), "<u>" + ActName(Stage) + "</u>");
 		//ColouredIconChat("0.0,0.8,0.2", "icons\building norse shrine icon 64", "Interract with shrines using W.");
 		ColouredChat("0.0,0.8,0.2", "Chickens are tasty and made out of food.");
-		ColouredChat("0.0,0.8,0.2", "This probably needs a short cinematic.");
+		ColouredChat("0.0,0.8,0.2", "The hordes are coming.");
 		xsEnableRule("PlayMusic");
 		trQuestVarSet("Time", trTime());
 		PlayersDead = 0;
@@ -111,6 +122,7 @@ inactive
 			gadgetUnreal("GodPowers");
 		}
 		trSetCounterDisplay("You will be able to hold more relics as the act progresses");
+		xsDisableSelf();
 	}
 }
 
@@ -122,7 +134,7 @@ highFrequency
 		R5Wave(2*(PlayersActive-PlayersDead), "Militia", 3000, 2000);
 		xsEnableRule("ChickenWave1A");
 		playSound("\cinematics\04_in\armyarrive.wav");
-		trCounterAddTime("ChickenInfo", 320, 0, "<color={PlayerColor(2)}>Ring 1 super poacher</color>", 41);
+		trCounterAddTime("ChickenInfo", 330, 0, "<color={PlayerColor(2)}>Ring 1 super poacher</color>", 41);
 		trClearCounterDisplay();
 		xsDisableSelf();
 	}
@@ -144,7 +156,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(3*(PlayersActive-PlayersDead), "Toxotes", 1900, 1700);
+		R5Wave(2*(PlayersActive-PlayersDead), "Toxotes", 1900, 1700);
 		xsEnableRule("ChickenWave1C");
 		xsDisableSelf();
 	}
@@ -155,7 +167,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(4*(PlayersActive-PlayersDead), "Toxotes", 1900, 1700);
+		R5Wave(3*(PlayersActive-PlayersDead), "Toxotes", 1900, 1700);
 		R5Wave(4*(PlayersActive-PlayersDead), "Militia", 1800, 1600);
 		xsEnableRule("ChickenWave1D");
 		xsDisableSelf();
@@ -179,7 +191,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(6*(PlayersActive-PlayersDead), "Toxotes", 1900, 1600);
+		R5Wave(4*(PlayersActive-PlayersDead), "Toxotes", 1900, 1600);
 		xsEnableRule("ChickenWave1F");
 		xsDisableSelf();
 		for(p = 1; < cNumberNonGaiaPlayers){
@@ -198,7 +210,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(5*(PlayersActive-PlayersDead), "Spearman", 2000, 1700);
+		R5Wave(3*(PlayersActive-PlayersDead), "Spearman", 2000, 1700);
 		xsEnableRule("ChickenWave1G");
 		xsDisableSelf();
 	}
@@ -208,9 +220,9 @@ rule ChickenWave1G
 inactive
 highFrequency
 {
-	if (trTime() > cActivationTime + 30) {
-		R5Wave(5*(PlayersActive-PlayersDead), "Slinger", 2800, 1600);
-		R5Wave(5*(PlayersActive-PlayersDead), "Spearman", 2100, 1800);
+	if (trTime() > cActivationTime + 40) {
+		R5Wave(2*(PlayersActive-PlayersDead), "Slinger", 2800, 1600);
+		R5Wave(4*(PlayersActive-PlayersDead), "Spearman", 2100, 1800);
 		xsEnableRule("ChickenWave1H");
 		trClearCounterDisplay();
 		xsDisableSelf();
@@ -222,7 +234,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(8*(PlayersActive-PlayersDead), "Spearman", 2500, 2000);
+		R5Wave(4*(PlayersActive-PlayersDead), "Spearman", 2500, 2000);
 		xsEnableRule("ChickenWave1I");
 		xsDisableSelf();
 	}
@@ -233,7 +245,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(8*(PlayersActive-PlayersDead), "Slinger", 3500, 2000);
+		R5Wave(4*(PlayersActive-PlayersDead), "Slinger", 3500, 2000);
 		xsEnableRule("ChickenWave1Super");
 		xsDisableSelf();
 	}
@@ -327,7 +339,7 @@ highFrequency
 		R5Wave(2*(PlayersActive-PlayersDead), "Bella", 3900, 3600);
 		xsEnableRule("ChickenWave2A");
 		playSound("\cinematics\04_in\armyarrive.wav");
-		trCounterAddTime("ChickenInfo", 330, 0, "<color={PlayerColor(2)}>Ring 2 super poacher</color>", 43);
+		trCounterAddTime("ChickenInfo", 360, 0, "<color={PlayerColor(2)}>Ring 2 super poacher</color>", 43);
 		trClearCounterDisplay();
 		xsDisableSelf();
 	}
@@ -384,7 +396,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(6*(PlayersActive-PlayersDead), "Bogsveigir", 7500, 6000);
+		R5Wave(4*(PlayersActive-PlayersDead), "Bogsveigir", 7500, 6000);
 		xsEnableRule("ChickenWave2F");
 		xsDisableSelf();
 		for(p = 1; < cNumberNonGaiaPlayers){
@@ -400,8 +412,8 @@ rule ChickenWave2F
 inactive
 highFrequency
 {
-	if (trTime() > cActivationTime + 30) {
-		R5Wave(5*(PlayersActive-PlayersDead), "Monkey King", 8000, 6600);
+	if (trTime() > cActivationTime + 45) {
+		R5Wave(4*(PlayersActive-PlayersDead), "Monkey King", 8000, 6600);
 		xsEnableRule("ChickenWave2G");
 		xsDisableSelf();
 	}
@@ -412,8 +424,8 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(5*(PlayersActive-PlayersDead), "Bogsveigir", 8500, 7000);
-		R5Wave(8*(PlayersActive-PlayersDead), "Monkey King", 8700, 7200);
+		R5Wave(4*(PlayersActive-PlayersDead), "Bogsveigir", 8500, 7000);
+		R5Wave(4*(PlayersActive-PlayersDead), "Monkey King", 8700, 7200);
 		xsEnableRule("ChickenWave2H");
 		trClearCounterDisplay();
 		xsDisableSelf();
@@ -425,7 +437,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(12*(PlayersActive-PlayersDead), "Bella", 9000, 7000);
+		R5Wave(6*(PlayersActive-PlayersDead), "Bella", 9000, 7000);
 		xsEnableRule("ChickenWave2I");
 		xsDisableSelf();
 	}
@@ -436,7 +448,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
-		R5Wave(12*(PlayersActive-PlayersDead), "Bogsveigir", 9900, 7000);
+		R5Wave(6*(PlayersActive-PlayersDead), "Bogsveigir", 9900, 7000);
 		xsEnableRule("ChickenWave2Super");
 		xsDisableSelf();
 	}
@@ -448,7 +460,7 @@ highFrequency
 {
 	if (ActPart == 5) {
 		R5Wave(1, "Satyr", 3500, 2500);
-		R5Wave(8*(PlayersActive-PlayersDead), "Monkey King", 9800, 8000);
+		R5Wave(4*(PlayersActive-PlayersDead), "Monkey King", 9800, 8000);
 		modifyProtounitAbsolute("Wadjet Spit", cNumberNonGaiaPlayers, 1, 10);
 		xsDisableSelf();
 		playSound("\cinematics\04_in\armyarrive.wav");
