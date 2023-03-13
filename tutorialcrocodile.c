@@ -284,7 +284,7 @@ inactive
 				}
 			}
 			trUnitSelectByQV("P"+p+"Unit");
-			if((trUnitDead() == true) && (xGetBool(dPlayerData, xPlayerActive) == true) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0)){
+			if((trUnitAlive() == false) && (xGetBool(dPlayerData, xPlayerActive) == true) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0)){
 				trUnitSelectByQV("P"+p+"Unit");
 				trUnitChangeProtoUnit("Ragnorok SFX");
 				trUnitSelectByQV("P"+p+"Unit");
@@ -439,8 +439,8 @@ inactive
 										xUnitSelect(dEdibles, xUnitID);
 										trDamageUnit(1000);
 										xFreeDatabaseBlock(dEdibles);
-										xUnitSelect(dPoachers, xUnitID);
-										xFreeDatabaseBlock(dPoachers);
+										//xUnitSelect(dPoachers, xUnitID);
+										//xFreeDatabaseBlock(dPoachers);
 										xSetFloat(dPlayerData, xCrocFood, xGetFloat(dPlayerData, xCrocFood)+2);
 										if(trCurrentPlayer() == p){
 											playSound("crocsnap.wav");
@@ -456,8 +456,8 @@ inactive
 										xUnitSelect(dEdibles, xUnitID);
 										trDamageUnit(1000);
 										xFreeDatabaseBlock(dEdibles);
-										xUnitSelect(dPoachers, xUnitID);
-										xFreeDatabaseBlock(dPoachers);
+										//xUnitSelect(dPoachers, xUnitID);
+										//xFreeDatabaseBlock(dPoachers);
 										if(trCurrentPlayer() == p){
 											playSound("crocsnap.wav");
 										}
@@ -471,8 +471,8 @@ inactive
 										xUnitSelect(dEdibles, xUnitID);
 										trDamageUnit(1000);
 										xFreeDatabaseBlock(dEdibles);
-										xUnitSelect(dPoachers, xUnitID);
-										xFreeDatabaseBlock(dPoachers);
+										//xUnitSelect(dPoachers, xUnitID);
+										//xFreeDatabaseBlock(dPoachers);
 										if(trCurrentPlayer() == p){
 											playSound("crocsnap.wav");
 										}
@@ -486,8 +486,8 @@ inactive
 										xUnitSelect(dEdibles, xUnitID);
 										trDamageUnit(1000);
 										xFreeDatabaseBlock(dEdibles);
-										xUnitSelect(dPoachers, xUnitID);
-										xFreeDatabaseBlock(dPoachers);
+										//xUnitSelect(dPoachers, xUnitID);
+										//xFreeDatabaseBlock(dPoachers);
 										xSetFloat(dPlayerData, xCrocFood, xGetFloat(dPlayerData, xCrocFood)+3);
 										if(trCurrentPlayer() == p){
 											playSound("crocsnap.wav");

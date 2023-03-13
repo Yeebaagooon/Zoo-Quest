@@ -1,6 +1,6 @@
 //---Controls
 //\Yeebaagooon\Zoo Quest\Test sound.mp3
-int QuickStart = 4;
+int QuickStart = 5;
 bool LOS = true;
 bool AlwaysWin = true;
 bool PlayCine = true;
@@ -31,19 +31,14 @@ and of course the cost needs to be set to 0
 
 since kbGetBlockPosition requires the unit name
 instead of the id
-
+ONLY HAVE ONE FREEDBBLOCK
 
 [BUG LIST]
 tile for minigame is *2 for vector
-S4 civ name level
+
 deer tp vector*2 end mg
 
 S3 super
-S4 uber
-S4 poachers dead just on eat?
-
-S5 R for lure to conv relics to mines
-30s recharge for 5x E
 
 
 
@@ -51,7 +46,6 @@ Difficulty
 Data
 Persistent bonus
 Act Skip
-S5 Cine
 End Cine
 
 

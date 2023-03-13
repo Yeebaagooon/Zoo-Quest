@@ -117,6 +117,8 @@ int dEnemyCollision = 0;
 int dMines = 0;
 int xMineSFX = 0;
 
+int dBurner = 0;
+
 rule initialise_spy_database
 active
 highFrequency
@@ -273,6 +275,9 @@ highFrequency
 	xUnitID = xInitAddInt(dMines, "id", -1);
 	xOwner = xInitAddInt(dMines, "owner", 0);
 	xMineSFX = xInitAddInt(dMines, "sfxid", -1);
+	
+	dBurner = xInitDatabase("burn");
+	xUnitID = xInitAddInt(dBurner, "id", -1);
 }
 
 /*

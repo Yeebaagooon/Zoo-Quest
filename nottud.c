@@ -2742,7 +2742,6 @@ void SpawnCrocPoacher3(int num = 0){
 			}
 			ABORT = ABORT+1;
 			if(ABORT > 200){
-				debugLog("Error sentinel");
 				break;
 			}
 		}
@@ -2789,7 +2788,52 @@ void SpawnCrocPoacher4(int num = 0){
 			}
 			ABORT = ABORT+1;
 			if(ABORT > 200){
-				debugLog("Error peltast");
+				break;
+			}
+		}
+	}
+}
+
+void UberCrocPoacher(int num = 0){
+	int temp = 0;
+	int ABORT = 0;
+	vector spawn = vector(0,0,0);
+	vector EP = EndPoint*2;
+	int allow = 0;
+	if(InMinigame == false){
+		while(num > 0){
+			trQuestVarSetFromRand("temp", 1, xGetDatabaseCount(dRiver));
+			xSetPointer(dRiver, 1*trQuestVarGet("temp"));
+			spawn = xGetVector(dRiver, xRiverLoc);
+			temp = trGetNextUnitScenarioNameNumber();
+			UnitCreate(cNumberNonGaiaPlayers, "Cinematic Block", xsVectorGetX(spawn), xsVectorGetZ(spawn), 0);
+			if((distanceBetweenVectors(spawn, EP, true) > 1000)){
+				for(p = 1; < cNumberNonGaiaPlayers){
+					xSetPointer(dPlayerData, p);
+					if((distanceBetweenVectors(spawn, kbGetBlockPosition(""+xGetInt(dPlayerData, xPlayerUnitID)),true) < 2800) && (xGetBool(dPlayerData, xPlayerActive) == true)){
+						allow = 1;
+					}
+				}
+				if(allow == 0){
+					trUnitSelectClear();
+					trUnitSelect(""+temp);
+					trUnitChangeProtoUnit("Siege Ship Egyptian");
+					trUnitSelectClear();
+					trUnitSelect(""+temp);
+					xAddDatabaseBlock(dPoachers, true);
+					xSetInt(dPoachers, xUnitID, temp);
+					xSetString(dPoachers, xPoacherType, "Siege Ship Egyptian");
+					xSetInt(dPoachers, xMoveTime, 0);
+					num = num-1;
+					PoachersTarget = PoachersTarget+1;
+				}
+			}
+			else if(allow == 1){
+				allow = 0;
+			}
+			ABORT = ABORT+1;
+			if(ABORT > 200){
+				debugLog("ErroKebenit");
 				break;
 			}
 		}

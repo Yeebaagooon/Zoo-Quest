@@ -95,6 +95,14 @@ highFrequency
 							}
 						}
 					}
+					case 5:
+					{
+						ColouredChat("1,1,0", "<u>E:</u> All towers shoot");
+						ColouredChat("0.8,0.8,0", "All towers fire at the cursor, ignoring range");
+						ColouredChat("0.8,0.8,0", "After you expend your charges, they recharge");
+						ColouredChat("1,1,0", "<u>R:</u> Convert relics");
+						ColouredChat("0.8,0.8,0", "Changes nearby relics to landmines");
+					}
 				}
 			}
 		}

@@ -95,9 +95,15 @@ inactive
 					SpawnCrocPoacher3(1);
 				}
 				if(1*trQuestVarGet("AllowS4Uber") > 0){
-					trOverlayText("Uber Poachers Spawning... run!", 5.0,-1,-1,600);
+					trOverlayText("Uber Poacher Spawning... run!", 5.0,-1,-1,600);
 					playSound("\cinematics\04_in\armyarrive.wav");
-					//Uber poacher
+					UberCrocPoacher(1);
+					trQuestVarModify("NextPoacherSpawn", "-", 30);
+				}
+				if(1*trQuestVarGet("FirstBuffer") == 0){
+					trQuestVarModify("NextPoacherSpawn", "+", 40);
+					trQuestVarSet("FirstBuffer", 1);
+					SpawnEdible(2);
 				}
 			}
 		}
@@ -130,10 +136,40 @@ inactive
 		if(xGetDatabaseCount(dMissiles) > 0){
 			DoMissile();
 		}
+		if(xGetDatabaseCount(dBurner) > 0){
+			for(a = xGetDatabaseCount(dBurner); > 0){
+				xDatabaseNext(dBurner);
+				if(trCountUnitsInArea(""+xGetInt(dBurner, xUnitID),0, "Palm", 2) > 0){
+					trUnitSelectClear();
+					xUnitSelect(dBurner, xUnitID);
+					trUnitChangeProtoUnit("Palm");
+					tempV = kbGetBlockPosition(""+xGetInt(dBurner, xUnitID));
+					temp = trGetNextUnitScenarioNameNumber();
+					UnitCreateV(0, "Dwarf", tempV);
+					trUnitSelectClear();
+					trUnitSelect(""+temp);
+					trUnitChangeProtoUnit("Meteor Impact Ground");
+					temp = trGetNextUnitScenarioNameNumber();
+					UnitCreateV(0, "Dwarf", tempV);
+					trUnitSelectClear();
+					trUnitSelect(""+temp);
+					trUnitChangeProtoUnit("Underworld Smoke");
+					playSound("meteorbighit.wav");
+					playSound("forestfirebirth.wav");
+					xAddDatabaseBlock(dDestroyMe, true);
+					xSetInt(dDestroyMe, xDestroyName, temp);
+					xSetInt(dDestroyMe, xDestroyTime, trTimeMS()+6000);
+					trUnitSelectClear();
+					xUnitSelect(dBurner, xUnitID);
+					trTechInvokeGodPower(0, "Forest Fire", vector(0,0,0), vector(0,0,0));
+					xFreeDatabaseBlock(dBurner);
+				}
+			}
+		}
 		for(a = xGetDatabaseCount(dPoachers); > 0){
 			xDatabaseNext(dPoachers);
 			xUnitSelect(dPoachers, xUnitID);
-			if(trUnitDead() == true){
+			if(trUnitAlive() == false){
 				xFreeDatabaseBlock(dPoachers);
 				PoachersDead = PoachersDead+1;
 			}
@@ -460,42 +496,6 @@ minInterval 5
 	}
 }
 
-rule CrocExit
-inactive
-highFrequency
-{
-	trCounterAbort("poachtimer");
-	xsDisableRule("CrocActLoops");
-	xsDisableRule("CrocAllDead");
-	xsDisableRule("CrocPoacherMovement");
-	xsDisableRule("CrocEndZoneSee");
-	xsDisableRule("CrocLeave");
-	xsDisableRule("CrocTutorialLoops");
-	xsDisableRule("CrocMinigameDetect");
-	xsDisableRule("CrocBonus");
-	xsDisableRule("MGGOCroc");
-	xsDisableRule("CrocPoacherTimer");
-	xsDisableRule("CrocMechanicLoops");
-	xsDisableRule("CrocFoodTimer");
-	xsDisableRule("CrocMinigameEnd");
-	for(p=1 ; < cNumberNonGaiaPlayers){
-		xSetPointer(dPlayerData, p);
-		trUnitSelectByQV("P"+p+"Unit");
-		trUnitChangeProtoUnit("Ragnorok SFX");
-		trUnitSelectByQV("P"+p+"Unit");
-		trUnitDestroy();
-		trUnitSelectClear();
-		trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
-		trUnitChangeProtoUnit("Hero Death");
-		trCounterAbort("sprinttooltip"+p);
-		trCounterAbort("CrocC"+p);
-		trCounterAbort("CrocR"+p);
-	}
-	trClearCounterDisplay();
-	xsEnableRule("ScoreScreenStart");
-	xsDisableSelf();
-}
-
 rule CrocMinigameDetect
 highFrequency
 inactive
@@ -671,4 +671,41 @@ highFrequency
 		trFadeOutMusic(3);
 		xsEnableRule("PlayMusic");
 	}
+}
+
+rule CrocExit
+inactive
+highFrequency
+{
+	trCounterAbort("poachtimer");
+	xsDisableRule("CrocActLoops");
+	xsDisableRule("CrocAllDead");
+	xsDisableRule("CrocPoacherMovement");
+	xsDisableRule("CrocEndZoneSee");
+	xsDisableRule("CrocLeave");
+	xsDisableRule("CrocTutorialLoops");
+	xsDisableRule("CrocMinigameDetect");
+	xsDisableRule("CrocBonus");
+	xsDisableRule("MGGOCroc");
+	xsDisableRule("CrocPoacherTimer");
+	xsDisableRule("CrocMechanicLoops");
+	xsDisableRule("CrocFoodTimer");
+	xsDisableRule("CrocMinigameEnd");
+	for(p=1 ; < cNumberNonGaiaPlayers){
+		xSetPointer(dPlayerData, p);
+		trUnitSelectByQV("P"+p+"Unit");
+		trUnitChangeProtoUnit("Ragnorok SFX");
+		trUnitSelectByQV("P"+p+"Unit");
+		trUnitDestroy();
+		trUnitSelectClear();
+		trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
+		trUnitChangeProtoUnit("Hero Death");
+		trCounterAbort("sprinttooltip"+p);
+		trCounterAbort("CrocC"+p);
+		trCounterAbort("CrocR"+p);
+	}
+	trClearCounterDisplay();
+	xResetDatabase(dBurner);
+	xsEnableRule("ScoreScreenStart");
+	xsDisableSelf();
 }

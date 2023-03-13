@@ -45,6 +45,10 @@ void ShootProjectile(vector dir = vector(0,0,0), vector startpos = vector(0,0,0)
 	xSetInt(dIncomingMissiles, xMissileAnim, anim);
 	xSetInt(dIncomingMissiles, xIMissileDmg, dmg);
 	xSetInt(dIncomingMissiles, xIMissileTime, time);
+	if(protounit == "Meteorite"){
+		xAddDatabaseBlock(dBurner, true);
+		xSetInt(dBurner, xUnitID, temp);
+	}
 }
 
 rule DestroyConstant
@@ -990,6 +994,16 @@ void NewRelic(int id = 0, int max = 0, int forcelevel = 0){
 		if(level == 4){
 			trQuestVarSetFromRand("temp", 10, 15, true);
 		}
+		if(level == 5){
+			trQuestVarSetFromRand("temp", 16, 20, true);
+		}
+		if(level == 6){
+			trQuestVarSetFromRand("temp", 21, 25, true);
+		}
+		if(level == 7){
+			trQuestVarSetFromRand("temp", 26, 40, true);
+		}
+		
 	}
 	if(type == RELIC_HP){
 		trQuestVarSetFromRand("temp", 3, 10, true);
@@ -999,35 +1013,30 @@ void NewRelic(int id = 0, int max = 0, int forcelevel = 0){
 		if(level == 3){
 			trQuestVarSetFromRand("temp", 21, 30, true);
 		}
-		if(level == 3){
+		if(level == 4){
 			trQuestVarSetFromRand("temp", 31, 50, true);
 		}
+		if(level == 5){
+			trQuestVarSetFromRand("temp", 51, 65, true);
+		}
+		if(level == 6){
+			trQuestVarSetFromRand("temp", 66, 80, true);
+		}
+		if(level == 7){
+			trQuestVarSetFromRand("temp", 81, 100, true);
+		}
+		
 		trQuestVarModify("temp", "*", 10);
 	}
 	if(type == RELIC_PROJ_SPEED){
 		trQuestVarSetFromRand("temp", 1, 2, true);
-		if(level == 2){
-			trQuestVarSet("temp", 3);
-		}
-		if(level == 3){
-			trQuestVarSet("temp", 4);
-		}
-		if(level == 4){
-			trQuestVarSet("temp", 5);
+		if(level >= 2){
+			trQuestVarSet("temp", 1*trQuestVarGet("temp")+level);
 		}
 		trQuestVarModify("temp", "*", 1);
 	}
 	if(type == RELIC_CHICKEN_SPEED){
-		trQuestVarSet("temp", 1);
-		if(level == 2){
-			trQuestVarSet("temp", 2);
-		}
-		if(level == 3){
-			trQuestVarSet("temp", 3);
-		}
-		if(level == 4){
-			trQuestVarSet("temp", 4);
-		}
+		trQuestVarSet("temp", level);
 	}
 	if(type == RELIC_RANGE){
 		trQuestVarSetFromRand("temp", 1, 2, true);
@@ -1039,6 +1048,15 @@ void NewRelic(int id = 0, int max = 0, int forcelevel = 0){
 		}
 		if(level == 4){
 			trQuestVarSetFromRand("temp", 7, 8, true);
+		}
+		if(level == 5){
+			trQuestVarSetFromRand("temp", 9, 10, true);
+		}
+		if(level == 6){
+			trQuestVarSetFromRand("temp", 11, 12, true);
+		}
+		if(level == 7){
+			trQuestVarSetFromRand("temp", 13, 15, true);
 		}
 	}
 	if(type == RELIC_TOWER){
@@ -1052,6 +1070,15 @@ void NewRelic(int id = 0, int max = 0, int forcelevel = 0){
 		if(level == 4){
 			trQuestVarSetFromRand("temp", 9, 14, true);
 		}
+		if(level == 5){
+			trQuestVarSetFromRand("temp", 15, 17, true);
+		}
+		if(level == 6){
+			trQuestVarSetFromRand("temp", 18, 20, true);
+		}
+		if(level == 7){
+			trQuestVarSetFromRand("temp", 21, 25, true);
+		}
 	}
 	if(type == RELIC_CHICKEN_HP){
 		trQuestVarSetFromRand("temp", 1, 7, true);
@@ -1063,6 +1090,15 @@ void NewRelic(int id = 0, int max = 0, int forcelevel = 0){
 		}
 		if(level == 4){
 			trQuestVarSetFromRand("temp", 20, 30, true);
+		}
+		if(level == 5){
+			trQuestVarSetFromRand("temp", 31, 41, true);
+		}
+		if(level == 6){
+			trQuestVarSetFromRand("temp", 42, 50, true);
+		}
+		if(level == 7){
+			trQuestVarSetFromRand("temp", 51, 66, true);
 		}
 		trQuestVarModify("temp", "*", 15);
 	}
@@ -1077,6 +1113,15 @@ void NewRelic(int id = 0, int max = 0, int forcelevel = 0){
 		if(level == 4){
 			trQuestVarSetFromRand("temp", 8, 10, true);
 		}
+		if(level == 5){
+			trQuestVarSetFromRand("temp", 11, 12, true);
+		}
+		if(level == 6){
+			trQuestVarSetFromRand("temp", 13, 15, true);
+		}
+		if(level == 7){
+			trQuestVarSetFromRand("temp", 16, 20, true);
+		}
 	}
 	if(type == RELIC_TOWER_HEAL){
 		trQuestVarSetFromRand("temp", 1, 2, true);
@@ -1088,6 +1133,15 @@ void NewRelic(int id = 0, int max = 0, int forcelevel = 0){
 		}
 		if(level == 4){
 			trQuestVarSetFromRand("temp", 8, 10, true);
+		}
+		if(level == 5){
+			trQuestVarSetFromRand("temp", 11, 13, true);
+		}
+		if(level == 6){
+			trQuestVarSetFromRand("temp", 14, 18, true);
+		}
+		if(level == 7){
+			trQuestVarSetFromRand("temp", 20, 30, true);
 		}
 	}
 	stat = trQuestVarGet("temp");

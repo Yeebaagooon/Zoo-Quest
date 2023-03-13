@@ -339,15 +339,31 @@ highFrequency
 					}
 				}
 				if(Stage == 5){
-					//rotate to L, for loop shoot
-					baseCos = 0.965926; //cos15
-					baseSin = 0.258819; //sin15
-					//calculator for sin and cos(angle) required
-					//so for 15 degrees and 5 projs our angles are 30,15,0,-15-,-30, so set to cos/sin -30 then loop for +15
-					dir = rotationMatrix(dir, 0.866025, -0.5); //dir, -30cos, -30sin
-					for(a = 1; < 6){
-						ShootProjectile(dir, closevector, "Ball of Fire", "Wadjet Spit", 0, 20, 6000);
-						dir = rotationMatrix(dir, baseCos, baseSin);
+					//FOR PELTAST
+					if((ChickenLevel == 2) || (ChickenLevel == 3)){
+						//rotate to L, for loop shoot
+						baseCos = 0.965926; //cos15
+						baseSin = 0.258819; //sin15
+						//calculator for sin and cos(angle) required
+						//so for 15 degrees and 5 projs our angles are 30,15,0,-15-,-30, so set to cos/sin -30 then loop for +15
+						dir = rotationMatrix(dir, 0.866025, -0.5); //dir, -30cos, -30sin
+						for(a = 1; < 6){
+							ShootProjectile(dir, closevector, "Ball of Fire", "Wadjet Spit", 0, 20, 6000);
+							dir = rotationMatrix(dir, baseCos, baseSin);
+						}
+					}
+					//FOR SATYR
+					if((ChickenLevel == 4) || (ChickenLevel == 5)){
+						//rotate to L, for loop shoot
+						baseCos = 0.965926; //cos15
+						baseSin = 0.258819; //sin15
+						//calculator for sin and cos(angle) required
+						//so for 15 degrees and 5 projs our angles are 30,15,0,-15-,-30, so set to cos/sin -30 then loop for +15
+						dir = rotationMatrix(dir, 0.866025, -0.5); //dir, -30cos, -30sin
+						for(a = 1; < 6){
+							ShootProjectile(dir, closevector, "Ball of Fire", "Wadjet Spit", 0, 40, 6000);
+							dir = rotationMatrix(dir, baseCos, baseSin);
+						}
 					}
 				}
 			}
@@ -427,6 +443,56 @@ highFrequency
 					else{
 						ShootProjectile(dir, closevector, "Ball of Fire", "Wadjet Spit", 0, 25, 8000);
 					}
+				}
+			}
+			case kbGetProtoUnitID("Ballista Shot"):
+			{
+				slingvector = kbGetBlockPosition(""+i);
+				trUnitSelectClear();
+				trUnitSelectByID(id);
+				trUnitDestroy();
+				dir = vector(0,0,0);
+				closevector = vector(0,0,0);
+				target = vector(0,0,0);
+				closest = 10000;
+				closestid = 0;
+				//cycle through all poachers to find the closest
+				for(a=xGetDatabaseCount(dPoachers) ; > 0){
+					xDatabaseNext(dPoachers);
+					dir = kbGetBlockPosition(""+xGetInt(dPoachers, xUnitID));
+					xUnitSelect(dPoachers, xUnitID);
+					if(trUnitDead() == false){
+						if(distanceBetweenVectors(dir, slingvector, true) < closest){
+							closest = distanceBetweenVectors(dir, slingvector, true);
+							closestid = xGetInt(dPoachers, xUnitID);
+						}
+					}
+				}
+				closevector = kbGetBlockPosition(""+closestid);
+				xsSetContextPlayer(cNumberNonGaiaPlayers);
+				dest = kbGetBlockPosition(""+trGetUnitScenarioNameNumber(kbUnitGetTargetUnitID(kbGetBlockID(""+closestid))));
+				xsSetContextPlayer(0);
+				dir = xsVectorNormalize(dest-closevector);
+				for(a = xGetDatabaseCount(dPoachers); > 0){
+					xDatabaseNext(dPoachers);
+					if(xGetInt(dPoachers, xUnitID) == closestid){
+						unitcheck = xGetString(dPoachers, xPoacherType);
+						continue;
+					}
+				}
+				if(unitcheck == "Siege Ship Egyptian"){
+					IGUnit = true;
+					IGName = closestid;
+				}
+				//rotate to L, for loop shoot
+				baseCos = 0.965926; //cos15
+				baseSin = 0.258819; //sin15
+				//calculator for sin and cos(angle) required
+				//so for 15 degrees and 5 projs our angles are 30,15,0,-15-,-30, so set to cos/sin -30 then loop for +15
+				dir = rotationMatrix(dir, 0.866025, -0.5); //dir, -30cos, -30sin
+				for(a = 1; < 6){
+					ShootProjectile(dir, closevector, "Meteorite", "Wadjet Spit", 6, 100, 6500);
+					dir = rotationMatrix(dir, baseCos, baseSin);
 				}
 			}
 			case kbGetProtoUnitID("Tower"):

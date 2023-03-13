@@ -55,7 +55,7 @@ void ProcessRhinoFence(int count = 5){
 	for (x=xsMin(count, xGetDatabaseCount(dFences)); > 0) {
 		xDatabaseNext(dFences);
 		xUnitSelect(dFences, xUnitID);
-		if(trUnitDead() == true){
+		if(trUnitAlive() == false){
 			if(1*trQuestVarGet("Segment"+xGetInt(dFences, xSegment)+"Broken") == 0){
 				trQuestVarModify("Segment"+xGetInt(dFences, xSegment)+"Broken", "+", 1);
 				FencesDone = FencesDone+1;
@@ -81,7 +81,7 @@ void PoacherKillTrack(int count = 5){
 	for (x=xsMin(count, xGetDatabaseCount(dPoachers)); > 0) {
 		xDatabaseNext(dPoachers);
 		xUnitSelect(dPoachers, xUnitID);
-		if(trUnitDead() == true){
+		if(trUnitAlive() == false){
 			PoachersDead = PoachersDead+1;
 			xFreeDatabaseBlock(dPoachers);
 		}
@@ -514,7 +514,7 @@ highFrequency
 		if(xGetBool(dPlayerData, xPlayerActive)){
 			trVectorQuestVarSet("P"+p+"PosMG", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
 			trVectorQuestVarSet("P"+p+"PosMG", trVectorQuestVarGet("P"+p+"PosMG")/2);
-			if((trVectorQuestVarGetX("P"+p+"PosMG") >= xsVectorGetX(StageVector)-2) && (trVectorQuestVarGetX("P"+p+"PosMG") <= xsVectorGetX(StageVector)+2) && (trVectorQuestVarGetZ("P"+p+"PosMG") >= xsVectorGetZ(StageVector)-2) && (trVectorQuestVarGetZ("P"+p+"PosMG") <= xsVectorGetZ(StageVector)+2)){
+			if((trVectorQuestVarGetX("P"+p+"PosMG") >= xsVectorGetX(StageVector)-3) && (trVectorQuestVarGetX("P"+p+"PosMG") <= xsVectorGetX(StageVector)+3) && (trVectorQuestVarGetZ("P"+p+"PosMG") >= xsVectorGetZ(StageVector)-3) && (trVectorQuestVarGetZ("P"+p+"PosMG") <= xsVectorGetZ(StageVector)+3)){
 				xSetFloat(dPlayerData, xRhinoChargeTime, 30);
 				modifyProtounitAbsolute(""+RhinoProto, p, 9, 1);
 				PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is playing");

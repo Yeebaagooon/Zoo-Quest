@@ -26,6 +26,8 @@ highFrequency
 	trEventSetHandler(41, "ChickenWave1End");
 	trEventSetHandler(42, "ChickenWave2");
 	trEventSetHandler(43, "ChickenWave2End");
+	trEventSetHandler(44, "ChickenWave3");
+	trEventSetHandler(45, "ChickenWave3End");
 	trEventSetHandler(46, "CineGo");
 	xsDisableSelf();
 }

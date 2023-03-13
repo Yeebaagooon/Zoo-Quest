@@ -10,7 +10,7 @@ inactive
 		xsDisableRule("CrocodileTutorialDone");
 		xsDisableRule("Jump");
 		xsDisableRule("JumpEnd");
-		QuickStart = 0;
+		//QuickStart = 0;
 		NewDestroyNumber = trGetNextUnitScenarioNameNumber()-1;
 		TutorialMode = true;
 		Stage = 5;
@@ -266,7 +266,7 @@ void ProcessTowers(int count = 1) {
 			}
 		}
 		xUnitSelect(dTowers, xUnitID);
-		if(trUnitDead() == true){
+		if(trUnitAlive() == false){
 			for(a = xGetDatabaseCount(dEnemyCollision); > 0){
 				xDatabaseNext(dEnemyCollision);
 				if(xGetInt(dEnemyCollision, xUnitID) == xGetInt(dTowers, xUnitID)){
@@ -275,7 +275,7 @@ void ProcessTowers(int count = 1) {
 					break;
 				}
 			}
-			xFreeDatabaseBlock(dTowers);
+			//xFreeDatabaseBlock(dTowers);
 		}
 	}
 }
@@ -321,9 +321,9 @@ void ProcessEnemy(int count = 1) {
 			trUnitMoveToPoint(xsVectorGetX(MapCentre),1,xsVectorGetZ(MapCentre),-1,true);
 		}
 		xUnitSelect(dEnemies, xUnitID);
-		if(trUnitDead() == true){
+		if(trUnitAlive() == false){
 			pos = kbGetBlockPosition(""+xGetInt(dEnemies, xUnitID));
-			if(iModulo(10, trTimeMS()) == 0){
+			if(iModulo((10+cNumberNonGaiaPlayers), trTimeMS()) == 0){
 				temp = trGetNextUnitScenarioNameNumber();
 				UnitCreate(1, "Cinematic Block", xsVectorGetX(pos), xsVectorGetZ(pos), 0);
 				trUnitSelectClear();
@@ -333,7 +333,7 @@ void ProcessEnemy(int count = 1) {
 				//[THIS MAY CAUSE A BUG]
 				break;
 			}
-			xFreeDatabaseBlock(dEnemies);
+			//xFreeDatabaseBlock(dEnemies);
 		}
 		trUnitSelectClear();
 	}
@@ -508,7 +508,7 @@ inactive
 				}
 			}
 			trUnitSelectByQV("P"+p+"Unit");
-			if((trUnitDead() == true) && (xGetBool(dPlayerData, xPlayerActive) == true) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0)){
+			if((trUnitAlive() == false) && (xGetBool(dPlayerData, xPlayerActive) == true) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0)){
 				trUnitSelectByQV("P"+p+"Unit");
 				trUnitChangeProtoUnit("Ragnorok SFX");
 				trUnitSelectByQV("P"+p+"Unit");

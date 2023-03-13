@@ -437,7 +437,7 @@ inactive
 			if(xGetInt(dPlayerData, xTarget) > 0){
 				trUnitSelectClear();
 				trUnitSelect(""+xGetInt(dPlayerData, xTarget));
-				if((trUnitPercentDamaged() > 0) || (trUnitDead())){
+				if((trUnitPercentDamaged() > 0) || (trUnitAlive() == false)){
 					xUnitSelect(dPlayerData, xTarget);
 					trUnitConvert(p);
 					trMutateSelected(kbGetProtoUnitID("Transport Ship Greek"));
@@ -604,7 +604,7 @@ inactive
 				}
 			}
 			trUnitSelectByQV("P"+p+"Unit");
-			if((trUnitDead() == true) && (xGetBool(dPlayerData, xPlayerActive) == true) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0)){
+			if((trUnitAlive() == false) && (xGetBool(dPlayerData, xPlayerActive) == true) && (1*trQuestVarGet("P"+p+"DoneTutorial") == 0)){
 				trUnitSelectByQV("P"+p+"Unit");
 				trUnitChangeProtoUnit("Ragnorok SFX");
 				trUnitSelectByQV("P"+p+"Unit");
