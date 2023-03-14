@@ -367,6 +367,82 @@ highFrequency
 					}
 				}
 			}
+			case kbGetProtoUnitID("Manticore Barb"):
+			{
+				slingvector = kbGetBlockPosition(""+i);
+				trUnitSelectClear();
+				trUnitSelectByID(id);
+				trUnitDestroy();
+				dir = vector(0,0,0);
+				closevector = vector(0,0,0);
+				target = vector(0,0,0);
+				closest = 10000;
+				closestid = 0;
+				//cycle through all poachers to find the closest
+				for(a=xGetDatabaseCount(dEnemies) ; > 0){
+					xDatabaseNext(dEnemies);
+					dir = kbGetBlockPosition(""+xGetInt(dEnemies, xUnitID));
+					xUnitSelect(dEnemies, xUnitID);
+					if(trUnitDead() == false){
+						if(distanceBetweenVectors(dir, slingvector, true) < closest){
+							closest = distanceBetweenVectors(dir, slingvector, true);
+							closestid = xGetInt(dEnemies, xUnitID);
+						}
+					}
+				}
+				closevector = kbGetBlockPosition(""+closestid);
+				xsSetContextPlayer(cNumberNonGaiaPlayers);
+				dest = kbGetBlockPosition(""+trGetUnitScenarioNameNumber(kbUnitGetTargetUnitID(kbGetBlockID(""+closestid))));
+				xsSetContextPlayer(0);
+				dir = xsVectorNormalize(dest-closevector);
+				//FOR PELTAST
+				//rotate to L, for loop shoot
+				baseCos = 0.965926; //cos5
+				baseSin = 0.996195; //sin5
+				dir = rotationMatrix(dir, 0.996194, -0.087156); //dir, -5cos, -5sin
+				for(a = 1; < 4){
+					ShootProjectile(dir, closevector, "Ball of Fire", "Wadjet Spit", 0, 80, 6000);
+					dir = rotationMatrix(dir, baseCos, baseSin);
+				}
+			}
+			case kbGetProtoUnitID("Ball of fire Prometheus"):
+			{
+				slingvector = kbGetBlockPosition(""+i);
+				trUnitSelectClear();
+				trUnitSelectByID(id);
+				trUnitDestroy();
+				dir = vector(0,0,0);
+				closevector = vector(0,0,0);
+				target = vector(0,0,0);
+				closest = 10000;
+				closestid = 0;
+				//cycle through all poachers to find the closest
+				for(a=xGetDatabaseCount(dEnemies) ; > 0){
+					xDatabaseNext(dEnemies);
+					dir = kbGetBlockPosition(""+xGetInt(dEnemies, xUnitID));
+					xUnitSelect(dEnemies, xUnitID);
+					if(trUnitDead() == false){
+						if(distanceBetweenVectors(dir, slingvector, true) < closest){
+							closest = distanceBetweenVectors(dir, slingvector, true);
+							closestid = xGetInt(dEnemies, xUnitID);
+						}
+					}
+				}
+				closevector = kbGetBlockPosition(""+closestid);
+				xsSetContextPlayer(cNumberNonGaiaPlayers);
+				dest = kbGetBlockPosition(""+trGetUnitScenarioNameNumber(kbUnitGetTargetUnitID(kbGetBlockID(""+closestid))));
+				xsSetContextPlayer(0);
+				dir = xsVectorNormalize(dest-closevector);
+				//FOR PELTAST
+				//rotate to L, for loop shoot
+				baseCos = 0.965926; //cos15
+				baseSin = 0.258819; //sin15
+				dir = rotationMatrix(dir, 0.996194, -0.087156); //dir, -5cos, -5sin
+				for(a = 1; < 8){
+					ShootProjectile(dir, closevector, "Ball of Fire", "Wadjet Spit", 0, 100, 6000);
+					dir = rotationMatrix(dir, baseCos, baseSin);
+				}
+			}
 			case kbGetProtoUnitID("Arrow Flaming"):
 			{
 				slingvector = kbGetBlockPosition(""+i);

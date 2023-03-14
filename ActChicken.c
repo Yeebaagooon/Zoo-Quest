@@ -157,7 +157,7 @@ inactive
 		modifyProtounitAbsolute("Fenris Wolf", cNumberNonGaiaPlayers, 0, 3000);
 		modifyProtounitAbsolute("Fenris Wolf", cNumberNonGaiaPlayers, 27, 160);
 		
-		trTechSetStatus(cNumberNonGaiaPlayers, 825, 4);
+		trTechSetStatus(cNumberNonGaiaPlayers, 500, 4);
 		modifyProtounitAbsolute("Titan Prometheus", cNumberNonGaiaPlayers, 9, 0);
 		
 		if(QuickStart == 0){
@@ -577,6 +577,7 @@ highFrequency
 {
 	if(ActPart == 6){
 		R5Wave(8*(PlayersActive-PlayersDead), "Bella", 12000, 10000);
+		//R5Wave(1, "Manticore", 12000, 10000);
 		xsEnableRule("ChickenWave3A");
 		playSound("\cinematics\04_in\armyarrive.wav");
 		trClearCounterDisplay();
@@ -591,6 +592,7 @@ highFrequency
 {
 	if (trTime() > cActivationTime + 30) {
 		R5Wave(2*(PlayersActive-PlayersDead), "White Tiger", 12000, 10000);
+		//R5Wave(1, "Titan Prometheus", 12000, 10000);
 		xsEnableRule("ChickenWave3B");
 		xsDisableSelf();
 	}
@@ -689,11 +691,11 @@ highFrequency
 {
 	if (trTime() > cActivationTime + 40) {
 		R5Wave(6*(PlayersActive-PlayersDead), "Manticore", 16000, 7000);
-		R5Wave(1*(PlayersActive-PlayersDead), "Satyr", 16000, 7000);
+		R5Wave(1*(PlayersActive-PlayersDead), "Fenris Wolf", 16000, 7000);
 		xsEnableRule("ChickenWave3Super");
 		for(p = 1; < cNumberNonGaiaPlayers){
 			trModifyProtounit(ChickenProto, p, 5, 1);
-			ColouredChatToPlayer(p, "1,0.5,0", "<u>Relic hold capacity increased!</u>");
+			ColouredChatToPlayer(p, "1,0.5,0", "<u>Relic hold capacity increased to maximum!</u>");
 		}
 		ChickenLevel = 7;
 		playSound("ageadvance.wav");
