@@ -31,7 +31,8 @@ inactive
 		createChickenArea();
 		xsDisableSelf();
 		trUIFadeToColor(0,0,0,100,800,false);
-		xsEnableRule("C_Cine_000");
+		//xsEnableRule("C_Cine_000");
+		xsEnableRule("ChickenLanding");
 		uiZoomToProto(""+ChickenProto);
 		uiLookAtProto(""+ChickenProto);
 		//replaceTerrainAboveHeightMax("ForestFloorPine", "GrassB", 0.0);
@@ -91,10 +92,10 @@ inactive
 			trRateConstruction(10);
 		}
 		ActPart = 1;
-		//trCounterAddTime("ChickenInfo", 65-(QuickStart*9), 0, "<color={PlayerColor(2)}>Attacks begin</color>", 40);
-		//xsEnableRule("ChickenWave1Go");
-		trModifyProtounit(ChickenProto, p, 5, 3);
-		xsEnableRule("ChickenWave2Finish");
+		trCounterAddTime("ChickenInfo", 65-(QuickStart*9), 0, "<color={PlayerColor(2)}>Attacks begin</color>", 40);
+		xsEnableRule("ChickenWave1Go");
+		//trModifyProtounit(ChickenProto, p, 5, 3);
+		//xsEnableRule("ChickenWave2Finish");
 		modifyProtounitAbsolute("Toxotes", cNumberNonGaiaPlayers, 0, 50);
 		modifyProtounitAbsolute("Militia", cNumberNonGaiaPlayers, 0, 50);
 		modifyProtounitAbsolute("Toxotes", cNumberNonGaiaPlayers, 31, 5);

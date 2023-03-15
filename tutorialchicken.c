@@ -10,7 +10,7 @@ inactive
 		xsDisableRule("CrocodileTutorialDone");
 		xsDisableRule("Jump");
 		xsDisableRule("JumpEnd");
-		//QuickStart = 0;
+		QuickStart = 0;
 		NewDestroyNumber = trGetNextUnitScenarioNameNumber()-1;
 		TutorialMode = true;
 		Stage = 5;

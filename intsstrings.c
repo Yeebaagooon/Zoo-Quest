@@ -1,7 +1,7 @@
 //---Controls
 //\Yeebaagooon\Zoo Quest\Test sound.mp3
 int QuickStart = 5;
-bool LOS = true;
+bool LOS = false;
 bool AlwaysWin = true;
 bool PlayCine = true;
 
@@ -40,7 +40,8 @@ deer tp vector*2 end mg
 
 S3 super
 
-
+-0.5 enemy speed
+dwarf 10s lifespan
 
 Difficulty
 Data

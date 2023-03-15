@@ -69,7 +69,7 @@ highFrequency
 	xsDisableRule("BasicVC2");
 	//start fade to black
 	//trUIFadeToColor(1,0,0,0,0,true);
-	trShowImageDialog("icons\icon class harmless animal", MapName + " by Yeebaagooon");
+	//trShowImageDialog("icons\icon class harmless animal", MapName + " by Yeebaagooon");
 	gadgetUnreal("ShowImageBox-BordersTop");
 	gadgetUnreal("ShowImageBox-BordersBottom");
 	gadgetUnreal("ShowImageBox-BordersLeft");
