@@ -2,8 +2,8 @@
 //\Yeebaagooon\Zoo Quest\Test sound.mp3
 int QuickStart = 0;
 bool LOS = false;
-bool AlwaysWin = false;
-bool PlayCine = false;
+bool AlwaysWin = true;
+bool PlayCine = true;
 
 /*
 it uses build at pointer instead
@@ -34,14 +34,19 @@ instead of the id
 ONLY HAVE ONE FREEDBBLOCK
 
 [BUG LIST]
-tile for minigame is *2 for vector
+Prisoner attack
+pit 2 square hitbox for villies +2
+tp make default yes
+vortex grant instant nbo rehcrage
+reset civ chicken
+resign when prisoner
+res chciken tut
 
-deer tp vector*2 end mg
+chicken enemy tut spawn relics
+chicken cine tower build num
+chicken inc enemy hitbox size FOR LAG
+normal player projectiles
 
-S3 super
-
--0.5 enemy speed
-dwarf 10s lifespan
 
 Difficulty - INT Difficulty is set
 Data
