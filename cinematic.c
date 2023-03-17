@@ -104,7 +104,7 @@ highFrequency
 	trSetCounterDisplay("</color>Votes to skip: " + 1*trQuestVarGet("SkipVotes") +"/" + SkipRequired);
 	trCounterAddTime("cdcine", 13, 0, "<color={PlayerColor("+ cNumberNonGaiaPlayers +")}>Cinematic begins", 46);
 	for(p=1 ; < cNumberNonGaiaPlayers){
-		PlayerChoice(p, "Skip Cinematic?", "Yes", 3, "No", 0, 12900);
+		PlayerChoice(p, "Skip Cinematic?", "Yes", 3, "No", -1, 12900);
 	}
 	xsEnableRule("SkipCine");
 	xsDisableSelf();
@@ -395,7 +395,8 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 4) {
-		characterDialog("Chicken Gameplay", "You can only build 10, this may increase later.", "icons\animal chicken icon 64");
+		xSetPointer(dPlayerData, 1);
+		characterDialog("Chicken Gameplay", "You can only build " + xGetInt(dPlayerData, xTowerLimit) + ", this may increase later.", "icons\animal chicken icon 64");
 		xsDisableSelf();
 		xsEnableRule("C_Cine_002");
 	}
@@ -428,7 +429,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 4) {
-		characterDialog("Chicken Powers", "Use 'E' to command every tower to fire at the cursor (chicken must be selected)", "icons\animal chicken icon 64");
+		characterDialog("Chicken Powers", "TEST E DOES NOT WORK", "icons\animal chicken icon 64");
 		xsDisableSelf();
 		xsEnableRule("C_Cine_005");
 	}

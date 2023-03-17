@@ -58,6 +58,10 @@ inactive
 		trPlayNextMusicTrack();
 		if(Difficulty == 3){
 			SpawnDeerPoacher(2);
+			trOverlayText("TITAN: Poachers do double damage!", 5.0,-1,-1,600);
+		}
+		if(Difficulty == 2){
+			trOverlayText("HARD: Poachers do double damage!", 5.0,-1,-1,600);
 		}
 		xsDisableSelf();
 	}
@@ -538,6 +542,24 @@ inactive
 				xSetBool(dPlayerData, xStopDeath, true);
 				PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is playing");
 				PlayersMinigaming = PlayersMinigaming+1;
+			}
+			if((xGetBool(dPlayerData, xPWantsMG) == true) && (xGetBool(dPlayerData, xStopDeath) == false)){
+				xSetVector(dPlayerData, xVectorHold, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
+				xSetInt(dPlayerData, xTeleportDue, 1);
+				xSetBool(dPlayerData, xStopDeath, true);
+				xSetBool(dPlayerData, xPWantsMG, false);
+				PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is playing");
+				PlayersMinigaming = PlayersMinigaming+1;
+				trQuestVarSet("P"+p+"IG", trGetNextUnitScenarioNameNumber());
+				UnitCreate(p, "Roc", 2*xsVectorGetX(StageVector)+7,2*xsVectorGetZ(StageVector)+10, 0);
+				trUnitSelectByQV("P"+p+"Unit");
+				trImmediateUnitGarrison(""+1*trQuestVarGet("P"+p+"IG"));
+				trUnitSelectByQV("P"+p+"IG");
+				trUnitChangeProtoUnit("Cinematic Block");
+				if(trCurrentPlayer() == p){
+					uiZoomToProto(""+GazelleProto);
+					uiLookAtProto(""+GazelleProto);
+				}
 			}
 		}
 	}

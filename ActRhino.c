@@ -339,10 +339,10 @@ inactive
 				xDatabaseNext(dTemp);
 				vector yeetpos = kbGetBlockPosition(""+xGetInt(dTemp, xUnitID));
 				yeetpos = yeetpos/2;
-				if((xsVectorGetX(yeetpos) >= xsVectorGetX(StageVector)-2) && (xsVectorGetX(yeetpos) <= xsVectorGetX(StageVector)+2) && (xsVectorGetZ(yeetpos) >= xsVectorGetZ(StageVector)-2) && (xsVectorGetZ(yeetpos) <= xsVectorGetZ(StageVector)+2)){
+				if((xsVectorGetX(yeetpos) >= xsVectorGetX(StageVector)-3) && (xsVectorGetX(yeetpos) <= xsVectorGetX(StageVector)+3) && (xsVectorGetZ(yeetpos) >= xsVectorGetZ(StageVector)-3) && (xsVectorGetZ(yeetpos) <= xsVectorGetZ(StageVector)+3)){
 					int anim = kbUnitGetAnimationActionType(kbGetBlockID(""+xGetInt(dTemp, xUnitID)+""));
-					if(anim != 29){
-						//if unit in pit and not flailing
+					if((anim != 29) && (anim != 10)){
+						//if unit in pit and not flailing or walking
 						xUnitSelect(dTemp, xUnitID);
 						trUnitChangeProtoUnit("Tartarian Gate flame");
 						xFreeDatabaseBlock(dTemp);
@@ -525,16 +525,40 @@ highFrequency
 				PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is playing");
 				PlayersMinigaming = PlayersMinigaming+1;
 				//destroy and recreate
+				trQuestVarSet("P"+p+"IG", trGetNextUnitScenarioNameNumber());
+				UnitCreate(p, "Roc", trVectorQuestVarGetX("P"+p+"PosMG")*2, trVectorQuestVarGetZ("P"+p+"PosMG")*2+10, 0);
 				trUnitSelectByQV("P"+p+"Unit");
-				trUnitChangeInArea(p,p,""+RhinoProto, "Rocket", 999);
+				trImmediateUnitGarrison(""+1*trQuestVarGet("P"+p+"IG"));
+				trUnitSelectByQV("P"+p+"IG");
+				trUnitChangeProtoUnit("Cinematic Block");
+				if(trCurrentPlayer() == p){
+					uiZoomToProto(""+RhinoProto);
+					uiLookAtProto(""+RhinoProto);
+				}
+				xSetBool(dPlayerData, xStopDeath, true);
+			}
+			if((xGetBool(dPlayerData, xPWantsMG) == true) && (xGetBool(dPlayerData, xStopDeath) == false)){
+				xSetVector(dPlayerData, xVectorHold, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
+				xSetInt(dPlayerData, xTeleportDue, 1);
+				xSetBool(dPlayerData, xStopDeath, true);
+				xSetBool(dPlayerData, xPWantsMG, false);
+				xSetFloat(dPlayerData, xRhinoChargeTime, 30);
+				modifyProtounitAbsolute(""+RhinoProto, p, 9, 1);
+				PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is playing");
+				PlayersMinigaming = PlayersMinigaming+1;
+				//destroy and recreate
+				trQuestVarSet("P"+p+"IG", trGetNextUnitScenarioNameNumber());
+				UnitCreate(p, "Roc", xsVectorGetX(StageVector), xsVectorGetX(StageVector)+10, 0);
 				trUnitSelectByQV("P"+p+"Unit");
-				trUnitChangeProtoUnit("Ragnorok SFX");
-				trUnitSelectByQV("P"+p+"Unit");
-				trUnitDestroy();
-				trUnitSelectClear();
-				trUnitSelect(""+xGetInt(dPlayerData, xSpyID));
-				trUnitChangeProtoUnit("Hero Death");
-				CreateRhino(p, trVectorQuestVarGetX("P"+p+"PosMG")*2,trVectorQuestVarGetZ("P"+p+"PosMG")*2+10,0);
+				trImmediateUnitGarrison(""+1*trQuestVarGet("P"+p+"IG"));
+				trUnitSelectByQV("P"+p+"IG");
+				trUnitChangeProtoUnit("Cinematic Block");
+				//trUnitSelectByQV("P"+p+"Unit");
+				//trUnitTeleport(trVectorQuestVarGetX("P"+p+"PosMG")*2, 5, trVectorQuestVarGetZ("P"+p+"PosMG")*2+10);
+				if(trCurrentPlayer() == p){
+					uiZoomToProto(""+RhinoProto);
+					uiLookAtProto(""+RhinoProto);
+				}
 				xSetBool(dPlayerData, xStopDeath, true);
 			}
 		}

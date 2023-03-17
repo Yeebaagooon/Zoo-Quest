@@ -1748,6 +1748,9 @@ void createGoatArea(){
 	trUnitSetAnimationPath("0,1,0,0,1,1,1");
 	StageVector = tileForMinigame;
 	int chestnum = xsMax(4,cNumberNonGaiaPlayers/2+1);
+	if(Difficulty > 1){
+		chestnum = chestnum-1;
+	}
 	while(chestnum > 0){
 		trQuestVarSetFromRand("x", 0, 252);
 		trQuestVarSetFromRand("z", 0, 252);
@@ -2250,6 +2253,9 @@ void createDeepForestArea(){
 		trUnitChangeInArea(0,0,"Tamarisk Tree Dead","Cinematic Block", 15);
 	}
 	int chestnum = xsMax(4,cNumberNonGaiaPlayers/2+1);
+	if(Difficulty > 1){
+		chestnum = chestnum-1;
+	}
 	while(chestnum > 0){
 		trQuestVarSetFromRand("x", 0, 252);
 		trQuestVarSetFromRand("z", 0, 252);

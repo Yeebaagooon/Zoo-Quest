@@ -87,7 +87,7 @@ inactive
 		ActPart = 1;
 		trCounterAddTime("ChickenInfo", 65-(QuickStart*9), 0, "<color={PlayerColor(2)}>Attacks begin</color>", 40);
 		xsEnableRule("ChickenWave1Go");
-		//trModifyProtounit(ChickenProto, p, 5, 3);
+		//trModifyProtounit(ChickenProto, 1, 5, 4);
 		//xsEnableRule("ChickenWave2Finish");
 		modifyProtounitAbsolute("Toxotes", cNumberNonGaiaPlayers, 0, 50);
 		modifyProtounitAbsolute("Militia", cNumberNonGaiaPlayers, 0, 50);
@@ -153,6 +153,13 @@ inactive
 		
 		modifyProtounitAbsolute("Fenris Wolf", cNumberNonGaiaPlayers, 0, 500);
 		modifyProtounitAbsolute("Fenris Wolf", cNumberNonGaiaPlayers, 27, 160);
+		
+		modifyProtounitAbsolute("Militia", cNumberNonGaiaPlayers, 24, 0);
+		modifyProtounitAbsolute("Militia", cNumberNonGaiaPlayers, 25, 0);
+		modifyProtounitAbsolute("Militia", cNumberNonGaiaPlayers, 26, 0);
+		modifyProtounitAbsolute("Titan Prometheus", cNumberNonGaiaPlayers, 24, 0);
+		modifyProtounitAbsolute("Titan Prometheus", cNumberNonGaiaPlayers, 25, 0);
+		modifyProtounitAbsolute("Titan Prometheus", cNumberNonGaiaPlayers, 26, 0);
 		
 		trTechSetStatus(cNumberNonGaiaPlayers, 500, 4);
 		modifyProtounitAbsolute("Titan Prometheus", cNumberNonGaiaPlayers, 9, 0);
@@ -711,7 +718,7 @@ highFrequency
 		R5Wave(1, "Titan Prometheus", 14000, 10000);
 		R5Wave(4*(PlayersActive-PlayersDead), "White Tiger", 12000, 10000);
 		modifyProtounitAbsolute("Wadjet Spit", cNumberNonGaiaPlayers, 1, 12);
-		modifyProtounitAbsolute("Titan Prometheus", cNumberNonGaiaPlayers, 0, 5000);
+		modifyProtounitAbsolute("Titan Prometheus", cNumberNonGaiaPlayers, 0, 10000+(5000*Difficulty));
 		xsDisableSelf();
 		playSound("\cinematics\04_in\armyarrive.wav");
 		trSetLighting("Night", 6);

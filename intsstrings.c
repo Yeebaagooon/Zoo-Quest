@@ -34,25 +34,18 @@ instead of the id
 ONLY HAVE ONE FREEDBBLOCK
 
 [BUG LIST]
-Prisoner attack
-pit 2 square hitbox for villies +2
-tp make default yes
-vortex grant instant nbo rehcrage
-reset civ chicken
-resign when prisoner
+*tp make default yes
+?resign when prisoner
 res chciken tut
 
-chicken enemy tut spawn relics
-chicken cine tower build num
-chicken inc enemy hitbox size FOR LAG
-normal player projectiles
+A5 chests
+A5 armour
 
-
-Difficulty - INT Difficulty is set
-Data
-Persistent bonus
-Act Skip
-End Cine
+Difficulty - INT Difficulty is set, do in nottud.c
+xData
+xPersistent bonus
+xAct Skip
+*End Cine
 
 
 //DELETE
@@ -184,6 +177,7 @@ int xRelics = 0;
 int xCrocProto = 0;
 int xCrocRangedTime = 0;
 int xDeathVector = 0;
+int xPWantsMG = 0;
 //---S5
 int xTowerDamage = 0;
 int xTowerSpeed = 0;
@@ -257,11 +251,12 @@ highFrequency
 	xTowerSpeed = xInitAddFloat(dPlayerData, "towerspeed", 10);
 	xSpecialVector = xInitAddVector(dPlayerData, "sv", vector(0,0,0));
 	xS5Kills = xInitAddInt(dPlayerData, "stage 5 kills", 0);
-	xLandmineDamage = xInitAddInt(dPlayerData, "mine dmg", 250);
+	xLandmineDamage = xInitAddInt(dPlayerData, "mine dmg", 100);
 	xLandmineRange = xInitAddInt(dPlayerData, "mine dmg", 4);
 	xS5E = xInitAddInt(dPlayerData, "specialshots", 0);
 	xS5ERecharge = xInitAddInt(dPlayerData, "specialshotsrecharge", 30);
 	xTowerLimit = xInitAddInt(dPlayerData, "tower build lim", 10);
+	xPWantsMG = xInitAddBool(dPlayerData, "mg teleport rehaul", true);
 	for(p=1; <= cNumberNonGaiaPlayers) {
 		xAddDatabaseBlock(dPlayerData, true);
 	}

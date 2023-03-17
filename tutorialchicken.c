@@ -243,7 +243,7 @@ void ProcessHeldRelics(int count = 1) {
 			xUnitSelect(dHeldRelics, xUnitID);
 			trUnitChangeProtoUnit("Relic");
 			xUnitSelect(dHeldRelics, xUnitID);
-			trSetScale(0.25*xGetInt(dHeldRelics, xRelicLevel)+0.75);
+			trSetSelectedScale(0.25*xGetInt(dHeldRelics, xRelicLevel)+0.75,0.25*xGetInt(dHeldRelics, xRelicLevel)+0.75,0.25*xGetInt(dHeldRelics, xRelicLevel)+0.75);
 			xAddDatabaseBlock(dFreeRelics, true);
 			xSetInt(dFreeRelics, xUnitID, 1*xGetInt(dHeldRelics, xUnitID));
 			xSetInt(dFreeRelics, xRelicType, 1*xGetInt(dHeldRelics, xRelicType));
@@ -321,19 +321,21 @@ void ProcessEnemy(int count = 1) {
 			trUnitMoveToPoint(xsVectorGetX(MapCentre),1,xsVectorGetZ(MapCentre),-1,true);
 		}
 		xUnitSelect(dEnemies, xUnitID);
-		if(trUnitAlive() == false){
-			pos = kbGetBlockPosition(""+xGetInt(dEnemies, xUnitID));
-			if(iModulo((10+cNumberNonGaiaPlayers), trTimeMS()) == 0){
-				temp = trGetNextUnitScenarioNameNumber();
-				UnitCreate(1, "Cinematic Block", xsVectorGetX(pos), xsVectorGetZ(pos), 0);
-				trUnitSelectClear();
-				trUnitSelect(""+temp);
-				trUnitChangeProtoUnit("Medusa");
-				xFreeDatabaseBlock(dEnemies);
-				//[THIS MAY CAUSE A BUG]
-				break;
+		if(TutorialMode == false){
+			if(trUnitAlive() == false){
+				pos = kbGetBlockPosition(""+xGetInt(dEnemies, xUnitID));
+				if(iModulo((20+cNumberNonGaiaPlayers+(Difficulty*5)), trTimeMS()) == 0){
+					temp = trGetNextUnitScenarioNameNumber();
+					UnitCreate(1, "Cinematic Block", xsVectorGetX(pos), xsVectorGetZ(pos), 0);
+					trUnitSelectClear();
+					trUnitSelect(""+temp);
+					trUnitChangeProtoUnit("Medusa");
+					xFreeDatabaseBlock(dEnemies);
+					//[THIS MAY CAUSE A BUG]
+					break;
+				}
+				//xFreeDatabaseBlock(dEnemies);
 			}
-			//xFreeDatabaseBlock(dEnemies);
 		}
 		trUnitSelectClear();
 	}

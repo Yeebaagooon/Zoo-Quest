@@ -192,6 +192,7 @@ highFrequency
 		trModifyProtounit(""+NoChoiceUnitName + " Hero", p, 19, -9999999999999999999.0);
 		trModifyProtounit(""+CrocProto, p, 55, 3);
 		trModifyProtounit("Petsuchos", p, 55, 3);
+		modifyProtounitAbsolute("Prisoner", p, 27, 0);
 		modifyProtounitAbsolute("Tower", p, 16, 0);
 		modifyProtounitAbsolute("Tower", p, 17, 0);
 		modifyProtounitAbsolute("Tower", p, 18, 0);

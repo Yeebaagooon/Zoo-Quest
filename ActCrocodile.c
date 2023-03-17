@@ -88,7 +88,7 @@ inactive
 					}
 				}
 				if(CrocProgress >= 3*PlayersActive){
-					SpawnCrocPoacher4(iModulo(2, trTime())+1);
+					SpawnCrocPoacher4(1);
 					trOverlayText("Super Poachers Spawning...", 5.0,-1,-1,600);
 					playSound("\cinematics\04_in\armyarrive.wav");
 				}
@@ -98,7 +98,9 @@ inactive
 				if(CrocProgress >= 5*PlayersActive){
 					SpawnCrocPoacher4(xsMax(1,PlayersActive-2));
 					SpawnCrocPoacher3(1);
-					if(Difficulty == 3){
+				}
+				if(Difficulty == 3){
+					if(CrocProgress >= 6*PlayersActive){
 						trOverlayText("Uber Poacher Spawning... run!", 5.0,-1,-1,600);
 						playSound("\cinematics\04_in\armyarrive.wav");
 						UberCrocPoacher(1);
@@ -576,6 +578,29 @@ highFrequency
 				PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is playing");
 				PlayersMinigaming = PlayersMinigaming+1;
 				xSetBool(dPlayerData, xStopDeath, true);
+				xSetInt(dPlayerData, xQuestions, 4);
+				AskQuestion(p);
+				if(xGetInt(dPlayerData, xTeleportDue) == 0){
+					xSetVector(dPlayerData, xVectorHold, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
+				}
+			}
+			if((xGetBool(dPlayerData, xPWantsMG) == true) && (xGetBool(dPlayerData, xStopDeath) == false)){
+				xSetVector(dPlayerData, xVectorHold, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
+				xSetInt(dPlayerData, xTeleportDue, 1);
+				xSetBool(dPlayerData, xStopDeath, true);
+				xSetBool(dPlayerData, xPWantsMG, false);
+				PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is playing");
+				PlayersMinigaming = PlayersMinigaming+1;
+				trQuestVarSet("P"+p+"IG", trGetNextUnitScenarioNameNumber());
+				UnitCreate(p, "Roc", 2*xsVectorGetX(StageVector),2*xsVectorGetZ(StageVector), 0);
+				trUnitSelectByQV("P"+p+"Unit");
+				trImmediateUnitGarrison(""+1*trQuestVarGet("P"+p+"IG"));
+				trUnitSelectByQV("P"+p+"IG");
+				trUnitChangeProtoUnit("Cinematic Block");
+				if(trCurrentPlayer() == p){
+					uiZoomToProto(""+CrocProto);
+					uiLookAtProto(""+CrocProto);
+				}
 				xSetInt(dPlayerData, xQuestions, 4);
 				AskQuestion(p);
 				if(xGetInt(dPlayerData, xTeleportDue) == 0){

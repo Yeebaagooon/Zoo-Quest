@@ -243,45 +243,6 @@ highFrequency
 						dir = rotationMatrix(dir, baseCos, baseSin);
 					}
 				}
-				if(Stage == 5){
-					slingvector = kbGetBlockPosition(""+i);
-					trUnitSelectClear();
-					trUnitSelectByID(id);
-					trUnitDestroy();
-					dir = vector(0,0,0);
-					closevector = vector(0,0,0);
-					target = vector(0,0,0);
-					closest = 10000;
-					closestid = 0;
-					//cycle through all poachers to find the closest
-					for(a=xGetDatabaseCount(dTowers) ; > 0 ){
-						xDatabaseNext(dTowers);
-						dir = kbGetBlockPosition(""+xGetInt(dTowers, xUnitID));
-						xUnitSelect(dTowers, xUnitID);
-						if(trUnitDead() == false){
-							if(xGetBool(dTowers, xConstructed) == true){
-								if(distanceBetweenVectors(dir, slingvector, true) < closest){
-									closest = distanceBetweenVectors(dir, slingvector, true);
-									closestid = xGetInt(dTowers, xUnitID);
-									index = xGetPointer(dTowers);
-								}
-							}
-						}
-					}
-					closevector = kbGetBlockPosition(""+closestid);
-					xsSetContextPlayer(xGetInt(dTowers, xOwner, index));
-					dest = kbGetBlockPosition(""+trGetUnitScenarioNameNumber(kbUnitGetTargetUnitID(kbGetBlockID(""+closestid))));
-					xsSetContextPlayer(0);
-					dir = xsVectorNormalize(dest-closevector);
-					IGUnit = true;
-					IGName = closestid;
-					unitcheck = "Tower";
-					xSetPointer(dPlayerData, xGetInt(dTowers, xOwner));
-					trBlockAllAmbientSounds();
-					trBlockAllSounds();
-					ShootProjectile(dir, closevector, "Lampades Bolt", "Wadjet Spit", 0, xGetInt(dPlayerData, xTowerDamage), 5000, 1*xGetInt(dTowers, xOwner));
-					trDelayedRuleActivation("UnblockSound");
-				}
 			}
 			case kbGetProtoUnitID("Spear Flaming"):
 			{
@@ -573,9 +534,6 @@ highFrequency
 			}
 			case kbGetProtoUnitID("Tower"):
 			{
-				trUnitSelectClear();
-				trUnitSelectByID(id);
-				trSetSelectedScale(1,0.3,1);
 				trUnitSelectClear();
 				dest = kbGetBlockPosition(""+i);
 				if(TutorialMode == true){

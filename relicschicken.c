@@ -44,7 +44,7 @@ string relicName(int relicid = 0) {
 		}
 		case RELIC_PROJ_SPEED:
 		{
-			msg = "+ " + 1*stat + " projectile speed";
+			msg = "+ " + 1*stat + " landmine damage";
 		}
 		case RELIC_CHICKEN_SPEED:
 		{
@@ -88,7 +88,7 @@ int relicProto(int relic = 0) {
 		}
 		case RELIC_PROJ_SPEED:
 		{
-			proto = kbGetProtoUnitID("Phoenix From Egg");
+			proto = kbGetProtoUnitID("Fire Giant");
 		}
 		case RELIC_CHICKEN_SPEED:
 		{

@@ -417,6 +417,9 @@ void DoMissile(){
 			xSetPointer(dPlayerData, playerhit);
 			xUnitSelect(dPlayerData, xPlayerUnitID);
 			trDamageUnit(1);
+			if(Difficulty >= 2){
+				trDamageUnit(1);
+			}
 		}
 		if(Stage == 2){
 			trUnitChangeProtoUnit("Blood Cinematic");
@@ -427,6 +430,9 @@ void DoMissile(){
 			xSetPointer(dPlayerData, playerhit);
 			xUnitSelect(dPlayerData, xPlayerUnitID);
 			trDamageUnit(2);
+			if(Difficulty >= 2){
+				trDamageUnit(1);
+			}
 		}
 		if(Stage == 3){
 			trUnitChangeProtoUnit("Blood Cinematic");
@@ -437,6 +443,9 @@ void DoMissile(){
 			xSetPointer(dPlayerData, playerhit);
 			xUnitSelect(dPlayerData, xPlayerUnitID);
 			trDamageUnit(1);
+			if(Difficulty >= 2){
+				trDamageUnit(2);
+			}
 		}
 		if(Stage == 4){
 			trUnitChangeProtoUnit("Blood Cinematic");
@@ -447,6 +456,9 @@ void DoMissile(){
 			xSetPointer(dPlayerData, playerhit);
 			xUnitSelect(dPlayerData, xPlayerUnitID);
 			trDamageUnit(xGetInt(dMissiles, xMissileDmg));
+			if(Difficulty >= 2){
+				trDamageUnit(xGetInt(dMissiles, xMissileDmg));
+			}
 		}
 		//FREE DB LAST
 		xFreeDatabaseBlock(dMissiles);
@@ -481,61 +493,16 @@ void DoMissileStage5(){
 		dir = xGetVector(dMissiles, xMissileDir); //Normalized direction when missile created and target locked
 		xSetVector(dMissiles, xMissilePos, pos);
 		float dist = distanceBetweenVectors(pos, prev, false);
-		if(xGetInt(dMissiles, xOwner) != cNumberNonGaiaPlayers){
-			for(x = xGetDatabaseCount(dEnemies); > 0) {
-				xDatabaseNext(dEnemies);
-				//2 is raw dist, 4 is squared
-				if(rayCollision(prev,dir,dist+1,1)){
-					hitenemy = true;
-					unithit = xGetPointer(dEnemies);
-					break;
-				}
+		for(x = xGetDatabaseCount(dEnemyCollision); > 0) {
+			xDatabaseNext(dEnemyCollision);
+			//2 is raw dist, 4 is squared
+			if(rayCollision(prev,dir,dist+2,4)){
+				hittower = true;
+				unithit = xGetPointer(dEnemyCollision);
+				break;
 			}
 		}
-		else{
-			for(x = xGetDatabaseCount(dEnemyCollision); > 0) {
-				xDatabaseNext(dEnemyCollision);
-				//2 is raw dist, 4 is squared
-				if(rayCollision(prev,dir,dist+2,4)){
-					hittower = true;
-					unithit = xGetPointer(dEnemyCollision);
-					break;
-				}
-			}
-		}
-		if(hitenemy){
-			//hit effect
-			xUnitSelect(dMissiles, xUnitID);
-			//trDamageUnitsInArea(cNumberNonGaiaPlayers, "All", 2, xGetInt(dMissiles, xMissileDmg));
-			//xUnitSelect(dMissiles, xUnitID);
-			trUnitDestroy();
-			/*boomID = trGetNextUnitScenarioNameNumber();
-			UnitCreate(0, "Cinematic Block", xsVectorGetX(pos), xsVectorGetZ(pos), 0);
-			trUnitSelectClear();
-			trUnitSelect(""+boomID);
-			trUnitChangeProtoUnit("Blood Cinematic");*/
-			trUnitSelectClear();
-			xSetPointer(dEnemies, unithit);
-			xUnitSelect(dEnemies, xUnitID);
-			trDamageUnit(xGetInt(dMissiles, xMissileDmg));
-			xUnitSelect(dEnemies, xUnitID);
-			//trUnitHighlight(1, false);
-			//debugLog("Hit unit " + xGetInt(dEnemies, xUnitID) + " for " + xGetInt(dMissiles, xMissileDmg));
-			if(trUnitDead() == true){
-				if(iModulo(10, trTimeMS()) == 0){
-					boomID = trGetNextUnitScenarioNameNumber();
-					UnitCreate(xGetPointer(dPlayerData), "Cinematic Block", xsVectorGetX(pos), xsVectorGetZ(pos), 0);
-					trUnitSelectClear();
-					trUnitSelect(""+boomID);
-					trUnitChangeProtoUnit("Medusa");
-				}
-				xFreeDatabaseBlock(dEnemies);
-			}
-			//FREE DB LAST
-			xFreeDatabaseBlock(dMissiles);
-			//debugLog("Hits P " + playerhit);
-		}
-		else if(hittower){
+		if(hittower){
 			xUnitSelect(dMissiles, xUnitID);
 			trUnitDestroy();
 			trUnitSelectClear();

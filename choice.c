@@ -21,7 +21,7 @@ inactive
 		{
 			case 0:
 			{
-				trChatSend(0,"<color=1,0,1>Debug TP player " + xGetPointer(dPlayerData) + " said no</color>");
+				xSetBool(dPlayerData, xPWantsMG, false);
 			}
 			case 1:
 			{
@@ -48,7 +48,6 @@ inactive
 				xSetPointer(dPlayerData, p);
 				xSetVector(dPlayerData, xVectorHold, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
 				xSetInt(dPlayerData, xTeleportDue, 1);
-				trChatSend(0,"<color=1,0,1>Debug TP player " + xGetPointer(dPlayerData) + "</color>");
 				if(Stage == 1){
 					trQuestVarSet("P"+p+"IG", trGetNextUnitScenarioNameNumber());
 					UnitCreate(p, "Roc", 2*xsVectorGetX(StageVector)+7,2*xsVectorGetZ(StageVector)+10, 0);
@@ -97,6 +96,7 @@ inactive
 						uiLookAtProto(""+CrocProto);
 					}
 				}
+				xSetBool(dPlayerData, xPWantsMG, false);
 			}
 			case 5:
 			{

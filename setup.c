@@ -96,6 +96,50 @@ highFrequency
 	%
 }
 
+void BuildYeebCol(int x = 0, int z = 0, int y = 0){
+	FloatingUnit("Wall Connector", x, 3, z, 0,1,2,1);
+	trUnitSelectByQV("QVRelic");
+	trUnitSetAnimationPath("0,2,0,0,0,0");
+	FloatingUnit("Wall Connector", x, 11, z, 0,1,2,1);
+	trUnitSelectByQV("QVRelic");
+	trUnitSetAnimationPath("0,2,0,0,0,0");
+	FloatingUnit("Wall Connector", x, 19, z, 0,1,2,1);
+	trUnitSelectByQV("QVRelic");
+	trUnitSetAnimationPath("0,2,0,0,0,0");
+	FloatingUnit("Wall Connector", x, 27, z, 0,1,2,1);
+	trUnitSelectByQV("QVRelic");
+	trUnitSetAnimationPath("0,2,0,0,0,0");
+	FloatingUnit("Wall Connector", x, 3, z-2, 0,1,1,1);
+	trUnitSelectByQV("QVRelic");
+	trUnitSetAnimationPath("0,2,0,0,0,0");
+	FloatingUnit("Wall Connector", x, 3, z+2, 0,1,1,1);
+	trUnitSelectByQV("QVRelic");
+	trUnitSetAnimationPath("0,2,0,0,0,0");
+	FloatingUnit("Wall Connector", x+2, 3, z, 0,1,1,1);
+	trUnitSelectByQV("QVRelic");
+	trUnitSetAnimationPath("0,2,0,0,0,0");
+	FloatingUnit("Wall Connector", x-2, 3, z, 0,1,1,1);
+	trUnitSelectByQV("QVRelic");
+	trUnitSetAnimationPath("0,2,0,0,0,0");
+	FloatingUnit("Monument", x-2, 7, z, 270,1,1,1);
+	FloatingUnit("Monument", x+2, 7, z, 90,1,1,1);
+	FloatingUnit("Monument", x, 7, z+2, 0,1,1,1);
+	FloatingUnit("Monument", x, 7, z-2, 180,1,1,1);
+	FloatingUnit("Flag", x+2, 19, z, 90,1,-1,1);
+	trUnitSelectByQV("QVRelic");
+	trUnitSetAnimationPath("0,1,0,0,0,0");
+	FloatingUnit("Flag", x-1.6, 19, z, 90,1,-1,1);
+	trUnitSelectByQV("QVRelic");
+	trUnitSetAnimationPath("0,1,0,0,0,0");
+	FloatingUnit("Columns Fallen", x+2, 18.5, z, 90,0.5,0.5,0.5);
+	trUnitSelectByQV("QVRelic");
+	trUnitSetAnimationPath("0,0,0,0,0,0");
+	FloatingUnit("Columns Fallen", x-2, 18.5, z, 270,0.5,0.5,0.5);
+	trUnitSelectByQV("QVRelic");
+	trUnitSetAnimationPath("0,0,0,0,0,0");
+	//FloatingUnitAnimIdle("Plenty Vault", x, 3, z, 0,0.6,-1,0.6);
+}
+
 rule load1
 inactive
 highFrequency
@@ -181,6 +225,44 @@ highFrequency
 		gadgetReal("ShowImageBox-BordersRightTop");
 		gadgetReal("ShowImageBox-CloseButton");
 		//startNPCDialog(1);
+		if(QuickStart == 8){
+			for(a = 1 ; < 10){
+				for(b = 1 ; < 10){
+					BuildYeebCol(10+a*15,10+b*15);
+				}
+			}
+			for(x = 0 ; < 40){
+				for(z = 0 ; < 40){
+					int temp = trGetNextUnitScenarioNameNumber();
+					UnitCreate(0, "Dwarf", x*4, z*4, 0);
+					trUnitSelectClear();
+					trUnitSelect(""+temp);
+					trUnitChangeProtoUnit("Spy Eye");
+					trUnitSelectClear();
+					trUnitSelect(""+temp);
+					trMutateSelected(kbGetProtoUnitID("Wall Connector"));
+					trUnitSetAnimationPath("0,1,0,0,0,0,0");
+					trSetSelectedScale(2,0.01,2);
+				}
+			}
+			for(x = 0 ; < 14){
+				int temp2 = trGetNextUnitScenarioNameNumber();
+				UnitCreate(1, "Underworld Passage SPC", 12+x*10, 12, 0);
+				trUnitSelectClear();
+				trUnitSelect(""+temp2);
+				trSetSelectedUpVector(0,2,0);
+				trSetSelectedScale(2,1,1);
+				trUnitSelectClear();
+				trUnitSelect(""+temp2);
+				trUnitSetAnimationPath("2,0,0,0,0,0,0");
+			}
+			int temp3 = trGetNextUnitScenarioNameNumber();
+			UnitCreate(1, "Pharaoh of Osiris XP", 150,150, 0);
+			trUnitSelectClear();
+			trUnitSelect(""+temp3);
+			trUnitSetAnimationPath("0,1,0,1,0,0");
+			trUnitOverrideAnimation(33, 0, true, true, -1, 0);
+		}
 		if(QuickStart == 7){
 			xsEnableRule("ChickenWave3Finish");
 		}
@@ -214,6 +296,10 @@ highFrequency
 		xsEnableRule("DestroyConstant");
 		xsEnableRule("Animations");
 		trDelayedRuleActivation("Help_Chat");
+		for(p = 1; < cNumberNonGaiaPlayers){
+			trSetCivilizationNameOverride(p, "Yeebaagooon");
+		}
+		trSetCivilizationNameOverride(cNumberNonGaiaPlayers, "Poachers");
 	}
 }
 

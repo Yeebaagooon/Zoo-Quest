@@ -378,7 +378,7 @@ inactive
 							//Interracting with shop
 							if(xGetInt(dPlayerData, xRelics) >= xGetInt(dShop, xCost)){
 								xSetInt(dPlayerData, xRelics, xGetInt(dPlayerData, xRelics)-xGetInt(dShop, xCost));
-								trTechGodPower(p, xGetString(dShop, xPowerName), 1);
+								grantGodPowerNoRechargeNextPosition(p, xGetString(dShop, xPowerName), 1);
 								if(trCurrentPlayer() == p){
 									playSound("tributereceived.wav");
 									playSound("\cinematics\24_in\magic.mp3");

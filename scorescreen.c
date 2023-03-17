@@ -537,6 +537,9 @@ inactive
 		xsEnableRule("TutorialTerrainChicken");
 	}
 	trLetterBox(false);
+	for(p = 1; < cNumberNonGaiaPlayers){
+		trSetCivilizationNameOverride(p, ActName(Stage));
+	}
 	trFadeOutAllSounds(3);
 	trFadeOutMusic(3);
 }
@@ -709,6 +712,7 @@ inactive
 			xSetVector(dPlayerData, xVectorHold, vector(0,0,0));
 			xSetInt(dPlayerData, xTeleportDue, 0);
 			xSetInt(dPlayerData, xRelics, 0);
+			xSetBool(dPlayerData,xPWantsMG, true);
 		}
 	}
 	xResetDatabase(dTemp);

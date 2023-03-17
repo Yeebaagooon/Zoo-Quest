@@ -543,12 +543,6 @@ void CreateGazelle(int p = 1, int x = 1, int z = 1, int heading = 0){
 	spyEffect(kbGetProtoUnitID("Gazelle"), 0, xsVectorSet(dPlayerData,xSpyID,p), vector(1,1,1));
 	xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
 	xSetBool(dPlayerData, xStopDeath, false);
-	/*
-	vector test = kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit"));
-	test = test + HeadingToVector(heading);
-	test = test + HeadingToVector(heading);
-	UnitCreate(p, "Dwarf", xsVectorGetX(test),xsVectorGetZ(test), 0);
-	*/
 }
 
 void CreateRhino(int p = 1, int x = 1, int z = 1, int heading = 0){
@@ -562,12 +556,6 @@ void CreateRhino(int p = 1, int x = 1, int z = 1, int heading = 0){
 	//spyEffect(kbGetProtoUnitID("Cinematic Block"), 0, xsVectorSet(dPlayerData,xSecondSpy,p), vector(1,1,1));
 	xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
 	xSetBool(dPlayerData, xStopDeath, false);
-	/*
-	vector test = kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit"));
-	test = test + HeadingToVector(heading);
-	test = test + HeadingToVector(heading);
-	UnitCreate(p, "Dwarf", xsVectorGetX(test),xsVectorGetZ(test), 0);
-	*/
 }
 
 void CreateGoat(int p = 1, int x = 1, int z = 1, int heading = 0){
@@ -581,12 +569,6 @@ void CreateGoat(int p = 1, int x = 1, int z = 1, int heading = 0){
 	//spyEffect(kbGetProtoUnitID("Cinematic Block"), 0, xsVectorSet(dPlayerData,xSecondSpy,p), vector(1,1,1));
 	xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
 	xSetBool(dPlayerData, xStopDeath, false);
-	/*
-	vector test = kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit"));
-	test = test + HeadingToVector(heading);
-	test = test + HeadingToVector(heading);
-	UnitCreate(p, "Dwarf", xsVectorGetX(test),xsVectorGetZ(test), 0);
-	*/
 }
 
 void CreateCroc(int p = 1, int x = 1, int z = 1, int heading = 0){
@@ -604,12 +586,6 @@ void CreateCroc(int p = 1, int x = 1, int z = 1, int heading = 0){
 	xUnitSelect(dPlayerData, xSpyID);
 	float scale = 0.25*xGetInt(dPlayerData, xCrocSize)+0.75;
 	trSetScale(scale);
-	/*
-	vector test = kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit"));
-	test = test + HeadingToVector(heading);
-	test = test + HeadingToVector(heading);
-	UnitCreate(p, "Dwarf", xsVectorGetX(test),xsVectorGetZ(test), 0);
-	*/
 }
 
 void CreateChicken(int p = 1, int x = 1, int z = 1, int heading = 0){
@@ -627,12 +603,6 @@ void CreateChicken(int p = 1, int x = 1, int z = 1, int heading = 0){
 	
 	xAddDatabaseBlock(dEnemyCollision, true);
 	xSetInt(dEnemyCollision, xUnitID, 1*trQuestVarGet("P"+p+"Unit"));
-	/*
-	vector test = kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit"));
-	test = test + HeadingToVector(heading);
-	test = test + HeadingToVector(heading);
-	UnitCreate(p, "Dwarf", xsVectorGetX(test),xsVectorGetZ(test), 0);
-	*/
 }
 
 void CreateChest(int x = 1, int z = 1, int heading = -1){
@@ -746,6 +716,9 @@ void CrocGrow(int p = 0){
 	xSetFloat(dPlayerData, xCrocFood, xGetFloat(dPlayerData, xCrocFood)-xGetFloat(dPlayerData, xCrocNext));
 	//4+2*xGetInt(dPlayerData, xCrocSize)
 	xSetFloat(dPlayerData, xCrocNext, 4+2*xGetInt(dPlayerData, xCrocSize));
+	if(Difficulty == 3){
+		xSetFloat(dPlayerData, xCrocNext, xGetFloat(dPlayerData, xCrocNext)+1);
+	}
 	if(xGetFloat(dPlayerData, xCrocFood) < 0){
 		xSetFloat(dPlayerData, xCrocFood, 0);
 	}
@@ -794,10 +767,10 @@ void CrocGrow(int p = 0){
 		ColouredIconChatToPlayer(p, "0,0,0.7", "icons\animal crocodile icon 64", "You can now use 'W' to eat Peltasts!");
 		ColouredChatToPlayer(p, "0,0,0.7", "They do a lot of damage so you may want to avoid them.");
 	}
-	if(xGetInt(dPlayerData, xCrocSize) == 10){
+	if(xGetInt(dPlayerData, xCrocSize) == 9){
 		ColouredIconChatToPlayer(p, "0,0,0.7", "icons\animal crocodile icon 64", "You can now use 'W' to eat Sentinels!");
 	}
-	if(xGetInt(dPlayerData, xCrocSize) == 12){
+	if(xGetInt(dPlayerData, xCrocSize) == 10){
 		ColouredIconChatToPlayer(p, "1,0,0", "icons\animal crocodile icon 64", "You have become an infamous man eater!");
 		ColouredIconChatToPlayer(p, "1,0,0", "icons\animal crocodile icon 64", "The world's top poachers are coming for you.");
 		trQuestVarSet("AllowS4Uber", 1);
@@ -891,10 +864,10 @@ void DoRelicSFX(int id = 0, int type = 0){
 		trUnitChangeProtoUnit("Spy Eye");
 		trUnitSelectClear();
 		trUnitSelect(""+id);
-		trMutateSelected(kbGetProtoUnitID("Dust Devil"));
+		trMutateSelected(kbGetProtoUnitID("Volcano"));
 		trUnitSelectClear();
 		trUnitSelect(""+id);
-		trSetScale(0.5);
+		trSetScale(0.8);
 	}
 	if(type == RELIC_CHICKEN_SPEED){
 		trUnitChangeProtoUnit("Spy Eye");
@@ -1029,11 +1002,8 @@ void NewRelic(int id = 0, int max = 0, int forcelevel = 0){
 		trQuestVarModify("temp", "*", 10);
 	}
 	if(type == RELIC_PROJ_SPEED){
-		trQuestVarSetFromRand("temp", 1, 2, true);
-		if(level >= 2){
-			trQuestVarSet("temp", 1*trQuestVarGet("temp")+level);
-		}
-		trQuestVarModify("temp", "*", 1);
+		trQuestVarSet("temp", level);
+		trQuestVarModify("temp", "*", 25);
 	}
 	if(type == RELIC_CHICKEN_SPEED){
 		trQuestVarSet("temp", level);
@@ -1145,6 +1115,9 @@ void NewRelic(int id = 0, int max = 0, int forcelevel = 0){
 		}
 	}
 	stat = trQuestVarGet("temp");
+	if(Difficulty >= 2){
+		stat = stat*0.75;
+	}
 	xAddDatabaseBlock(dFreeRelics, true);
 	xSetInt(dFreeRelics, xUnitID, id);
 	xSetInt(dFreeRelics, xRelicType, type);
@@ -1173,7 +1146,7 @@ void FunctionRelic(bool apply = false, int p = 0){
 			trModifyProtounit("Tower", p, 0, 1*xGetFloat(dFreeRelics, xRelicStat));
 		}
 		if(xGetInt(dFreeRelics, xRelicType) == RELIC_PROJ_SPEED){
-			trModifyProtounit("Wadjet Spit", p, 1, xGetFloat(dFreeRelics, xRelicStat));
+			xSetInt(dPlayerData, xLandmineDamage, xGetInt(dPlayerData, xLandmineDamage)+1*xGetFloat(dFreeRelics, xRelicStat));
 		}
 		if(xGetInt(dFreeRelics, xRelicType) == RELIC_CHICKEN_SPEED){
 			trModifyProtounit(ChickenProto, p, 1, xGetFloat(dFreeRelics, xRelicStat));
@@ -1203,10 +1176,9 @@ void FunctionRelic(bool apply = false, int p = 0){
 		}
 		if(xGetInt(dHeldRelics, xRelicType) == RELIC_HP){
 			trModifyProtounit("Tower", p, 0, (0-1*xGetFloat(dHeldRelics, xRelicStat)));
-			debugLog("hp down");
 		}
 		if(xGetInt(dHeldRelics, xRelicType) == RELIC_PROJ_SPEED){
-			trModifyProtounit("Wadjet Spit", p, 1, (0-xGetFloat(dHeldRelics, xRelicStat)));
+			xSetInt(dPlayerData, xLandmineDamage, xGetInt(dPlayerData, xLandmineDamage)-1*xGetFloat(dHeldRelics, xRelicStat));
 		}
 		if(xGetInt(dHeldRelics, xRelicType) == RELIC_CHICKEN_SPEED){
 			trModifyProtounit(ChickenProto, p, 1, (0-xGetFloat(dHeldRelics, xRelicStat)));

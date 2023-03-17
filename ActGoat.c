@@ -557,6 +557,24 @@ highFrequency
 					xSetVector(dPlayerData, xVectorHold, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
 				}
 			}
+			if((xGetBool(dPlayerData, xPWantsMG) == true) && (xGetBool(dPlayerData, xStopDeath) == false)){
+				xSetVector(dPlayerData, xVectorHold, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
+				xSetInt(dPlayerData, xTeleportDue, 1);
+				xSetBool(dPlayerData, xStopDeath, true);
+				xSetBool(dPlayerData, xPWantsMG, false);
+				PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is playing");
+				PlayersMinigaming = PlayersMinigaming+1;
+				trQuestVarSet("P"+p+"IG", trGetNextUnitScenarioNameNumber());
+				UnitCreate(p, "Roc", 2*xsVectorGetX(StageVector),2*xsVectorGetZ(StageVector), 0);
+				trUnitSelectByQV("P"+p+"Unit");
+				trImmediateUnitGarrison(""+1*trQuestVarGet("P"+p+"IG"));
+				trUnitSelectByQV("P"+p+"IG");
+				trUnitChangeProtoUnit("Cinematic Block");
+				if(trCurrentPlayer() == p){
+					uiZoomToProto(""+GoatProto);
+					uiLookAtProto(""+GoatProto);
+				}
+			}
 		}
 	}
 	refreshPassability();
