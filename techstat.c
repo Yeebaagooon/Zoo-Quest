@@ -225,6 +225,7 @@ highFrequency
 	trModifyProtounit("Invisible Target", cNumberNonGaiaPlayers, 55, 4);
 	trModifyProtounit("Maceman", 0, 55, 4);
 	trModifyProtounit("Maceman", cNumberNonGaiaPlayers, 55, 4);
+	trModifyProtounit("Titan Prometheus", cNumberNonGaiaPlayers, 55, 4);
 	//ENEMIES STAGE 5
 	modifyProtounitAbsolute("Militia", cNumberNonGaiaPlayers, 0, 10);
 	modifyProtounitAbsolute("Militia", cNumberNonGaiaPlayers, 27, 2);

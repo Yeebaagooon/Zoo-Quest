@@ -170,6 +170,7 @@ highFrequency
 		trOverlayText(MapName, 8.0, 594, 28, 1000);
 		trSetUnitIdleProcessing(true);
 		xsDisableSelf();
+		Difficulty = 1*trGetWorldDifficulty();
 		gadgetReal("ShowImageBox-BordersTop");
 		gadgetReal("ShowImageBox-BordersBottom");
 		gadgetReal("ShowImageBox-BordersLeft");
@@ -180,6 +181,9 @@ highFrequency
 		gadgetReal("ShowImageBox-BordersRightTop");
 		gadgetReal("ShowImageBox-CloseButton");
 		//startNPCDialog(1);
+		if(QuickStart == 7){
+			xsEnableRule("ChickenWave3Finish");
+		}
 		if(QuickStart == 6){
 			xsEnableRule("BuildCineScene");
 		}

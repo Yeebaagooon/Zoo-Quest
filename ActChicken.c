@@ -31,8 +31,12 @@ inactive
 		createChickenArea();
 		xsDisableSelf();
 		trUIFadeToColor(0,0,0,100,800,false);
-		//xsEnableRule("C_Cine_000");
-		xsEnableRule("ChickenLanding");
+		if(PlayCine == true){
+			xsEnableRule("C_Cine_000");
+		}
+		else{
+			xsEnableRule("ChickenLanding");
+		}
 		uiZoomToProto(""+ChickenProto);
 		uiLookAtProto(""+ChickenProto);
 		//replaceTerrainAboveHeightMax("ForestFloorPine", "GrassB", 0.0);
@@ -49,17 +53,11 @@ inactive
 		uiZoomToProto(""+ChickenProto);
 		uiLookAtProto(""+ChickenProto);
 		trDelayedRuleActivation("ResetBlackmap");
-		//trDelayedRuleActivation("CrocMinigameDetect");
 		trDelayedRuleActivation("TEST");
-		//trDelayedRuleActivation("CrocEndZoneSee");
 		trDelayedRuleActivation("ChickenAllDead");
-		//trDelayedRuleActivation("CrocPoacherTimer");
-		//xsEnableRule("CrocPoacherMovement");
-		//trSetCounterDisplay("<color={PlayerColor(2)}>Fencing destroyed: "+FencesDone+"/8");
 		ColouredIconChat("1,0.5,0", ActIcon(Stage), "<u>" + ActName(Stage) + "</u>");
-		//ColouredIconChat("0.0,0.8,0.2", "icons\building norse shrine icon 64", "Interract with shrines using W.");
 		ColouredChat("0.0,0.8,0.2", "Chickens are tasty and made out of food.");
-		ColouredChat("0.0,0.8,0.2", "The hordes are coming.");
+		ColouredChat("0.0,0.8,0.2", "The hordes are coming - defend yourselves!");
 		trQuestVarSet("Time", trTime());
 		PlayersDead = 0;
 		timediff = trTimeMS();
@@ -70,9 +68,6 @@ inactive
 			xSetInt(dPlayerData, xS5E, 5);
 			trUnforbidProtounit(p, "Armory");
 			trUnforbidProtounit(p, "Tower");
-			xSetPointer(dPlayerData, p);
-			//xSetInt(dPlayerData, xCrocSize, 1);
-			//xSetFloat(dPlayerData, xCrocNext, 5*xGetInt(dPlayerData, xCrocSize));
 			trQuestVarSet("P"+p+"FountainMsg", 0);
 			//limit
 			modifyProtounitAbsolute("Tower", p, 10, xGetInt(dPlayerData, xTowerLimit));
@@ -85,8 +80,6 @@ inactive
 			trTechGodPower(p, "Animal Magnetism", 1);
 			trPlayerSetDiplomacy(p, 0, "Neutral");
 		}
-		//trQuestVarSet("NextPoacherSpawn", trTime()+220);
-		//trQuestVarSet("NextFoodSpawn", trTime()+90);
 		trRateConstruction(1);
 		if(QuickStart == 5){
 			trRateConstruction(10);
@@ -113,19 +106,22 @@ inactive
 		modifyProtounitAbsolute("Peltast", cNumberNonGaiaPlayers, 11, 20);
 		modifyProtounitAbsolute("Peltast", cNumberNonGaiaPlayers, 2, 250);
 		modifyProtounitAbsolute("Peltast", cNumberNonGaiaPlayers, 31, 20);
-		modifyProtounitAbsolute("Bella", cNumberNonGaiaPlayers, 0, 300);
+		modifyProtounitAbsolute("Bella", cNumberNonGaiaPlayers, 0, 200);
 		modifyProtounitAbsolute("Bella", cNumberNonGaiaPlayers, 27, 10);
 		modifyProtounitAbsolute("Bella", cNumberNonGaiaPlayers, 28, 0);
 		modifyProtounitAbsolute("Bella", cNumberNonGaiaPlayers, 29, 0);
+		trModifyProtounit("Bella", cNumberNonGaiaPlayers, 1, -1);
+		trModifyProtounit("Militia", cNumberNonGaiaPlayers, 1, -1);
+		trModifyProtounit("Spearman", cNumberNonGaiaPlayers, 1, -1);
 		for(q = 33; < 55){
 			modifyProtounitAbsolute("Bella", cNumberNonGaiaPlayers, q, 0);
 			modifyProtounitAbsolute("Monkey King", cNumberNonGaiaPlayers, q, 0);
 		}
-		modifyProtounitAbsolute("Monkey King", cNumberNonGaiaPlayers, 0, 400);
+		modifyProtounitAbsolute("Monkey King", cNumberNonGaiaPlayers, 0, 300);
 		modifyProtounitAbsolute("Monkey King", cNumberNonGaiaPlayers, 27, 30);
 		modifyProtounitAbsolute("Monkey King", cNumberNonGaiaPlayers, 28, 10);
 		modifyProtounitAbsolute("Monkey King", cNumberNonGaiaPlayers, 29, 10);
-		modifyProtounitAbsolute("Bogsveigir", cNumberNonGaiaPlayers, 0, 150);
+		modifyProtounitAbsolute("Bogsveigir", cNumberNonGaiaPlayers, 0, 100);
 		modifyProtounitAbsolute("Bogsveigir", cNumberNonGaiaPlayers, 31, 25);
 		
 		modifyProtounitAbsolute("Toxotes", cNumberNonGaiaPlayers, 2, 50);
@@ -143,19 +139,19 @@ inactive
 		modifyProtounitAbsolute("Satyr", cNumberNonGaiaPlayers, 31, 40);
 		modifyProtounitAbsolute("Satyr", cNumberNonGaiaPlayers, 13, 1);
 		
-		modifyProtounitAbsolute("White Tiger", cNumberNonGaiaPlayers, 0, 1000);
+		modifyProtounitAbsolute("White Tiger", cNumberNonGaiaPlayers, 0, 500);
 		modifyProtounitAbsolute("White Tiger", cNumberNonGaiaPlayers, 27, 60);
 		
-		modifyProtounitAbsolute("Scarab", cNumberNonGaiaPlayers, 0, 2000);
+		modifyProtounitAbsolute("Scarab", cNumberNonGaiaPlayers, 0, 600);
 		modifyProtounitAbsolute("Scarab", cNumberNonGaiaPlayers, 27, 110);
 		
-		modifyProtounitAbsolute("Manticore", cNumberNonGaiaPlayers, 0, 2500);
+		modifyProtounitAbsolute("Manticore", cNumberNonGaiaPlayers, 0, 500);
 		modifyProtounitAbsolute("Manticore", cNumberNonGaiaPlayers, 11, 26);
 		modifyProtounitAbsolute("Manticore", cNumberNonGaiaPlayers, 2, 400);
 		modifyProtounitAbsolute("Manticore", cNumberNonGaiaPlayers, 31, 80);
 		modifyProtounitAbsolute("Manticore", cNumberNonGaiaPlayers, 13, 1);
 		
-		modifyProtounitAbsolute("Fenris Wolf", cNumberNonGaiaPlayers, 0, 3000);
+		modifyProtounitAbsolute("Fenris Wolf", cNumberNonGaiaPlayers, 0, 500);
 		modifyProtounitAbsolute("Fenris Wolf", cNumberNonGaiaPlayers, 27, 160);
 		
 		trTechSetStatus(cNumberNonGaiaPlayers, 500, 4);
@@ -165,6 +161,9 @@ inactive
 			gadgetUnreal("GodPowers");
 		}
 		trSetCounterDisplay("You will be able to hold more relics as the act progresses");
+		for(x = 1; <= cNumberNonGaiaPlayers){
+			trModifyProtounit("Dwarf", x, 8, 10);
+		}
 		xsDisableSelf();
 	}
 }
@@ -712,10 +711,87 @@ highFrequency
 		R5Wave(1, "Titan Prometheus", 14000, 10000);
 		R5Wave(4*(PlayersActive-PlayersDead), "White Tiger", 12000, 10000);
 		modifyProtounitAbsolute("Wadjet Spit", cNumberNonGaiaPlayers, 1, 12);
+		modifyProtounitAbsolute("Titan Prometheus", cNumberNonGaiaPlayers, 0, 5000);
 		xsDisableSelf();
 		playSound("\cinematics\04_in\armyarrive.wav");
 		trSetLighting("Night", 6);
 		xsEnableRule("ChickenWave3Finish");
+	}
+}
+
+rule ChickenWave3Finish
+inactive
+highFrequency
+{
+	if(trPlayerUnitCountSpecific(cNumberNonGaiaPlayers, "Titan Prometheus") == 0){
+		trFadeOutAllSounds(3);
+		playSound("xwin.wav");
+		trSetLighting("default", 3);
+		trUIFadeToColor(255,255,255,1500,3000,true);
+		xsEnableRule("EndGameLand");
+		trFadeOutMusic(3);
+		trPlayerKillAllUnits(cNumberNonGaiaPlayers);
+		for(a = xGetDatabaseCount(dMissiles); > 0){
+			xDatabaseNext(dMissiles);
+			xUnitSelect(dMissiles, xUnitID);
+			trUnitDestroy();
+			xFreeDatabaseBlock(dMissiles);
+		}
+		xClearDatabase(dMissiles);
+		xResetDatabase(dMissiles);
+		for(p = 1; < cNumberNonGaiaPlayers){
+			trPlayerKillAllGodPowers(p);
+			trUnitSelectClear();
+			trUnitSelectByQV("P"+p+"Unit");
+			trDamageUnit(-1000);
+		}
+		xsDisableSelf();
+		xsDisableRule("BuildChickenArea");
+		xsDisableRule("ChickenLanding");
+		xsDisableRule("ChickenWave1Go");
+		xsDisableRule("ChickenWave1A");
+		xsDisableRule("ChickenWave1B");
+		xsDisableRule("ChickenWave1C");
+		xsDisableRule("ChickenWave1D");
+		xsDisableRule("ChickenWave1E");
+		xsDisableRule("ChickenWave1F");
+		xsDisableRule("ChickenWave1G");
+		xsDisableRule("ChickenWave1H");
+		xsDisableRule("ChickenWave1I");
+		xsDisableRule("ChickenWave1Super");
+		xsDisableRule("ChickenWave1Finish");
+		xsDisableRule("ChickenWave2Go");
+		xsDisableRule("ChickenWave2A");
+		xsDisableRule("ChickenWave2B");
+		xsDisableRule("ChickenWave2C");
+		xsDisableRule("ChickenWave2D");
+		xsDisableRule("ChickenWave2E");
+		xsDisableRule("ChickenWave2F");
+		xsDisableRule("ChickenWave2G");
+		xsDisableRule("ChickenWave2H");
+		xsDisableRule("ChickenWave2I");
+		xsDisableRule("ChickenWave2Super");
+		xsDisableRule("ChickenWave2Finish");
+		xsDisableRule("ChickenWave3Go");
+		xsDisableRule("ChickenWave3A");
+		xsDisableRule("ChickenWave3B");
+		xsDisableRule("ChickenWave3C");
+		xsDisableRule("ChickenWave3D");
+		xsDisableRule("ChickenWave3E");
+		xsDisableRule("ChickenWave3F");
+		xsDisableRule("ChickenWave3G");
+		xsDisableRule("ChickenWave3H");
+		xsDisableRule("ChickenWave3I");
+		xsDisableRule("ChickenWave3Super");
+		xsDisableRule("ChickenWave3Finish");
+		xsDisableRule("ChickenActLoops");
+		xsDisableRule("ChickenAllDead");
+		xsDisableRule("TutorialTerrainChicken");
+		xsDisableRule("FirstTower");
+		xsDisableRule("MissileCheckS5");
+		xsDisableRule("ChickenMechanicLoops");
+		xsDisableRule("ChickenTutorialLoops");
+		xsDisableRule("ChickenTutorialDone");
 	}
 }
 

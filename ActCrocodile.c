@@ -79,8 +79,13 @@ inactive
 					SpawnCrocPoacher2(xsMax(3, cNumberNonGaiaPlayers));
 				}
 				if(CrocProgress >= 2*PlayersActive){
-					SpawnCrocPoacher3(1);
-					SpawnEdible(1);
+					if(Difficulty <= 1){
+						SpawnCrocPoacher3(1);
+						SpawnEdible(1);
+					}
+					else{
+						SpawnCrocPoacher3(2);
+					}
 				}
 				if(CrocProgress >= 3*PlayersActive){
 					SpawnCrocPoacher4(iModulo(2, trTime())+1);
@@ -93,6 +98,11 @@ inactive
 				if(CrocProgress >= 5*PlayersActive){
 					SpawnCrocPoacher4(xsMax(1,PlayersActive-2));
 					SpawnCrocPoacher3(1);
+					if(Difficulty == 3){
+						trOverlayText("Uber Poacher Spawning... run!", 5.0,-1,-1,600);
+						playSound("\cinematics\04_in\armyarrive.wav");
+						UberCrocPoacher(1);
+					}
 				}
 				if(1*trQuestVarGet("AllowS4Uber") > 0){
 					trOverlayText("Uber Poacher Spawning... run!", 5.0,-1,-1,600);

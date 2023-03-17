@@ -320,7 +320,7 @@ inactive
 			StageScore = 100;
 		}
 		if(ExtrasGot > Extras){
-			trChatSend(0, "ERROR MORE THAN 100 PERCENT COMPLETE");
+			debugLog("ERROR MORE THAN 100 PERCENT COMPLETE");
 		}
 		debugLog("Poachers total = " + PoachersTarget);
 		debugLog("Poachers killed = " + PoachersDead);
@@ -386,6 +386,11 @@ inactive
 		trQuestVarSet("ScoreBonus2", 90);
 		trQuestVarSet("ScoreBonus3", 100);
 	}
+	if(Stage == 5){
+		trQuestVarSet("ScoreBonus1", 200);
+		trQuestVarSet("ScoreBonus2", 200);
+		trQuestVarSet("ScoreBonus3", 200);
+	}
 	for(z=1 ; < 51){
 		if((z == 1*trQuestVarGet("ScoreBonus1")/2) || (z == 1*trQuestVarGet("ScoreBonus2")/2) || (z == 1*trQuestVarGet("ScoreBonus3")/2)){
 			CreateDot(63,20+z*2, true);
@@ -403,8 +408,6 @@ rule DoScore
 highFrequency
 inactive
 {
-	//[SCORE OVERRIDE FOR TESTING]
-	//StageScore = 100;
 	int TimerTile = trTimeMS();
 	if(TimerTile > GlobalTimerMS){
 		GlobalTimerMS = trTimeMS()+70;
@@ -490,33 +493,6 @@ inactive
 	}
 }
 
-rule TempEndGame
-highFrequency
-inactive
-{
-	if (trTime() > cActivationTime + 1) {
-		if(QuickStart == 0){
-			trShowWinLose("Thats all so far...", "xwin.wav");
-			for(p=1 ; < cNumberNonGaiaPlayers){
-				trSetPlayerWon(p);
-			}
-			xsDisableSelf();
-			trEndGame();
-		}
-		else{
-			clearMap("black", 5);
-			//xsEnableRule("TutorialTerrainRhino");
-			//[SORT THE ABOVE OUT - AS A CUT TO RHINO FOR DEER, MAYBE JUST FIRE THE EVENT]
-			for(x=NewDestroyNumber ; < trGetNextUnitScenarioNameNumber()){
-				trUnitSelectClear();
-				trUnitSelect(""+x);
-				trUnitDestroy();
-			}
-			xsDisableSelf();
-		}
-	}
-}
-
 rule PassAct
 highFrequency
 inactive
@@ -524,6 +500,18 @@ inactive
 	if (trTime() > cActivationTime + 3) {
 		xsDisableSelf();
 		xsEnableRule("CheckBonuses");
+		if(Stage == 1){
+			Score1 = StageScore;
+		}
+		if(Stage == 2){
+			Score2 = StageScore;
+		}
+		if(Stage == 3){
+			Score3 = StageScore;
+		}
+		if(Stage == 4){
+			Score4 = StageScore;
+		}
 	}
 }
 
@@ -736,4 +724,191 @@ inactive
 		trUnitDestroy();
 	}
 	xsDisableSelf();
+}
+
+rule EndGameLand
+highFrequency
+inactive
+{
+	if (trTime() > cActivationTime + 5) {
+		xsDisableSelf();
+		xsEnableRule("GameEnd");
+		trLetterBox(true);
+		trUIFadeToColor(255,255,255,500,1000,false);
+	}
+}
+
+rule GameEnd
+highFrequency
+inactive
+{
+	for(x=DontDestroyBelow ; < trGetNextUnitScenarioNameNumber()){
+		trUnitSelectClear();
+		trUnitSelect(""+x);
+		trUnitDestroy();
+	}
+	xsDisableRule("Animations");
+	Stage = 6;
+	trFadeOutAllSounds(3);
+	trSetLighting("default", 0);
+	trFadeOutMusic(3);
+	clearMap("black", 5.0);
+	refreshPassability();
+	PaintAtlantisArea(30,10,32,61,5,4);
+	PaintAtlantisArea(30,7,32,9,60,0);
+	PaintAtlantisArea(33,10,35,61,5,4);
+	PaintAtlantisArea(33,7,35,9,60,0);
+	PaintAtlantisArea(36,10,38,61,5,4);
+	PaintAtlantisArea(36,7,38,9,60,0);
+	PaintAtlantisArea(39,10,41,61,5,4);
+	PaintAtlantisArea(39,7,41,9,60,0);
+	PaintAtlantisArea(42,10,44,61,5,4);
+	PaintAtlantisArea(42,7,44,9,60,0);
+	PaintAtlantisArea(45,10,47,61,5,4);
+	PaintAtlantisArea(45,7,47,9,60,0);
+	trCameraCut(vector(78.466331,32.151772,-47.824001), vector(0.019572,-0.281540,0.959350), vector(0.005743,0.959549,0.281482), vector(0.999792,0.000000,-0.020397));
+	modifyProtounitAbsolute("Chicken", 0, 1,0);
+	modifyProtounitAbsolute("Goat", 0, 1,0);
+	modifyProtounitAbsolute("Crocodile", 0, 1,0);
+	modifyProtounitAbsolute("Rhinocerous", 0, 1,0);
+	modifyProtounitAbsolute("Gazelle", 0, 1,0);
+	UnitCreate(0, "Gazelle" ,62, 16, 180);
+	UnitCreate(0, "Rhinocerous" ,68, 16, 180);
+	UnitCreate(0, "Goat", 74, 16, 180);
+	UnitCreate(0, "Crocodile" ,80, 16, 180);
+	UnitCreate(0, "Chicken" , 86, 16, 180);
+	UnitCreate(0, "Pharaoh of Osiris XP" ,92, 16, 180);
+	for(z=1 ; < 51){
+		CreateDot(93,20+z*2, false);
+	}
+	TotalScore = (Score1+Score2+Score3+Score4+100)/5;
+	trPaintTerrain(31,11,31,10+(Score1/2),0,1);
+	trPaintTerrain(34,11,34,10+(Score2/2),0,1);
+	trPaintTerrain(37,11,37,10+(Score3/2),0,1);
+	trPaintTerrain(40,11,40,10+(Score4/2),0,1);
+	trPaintTerrain(43,11,43,10+(100/2),0,1);
+	trQuestVarSet("ScoreCheck", 0);
+	xsDisableSelf();
+	xsEnableRule("ScoreFDelay");
+}
+
+rule ScoreFDelay
+highFrequency
+inactive
+{
+	if (trTime() > cActivationTime + 2) {
+		xsDisableSelf();
+		xsEnableRule("DoScoreFinal");
+	}
+}
+
+rule DoScoreFinal
+highFrequency
+inactive
+{
+	int TimerTile = trTimeMS();
+	if(TimerTile > GlobalTimerMS){
+		GlobalTimerMS = trTimeMS()+70;
+		trQuestVarModify("ScoreCheck", "+", 1);
+		if (iModulo(2, 1*trQuestVarGet("ScoreCheck")) == 0) { //if is divisble by 2
+			xDatabaseNext(dDots);
+			if(xGetInt(dDots, xPercent) <= TotalScore){
+				trUnitSelectClear();
+				xUnitSelect(dDots, xUnitID);
+				trUnitHighlight(10000, false);
+			}
+			if(1*trQuestVarGet("ScoreCheck") >= TotalScore){
+				xsDisableSelf();
+				trDelayedRuleActivation("FinalScoreDone");
+				int temp = trGetNextUnitScenarioNameNumber();
+				UnitCreate(0, "Dwarf", 93, 20+TotalScore, 90);
+				trUnitSelectClear();
+				trUnitSelect(""+temp);
+				trUnitChangeProtoUnit("Heavenlight");
+				temp = trGetNextUnitScenarioNameNumber();
+				UnitCreate(GreenText(), "Dwarf", 93, 20+TotalScore, 90);
+				trUnitSelectClear();
+				trUnitSelect(""+temp);
+				trUnitChangeProtoUnit("Flag");
+				trUnitSelectClear();
+				trUnitSelect(""+temp);
+				trUnitSetAnimationPath("0,1,0,0,0,0");
+				playSoundCustom("fanfare.wav", "\Yeebaagooon\Zoo Quest\Skillpoint.mp3");
+			}
+		}
+		characterDialog("Zoo Quest - "+1*trQuestVarGet("ScoreCheck") + " percent complete", "", "icons/special e son of osiris icon 64");
+	}
+}
+
+void TextDifficulty(){
+	string difficult = "error";
+	if(Difficulty == 0){
+		trOverlayTextColour(0, 255, 0);
+		trOverlayText("Easy difficulty", 8.0, 584, 180, 1000);
+	}
+	if(Difficulty == 1){
+		trOverlayTextColour(255, 255, 0);
+		trOverlayText("Moderate difficulty", 8.0, 550, 180, 1000);
+	}
+	if(Difficulty == 2){
+		trOverlayTextColour(255, 125, 0);
+		trOverlayText("Hard difficulty", 8.0, 584, 180, 1000);
+	}
+	if(Difficulty == 3){
+		trOverlayTextColour(255, 0, 0);
+		trOverlayText("Titan difficulty", 8.0, 582, 180, 1000);
+	}
+}
+
+
+rule FinalScoreDone
+highFrequency
+inactive
+{
+	if (trTime() > cActivationTime + 2) {
+		trLetterBox(false);
+		xsDisableSelf();
+		xsEnableRule("YouWin");
+		TextDifficulty();
+		createCameraTrack(1000);
+		trCameraCut(vector(78.466331,32.151772,-47.824001), vector(0.019572,-0.281540,0.959350), vector(0.005743,0.959549,0.281482), vector(0.999792,-0.000000,-0.020397));
+		addCameraTrackWaypoint();
+		trCameraCut(vector(75.384941,18.111774,-48.841358), vector(0.020254,-0.118123,0.992792), vector(0.002410,0.992999,0.118098), vector(0.999792,-0.000000,-0.020397));
+		addCameraTrackWaypoint();
+		playCameraTrack();
+		if(Difficulty == 0){
+			PaintAtlantisArea(28,64,49,69,0,71);
+		}
+		if(Difficulty == 1){
+			PaintAtlantisArea(28,64,49,69,0,86);
+		}
+		if(Difficulty == 2){
+			PaintAtlantisArea(28,64,49,69,2,12);
+		}
+		if(Difficulty == 3){
+			PaintAtlantisArea(28,64,49,69,2,10);
+		}
+		trChangeTerrainHeight(30,65,48,65,7,false);
+		trChangeTerrainHeight(30,66,48,66,10,false);
+		trChangeTerrainHeight(30,67,48,67,13,false);
+		trChangeTerrainHeight(30,68,48,68,16,false);
+		trChangeTerrainHeight(30,69,48,69,19,false);
+		trChangeTerrainHeight(30,70,48,70,22,false);
+	}
+}
+
+rule YouWin
+highFrequency
+inactive
+{
+	if (trTime() > cActivationTime + 1) {
+		trShowWinLose("Zoo Quest "+1*trQuestVarGet("ScoreCheck") + " percent complete ", "xwin.wav");
+		for(p=1 ; < cNumberNonGaiaPlayers){
+			trSetPlayerWon(p);
+		}
+		xsDisableSelf();
+		trEndGame();
+		xsDisableSelf();
+		ColouredIconChat("1,0.5,0", "icons/special e son of osiris icon 64", "<u>" + "Zoo Quest by Yeebaagooon" + "</u>");
+	}
 }

@@ -168,7 +168,12 @@ inactive
 					SpawnRhinoPoacher(2);
 				}
 				else{
-					SpawnRhinoSuperPoacher(1);
+					if(Difficulty <= 1){
+						SpawnRhinoSuperPoacher(1);
+					}
+					else{
+						SpawnRhinoSuperPoacher(2);
+					}
 				}
 			}
 		}

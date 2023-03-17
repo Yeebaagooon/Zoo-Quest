@@ -56,6 +56,9 @@ inactive
 	if (trTime() > cActivationTime + 29) {
 		trMusicPlay();
 		trPlayNextMusicTrack();
+		if(Difficulty == 3){
+			SpawnDeerPoacher(2);
+		}
 		xsDisableSelf();
 	}
 }
@@ -78,9 +81,15 @@ inactive
 	if (trTime() > cActivationTime + 64) {
 		if(InMinigame == false){
 			if(Stage == 1){
-				trCounterAddTime("poachtimer", 122, 0, "<color={PlayerColor(2)}>Poachers spawn", 32);
-				trQuestVarSet("NextPoacherSpawn", trTime()+200);
-				xsEnableRule("PoacherSpawnLoop");
+				if(Difficulty <= 1){
+					trCounterAddTime("poachtimer", 122, 0, "<color={PlayerColor(2)}>Poachers spawn", 32);
+					trQuestVarSet("NextPoacherSpawn", trTime()+200);
+					xsEnableRule("PoacherSpawnLoop");
+				}
+				else{
+					trQuestVarSet("NextPoacherSpawn", trTime()+1);
+					xsEnableRule("PoacherSpawnLoop");
+				}
 				ColouredIconChat("1,0,0", "icons\archer n throwing axeman icon 64", "<u>Watch out for poachers!</u>");
 				ColouredChat("0.9,0.3,0.3", "They can hide amongst the trees or actively scout for you.");
 				ColouredChat("0.9,0.3,0.3", "You will be attacked on sight.");
@@ -116,7 +125,7 @@ inactive
 {
 	if (trTime() > 1*trQuestVarGet("NextPoacherSpawn")) {
 		if(Stage == 1){
-			SpawnDeerPoacher(2);
+			SpawnDeerPoacher(2+Difficulty);
 			trQuestVarModify("NextPoacherSpawn", "+", 50);
 		}
 	}

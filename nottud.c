@@ -2437,7 +2437,13 @@ void createCrocArea(){
 	paintTrees2("SavannahA", "Palm");
 	paintTrees2("SavannahD", "Palm Stump");
 	int chestnum = PlayersActive+1;
+	if(Difficulty > 0){
+		chestnum = chestnum-Difficulty;
+	}
 	ABORT = 0;
+	if(chestnum == 0){
+		chestnum = 1;
+	}
 	while(chestnum > 0){
 		tempV = getRandomTileMatchingTerrain("SandC", 5);
 		currentId = trGetNextUnitScenarioNameNumber();
@@ -2455,6 +2461,9 @@ void createCrocArea(){
 		}
 	}
 	int runenum = xsMin(8,cNumberNonGaiaPlayers*3);
+	if(Difficulty > 0){
+		runenum = runenum-(Difficulty*3);
+	}
 	int temp = 0;
 	while(runenum > 0){
 		trQuestVarSetFromRand("x", 0, 126);

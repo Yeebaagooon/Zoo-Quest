@@ -26,13 +26,16 @@ inactive
 		ColouredChat("0.0,0.8,0.2", "Get as many as you think you need, then head to the extraction zone.");
 		ColouredChat("0.0,0.8,0.2", "You may also be able to interract with other objects...");
 		xsEnableRule("PlayMusic");
-		//SpawnRhinoPoacher(xsMax(PlayersActive,3));
-		//SpawnRhinoSuperPoacher(1);
 		PlayersDead = 0;
 		timediff = trTimeMS();
 		timelast = trTimeMS();
 		trDelayedRuleActivation("GoatActLoops");
-		SpawnGoatPoacher(2);
+		if(Difficulty <= 1){
+			SpawnGoatPoacher(2);
+		}
+		else{
+			SpawnGoatPoacher(4);
+		}
 		modifyProtounitAbsolute("Throwing Axeman", cNumberNonGaiaPlayers, 55, 4);
 		modifyProtounitAbsolute("Throwing Axeman", cNumberNonGaiaPlayers, 2, 30);
 		for(p = 1 ; < cNumberNonGaiaPlayers){
@@ -42,7 +45,7 @@ inactive
 		ShrinesMax = trPlayerUnitCountSpecific(0, "Shrine");
 		trQuestVarSet("NextPoacherSpawn", trTime()+220);
 		ShrineTarget = ShrinesMax-2-PlayersActive;
-		SpawnRelic(PlayersActive*2+1);
+		SpawnRelic(PlayersActive*2+1-Difficulty);
 		trDelayedRuleActivation("GoatRelicChat");
 	}
 }
@@ -741,6 +744,9 @@ inactive
 				trQuestVarSet("NextPoacherSpawn", trTime()+60+iModulo(140, trTimeMS()));
 				trQuestVarSetFromRand("temp", 1, 2);
 				SpawnGoatPoacher(1*trQuestVarGet("temp"));
+				if(Difficulty == 3){
+					SpawnGoatPoacher(1);
+				}
 				trOverlayText("Poachers Spawning...", 5.0,-1,-1,600);
 				playSound("\cinematics\04_in\armyarrive.wav");
 			}

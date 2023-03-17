@@ -1,9 +1,9 @@
 //---Controls
 //\Yeebaagooon\Zoo Quest\Test sound.mp3
-int QuickStart = 5;
+int QuickStart = 0;
 bool LOS = false;
-bool AlwaysWin = true;
-bool PlayCine = true;
+bool AlwaysWin = false;
+bool PlayCine = false;
 
 /*
 it uses build at pointer instead
@@ -43,7 +43,7 @@ S3 super
 -0.5 enemy speed
 dwarf 10s lifespan
 
-Difficulty
+Difficulty - INT Difficulty is set
 Data
 Persistent bonus
 Act Skip
@@ -81,6 +81,13 @@ float timediff = 0.0;
 int timelast = 0;
 int Stage = 0;
 int SkipRequired = 0;
+int Difficulty = 0;
+
+int Score1 = 0;
+int Score2 = 0;
+int Score3 = 0;
+int Score4 = 0;
+float TotalScore = 0;
 
 float timediff2 = 0.0;
 float timelast2 = 0.0;
