@@ -528,7 +528,7 @@ highFrequency
 				//so for 15 degrees and 5 projs our angles are 30,15,0,-15-,-30, so set to cos/sin -30 then loop for +15
 				dir = rotationMatrix(dir, 0.866025, -0.5); //dir, -30cos, -30sin
 				for(a = 1; < 6){
-					ShootProjectile(dir, closevector, "Meteorite", "Wadjet Spit", 6, 100, 6500);
+					ShootProjectile(dir, closevector, "Meteorite", "Wadjet Spit", 6, 20, 6500);
 					dir = rotationMatrix(dir, baseCos, baseSin);
 				}
 			}

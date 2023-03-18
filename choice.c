@@ -584,7 +584,106 @@ inactive
 					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
 				}
 			}
+			case 57:
+			{
+				//chicken +200hp
+				trModifyProtounit(""+ChickenProto, p, 0, 200);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 58:
+			{
+				//chicken +1 speed
+				trModifyProtounit(""+ChickenProto, p, 1, 1);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 59:
+			{
+				//chicken +4 tower limit
+				trModifyProtounit("Tower", p, 10, 4);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 60:
+			{
+				//chicken +4 tower attack
+				trModifyProtounit("Tower", p, 31, 4);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 61:
+			{
+				//chicken +1 landmine range
+				xSetInt(dPlayerData, xLandmineRange, xGetInt(dPlayerData, xLandmineRange)+1);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 62:
+			{
+				//chicken regen 20/20
+				xSetInt(dPlayerData, xHPRegenTime, 20);
+				xSetInt(dPlayerData, xHPRegen, xGetInt(dPlayerData, xHPRegen)+20);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 63:
+			{
+				//chicken +400hp
+				trModifyProtounit(""+ChickenProto, p, 0, 400);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 64:
+			{
+				//chicken +2 speed
+				trModifyProtounit(""+ChickenProto, p, 1, 2);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 65:
+			{
+				//chicken +4 tower limit
+				trModifyProtounit("Tower", p, 10, 8);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 66:
+			{
+				//chicken +4 tower attack
+				trModifyProtounit("Tower", p, 31, 8);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 67:
+			{
+				//chicken +1 landmine range
+				xSetInt(dPlayerData, xLandmineRange, xGetInt(dPlayerData, xLandmineRange)+2);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
+			case 68:
+			{
+				//chicken regen 20/20
+				xSetInt(dPlayerData, xHPRegenTime, 20);
+				xSetInt(dPlayerData, xHPRegen, xGetInt(dPlayerData, xHPRegen)+60);
+				if(trCurrentPlayer() == p){
+					playSoundCustom("researchcomplete.wav", "\Yeebaagooon\Zoo Quest\SelectBonus.mp3");
+				}
+			}
 		}
+		
 		trQuestVarSet("P"+ActionChoice+"YesAction", 0);
 		trQuestVarSet("P"+ActionChoice+"NoAction", 0);
 		trQuestVarSet("P"+ActionChoice+"ChoiceDialog", 0);

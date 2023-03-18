@@ -429,7 +429,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 4) {
-		characterDialog("Chicken Powers", "TEST E DOES NOT WORK", "icons\animal chicken icon 64");
+		characterDialog("Chicken Powers", "Use 'E' to temporarily allow towers to fire two arrows", "icons\animal chicken icon 64");
 		xsDisableSelf();
 		xsEnableRule("C_Cine_005");
 	}
@@ -440,7 +440,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 4) {
-		characterDialog("Chicken Powers", "E will recharge after all charges are spent.", "icons\animal chicken icon 64");
+		characterDialog("Chicken Powers", "E will recharge after use.", "icons\animal chicken icon 64");
 		xsDisableSelf();
 		xsEnableRule("ChickenLanding");
 	}

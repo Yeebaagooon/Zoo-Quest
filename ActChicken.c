@@ -48,7 +48,7 @@ rule ChickenLanding
 highFrequency
 inactive
 {
-	if (trTime() > cActivationTime + 4) {
+	if (trTime() > cActivationTime + 3) {
 		trLetterBox(false);
 		uiZoomToProto(""+ChickenProto);
 		uiLookAtProto(""+ChickenProto);
@@ -319,6 +319,7 @@ inactive
 highFrequency
 {
 	if(trPlayerUnitCountSpecific(cNumberNonGaiaPlayers, "Peltast") == 0){
+		R5Chest((cNumberNonGaiaPlayers-Difficulty), 9800, 3600);
 		modifyProtounitAbsolute("Wadjet Spit", cNumberNonGaiaPlayers, 1, 6);
 		vector tileForStart = MapCentre*0.5;
 		int StartTileX = xsVectorGetX(tileForStart);
@@ -519,6 +520,7 @@ inactive
 highFrequency
 {
 	if(trPlayerUnitCountSpecific(cNumberNonGaiaPlayers, "Satyr") == 0){
+		R5Chest((cNumberNonGaiaPlayers-Difficulty), 20000, 9800);
 		modifyProtounitAbsolute("Wadjet Spit", cNumberNonGaiaPlayers, 1, 6);
 		vector tileForStart = MapCentre*0.5;
 		int StartTileX = xsVectorGetX(tileForStart);
@@ -588,7 +590,7 @@ highFrequency
 		xsEnableRule("ChickenWave3A");
 		playSound("\cinematics\04_in\armyarrive.wav");
 		trClearCounterDisplay();
-		trCounterAddTime("ChickenInfo", 400, 0, "<color={PlayerColor(2)}>Ultra poacher</color>", 45);
+		trCounterAddTime("ChickenInfo", 425, 0, "<color={PlayerColor(2)}>Ultra poacher</color>", 45);
 		xsDisableSelf();
 	}
 }
@@ -844,18 +846,25 @@ inactive
 					playSound("\xpack\xdialog\es\xkri075.mp3");
 				}
 			}
+			if(xGetInt(dPlayerData, xHPRegen) > 0){
+				if(trTime() > xGetInt(dPlayerData, xHPRegenNext)){
+					trUnitSelectByQV("P"+p+"Unit");
+					trDamageUnit(-1*xGetInt(dPlayerData, xHPRegen));
+					xSetInt(dPlayerData, xHPRegenNext, trTime()+xGetInt(dPlayerData, xHPRegenTime));
+				}
+			}
 			if((trTime() > 1*trQuestVarGet("P"+p+"ERecharge")) && (xGetInt(dPlayerData, xS5E) == 0)){
 				trQuestVarSet("P"+p+"ERecharge", trTime()+xGetInt(dPlayerData, xS5ERecharge));
 				xSetInt(dPlayerData, xS5E, -1);
 			}
 			if((trTime() >= 1*trQuestVarGet("P"+p+"ERecharge")) && (xGetInt(dPlayerData, xS5E) < 0)){
-				xSetInt(dPlayerData, xS5E, 5);
+				xSetInt(dPlayerData, xS5E, 1);
 			}
 			
 			if(xGetInt(dPlayerData, xS5E) > 0){
 				if(trCurrentPlayer() == p){
 					trCounterAbort("cdtutorial");
-					trCounterAddTime("cdtutorial", -100, -200, "</color>E - All towers fire at cursor | " + xGetInt(dPlayerData, xS5E), -1);
+					trCounterAddTime("cdtutorial", -100, -200, "</color>E - All towers doubleshot | " + xGetInt(dPlayerData, xS5E), -1);
 				}
 			}
 			else if((1*trQuestVarGet("P"+p+"ERecharge") > trTime()) && (xGetInt(dPlayerData, xS5E) == -1)){
@@ -865,6 +874,75 @@ inactive
 				}
 				xSetInt(dPlayerData, xS5E, -2);
 				//E recharge
+			}
+		}
+		if(xGetDatabaseCount(dChests) > 0){
+			xDatabaseNext(dChests);
+			int n = xGetInt(dChests, xUnitID);
+			xUnitSelect(dChests,xUnitID);
+			if(trCountUnitsInArea(""+n,0,"Great Box", 1) == 0){
+				xFreeDatabaseBlock(dChests);
+				debugLog("Chest removed" + n);
+				debugLog(""+kbGetProtoUnitID(""+n));
+				ChestsTotal = ChestsTotal-1;
+				//CreateChest(iModulo(252, trTimeMS()),iModulo(252, trTime()));
+			}
+			if (trUnitIsSelected()) {
+				uiClearSelection();
+				startNPCDialog(5);
+			}
+			trUnitSelectClear();
+			for(pl=1 ; < cNumberNonGaiaPlayers){
+				if(trCountUnitsInArea(""+n,pl,ChickenProto, 5) > 0){
+					xUnitSelect(dChests,xUnitID);
+					trUnitSetAnimation("SE_Great_Box_Opening",false,-1);
+					xUnitSelect(dChests,xUnitID);
+					trUnitHighlight(3, false);
+					trUnitSelectClear();
+					xUnitSelect(dChests, xUnlockUnitID);
+					trUnitChangeProtoUnit("Spy Eye");
+					trUnitSelectClear();
+					xUnitSelect(dChests, xUnlockUnitID);
+					trMutateSelected(kbGetProtoUnitID("Pyramid Osiris Xpack"));
+					trUnitSelectClear();
+					xUnitSelect(dChests, xUnlockUnitID);
+					trSetSelectedScale(100,0,0);
+					trUnitSelectClear();
+					xUnitSelect(dChests, xUnlockUnitID);
+					trUnitOverrideAnimation(6, 0, false, true, -1);
+					trUnitSelectClear();
+					xUnitSelect(dChests, xUnlockUnitID);
+					trUnitSetAnimationPath("0,1,0,0,0,0");
+					xAddDatabaseBlock(dDestroyMe, true);
+					xSetInt(dDestroyMe, xDestroyName, xGetInt(dChests, xUnlockUnitID));
+					xSetInt(dDestroyMe, xDestroyTime, trTimeMS()+3000);
+					ChestsFound = ChestsFound+1;
+					xFreeDatabaseBlock(dChests);
+					trQuestVarSetFromRand("temp2", 1, 3);
+					if(ActPart < 6){
+						if(1*trQuestVarGet("temp2") == 1){
+							PlayerChoice(pl, "Choose your reward:", "+200 chicken hp", 57, "+4 tower limit", 59, 10000);
+						}
+						if(1*trQuestVarGet("temp2") == 2){
+							PlayerChoice(pl, "Choose your reward:", "+1 chicken speed", 58, "+4 tower attack", 60, 10000);
+						}
+						if(1*trQuestVarGet("temp2") == 3){
+							PlayerChoice(pl, "Choose your reward:", "+1 landmine explosion range", 61, "+20hp regen every 20s", 62, 10000);
+						}
+					}
+					else{
+						//more rewards higher
+						if(1*trQuestVarGet("temp2") == 1){
+							PlayerChoice(pl, "Choose your reward:", "+400 chicken hp", 57, "+8 tower limit", 59, 10000);
+						}
+						if(1*trQuestVarGet("temp2") == 2){
+							PlayerChoice(pl, "Choose your reward:", "+2 chicken speed", 58, "+8 tower attack", 60, 10000);
+						}
+						if(1*trQuestVarGet("temp2") == 3){
+							PlayerChoice(pl, "Choose your reward:", "+2 landmine explosion range", 61, "+60hp regen every 20s", 62, 10000);
+						}
+					}
+				}
 			}
 		}
 	}

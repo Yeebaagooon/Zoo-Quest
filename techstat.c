@@ -94,7 +94,7 @@ highFrequency
 	modifyProtounitAbsolute("Peltast", cNumberNonGaiaPlayers, 11, 24);
 	modifyProtounitAbsolute("Siege Ship Egyptian", cNumberNonGaiaPlayers, 0, 250);
 	modifyProtounitAbsolute("Siege Ship Egyptian", cNumberNonGaiaPlayers, 13, 1);
-	modifyProtounitAbsolute("Siege Ship Egyptian", cNumberNonGaiaPlayers, 32, 100);
+	modifyProtounitAbsolute("Siege Ship Egyptian", cNumberNonGaiaPlayers, 32, 20);
 	for(p = 1; <= cNumberNonGaiaPlayers){
 		trTechSetStatus(p, 27 ,4);
 		trTechSetStatus(p, 28 ,4);

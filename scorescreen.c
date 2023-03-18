@@ -803,6 +803,7 @@ inactive
 	if (trTime() > cActivationTime + 2) {
 		xsDisableSelf();
 		xsEnableRule("DoScoreFinal");
+		trSetFogAndBlackmap(false,false);
 	}
 }
 

@@ -2776,7 +2776,7 @@ void SpawnCrocPoacher4(int num = 0){
 			spawn = xGetVector(dDirtA, xDirtLoc);
 			temp = trGetNextUnitScenarioNameNumber();
 			UnitCreate(cNumberNonGaiaPlayers, "Cinematic Block", xsVectorGetX(spawn), xsVectorGetZ(spawn), 0);
-			if((distanceBetweenVectors(spawn, EP, true) < 1000)){
+			if((distanceBetweenVectors(spawn, EP, true) > 1000)){
 				for(p = 1; < cNumberNonGaiaPlayers){
 					xSetPointer(dPlayerData, p);
 					if((distanceBetweenVectors(spawn, kbGetBlockPosition(""+xGetInt(dPlayerData, xPlayerUnitID)),true) < 1200) && (xGetBool(dPlayerData, xPlayerActive) == true)){

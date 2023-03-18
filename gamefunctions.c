@@ -1223,3 +1223,18 @@ void R5Wave(int deploy = 1, string proto = "", int distancemmax = 1800, int dist
 		}
 	}
 }
+
+void R5Chest(int deploy = 1, int distancemmax = 1800, int distancemin = 1600){
+	vector tempV = vector(0,0,0);
+	int temp = 0;
+	while(deploy > 0){
+		trQuestVarSetFromRand("temp", 1, xGetDatabaseCount(dShore));
+		xSetPointer(dShore, 1*trQuestVarGet("temp"));
+		tempV = xGetVector(dShore, xShoreLoc);
+		xSetInt(dShore, xShoreDist, distanceBetweenVectors(xGetVector(dShore, xShoreLoc), MapCentre, true));
+		if((xGetInt(dShore, xShoreDist) < distancemmax) && (xGetInt(dShore, xShoreDist) > distancemin)){
+			CreateChest(xsVectorGetX(tempV)/2, xsVectorGetZ(tempV)/2, -1);
+			deploy = deploy-1;
+		}
+	}
+}

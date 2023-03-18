@@ -406,8 +406,10 @@ inactive
 		}
 		if(Zebras <= PlayersActive/2){
 			SpawnEdible(cNumberNonGaiaPlayers);
-			SpawnCrocPoacher1(2);
-			SpawnCrocPoacher2(1);
+			if(InMinigame == false){
+				SpawnCrocPoacher1(2);
+				SpawnCrocPoacher2(1);
+			}
 		}
 		
 	}

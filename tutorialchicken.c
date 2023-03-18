@@ -243,7 +243,7 @@ void ProcessHeldRelics(int count = 1) {
 			xUnitSelect(dHeldRelics, xUnitID);
 			trUnitChangeProtoUnit("Relic");
 			xUnitSelect(dHeldRelics, xUnitID);
-			trSetSelectedScale(0.25*xGetInt(dHeldRelics, xRelicLevel)+0.75,0.25*xGetInt(dHeldRelics, xRelicLevel)+0.75,0.25*xGetInt(dHeldRelics, xRelicLevel)+0.75);
+			trSetSelectedScale(1+0.25*xGetInt(dHeldRelics, xRelicLevel),1+0.25*xGetInt(dHeldRelics, xRelicLevel),1+0.25*xGetInt(dHeldRelics, xRelicLevel));
 			xAddDatabaseBlock(dFreeRelics, true);
 			xSetInt(dFreeRelics, xUnitID, 1*xGetInt(dHeldRelics, xUnitID));
 			xSetInt(dFreeRelics, xRelicType, 1*xGetInt(dHeldRelics, xRelicType));
@@ -324,7 +324,7 @@ void ProcessEnemy(int count = 1) {
 		if(TutorialMode == false){
 			if(trUnitAlive() == false){
 				pos = kbGetBlockPosition(""+xGetInt(dEnemies, xUnitID));
-				if(iModulo((20+cNumberNonGaiaPlayers+(Difficulty*5)), trTimeMS()) == 0){
+				if(iModulo((15+cNumberNonGaiaPlayers+(Difficulty*5)), trTimeMS()) == 0){
 					temp = trGetNextUnitScenarioNameNumber();
 					UnitCreate(1, "Cinematic Block", xsVectorGetX(pos), xsVectorGetZ(pos), 0);
 					trUnitSelectClear();
@@ -337,7 +337,6 @@ void ProcessEnemy(int count = 1) {
 				//xFreeDatabaseBlock(dEnemies);
 			}
 		}
-		trUnitSelectClear();
 	}
 }
 
@@ -395,31 +394,13 @@ inactive
 			if(trCurrentPlayer() == p){
 				npcDiag(17);
 				trCounterAbort("cdtutorial");
-				trCounterAddTime("cdtutorial", -100, -200, "<color={PlayerColor("+p+")}>Press 'E' for all towers to fire", -1);
+				trCounterAddTime("cdtutorial", -100, -200, "<color={PlayerColor("+p+")}>Press 'E' for doubleshot", -1);
 			}
 		}
 		if(trPlayerResourceCount(p, "Food") > 0){
 			trPlayerGrantResources(p, "Food", -100000);
 			//E
-			trBlockAllAmbientSounds();
-			trBlockAllSounds();
 			if(xGetInt(dPlayerData, xS5E) > 0){
-				for(a = xGetDatabaseCount(dTowers); > 0){
-					xDatabaseNext(dTowers);
-					if(xGetInt(dTowers, xOwner) == p){
-						if(xGetBool(dTowers, xConstructed) == true){
-							start = kbGetBlockPosition(""+xGetInt(dTowers, xUnitID));
-							dest = xGetVector(dPlayerData, xSpecialVector);
-							dir = xsVectorNormalize(dest-start);
-							IGUnit = true;
-							IGName = xGetInt(dTowers, xUnitID);
-							unitcheck = "Tower";
-							xSetPointer(dPlayerData, xGetInt(dTowers, xOwner));
-							ShootProjectile(dir, start, "Lampades Bolt", "Wadjet Spit", 0, xGetInt(dPlayerData, xTowerDamage), 5000, p);
-						}
-					}
-				}
-				trDelayedRuleActivation("UnblockSound");
 				xSetInt(dPlayerData, xS5E, xGetInt(dPlayerData, xS5E)-1);
 			}
 			else{

@@ -1,9 +1,9 @@
 //---Controls
 //\Yeebaagooon\Zoo Quest\Test sound.mp3
-int QuickStart = 0;
+int QuickStart = 5;
 bool LOS = false;
 bool AlwaysWin = true;
-bool PlayCine = true;
+bool PlayCine = false;
 
 /*
 it uses build at pointer instead
@@ -34,12 +34,11 @@ instead of the id
 ONLY HAVE ONE FREEDBBLOCK
 
 [BUG LIST]
-*tp make default yes
 ?resign when prisoner
 res chciken tut
 
-A5 chests
-A5 armour
+
+
 
 Difficulty - INT Difficulty is set, do in nottud.c
 xData
@@ -48,7 +47,16 @@ xAct Skip
 *End Cine
 
 
+Chest open ddestroy ?
+?relics spawn for no reason
+
+End terrain messsy do units
+
+-DO E ABILITY, DOUBLESHOT
+-100% bonuses
+
 //DELETE
+
 */
 
 //---Strings
