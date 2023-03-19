@@ -65,7 +65,7 @@ inactive
 		trDelayedRuleActivation("ChickenActLoops");
 		for(p = 1 ; < cNumberNonGaiaPlayers){
 			xSetPointer(dPlayerData, p);
-			xSetInt(dPlayerData, xS5E, 5);
+			xSetInt(dPlayerData, xS5E, 1);
 			trUnforbidProtounit(p, "Armory");
 			trUnforbidProtounit(p, "Tower");
 			trQuestVarSet("P"+p+"FountainMsg", 0);
@@ -864,7 +864,7 @@ inactive
 			if(xGetInt(dPlayerData, xS5E) > 0){
 				if(trCurrentPlayer() == p){
 					trCounterAbort("cdtutorial");
-					trCounterAddTime("cdtutorial", -100, -200, "</color>E - All towers doubleshot | " + xGetInt(dPlayerData, xS5E), -1);
+					trCounterAddTime("cdtutorial", -100, -200, "</color>E - All towers doubleshot", -1);
 				}
 			}
 			else if((1*trQuestVarGet("P"+p+"ERecharge") > trTime()) && (xGetInt(dPlayerData, xS5E) == -1)){
@@ -885,7 +885,6 @@ inactive
 				debugLog("Chest removed" + n);
 				debugLog(""+kbGetProtoUnitID(""+n));
 				ChestsTotal = ChestsTotal-1;
-				//CreateChest(iModulo(252, trTimeMS()),iModulo(252, trTime()));
 			}
 			if (trUnitIsSelected()) {
 				uiClearSelection();

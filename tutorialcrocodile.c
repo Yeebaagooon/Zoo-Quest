@@ -439,8 +439,6 @@ inactive
 										xUnitSelect(dEdibles, xUnitID);
 										trDamageUnit(1000);
 										xFreeDatabaseBlock(dEdibles);
-										//xUnitSelect(dPoachers, xUnitID);
-										//xFreeDatabaseBlock(dPoachers);
 										xSetFloat(dPlayerData, xCrocFood, xGetFloat(dPlayerData, xCrocFood)+2);
 										if(trCurrentPlayer() == p){
 											playSound("crocsnap.wav");
@@ -456,8 +454,6 @@ inactive
 										xUnitSelect(dEdibles, xUnitID);
 										trDamageUnit(1000);
 										xFreeDatabaseBlock(dEdibles);
-										//xUnitSelect(dPoachers, xUnitID);
-										//xFreeDatabaseBlock(dPoachers);
 										if(trCurrentPlayer() == p){
 											playSound("crocsnap.wav");
 										}
@@ -471,8 +467,6 @@ inactive
 										xUnitSelect(dEdibles, xUnitID);
 										trDamageUnit(1000);
 										xFreeDatabaseBlock(dEdibles);
-										//xUnitSelect(dPoachers, xUnitID);
-										//xFreeDatabaseBlock(dPoachers);
 										if(trCurrentPlayer() == p){
 											playSound("crocsnap.wav");
 										}
@@ -486,8 +480,6 @@ inactive
 										xUnitSelect(dEdibles, xUnitID);
 										trDamageUnit(1000);
 										xFreeDatabaseBlock(dEdibles);
-										//xUnitSelect(dPoachers, xUnitID);
-										//xFreeDatabaseBlock(dPoachers);
 										xSetFloat(dPlayerData, xCrocFood, xGetFloat(dPlayerData, xCrocFood)+3);
 										if(trCurrentPlayer() == p){
 											playSound("crocsnap.wav");

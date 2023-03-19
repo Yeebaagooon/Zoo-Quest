@@ -1,6 +1,6 @@
 //---Controls
 //\Yeebaagooon\Zoo Quest\Test sound.mp3
-int QuickStart = 5;
+int QuickStart = 4;
 bool LOS = false;
 bool AlwaysWin = true;
 bool PlayCine = false;
@@ -34,25 +34,23 @@ instead of the id
 ONLY HAVE ONE FREEDBBLOCK
 
 [BUG LIST]
+A4 extras
+goat mg teleports in/out
+
+?relic scale
+?a medusa R5
+
+
 ?resign when prisoner
-res chciken tut
-
-
-
-
 Difficulty - INT Difficulty is set, do in nottud.c
 xData
 xPersistent bonus
 xAct Skip
 *End Cine
-
-
-Chest open ddestroy ?
 ?relics spawn for no reason
 
 End terrain messsy do units
 
--DO E ABILITY, DOUBLESHOT
 -100% bonuses
 
 //DELETE

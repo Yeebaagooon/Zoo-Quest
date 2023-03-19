@@ -1438,6 +1438,6 @@ vector HeadingToVector(int heading = 0){
 }
 //Does 90 degress left
 
-void trSetScale(int s = 0){
+void trSetScale(float s = 0.0){
 	trSetSelectedScale(s,s,s);
 }

@@ -76,7 +76,7 @@ inactive
 				trQuestVarSet("NextPoacherSpawn", trTime()+40+iModulo(90, trTimeMS()));
 				SpawnCrocPoacher1(xsMin(4, cNumberNonGaiaPlayers+2));
 				if(CrocProgress < 2*PlayersActive){
-					SpawnCrocPoacher2(xsMax(3, cNumberNonGaiaPlayers));
+					SpawnCrocPoacher2(xsMax(3, (cNumberNonGaiaPlayers-2)));
 				}
 				if(CrocProgress >= 2*PlayersActive){
 					if(Difficulty <= 1){
@@ -84,7 +84,7 @@ inactive
 						SpawnEdible(1);
 					}
 					else{
-						SpawnCrocPoacher3(2);
+						SpawnCrocPoacher3(1);
 					}
 				}
 				if(CrocProgress >= 3*PlayersActive){
@@ -573,7 +573,7 @@ highFrequency
 	temp = trGetNextUnitScenarioNameNumber();
 	for(p=1 ; < cNumberNonGaiaPlayers){
 		xSetPointer(dPlayerData, p);
-		if(xGetBool(dPlayerData, xPlayerActive)){
+		if((xGetBool(dPlayerData, xPlayerActive) == true) && (xGetBool(dPlayerData, xPlayerDead) == false)){
 			trVectorQuestVarSet("P"+p+"PosMG", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
 			trVectorQuestVarSet("P"+p+"PosMG", trVectorQuestVarGet("P"+p+"PosMG")/2);
 			if((trVectorQuestVarGetX("P"+p+"PosMG") > xsVectorGetX(StageVector)-2) && (trVectorQuestVarGetX("P"+p+"PosMG") < xsVectorGetX(StageVector)+2) && (trVectorQuestVarGetZ("P"+p+"PosMG") > xsVectorGetZ(StageVector)-2) && (trVectorQuestVarGetZ("P"+p+"PosMG") < xsVectorGetZ(StageVector)+2)){

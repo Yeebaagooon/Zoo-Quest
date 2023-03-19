@@ -549,7 +549,7 @@ highFrequency
 		if(xGetBool(dPlayerData, xPlayerActive)){
 			trVectorQuestVarSet("P"+p+"PosMG", kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
 			trVectorQuestVarSet("P"+p+"PosMG", trVectorQuestVarGet("P"+p+"PosMG")/2);
-			if((trVectorQuestVarGetX("P"+p+"PosMG") > xsVectorGetX(StageVector)-2) && (trVectorQuestVarGetX("P"+p+"PosMG") < xsVectorGetX(StageVector)+2) && (trVectorQuestVarGetZ("P"+p+"PosMG") > xsVectorGetZ(StageVector)-2) && (trVectorQuestVarGetZ("P"+p+"PosMG") < xsVectorGetZ(StageVector)+2)){
+			if((trVectorQuestVarGetX("P"+p+"PosMG") >= xsVectorGetX(StageVector)-2) && (trVectorQuestVarGetX("P"+p+"PosMG") <= xsVectorGetX(StageVector)+2) && (trVectorQuestVarGetZ("P"+p+"PosMG") >= xsVectorGetZ(StageVector)-2) && (trVectorQuestVarGetZ("P"+p+"PosMG") <= xsVectorGetZ(StageVector)+2)){
 				PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is playing");
 				PlayersMinigaming = PlayersMinigaming+1;
 				xSetBool(dPlayerData, xStopDeath, true);
@@ -637,7 +637,7 @@ inactive
 highFrequency
 {
 	if (trTime() > cActivationTime + 4) {
-		characterDialog("Goat Minigame", "This will cause 2 squares to sink", "icons\world column icon 64");
+		characterDialog("Goat Minigame", "This will cause 2 random squares to sink", "icons\world column icon 64");
 		xsEnableRule("GoatMG_C02");
 		xsDisableSelf();
 	}

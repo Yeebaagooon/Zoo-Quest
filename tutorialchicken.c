@@ -10,7 +10,7 @@ inactive
 		xsDisableRule("CrocodileTutorialDone");
 		xsDisableRule("Jump");
 		xsDisableRule("JumpEnd");
-		QuickStart = 0;
+		//QuickStart = 0;
 		NewDestroyNumber = trGetNextUnitScenarioNameNumber()-1;
 		TutorialMode = true;
 		Stage = 5;
@@ -221,6 +221,7 @@ void ProcessFreeRelics(int count = 0){
 
 void ProcessHeldRelics(int count = 1) {
 	int dropper = 0;
+	float scale = 1.0;
 	for (x=xsMin(count, xGetDatabaseCount(dHeldRelics)); > 0) {
 		xDatabaseNext(dHeldRelics);
 		xUnitSelect(dHeldRelics, xUnitID);
@@ -243,7 +244,8 @@ void ProcessHeldRelics(int count = 1) {
 			xUnitSelect(dHeldRelics, xUnitID);
 			trUnitChangeProtoUnit("Relic");
 			xUnitSelect(dHeldRelics, xUnitID);
-			trSetSelectedScale(1+0.25*xGetInt(dHeldRelics, xRelicLevel),1+0.25*xGetInt(dHeldRelics, xRelicLevel),1+0.25*xGetInt(dHeldRelics, xRelicLevel));
+			scale = 1+0.25*xGetInt(dHeldRelics, xRelicLevel);
+			trSetSelectedScale(scale,scale,scale);
 			xAddDatabaseBlock(dFreeRelics, true);
 			xSetInt(dFreeRelics, xUnitID, 1*xGetInt(dHeldRelics, xUnitID));
 			xSetInt(dFreeRelics, xRelicType, 1*xGetInt(dHeldRelics, xRelicType));
@@ -315,26 +317,21 @@ void ProcessEnemy(int count = 1) {
 	vector pos = vector(0,0,0);
 	for (x=xsMin(count, xGetDatabaseCount(dEnemies)); > 0) {
 		xDatabaseNext(dEnemies);
-		xUnitSelect(dEnemies, xUnitID);
-		if((trUnitPercentDamaged() > 0) && (xGetBool(dEnemies, xMoved) == false)){
-			xSetBool(dEnemies, xMoved, true);
-			trUnitMoveToPoint(xsVectorGetX(MapCentre),1,xsVectorGetZ(MapCentre),-1,true);
-		}
+		pos = kbGetBlockPosition(""+xGetInt(dEnemies, xUnitID));
 		xUnitSelect(dEnemies, xUnitID);
 		if(TutorialMode == false){
 			if(trUnitAlive() == false){
-				pos = kbGetBlockPosition(""+xGetInt(dEnemies, xUnitID));
-				if(iModulo((15+cNumberNonGaiaPlayers+(Difficulty*5)), trTimeMS()) == 0){
+				if(iModulo((11+cNumberNonGaiaPlayers+(Difficulty*2)), trTimeMS()) == 0){
+					//debugLog(""+pos);
 					temp = trGetNextUnitScenarioNameNumber();
 					UnitCreate(1, "Cinematic Block", xsVectorGetX(pos), xsVectorGetZ(pos), 0);
 					trUnitSelectClear();
 					trUnitSelect(""+temp);
 					trUnitChangeProtoUnit("Medusa");
 					xFreeDatabaseBlock(dEnemies);
-					//[THIS MAY CAUSE A BUG]
-					break;
 				}
-				//xFreeDatabaseBlock(dEnemies);
+				xFreeDatabaseBlock(dEnemies);
+				unitTransform("Medusa", "Lightning Sparks Ground");
 			}
 		}
 	}
@@ -364,6 +361,7 @@ inactive
 				ForceRelic(1*trQuestVarGet("ArmoryP"+p),RELIC_ATTACK,1);
 				if(trCurrentPlayer() == p){
 					npcDiag(16);
+					unitTransform("Armory", "Lightning Sparks Ground");
 					trCounterAbort("cdtutorial");
 					trCounterAddTime("cdtutorial", -100, -200, "<color={PlayerColor("+p+")}>Pick up the relic", -1);
 				}
@@ -402,6 +400,11 @@ inactive
 			//E
 			if(xGetInt(dPlayerData, xS5E) > 0){
 				xSetInt(dPlayerData, xS5E, xGetInt(dPlayerData, xS5E)-1);
+				trModifyProtounit("Tower", p, 13, 1);
+				trQuestVarSet("P"+p+"DDTime", trTimeMS()+5000);
+				if(trCurrentPlayer() == p){
+					playSound("arrow" + iModulo(4, (trTime())+1) + ".wav");
+				}
 			}
 			else{
 				if(trCurrentPlayer() == p){
@@ -420,6 +423,13 @@ inactive
 				gadgetReal("CapacityTextDisplay");
 			}
 			trUnitSelectClear();
+		}
+		if(trTimeMS() >= 1*trQuestVarGet("P"+p+"DDTime")){
+			trQuestVarSet("P"+p+"DDTime", trTimeMS()*100);
+			modifyProtounitAbsolute("Tower", p, 13, 1);
+			if(trCurrentPlayer() == p){
+				playSound("godpowerfailed.wav");
+			}
 		}
 		
 	}

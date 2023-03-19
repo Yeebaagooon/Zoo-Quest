@@ -257,11 +257,13 @@ highFrequency
 				trUnitSetAnimationPath("2,0,0,0,0,0,0");
 			}
 			int temp3 = trGetNextUnitScenarioNameNumber();
-			UnitCreate(1, "Pharaoh of Osiris XP", 150,150, 0);
+			UnitCreate(1, "Pharaoh of Osiris XP", 92,20, 0);
 			trUnitSelectClear();
 			trUnitSelect(""+temp3);
 			trUnitSetAnimationPath("0,1,0,1,0,0");
 			trUnitOverrideAnimation(33, 0, true, true, -1, 0);
+			trCameraCut(vector(94.802574,19.802563,186.212006), vector(-0.035675,-0.082735,-0.995933), vector(-0.002962,0.996572,-0.082682), vector(-0.999359,-0.000000,0.035798));
+			trCameraCut(vector(94.537735,9.362560,111.773857), vector(-0.035724,0.064126,-0.997302), vector(0.002295,0.997942,0.064085), vector(-0.999359,-0.000000,0.035798));
 		}
 		if(QuickStart == 7){
 			xsEnableRule("ChickenWave3Finish");

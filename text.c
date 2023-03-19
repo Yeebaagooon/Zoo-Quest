@@ -293,11 +293,11 @@ int npcDiag(int npc = 0, int dialog = 0) {
 			{
 				case 1:
 				{
-					uiMessageBox("Press 'E' for all towers to fire at the cursor.");
+					uiMessageBox("Press 'E' for all towers to gain doubleshot.");
 				}
 				case 2:
 				{
-					uiMessageBox("This ability ignores range and happens instantly.");
+					uiMessageBox("This ability lasts for 5 seconds.");
 				}
 				case 3:
 				{

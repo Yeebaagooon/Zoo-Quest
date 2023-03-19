@@ -759,15 +759,15 @@ inactive
 	clearMap("black", 5.0);
 	refreshPassability();
 	PaintAtlantisArea(30,10,32,61,5,4);
-	PaintAtlantisArea(30,7,32,9,60,0);
+	PaintAtlantisArea(30,7,32,9,0,90);
 	PaintAtlantisArea(33,10,35,61,5,4);
-	PaintAtlantisArea(33,7,35,9,60,0);
+	PaintAtlantisArea(33,7,35,9,0,15);
 	PaintAtlantisArea(36,10,38,61,5,4);
-	PaintAtlantisArea(36,7,38,9,60,0);
+	PaintAtlantisArea(36,7,38,9,2,3);
 	PaintAtlantisArea(39,10,41,61,5,4);
-	PaintAtlantisArea(39,7,41,9,60,0);
+	PaintAtlantisArea(39,7,41,9,0,37);
 	PaintAtlantisArea(42,10,44,61,5,4);
-	PaintAtlantisArea(42,7,44,9,60,0);
+	PaintAtlantisArea(42,7,44,9,3,2);
 	PaintAtlantisArea(45,10,47,61,5,4);
 	PaintAtlantisArea(45,7,47,9,60,0);
 	trCameraCut(vector(78.466331,32.151772,-47.824001), vector(0.019572,-0.281540,0.959350), vector(0.005743,0.959549,0.281482), vector(0.999792,0.000000,-0.020397));
@@ -824,7 +824,12 @@ inactive
 			}
 			if(1*trQuestVarGet("ScoreCheck") >= TotalScore){
 				xsDisableSelf();
-				trDelayedRuleActivation("FinalScoreDone");
+				if(TotalScore >= 90){
+					trDelayedRuleActivation("FinalScore100");
+				}
+				else{
+					trDelayedRuleActivation("FinalScoreDone");
+				}
 				int temp = trGetNextUnitScenarioNameNumber();
 				UnitCreate(0, "Dwarf", 93, 20+TotalScore, 90);
 				trUnitSelectClear();
@@ -899,6 +904,77 @@ inactive
 		trChangeTerrainHeight(30,68,48,68,16,false);
 		trChangeTerrainHeight(30,69,48,69,19,false);
 		trChangeTerrainHeight(30,70,48,70,22,false);
+	}
+}
+
+rule FinalScore100
+highFrequency
+inactive
+{
+	for(x=DontDestroyBelow ; < trGetNextUnitScenarioNameNumber()){
+		trUnitSelectClear();
+		trUnitSelect(""+x);
+		trUnitDestroy();
+	}
+	clearMap("black", 5.0);
+	for(a = 4 ; < 8){
+		for(b = 1 ; < 10){
+			BuildYeebCol(10+a*15,10+b*15);
+		}
+	}
+	for(x = 10 ; < 30){
+		for(z = 0 ; < 40){
+			int temp = trGetNextUnitScenarioNameNumber();
+			UnitCreate(0, "Dwarf", x*4, z*4, 0);
+			trUnitSelectClear();
+			trUnitSelect(""+temp);
+			trUnitChangeProtoUnit("Spy Eye");
+			trUnitSelectClear();
+			trUnitSelect(""+temp);
+			trMutateSelected(kbGetProtoUnitID("Wall Connector"));
+			trUnitSetAnimationPath("0,1,0,0,0,0,0");
+			trSetSelectedScale(2,0.01,2);
+		}
+	}
+	for(x = 4 ; < 10){
+		int temp2 = trGetNextUnitScenarioNameNumber();
+		UnitCreate(1, "Underworld Passage SPC", 12+x*10, 12, 0);
+		trUnitSelectClear();
+		trUnitSelect(""+temp2);
+		trSetSelectedUpVector(0,2,0);
+		trSetSelectedScale(2,1,1);
+		trUnitSelectClear();
+		trUnitSelect(""+temp2);
+		trUnitSetAnimationPath("2,0,0,0,0,0,0");
+	}
+	int temp3 = trGetNextUnitScenarioNameNumber();
+	UnitCreate(1, "Pharaoh of Osiris XP", 92,20, 0);
+	trUnitSelectClear();
+	trUnitSelect(""+temp3);
+	trUnitSetAnimationPath("0,1,0,1,0,0");
+	trUnitOverrideAnimation(33, 0, true, true, -1, 0);
+	trUnitSelectClear();
+	createCameraTrack(7500);
+	trCameraCut(vector(94.802574,19.802563,186.212006), vector(-0.035675,-0.082735,-0.995933), vector(-0.002962,0.996572,-0.082682), vector(-0.999359,-0.000000,0.035798));
+	addCameraTrackWaypoint();
+	trCameraCut(vector(94.537735,9.362560,111.773857), vector(-0.035724,0.064126,-0.997302), vector(0.002295,0.997942,0.064085), vector(-0.999359,-0.000000,0.035798));
+	addCameraTrackWaypoint();
+	playCameraTrack();
+	xsDisableSelf();
+	xsEnableRule("YouWinDelay");
+	trSetObscuredUnits(false);
+	trUIFadeToColor(255,255,255,500,1000,false);
+}
+
+rule YouWinDelay
+highFrequency
+inactive
+{
+	if (trTime() > cActivationTime + 6) {
+		xsDisableSelf();
+		trLetterBox(false);
+		xsEnableRule("YouWin");
+		TextDifficulty();
 	}
 }
 

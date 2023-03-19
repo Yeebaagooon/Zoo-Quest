@@ -50,9 +50,13 @@ int MALLOC = 0;
 int ARRAYS = 0;
 int mNumArrays = 0;
 
+bool DEBUGGER = true;
+
 void debugLog(string msg = "") {
-	if (trCurrentPlayer() == 1) {
-		trChatSend(0, "<color=1,0,0>" + msg);
+	if(DEBUGGER == true){
+		if (trCurrentPlayer() == 1) {
+			trChatSend(0, "<color=1,0,0>" + msg);
+		}
 	}
 }
 
