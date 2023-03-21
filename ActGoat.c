@@ -868,5 +868,6 @@ highFrequency
 		trUnitChangeProtoUnit("Lightning Sparks Ground");
 		xFreeDatabaseBlock(dInterractables);
 	}
+	xResetDatabase(dHelp);
 	xsDisableSelf();
 }

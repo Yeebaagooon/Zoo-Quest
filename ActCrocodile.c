@@ -594,7 +594,7 @@ highFrequency
 				PlayerColouredChat(p, trStringQuestVarGet("p"+p+"name") + " is playing");
 				PlayersMinigaming = PlayersMinigaming+1;
 				trQuestVarSet("P"+p+"IG", trGetNextUnitScenarioNameNumber());
-				UnitCreate(p, "Roc", 2*xsVectorGetX(StageVector),2*xsVectorGetZ(StageVector), 0);
+				UnitCreate(p, "Roc", 2*xsVectorGetX(StageVector)-5,2*xsVectorGetZ(StageVector)-5, 0);
 				trUnitSelectByQV("P"+p+"Unit");
 				trImmediateUnitGarrison(""+1*trQuestVarGet("P"+p+"IG"));
 				trUnitSelectByQV("P"+p+"IG");

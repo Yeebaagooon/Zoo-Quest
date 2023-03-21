@@ -1,6 +1,6 @@
 //---Controls
 //\Yeebaagooon\Zoo Quest\Test sound.mp3
-int QuickStart = 4;
+int QuickStart = 5;
 bool LOS = false;
 bool AlwaysWin = true;
 bool PlayCine = false;
@@ -34,11 +34,12 @@ instead of the id
 ONLY HAVE ONE FREEDBBLOCK
 
 [BUG LIST]
-A4 extras
-goat mg teleports in/out
-
-?relic scale
+?relic scale !!!!!!!!!!!!!!!!!!
 ?a medusa R5
+
+
+croc mg teleport -2,-2
+multi armory delete ?
 
 
 ?resign when prisoner
@@ -86,6 +87,7 @@ int timelast = 0;
 int Stage = 0;
 int SkipRequired = 0;
 int Difficulty = 0;
+int AllowChicken = 1;
 
 int Score1 = 0;
 int Score2 = 0;

@@ -62,7 +62,7 @@ inactive
 				}
 				if(Stage == 2){
 					trQuestVarSet("P"+p+"IG", trGetNextUnitScenarioNameNumber());
-					UnitCreate(p, "Roc", 2*xsVectorGetX(StageVector)+2,2*xsVectorGetZ(StageVector)+2, 0);
+					UnitCreate(p, "Roc", 2*xsVectorGetX(StageVector)-2,2*xsVectorGetZ(StageVector)-2, 0);
 					trUnitSelectByQV("P"+p+"Unit");
 					trImmediateUnitGarrison(""+1*trQuestVarGet("P"+p+"IG"));
 					trUnitSelectByQV("P"+p+"IG");
@@ -74,7 +74,7 @@ inactive
 				}
 				if(Stage == 3){
 					trQuestVarSet("P"+p+"IG", trGetNextUnitScenarioNameNumber());
-					UnitCreate(p, "Roc", 2*xsVectorGetX(StageVector)+2,2*xsVectorGetZ(StageVector)+2, 0);
+					UnitCreate(p, "Roc", 2*xsVectorGetX(StageVector)-2,2*xsVectorGetZ(StageVector)-2, 0);
 					trUnitSelectByQV("P"+p+"Unit");
 					trImmediateUnitGarrison(""+1*trQuestVarGet("P"+p+"IG"));
 					trUnitSelectByQV("P"+p+"IG");
@@ -86,7 +86,7 @@ inactive
 				}
 				if(Stage == 4){
 					trQuestVarSet("P"+p+"IG", trGetNextUnitScenarioNameNumber());
-					UnitCreate(p, "Roc", 2*xsVectorGetX(StageVector)+2,2*xsVectorGetZ(StageVector)+2, 0);
+					UnitCreate(p, "Roc", 2*xsVectorGetX(StageVector)-2,2*xsVectorGetZ(StageVector)-2, 0);
 					trUnitSelectByQV("P"+p+"Unit");
 					trImmediateUnitGarrison(""+1*trQuestVarGet("P"+p+"IG"));
 					trUnitSelectByQV("P"+p+"IG");

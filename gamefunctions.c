@@ -589,20 +589,22 @@ void CreateCroc(int p = 1, int x = 1, int z = 1, int heading = 0){
 }
 
 void CreateChicken(int p = 1, int x = 1, int z = 1, int heading = 0){
-	xSetPointer(dPlayerData, p);
-	trQuestVarSet("P"+p+"Unit", trGetNextUnitScenarioNameNumber());
-	UnitCreate(p, ""+ChickenProto, x, z, heading);
-	trUnitSelectByQV("P"+p+"Unit");
-	//[SUPER FUCKING STRANGE RELIC SHRINK]
-	trSetSelectedScale(0.000001,0.000001,0.000001);
-	trUnitSelectByQV("P"+p+"Unit");
-	spyEffect(kbGetProtoUnitID("Chicken"), 0, xsVectorSet(dPlayerData,xSpyID,p), vector(2,2,2));
-	//spyEffect(kbGetProtoUnitID("Cinematic Block"), 0, xsVectorSet(dPlayerData,xSecondSpy,p), vector(1,1,1));
-	xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
-	xSetBool(dPlayerData, xStopDeath, false);
-	
-	xAddDatabaseBlock(dEnemyCollision, true);
-	xSetInt(dEnemyCollision, xUnitID, 1*trQuestVarGet("P"+p+"Unit"));
+	if(AllowChicken == 1){
+		xSetPointer(dPlayerData, p);
+		trQuestVarSet("P"+p+"Unit", trGetNextUnitScenarioNameNumber());
+		UnitCreate(p, ""+ChickenProto, x, z, heading);
+		trUnitSelectByQV("P"+p+"Unit");
+		//[SUPER FUCKING STRANGE RELIC SHRINK]
+		trSetSelectedScale(0.000001,0.000001,0.000001);
+		trUnitSelectByQV("P"+p+"Unit");
+		spyEffect(kbGetProtoUnitID("Chicken"), 0, xsVectorSet(dPlayerData,xSpyID,p), vector(2,2,2));
+		//spyEffect(kbGetProtoUnitID("Cinematic Block"), 0, xsVectorSet(dPlayerData,xSecondSpy,p), vector(1,1,1));
+		xSetInt(dPlayerData, xPlayerUnitID, 1*trQuestVarGet("P"+p+"Unit"));
+		xSetBool(dPlayerData, xStopDeath, false);
+		
+		xAddDatabaseBlock(dEnemyCollision, true);
+		xSetInt(dEnemyCollision, xUnitID, 1*trQuestVarGet("P"+p+"Unit"));
+	}
 }
 
 void CreateChest(int x = 1, int z = 1, int heading = -1){

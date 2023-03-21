@@ -279,6 +279,11 @@ inactive
 		ExtrasGot = ExtrasGot + ChestsFound*2;
 		//debugLog("Chests = " + ChestsFound + " out of " + ChestsTotal);
 		
+		Extras = Extras+4;
+		if(xGetDatabaseCount(dHelp) < 2){
+			ExtrasGot = ExtrasGot+4;
+		}
+		
 		Extras = Extras+3;
 		if(MinigameFound == true){
 			ExtrasGot = ExtrasGot + 3;

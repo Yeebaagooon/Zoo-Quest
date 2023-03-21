@@ -171,6 +171,7 @@ inactive
 		for(x = 1; <= cNumberNonGaiaPlayers){
 			trModifyProtounit("Dwarf", x, 8, 10);
 		}
+		AllowChicken = 0;
 		xsDisableSelf();
 	}
 }
