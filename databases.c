@@ -111,6 +111,7 @@ int xRelicType = 0;
 int xRelicStat = 0;
 int xSFXID = 0;
 int xRelicLevel = 0;
+int xScaleDone = 0;
 
 int dEnemyCollision = 0;
 
@@ -260,6 +261,7 @@ highFrequency
 	xRelicStat = xInitAddFloat(dFreeRelics, "statvalue", 0);
 	xSFXID = xInitAddInt(dFreeRelics, "sfxid", -1);
 	xRelicLevel = xInitAddInt(dFreeRelics, "level", 1);
+	xScaleDone = xInitAddBool(dFreeRelics, "scale done", true);
 	
 	dHeldRelics = xInitDatabase("FreeRelics");
 	xUnitID = xInitAddInt(dHeldRelics, "id", -1);
@@ -267,6 +269,7 @@ highFrequency
 	xRelicStat = xInitAddFloat(dHeldRelics, "statvalue", 0);
 	xSFXID = xInitAddInt(dHeldRelics, "sfxid", -1);
 	xRelicLevel = xInitAddInt(dHeldRelics, "level", 1);
+	xScaleDone = xInitAddBool(dHeldRelics, "scale done", false);
 	
 	dEnemyCollision = xInitDatabase("collision");
 	xUnitID = xInitAddInt(dEnemyCollision, "id", -1);

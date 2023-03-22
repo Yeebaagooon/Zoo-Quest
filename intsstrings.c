@@ -37,18 +37,7 @@ ONLY HAVE ONE FREEDBBLOCK
 ?relic scale !!!!!!!!!!!!!!!!!!
 ?a medusa R5
 
-
-croc mg teleport -2,-2
-multi armory delete ?
-
-
 ?resign when prisoner
-Difficulty - INT Difficulty is set, do in nottud.c
-xData
-xPersistent bonus
-xAct Skip
-*End Cine
-?relics spawn for no reason
 
 End terrain messsy do units
 

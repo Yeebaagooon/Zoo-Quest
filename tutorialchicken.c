@@ -184,6 +184,7 @@ highFrequency
 }
 
 void ProcessFreeRelics(int count = 0){
+	float scale = 1.0;
 	for (x=xsMin(count, xGetDatabaseCount(dFreeRelics)); > 0) {
 		xDatabaseNext(dFreeRelics);
 		xUnitSelect(dFreeRelics, xUnitID);
@@ -206,6 +207,7 @@ void ProcessFreeRelics(int count = 0){
 					xSetInt(dHeldRelics, xRelicType, 1*xGetInt(dFreeRelics, xRelicType));
 					xSetFloat(dHeldRelics, xRelicStat, 1*xGetFloat(dFreeRelics, xRelicStat));
 					xSetInt(dHeldRelics, xRelicLevel, xGetInt(dFreeRelics, xRelicLevel));
+					xSetBool(dHeldRelics, xScaleDone, false);
 					xFreeDatabaseBlock(dFreeRelics);
 					trUnitSelectByQV("P"+p+"Unit");
 					trMutateSelected(kbGetProtoUnitID(""+ChickenProto));
@@ -215,6 +217,14 @@ void ProcessFreeRelics(int count = 0){
 		} else if (trUnitIsSelected()) {
 			uiClearSelection();
 			uiMessageBox(relicName(xGetInt(dFreeRelics, xUnitID)));
+		}
+		else if(xGetBool(dFreeRelics, xScaleDone) == false){
+			xSetBool(dFreeRelics, xScaleDone, true);
+			trUnitSelectClear();
+			xUnitSelect(dFreeRelics, xUnitID);
+			scale = 1+0.25*xGetInt(dHeldRelics, xRelicLevel);
+			trSetSelectedScale(scale,scale,scale);
+			trUnitSelectClear();
 		}
 	}
 }
@@ -252,6 +262,7 @@ void ProcessHeldRelics(int count = 1) {
 			xSetFloat(dFreeRelics, xRelicStat, 1*xGetFloat(dHeldRelics, xRelicStat));
 			xSetInt(dFreeRelics, xSFXID, 1*trQuestVarGet("SFXUnit"));
 			xSetInt(dFreeRelics, xRelicLevel, 1*xGetInt(dHeldRelics, xRelicLevel));
+			xSetBool(dFreeRelics, xScaleDone, false);
 			xFreeDatabaseBlock(dHeldRelics);
 			break;
 		}

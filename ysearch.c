@@ -358,8 +358,8 @@ highFrequency
 				dir = xsVectorNormalize(dest-closevector);
 				//FOR PELTAST
 				//rotate to L, for loop shoot
-				baseCos = 0.965926; //cos5
-				baseSin = 0.996195; //sin5
+				baseCos = 0.996195; //cos5
+				baseSin = 0.087156; //sin5
 				dir = rotationMatrix(dir, 0.996194, -0.087156); //dir, -5cos, -5sin
 				for(a = 1; < 4){
 					ShootProjectile(dir, closevector, "Ball of Fire", "Wadjet Spit", 0, 80, 6000);
@@ -394,7 +394,6 @@ highFrequency
 				dest = kbGetBlockPosition(""+trGetUnitScenarioNameNumber(kbUnitGetTargetUnitID(kbGetBlockID(""+closestid))));
 				xsSetContextPlayer(0);
 				dir = xsVectorNormalize(dest-closevector);
-				//FOR PELTAST
 				//rotate to L, for loop shoot
 				baseCos = 0.965926; //cos15
 				baseSin = 0.258819; //sin15
