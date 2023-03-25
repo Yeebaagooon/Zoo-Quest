@@ -724,13 +724,11 @@ void PlayerChoice(int p = 0, string prompt = "Question", string answerone = "Ans
 		temp = trGetNextUnitScenarioNameNumber();
 		UnitCreate(p, "Cinematic Block", p*3, 1, 0);
 		trQuestVarSet("P"+p+"Yes", temp);
-		debugLog("Choice selector dead");
 	}
 	if(kbGetBlockID(""+1*trQuestVarGet("P"+p+"No")) == -1){
 		temp = trGetNextUnitScenarioNameNumber();
 		UnitCreate(p, "Cinematic Block", p*3, 1, 0);
 		trQuestVarSet("P"+p+"No", temp);
-		debugLog("Choice selector dead");
 	}
 	trUnitSelectByQV("P"+p+"No");
 	trUnitChangeProtoUnit(""+NoChoiceUnitName);
@@ -793,7 +791,6 @@ active
 	//xsSetContextPlayer(-1);
 	for(p = 1; <cNumberNonGaiaPlayers){
 		if(trPlayerUnitCountSpecific(p, ""+YesChoiceUnitName + " Hero") != 0){
-			trChatSend(0, "Yes registered");
 			ChoiceEffect = 1*trQuestVarGet("P"+p+"YesAction");
 			ActionChoice = p;
 			xsEnableRule("AnswerConsequences");
@@ -803,7 +800,6 @@ active
 			trUnitChangeProtoUnit("Cinematic Block");
 		}
 		if(trPlayerUnitCountSpecific(p, ""+NoChoiceUnitName + " Hero") != 0){
-			trChatSend(0, "No registered");
 			ChoiceEffect = 1*trQuestVarGet("P"+p+"NoAction");
 			ActionChoice = p;
 			xsEnableRule("AnswerConsequences");

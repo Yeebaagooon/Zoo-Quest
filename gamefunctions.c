@@ -1,7 +1,47 @@
+void EndChats(){
+	ColouredIconChat("1,0.5,0", "icons/special e son of osiris icon 64", "<u>" + "Zoo Quest by Yeebaagooon" + "</u>");
+	if(1*trQuestVarGet("CustomContent") == 0){
+		ColouredChat("1,0.5,0", "Subscribe on the steam workshop to enable custom content!");
+	}
+	else{
+		ColouredChat("1,0.5,0", "Thank you, noble subscriber!");
+	}
+}
+
+void SetUI(int civ = 0, int culture = 0){
+	for(p = 1; < cNumberNonGaiaPlayers){
+		trSetCivAndCulture(p, civ, culture);
+		if(true)if(trCurrentPlayer()==p)trPlayerSetActive(p);
+		trSetCivAndCulture(p, 3, 1);
+		if(false)if(trCurrentPlayer()==p)trPlayerSetActive(p);
+		trPlayerKillAllGodPowers(p);
+		if(Stage == 5){
+			trTechGodPower(p, "Animal Magnetism", 1);
+		}
+	}
+	trDelayedRuleActivation("DelayGP");
+}
+
+rule DelayGP
+highFrequency
+inactive
+{
+	for(p = 1; < cNumberNonGaiaPlayers){
+		trPlayerKillAllGodPowers(p);
+		if(Stage == 5){
+			trTechGodPower(p, "Animal Magnetism", 1);
+		}
+	}
+	xsDisableSelf();
+}
+
 void ShootProjectile(vector dir = vector(0,0,0), vector startpos = vector(0,0,0), string protounit = "", string car = "", int anim = 0, int dmg = 1, int time = 10000, int ownerof = 0){
 	int temp = 0;
 	if(ownerof == 0){
 		ownerof = cNumberNonGaiaPlayers;
+	}
+	if(Stage == 4){
+		time = time-2000;
 	}
 	vector orient = xsVectorSet(xsVectorGetX(dir),0,xsVectorGetZ(dir));
 	temp = trGetNextUnitScenarioNameNumber();
@@ -73,6 +113,7 @@ inactive
 {
 	//ODD QUESTIONS ANSWER TRUE
 	//EVEN QUESTIONS ANSWER FALSE
+	trQuestVarSet("MaxQNumber", 29);
 	trStringQuestVarSet("Question1" ,"There are multiple crocodile species");
 	trStringQuestVarSet("Question2", "Crocodiles cannot hear");
 	trStringQuestVarSet("Question3", "Crocodiles lay eggs");
@@ -89,11 +130,19 @@ inactive
 	trStringQuestVarSet("Question14", "Deer eyes are on the front of the head");
 	trStringQuestVarSet("Question15", "Deer can be white");
 	trStringQuestVarSet("Question16", "Reindeer can be found in Antarctica");
-	trQuestVarSet("MaxQNumber", 20);
 	trStringQuestVarSet("Question17", "The word rhinoceros is a combination of two Greek words, 'rhino' and 'ceros'");
 	trStringQuestVarSet("Question18", "Rhino horns are made of bone");
 	trStringQuestVarSet("Question19", "Deer antlers are made of bone");
 	trStringQuestVarSet("Question20", "A group of Rhinos is called a herd");
+	trStringQuestVarSet("Question21", "Crocodiles cannot stick their tongues out");
+	trStringQuestVarSet("Question22", "Polar bear skin is white");
+	trStringQuestVarSet("Question23", "Only female mosquitoes bite");
+	trStringQuestVarSet("Question24", "No mammals can fly");
+	trStringQuestVarSet("Question25", "Mosquitoes kill more humans than any other non-human animal");
+	trStringQuestVarSet("Question26", "The chicken came before the egg");
+	trStringQuestVarSet("Question27", "The Nile crocodile has the worlds strongest bite");
+	trStringQuestVarSet("Question28", "Polar bears can be found at the south pole");
+	trStringQuestVarSet("Question29", "Sir David Attenborough's first programme was 'Zoo Quest'");
 	xsDisableSelf();
 }
 
@@ -787,6 +836,7 @@ active
 {
 	if(trCheckGPActive("Rain", 1)){
 		//[revive debug]
+		AllowChicken = 1;
 		for(p = 1; < cNumberNonGaiaPlayers){
 			xSetPointer(dPlayerData, p);
 			if(xGetBool(dPlayerData, xPlayerActive) == true){
@@ -835,6 +885,7 @@ inactive
 		for(p = 1; < cNumberNonGaiaPlayers){
 		}
 		xsDisableSelf();
+		AllowChicken = 0;
 		xsEnableRule("DebugRevive");
 		debugLog("PlayersActive = " + PlayersActive);
 		debugLog("PlayersDead = " + PlayersDead);
@@ -1119,6 +1170,9 @@ void NewRelic(int id = 0, int max = 0, int forcelevel = 0){
 	stat = trQuestVarGet("temp");
 	if(Difficulty >= 2){
 		stat = stat*0.75;
+	}
+	if(stat == 0){
+		stat = 1;
 	}
 	xAddDatabaseBlock(dFreeRelics, true);
 	xSetInt(dFreeRelics, xUnitID, id);

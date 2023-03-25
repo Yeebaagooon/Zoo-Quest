@@ -153,6 +153,7 @@ inactive
 		uiLookAtProto(""+CrocProto);
 		xsDisableSelf();
 		xsEnableRule("Swimming");
+		SetUI(14,4);
 	}
 }
 
@@ -461,7 +462,7 @@ inactive
 								}
 							}
 							if(xGetInt(dEdibles, xType) == 4){
-								if(xGetInt(dPlayerData, xCrocSize) > 9 ){
+								if(xGetInt(dPlayerData, xCrocSize) > 8 ){
 									//Interracting with sentinel
 									if(xGetInt(dEdibles, xSubtype) == 0){
 										xUnitSelect(dEdibles, xUnitID);

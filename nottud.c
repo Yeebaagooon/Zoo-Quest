@@ -1397,39 +1397,6 @@ void createMarsh(){
 		trVectorQuestVarSet("dir", rotationMatrix(trVectorQuestVarGet("dir"), baseCos, baseSin));
 		trUnitSelectClear();
 	}
-	//MINIGAME
-	int ABORT = 0;
-	vector tileForMinigame = vector(0,0,0);
-	tileForMinigame = getRandomTileMatchingTerrain("SavannahC", 11);
-	while(distanceBetweenVectors(tileForStart, tileForMinigame, true) < 3000){
-		tileForMinigame = getRandomTileMatchingTerrain("SavannahC", 11);
-		ABORT = ABORT+1;
-		if(ABORT >500){
-			break;
-			trChatSend(0, "ERROR NO MINIGAME TILE");
-		}
-	}
-	int MinigameTileX = xsVectorGetX(tileForMinigame);
-	int MinigameTileZ = xsVectorGetZ(tileForMinigame);
-	float MinigameHeight = trGetTerrainHeight(MinigameTileX, MinigameTileZ);
-	float MinigameMetreX = MinigameTileX*2+1;
-	float MinigameMetreZ = MinigameTileZ*2+1;
-	PaintAtlantisArea(MinigameTileX-1, MinigameTileZ-1, MinigameTileX+1, MinigameTileZ+1, 5, 4);
-	trChangeTerrainHeight(MinigameTileX-1, MinigameTileZ-1, MinigameTileX+1, MinigameTileZ+1, MinigameHeight, false);
-	currentId = trGetNextUnitScenarioNameNumber();
-	UnitCreate(0, "Cinematic Block", MinigameMetreX, MinigameMetreZ,0);
-	trQuestVarSet("MinigameStartID", currentId);
-	currentId = trGetNextUnitScenarioNameNumber();
-	UnitCreate(0, "Cinematic Block", MinigameMetreX, MinigameMetreZ,0);
-	trUnitSelectClear();
-	trUnitSelect(""+currentId);
-	trUnitChangeProtoUnit("Healing SFX");
-	trQuestVarSet("MinigameStartSFX", currentId);
-	trUnitSelectByQV("MinigameStartID");
-	trUnitChangeProtoUnit("Torch");
-	trUnitSelectByQV("MinigameStartID");
-	trUnitSetAnimationPath("0,1,0,0,1,1,1");
-	StageVector = tileForMinigame;
 	for(i = 0; <54){
 		currentId = trGetNextUnitScenarioNameNumber();
 		UnitCreate(cNumberNonGaiaPlayers, "Fence Wood", 20, i*4+20, 0);
@@ -1518,12 +1485,39 @@ void createMarsh(){
 	
 	float EndMetreX = EndTileX*2+1;
 	float EndMetreZ = EndTileZ*2+1;
-	for(a=0 ; < 60){
-		//deployCluster(randomFloat(toMetres(0.2), toMetres(0.8)), randomFloat(toMetres(0.2), toMetres(0.8)), "Savannah Tree", 0, 16, 10.0, false);
+	//MINIGAME
+	int ABORT = 0;
+	vector tileForMinigame = vector(0,0,0);
+	tileForMinigame = getRandomTileMatchingTerrain("SavannahC", 11);
+	while((distanceBetweenVectors(tileForStart, tileForMinigame, true) < 3000) && (distanceBetweenVectors(tileForEnd, tileForMinigame, true) < 3000)){
+		tileForMinigame = getRandomTileMatchingTerrain("SavannahC", 11);
+		ABORT = ABORT+1;
+		if(ABORT >500){
+			break;
+			trChatSend(0, "ERROR NO MINIGAME TILE");
+		}
 	}
-	//replaceTerrainBelowHeightMax("SandC", "IceA", 1);
-	//replaceTerrainBelowHeightMax("DirtA", "SnowA", 1);
-	//paintTrees("ForestFloorPalm", "Savannah Tree");
+	int MinigameTileX = xsVectorGetX(tileForMinigame);
+	int MinigameTileZ = xsVectorGetZ(tileForMinigame);
+	float MinigameHeight = trGetTerrainHeight(MinigameTileX, MinigameTileZ);
+	float MinigameMetreX = MinigameTileX*2+1;
+	float MinigameMetreZ = MinigameTileZ*2+1;
+	PaintAtlantisArea(MinigameTileX-1, MinigameTileZ-1, MinigameTileX+1, MinigameTileZ+1, 5, 4);
+	trChangeTerrainHeight(MinigameTileX-1, MinigameTileZ-1, MinigameTileX+1, MinigameTileZ+1, MinigameHeight, false);
+	currentId = trGetNextUnitScenarioNameNumber();
+	UnitCreate(0, "Cinematic Block", MinigameMetreX, MinigameMetreZ,0);
+	trQuestVarSet("MinigameStartID", currentId);
+	currentId = trGetNextUnitScenarioNameNumber();
+	UnitCreate(0, "Cinematic Block", MinigameMetreX, MinigameMetreZ,0);
+	trUnitSelectClear();
+	trUnitSelect(""+currentId);
+	trUnitChangeProtoUnit("Healing SFX");
+	trQuestVarSet("MinigameStartSFX", currentId);
+	trUnitSelectByQV("MinigameStartID");
+	trUnitChangeProtoUnit("Torch");
+	trUnitSelectByQV("MinigameStartID");
+	trUnitSetAnimationPath("0,1,0,0,1,1,1");
+	StageVector = tileForMinigame;
 	paintUnit("SavannahA", "Water Reeds", 0, 0.4);
 	paintUnit("SavannahA", "Rock River Sandy", 0, 0.2);
 	paintUnit("SavannahC", "Rock Sandstone Small", 0, 0.01);
@@ -2453,6 +2447,7 @@ void createCrocArea(){
 	while(chestnum > 0){
 		tempV = getRandomTileMatchingTerrain("SandC", 5);
 		currentId = trGetNextUnitScenarioNameNumber();
+		tempV = tempV*2;
 		UnitCreate(0, "Cinematic Block", xsVectorGetX(tempV), xsVectorGetZ(tempV), 0);
 		if(trCountUnitsInArea(""+currentId, 0, "Great Box", 50) == 0){
 			//if(xsVectorGetY(kbGetBlockPosition(""+currentId)) > 0){
@@ -2955,7 +2950,12 @@ void createChickenArea(){
 			CreateChicken(p, trVectorQuestVarGetX("base"), trVectorQuestVarGetZ("base"), heading);
 			currentId = trGetNextUnitScenarioNameNumber();
 			UnitCreate(0, "Relic", trVectorQuestVarGetX("relic"), trVectorQuestVarGetZ("relic"), heading);
-			NewRelic(currentId, 6);
+			if(1*trQuestVarGet("SuperBonus") == Stage){
+				NewRelic(currentId, 6, 3);
+			}
+			else{
+				NewRelic(currentId, 6);
+			}
 		}
 		//spyEffect(1*trQuestVarGet("P"+p+"Unit"), kbGetProtoUnitID("Gazelle"), vector(1,1,1), vector(1,1,1));
 		trPlayerKillAllGodPowers(p);

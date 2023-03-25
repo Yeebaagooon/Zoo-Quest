@@ -103,6 +103,7 @@ inactive
 		uiZoomToProto(""+RhinoProto);
 		uiLookAtProto(""+RhinoProto);
 		playSound("\xpack\xcinematics\5_in\music.mp3");
+		SetUI(5,1);
 		xsDisableSelf();
 	}
 }

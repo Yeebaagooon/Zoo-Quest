@@ -30,11 +30,13 @@ inactive
 		timediff = trTimeMS();
 		timelast = trTimeMS();
 		trDelayedRuleActivation("GoatActLoops");
-		if(Difficulty <= 1){
-			SpawnGoatPoacher(2);
-		}
-		else{
-			SpawnGoatPoacher(4);
+		if(1*trQuestVarGet("SuperBonus") != Stage){
+			if(Difficulty <= 1){
+				SpawnGoatPoacher(2);
+			}
+			else{
+				SpawnGoatPoacher(4);
+			}
 		}
 		modifyProtounitAbsolute("Throwing Axeman", cNumberNonGaiaPlayers, 55, 4);
 		modifyProtounitAbsolute("Throwing Axeman", cNumberNonGaiaPlayers, 2, 30);
@@ -47,6 +49,7 @@ inactive
 		ShrineTarget = ShrinesMax-2-PlayersActive;
 		SpawnRelic(PlayersActive*2+1-Difficulty);
 		trDelayedRuleActivation("GoatRelicChat");
+		SetUI(10,3);
 	}
 }
 
@@ -212,7 +215,6 @@ inactive
 				PlayerColouredChatToSelf(p, "You'll be able to join the next act if your team pass this one.");
 				trPlayerKillAllGodPowers(p);
 				xSetVector(dPlayerData, xDeathVector, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
-				trTechGodPower(1, "Rain", 1);
 				if(iModulo(2, trTime()) == 0){
 					playSound("\dialog\it\skul062.mp3");
 				}
@@ -226,6 +228,12 @@ inactive
 					trDamageUnit(-1*xGetInt(dPlayerData, xHPRegen));
 					xSetInt(dPlayerData, xHPRegenNext, trTime()+xGetInt(dPlayerData, xHPRegenTime));
 				}
+			}
+			if(trPlayerUnitCountSpecific(p, "Anubite") > 1){
+				trUnitSelectByQV("P"+p+"Unit");
+				trDamageUnitsInArea(p, "Anubite", 999, 1);
+				trUnitSelectByQV("P"+p+"Unit");
+				trDamageUnit(-1);
 			}
 		}
 		if((PlayersActive == PlayersReadyToLeave+PlayersDead) && (PlayersDead != PlayersActive)){
@@ -822,7 +830,9 @@ minInterval 5
 			trSetPlayerDefeated(p);
 		}
 		xsDisableSelf();
+		EndChats();
 		trEndGame();
+		playSound("\Yeebaagooon\Zoo Quest\Credits.mp3");
 	}
 }
 

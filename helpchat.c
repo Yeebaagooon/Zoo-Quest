@@ -4,6 +4,7 @@ highFrequency
 {
 	for(p = 1; < cNumberNonGaiaPlayers){
 		xSetPointer(dPlayerData, p);
+		string extrachat = "You can refresh already active shrines.";
 		if(trCurrentPlayer() == p){
 			if(trChatHistoryContains("HELP", p)){
 				trChatHistoryClear();
@@ -66,7 +67,12 @@ highFrequency
 						ColouredChat("0.8,0.8,0", "Interract with a world object, try it!");
 						trChatSend(0, "Collect relics (W) to buy god powers");
 						if(InMinigame == false){
-							trMessageSetText("OBJECTIVE: Activate shrines (W) and then make your way to the zone.", 10000);
+							if(Difficulty < 2){
+								trMessageSetText("OBJECTIVE: Activate shrines (W) and then make your way to the zone." + extrachat, 10000);
+							}
+							else{
+								trMessageSetText("OBJECTIVE: Activate shrines (W) and then make your way to the zone.", 10000);
+							}
 						}
 						else{
 							if(xGetBool(dPlayerData, xStopDeath) == true){

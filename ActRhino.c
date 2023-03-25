@@ -38,7 +38,9 @@ inactive
 		ColouredChat("0.0,0.8,0.2", "Each long fence segment needs at least one break.");
 		xsEnableRule("PlayMusic");
 		SpawnRhinoPoacher(xsMax(PlayersActive,3));
-		//SpawnRhinoSuperPoacher(1);
+		if(Difficulty == 3){
+			SpawnRhinoSuperPoacher(1);
+		}
 		PlayersDead = 0;
 		timediff = trTimeMS();
 		timelast = trTimeMS();
@@ -48,6 +50,16 @@ inactive
 		}
 		trDelayedRuleActivation("RhinoActLoops");
 		ActPart = 1;
+		if(1*trQuestVarGet("SuperBonus") == Stage){
+			for(p = 1; < cNumberNonGaiaPlayers){
+				xSetPointer(dPlayerData, p);
+				xSetInt(dPlayerData, xHPRegenTime, 20);
+				xSetInt(dPlayerData, xHPRegen, xGetInt(dPlayerData, xHPRegen)+2);
+				xSetFloat(dPlayerData, xRhinoRun, (xGetFloat(dPlayerData, xRhinoRun)+4));
+				xSetInt(dPlayerData, xRhinoChargeTimeMax, (xGetInt(dPlayerData, xRhinoChargeTimeMax)+5));
+			}
+		}
+		SetUI(5,1);
 	}
 }
 
@@ -234,7 +246,6 @@ inactive
 				PlayerColouredChatToSelf(p, "You'll be able to join the next act if your team pass this one.");
 				xSetVector(dPlayerData, xDeathVector, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
 				trPlayerKillAllGodPowers(p);
-				trTechGodPower(1, "Rain", 1);
 				if(iModulo(2, trTime()) == 0){
 					playSound("\dialog\jp\skul062.mp3");
 				}
@@ -378,6 +389,8 @@ minInterval 5
 			trSetPlayerDefeated(p);
 		}
 		xsDisableSelf();
+		EndChats();
+		playSound("\Yeebaagooon\Zoo Quest\Credits.mp3");
 		trEndGame();
 	}
 }
@@ -574,6 +587,7 @@ highFrequency
 		}
 		temp = trGetNextUnitScenarioNameNumber();
 		UnitCreate(cNumberNonGaiaPlayers, "Villager Egyptian", xsVectorGetX(base), xsVectorGetZ(base), heading);
+		UnitCreate(1, "Attack Revealer", xsVectorGetX(base), xsVectorGetZ(base), 0);
 		xAddDatabaseBlock(dTemp, true);
 		xSetInt(dTemp, xUnitID, temp);
 		dir = rotationMatrix(dir, baseCos, baseSin);

@@ -103,6 +103,7 @@ inactive
 		startNPCDialog(2);
 	}
 	playSoundCustom("\cinematics\29_in\music2.mp3", "\Yeebaagooon\Zoo Quest\Zoo Quest Theme.mp3");
+	SetUI(11,3);
 }
 
 rule ResetBlackmap
@@ -358,7 +359,7 @@ inactive
 			trUnitOverrideAnimation(24, 0, true, true, -1, 0);
 			//or 18 birth 24 flail
 		}
-		if(anim == 1){
+		if((anim == 1) || (anim == 13)){
 			//chicken building
 			trUnitSelectClear();
 			trUnitSelect(""+xGetInt(dPlayerData, xSpyID));

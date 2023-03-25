@@ -10,7 +10,7 @@ inactive
 		xsDisableRule("CrocodileTutorialDone");
 		xsDisableRule("Jump");
 		xsDisableRule("JumpEnd");
-		//QuickStart = 0;
+		QuickStart = 0;
 		NewDestroyNumber = trGetNextUnitScenarioNameNumber()-1;
 		TutorialMode = true;
 		Stage = 5;
@@ -142,6 +142,9 @@ inactive
 		uiLookAtProto(""+ChickenProto);
 		xsDisableSelf();
 		xsEnableRule("MissileCheckS5");
+		for(p=1 ; < cNumberNonGaiaPlayers){
+			trPlayerKillAllGodPowers(p);
+		}
 	}
 }
 
@@ -280,15 +283,7 @@ void ProcessTowers(int count = 1) {
 		}
 		xUnitSelect(dTowers, xUnitID);
 		if(trUnitAlive() == false){
-			for(a = xGetDatabaseCount(dEnemyCollision); > 0){
-				xDatabaseNext(dEnemyCollision);
-				if(xGetInt(dEnemyCollision, xUnitID) == xGetInt(dTowers, xUnitID)){
-					xFreeDatabaseBlock(dTowers);
-					xFreeDatabaseBlock(dEnemyCollision);
-					break;
-				}
-			}
-			//xFreeDatabaseBlock(dTowers);
+			xFreeDatabaseBlock(dTowers);
 		}
 	}
 }
@@ -332,7 +327,7 @@ void ProcessEnemy(int count = 1) {
 		xUnitSelect(dEnemies, xUnitID);
 		if(TutorialMode == false){
 			if(trUnitAlive() == false){
-				if(iModulo((11+cNumberNonGaiaPlayers+(Difficulty*2)), trTimeMS()) == 0){
+				if(iModulo((6+cNumberNonGaiaPlayers+(Difficulty*2)), trTimeMS()) == 0){
 					//debugLog(""+pos);
 					temp = trGetNextUnitScenarioNameNumber();
 					UnitCreate(1, "Cinematic Block", xsVectorGetX(pos), xsVectorGetZ(pos), 0);
@@ -342,7 +337,7 @@ void ProcessEnemy(int count = 1) {
 					xFreeDatabaseBlock(dEnemies);
 				}
 				xFreeDatabaseBlock(dEnemies);
-				unitTransform("Medusa", "Lightning Sparks Ground");
+				//unitTransform("Medusa", "Lightning Sparks Ground");
 			}
 		}
 	}
@@ -385,6 +380,12 @@ inactive
 				if(xGetInt(dEnemyCollision, xUnitID) == 1*trQuestVarGet("ArmoryP"+p)){
 					xFreeDatabaseBlock(dEnemyCollision);
 					//continue;
+				}
+				else{
+					xUnitSelect(dEnemyCollision, xUnitID);
+					if(trUnitAlive() == false){
+						xFreeDatabaseBlock(dEnemyCollision);
+					}
 				}
 			}
 			//add to db held relics as will be owned by 0

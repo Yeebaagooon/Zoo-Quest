@@ -27,7 +27,7 @@ import sys
 ###############################
 ####### CUSTOMIZE THESE #######
 ###############################
-FILENAME = 'Zoo Quest TEST.xs'
+FILENAME = 'Zoo Quest.xs'
 rmsFunc = ''
 rmsMain = 'main.c'
 files = ['zshared.c', 'voids.c', 'globals.c', 'intsstrings.c', 'databases.c', 'relicschicken.c', 'gamefunctions.c', 'ysearch.c', 'nottud.c', 'choice.c', 'text.c', 'setup.c',

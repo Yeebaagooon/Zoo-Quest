@@ -11,9 +11,12 @@ inactive
 		replaceTerrainAboveHeightMax("CoralA", "GrassB", 0.0);
 		trLetterBox(false);
 		trUIFadeToColor(0,0,0,100,800,false);
+		createCameraTrack(1);
 		trCameraCut(vector(-36.525265,123.743729,-36.525265), vector(0.500000,-0.707107,0.500000), vector(0.500000,0.707107,0.500000), vector(0.707107,0.000000,-0.707107));
-		uiZoomToProto(""+GazelleProto);
-		uiLookAtProto(""+GazelleProto);
+		addCameraTrackWaypoint();
+		trCameraCut(vector(-36.525265,123.743729,-36.525265), vector(0.500000,-0.707107,0.500000), vector(0.500000,0.707107,0.500000), vector(0.707107,0.000000,-0.707107));
+		addCameraTrackWaypoint();
+		playCameraTrack();
 		trDelayedRuleActivation("ResetBlackmap");
 		trDelayedRuleActivation("DeerActLoops");
 		trDelayedRuleActivation("DeerMinigameDetect");
@@ -23,7 +26,7 @@ inactive
 		trDelayedRuleActivation("PoacherTimer");
 		trDelayedRuleActivation("DeerEndZoneSee");
 		xsEnableRule("DeerPoacherMovement");
-		BerryTarget = 8+PlayersActive;
+		BerryTarget = 8+PlayersActive+(Difficulty*4);
 		if(BerryTarget >= xGetDatabaseCount(dBerryBush)){
 			BerryTarget = xGetDatabaseCount(dBerryBush)-12+PlayersActive;
 		}
@@ -37,6 +40,21 @@ inactive
 		trChatSend(0, "Make sure to explore, as higher act scores help you out later.");
 		playSound("\cinematics\19_out\music 2.mp3");
 		xsEnableRule("PlayMusicDelay");
+		uiZoomToProto(""+GazelleProto);
+		uiLookAtProto(""+GazelleProto);
+		trDelayedRuleActivation("CutDelay");
+		SetUI(11,3);
+	}
+}
+
+rule CutDelay
+highFrequency
+inactive
+{
+	if (trTime() >= cActivationTime + 1) {
+		uiZoomToProto(""+GazelleProto);
+		uiLookAtProto(""+GazelleProto);
+		xsDisableSelf();
 	}
 }
 
@@ -252,7 +270,6 @@ inactive
 				PlayerColouredChatToSelf(p, "You'll be able to join the next act if your team pass this one.");
 				trPlayerKillAllGodPowers(p);
 				xSetVector(dPlayerData, xDeathVector, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
-				trTechGodPower(1, "Rain", 1);
 				if(iModulo(2, trTime()) == 0){
 					playSound("\dialog\fr\skul062.mp3");
 				}
@@ -445,6 +462,7 @@ inactive
 						PlayerChoice(x, "Participate in minigame?", "Yes", 4, "No", 0, 11900);
 					}
 				}
+				xSetVector(dPlayerData, xVectorHold, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
 			}
 			for(b = xGetDatabaseCount(dPoachers); > 0){
 				xDatabaseNext(dPoachers);
@@ -685,7 +703,7 @@ highFrequency
 	}
 }
 
-/*rule DeerAllDead
+rule DeerAllDead
 inactive
 minInterval 5
 {
@@ -695,9 +713,11 @@ minInterval 5
 			trSetPlayerDefeated(p);
 		}
 		xsDisableSelf();
+		EndChats();
 		trEndGame();
+		playSound("\Yeebaagooon\Zoo Quest\Credits.mp3");
 	}
-}*/
+}
 
 rule DeerPoacherMovement
 inactive

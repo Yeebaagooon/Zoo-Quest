@@ -125,6 +125,7 @@ inactive
 		uiLookAtProto(""+GoatProto);
 		playSound("\xpack\xcinematics\2_in\music.mp3");
 		xsDisableSelf();
+		SetUI(10,3);
 	}
 }
 
@@ -275,6 +276,20 @@ inactive
 									playSound("shrine.wav");
 								}
 								ShrinesGot = ShrinesGot+1;
+							}
+							else if(xGetInt(dInterractables, xSubtype) == 1){
+								if(Difficulty < 2){
+									xUnitSelect(dInterractables, xUnitID);
+									trQuestVarSetFromRand("temp", ShrineTimeMin, ShrineTimeMax);
+									xSetInt(dInterractables, xSquare1, trTime()+1*trQuestVarGet("temp"));
+									trUnitHighlight(1*trQuestVarGet("temp"), false);
+									if(trCurrentPlayer() == p){
+										playSound("shrine.wav");
+									}
+								}
+								else{
+									trChatSend(0, "You cannot refresh shrines at this difficulty!");
+								}
 							}
 						}
 						if(xGetInt(dInterractables, xType) == 3){

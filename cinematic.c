@@ -57,7 +57,6 @@ highFrequency
 	modifyProtounitAbsolute("Gazelle", 0, 1,0);
 	
 	replaceTerrainAtMinSteepness("GrassB", "CliffGreekA", 2);
-	trCameraCut(vector(109.101425,39.023849,122.402161), vector(0.932531,-0.361055,0.005034), vector(0.361050,0.932545,0.001949), vector(0.005398,0.000000,-0.999985));
 	paintTrees2("GrassA", "Pine");
 	paintTrees2("GrassB", "Bush Short");
 	int b = 0;
@@ -85,6 +84,20 @@ highFrequency
 		trUnitSelect(""+temp);
 		trSetSelectedScale(1.4,1,1.4);
 	}
+	for(a = 0; < 20){
+		b = b+1;
+		if(b > cNumberNonGaiaPlayers){
+			b = 0;
+		}
+		temp = trGetNextUnitScenarioNameNumber();
+		UnitCreate(b, "Dwarf", 172, 70+a*5, 0);
+		trUnitSelectClear();
+		trUnitSelect(""+temp);
+		trUnitChangeProtoUnit("Hesperides Tree");
+		trUnitSelectClear();
+		trUnitSelect(""+temp);
+		trSetSelectedScale(1,0.1,1);
+	}
 	temp = trGetNextUnitScenarioNameNumber();
 	UnitCreate(0, "Dwarf", 240, 80, 90);
 	trUnitSelectClear();
@@ -107,6 +120,12 @@ highFrequency
 		PlayerChoice(p, "Skip Cinematic?", "Yes", 3, "No", -1, 12900);
 	}
 	xsEnableRule("SkipCine");
+	createCameraTrack(15000);
+	trCameraCut(vector(109.101425,39.023849,122.402161), vector(0.932531,-0.361055,0.005034), vector(0.361050,0.932545,0.001949), vector(0.005398,0.000000,-0.999985));
+	addCameraTrackWaypoint();
+	trCameraCut(vector(109.101425,39.023849,122.402161), vector(0.932531,-0.361055,0.005034), vector(0.361050,0.932545,0.001949), vector(0.005398,0.000000,-0.999985));
+	addCameraTrackWaypoint();
+	playCameraTrack();
 	xsDisableSelf();
 }
 

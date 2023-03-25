@@ -52,8 +52,13 @@ inactive
 		trQuestVarSet("NextFoodSpawn", trTime()+90);
 		SpawnEdible(cNumberNonGaiaPlayers*2);
 		trRateConstruction(20);
-		SpawnCrocPoacher1(xsMax(4, cNumberNonGaiaPlayers+2));
-		SpawnCrocPoacher2(xsMax(3, cNumberNonGaiaPlayers));
+		if(Difficulty > 0){
+			SpawnCrocPoacher1(xsMax(4, cNumberNonGaiaPlayers+2));
+			SpawnCrocPoacher2(xsMax(3, cNumberNonGaiaPlayers));
+		}
+		else{
+			xsEnableRule("CrocSpawnEzDelay");
+		}
 		modifyProtounitAbsolute("Chu Ko Nu", cNumberNonGaiaPlayers, 0, 5);
 		modifyProtounitAbsolute("Chu Ko Nu", cNumberNonGaiaPlayers, 12, 3);
 		modifyProtounitAbsolute("Chu Ko Nu", cNumberNonGaiaPlayers, 26, 0);
@@ -62,6 +67,27 @@ inactive
 		//SpawnCrocPoacher4(1);
 		CrocTarget = 5*PlayersActive;
 		SpawnRelic(PlayersActive);
+		if(1*trQuestVarGet("SuperBonus") == Stage){
+			for(p = 1; < cNumberNonGaiaPlayers){
+				xSetPointer(dPlayerData, p);
+				xSetInt(dPlayerData, xCrocSprintDuration, xGetInt(dPlayerData, xCrocSprintDuration)+2000);
+				xSetFloat(dPlayerData, xCrocSprintSpeed, xGetFloat(dPlayerData, xCrocSprintSpeed)+0.5);
+				CrocGrow(p);
+			}
+		}
+		UberCrocPoacher(1);
+		SetUI(14,4);
+	}
+}
+
+rule CrocSpawnEzDelay
+highFrequency
+inactive
+{
+	if (trTime() > cActivationTime + 60) {
+		SpawnCrocPoacher1(xsMax(4, cNumberNonGaiaPlayers+2));
+		SpawnCrocPoacher2(xsMax(3, cNumberNonGaiaPlayers));
+		xsDisableSelf();
 	}
 }
 
@@ -229,7 +255,6 @@ inactive
 				PlayerColouredChatToSelf(p, "You'll be able to join the next act if your team pass this one.");
 				trPlayerKillAllGodPowers(p);
 				xSetVector(dPlayerData, xDeathVector, kbGetBlockPosition(""+1*trQuestVarGet("P"+p+"Unit")));
-				trTechGodPower(1, "Rain", 1);
 				if(iModulo(2, trTime()) == 0){
 					playSound("\dialog\ko\skul062.mp3");
 				}
@@ -505,6 +530,8 @@ minInterval 5
 		for(p=1 ; < cNumberNonGaiaPlayers){
 			trSetPlayerDefeated(p);
 		}
+		playSound("\Yeebaagooon\Zoo Quest\Credits.mp3");
+		EndChats();
 		xsDisableSelf();
 		trEndGame();
 	}
@@ -728,6 +755,7 @@ highFrequency
 	xsDisableRule("CrocMechanicLoops");
 	xsDisableRule("CrocFoodTimer");
 	xsDisableRule("CrocMinigameEnd");
+	xsDisableRule("CrocSpawnEzDelay");
 	for(p=1 ; < cNumberNonGaiaPlayers){
 		xSetPointer(dPlayerData, p);
 		trUnitSelectByQV("P"+p+"Unit");

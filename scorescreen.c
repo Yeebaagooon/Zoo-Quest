@@ -493,6 +493,8 @@ inactive
 		for(p=1 ; < cNumberNonGaiaPlayers){
 			trSetPlayerDefeated(p);
 		}
+		playSound("\Yeebaagooon\Zoo Quest\Credits.mp3");
+		EndChats();
 		xsDisableSelf();
 		trEndGame();
 	}
@@ -658,19 +660,27 @@ inactive
 			trUnitSelect(""+temp);
 			trUnitChangeProtoUnit("Kronny Birth");
 			xsEnableRule("BonusDelay");
+			//[DO THESE]
 			if(Stage == 1){
-				characterDialog("Bonus unlocked!", "deer max bonus", ActIcon(Stage));
+				characterDialog("Bonus unlocked!", "Super charge and hp regen next act", ActIcon(Stage));
+				trQuestVarSet("SuperBonus", 2);
 			}
 			if(Stage == 2){
-				characterDialog("Bonus unlocked!", "rhino max bonus", ActIcon(Stage));
+				characterDialog("Bonus unlocked!", "No starting poachers next act", ActIcon(Stage));
+				trQuestVarSet("SuperBonus", 3);
 			}
 			if(Stage == 3){
-				characterDialog("Bonus unlocked!", "goat max bonus", ActIcon(Stage));
+				characterDialog("Bonus unlocked!", "Super sprint and start at level 2 next act", ActIcon(Stage));
+				trQuestVarSet("SuperBonus", 4);
 			}
 			if(Stage == 4){
-				characterDialog("Bonus unlocked!", "croc max bonus", ActIcon(Stage));
+				characterDialog("Bonus unlocked!", "Better relics supplied at act start", ActIcon(Stage));
+				trQuestVarSet("SuperBonus", 5);
 			}
 			playSound("plentybirth.wav");
+			playSound("bronzebirth.wav");
+			playSound("restorationbirth.wav");
+			trUIFadeToColor(255,255,0,100,500,true);
 		}
 		else{
 			xsEnableRule("StopBonusCheck");
@@ -744,6 +754,7 @@ inactive
 		xsEnableRule("GameEnd");
 		trLetterBox(true);
 		trUIFadeToColor(255,255,255,500,1000,false);
+		playSound("\Yeebaagooon\Zoo Quest\Credits.mp3");
 	}
 }
 
@@ -799,6 +810,7 @@ inactive
 	trQuestVarSet("ScoreCheck", 0);
 	xsDisableSelf();
 	xsEnableRule("ScoreFDelay");
+	trSetFogAndBlackmap(false,false);
 }
 
 rule ScoreFDelay
@@ -995,6 +1007,6 @@ inactive
 		xsDisableSelf();
 		trEndGame();
 		xsDisableSelf();
-		ColouredIconChat("1,0.5,0", "icons/special e son of osiris icon 64", "<u>" + "Zoo Quest by Yeebaagooon" + "</u>");
+		EndChats();
 	}
 }

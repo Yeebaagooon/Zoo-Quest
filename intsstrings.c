@@ -1,9 +1,9 @@
 //---Controls
-//\Yeebaagooon\Zoo Quest\Test sound.mp3
-int QuickStart = 5;
+//\Yeebaagooon\Zoo Quest\Credits.mp3
+int QuickStart = 0;
 bool LOS = false;
-bool AlwaysWin = true;
-bool PlayCine = false;
+bool AlwaysWin = false;
+bool PlayCine = true;
 
 /*
 it uses build at pointer instead
@@ -34,21 +34,12 @@ instead of the id
 ONLY HAVE ONE FREEDBBLOCK
 
 [BUG LIST]
-?relic scale !!!!!!!!!!!!!!!!!!
-?a medusa R5
-
-?resign when prisoner
-
-End terrain messsy do units
-
--100% bonuses
-
-//DELETE
-
+- Relic size
+- Chicken size
 */
 
 //---Strings
-string MapVersion = "Test Version";
+string MapVersion = "Version 1";
 string MapName = "Zoo Quest.xs";
 string GazelleProto = "Hero Greek Jason";
 string RhinoProto = "Ajax";
@@ -257,7 +248,6 @@ highFrequency
 	for(p=1; <= cNumberNonGaiaPlayers) {
 		xAddDatabaseBlock(dPlayerData, true);
 	}
-	
 	dDestroyMe = xInitDatabase("destroyme");
 	xDestroyName = xInitAddInt(dDestroyMe, "unit id", -1);
 	xDestroyTime = xInitAddInt(dDestroyMe, "timeMS", 1);
